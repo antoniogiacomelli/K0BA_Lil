@@ -8,27 +8,35 @@
 #ifndef INC_KERNEL_H_
 #define INC_KERNEL_H_
 
+/**
+ * @file kernel.h
+ * @brief K0BA Lite - Kernel 0 for emBedded Arm
+ * Copyright (C) 2023 www.antoniogiacomelli.com
+ */
+
 #include <stdint.h>
 
 /** @brief Kernel version string */
 #define KVERSION "0.1L"
-/** @brief HAL-dependent macros */
-#define KDISABLEIRQ() __disable_irq()
-#define KENABLEIRQ()  __enable_irq()
+
+/** @brief Hardware-dependent macros */
+#define KDISABLEIRQ() __asm volatile ("cpsid i \n\r");
+#define KENABLEIRQ() __asm volatile ("cpsie i \n\r");
+
 /************************************************************************/
 /* Configuration Macros                                                 */
 /************************************************************************/
 
 #define _NTHREADS 5 /**< Total number of application threads */
 #define NTHREADS (_NTHREADS + 1)  /**< Number of threads including TaskIdle */
-#define STACK_SIZE 512 /** Stack size for each thread */
+#define STACK_SIZE 256 /** Stack size for each thread */
 #define OK	0 /**< Return code for success */
 #define NOK	-1 /**< Return code for failure */
-#define MSG_SIZE 128 /**< Message Size of the Mailbox (Message passing) */
-#define FIFO_SIZE 128 /**< FIFO (Message Queue) size */
-#define NMBUF	10 /**< Number of Message Buffers on the system */
-#define PSIZE 128 /**< Pipe Size */
-#define NPIPE 10 /**< Number of total pipes on the system */
+#define MSG_SIZE 64 /**< Message Size of the Mailbox (Message passing) */
+#define FIFO_SIZE 64 /**< FIFO (Message Queue) size */
+#define NMBUF	5 /**< Number of Message Buffers on the system */
+#define PSIZE 64 /**< Pipe Size */
+#define NPIPE 5 /**< Number of total pipes on the system */
 
 /************************************************************************/
 /* Thread Management and ITC                                            */
