@@ -25,7 +25,7 @@ To be improved:
 * The version available here uses a single stack pointer. Application threads and kernel threads share the same address
 space, there is no memory virtualization. Kernel calls are then simple function calls. This is an acceptable approach
 for small embedded systems.
-An implementation with lightweight is processes under development.
+An implementation with lightweight processes is under development.
 
 So far this kernel has been tested on the following MCUs: ARM Cortex-MO+, ARM Cortex-M3 and ARM Cortex-M7.
 
