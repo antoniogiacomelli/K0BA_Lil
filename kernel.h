@@ -1,11 +1,12 @@
-#ifndef INC_KERNEL_H_
-#define INC_KERNEL_H_
-
 /**
  * @file kernel.h
- * @brief K0BA Lite - Kernel 0 for emBedded Arm
+ * @brief Header K0BA Lite - Kernel 0 for emBedded Arm
+ * @date 18/11/23
+ * @author Antonio Giacomelli <antoniogiacomelli@protonmail.com>
  * Copyright (C) 2023 www.antoniogiacomelli.com
  */
+#ifndef INC_KERNEL_H_
+#define INC_KERNEL_H_
 
 #include <stdint.h>
 
