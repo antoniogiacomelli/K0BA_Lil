@@ -63,13 +63,13 @@ int main(void)
 	/************************/
 	kMbufInitAll(); /* kernel call to initialize the Message Buffer pool */
 	kPipeInitAll(); /* kernel call to initialize the PIPEs pool */
-        /* kAddTask(TaskFunction, void* arguments, unique ID, priority [max=0]) */
+        /* kAddTask(TaskFunction, void* arguments, unique ID, priority [highest=0]) */
 	assert(kAddTask(TaskIdle, (void*)0, 0, 2) == OK); /* Adding task idle */
 	assert(kAddTask(Task1, (void*)0, 1, 1) == OK); 
 	assert(kAddTask(Task2, (void*)0, 2, 1) == OK); 
 	assert(kAddTask(Task3, (void*)0, 3, 1) == OK);
 	/* Adding a server-task - this task receives calls through synchronous                                                          
-   	message passing from client tasks - it has max priority */
+   	message passing from client tasks - it has highest priority */
 	assert(kAddTask(UART_Server_Task, (void*)0, 4, 0) == OK); 
 	sUSART_Create(&serviceUSART); /*Creating UART service */
 	serviceUSART.init();  /*Initializing uart service */
