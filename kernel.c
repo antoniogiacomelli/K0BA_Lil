@@ -7,7 +7,6 @@
 ***********************************************************************
 /*include your CMSIS compliant HAL here*/
 #include "kernel.h"
-
 /************************************************************************/
 /*	Thread Management                                                  */
 /************************************************************************/
@@ -85,20 +84,21 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 void SysTick_Handler(void)
 {
 	HAL_IncTick();
+	kYield();
+}
+
+void kTaskSwitch(void)
+{
+	__disable_irq();
 	for (int i = 0; i<NTHREADS; i++)
 	{
 		if (tcbs[i].sleeping > 0)
 		{
 			tcbs[i].sleeping--;
-			if (tcbs[i].sleeping == 0) tcbs[i].status = READY;
+			if (tcbs[i].sleeping == 0)
+				tcbs[i].status = READY;
 		}
 	}
-	kYield();
-}
-
-void kTaskSwitch(void) 
-{
-	__disable_irq();
 	if (RunPtr->status != BLOCKED && RunPtr->status != SLEEPING)
 	{
 		RunPtr->status = READY;
@@ -607,4 +607,3 @@ uint8_t FifoGet(FIFO_t* me)
 	kSemaSignal(&me->roomleft);
 	return get_data;
 }
-
