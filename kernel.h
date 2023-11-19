@@ -19,10 +19,6 @@
 /** @brief Kernel version string */
 #define KVERSION "0.1L"
 
-/** @brief Hardware-dependent macros */
-#define KDISABLEIRQ() __asm volatile ("cpsid i \n\r");
-#define KENABLEIRQ() __asm volatile ("cpsie i \n\r");
-
 /************************************************************************/
 /* Configuration Macros                                                 */
 /************************************************************************/
