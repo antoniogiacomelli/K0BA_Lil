@@ -1,8 +1,10 @@
-/*
- * @file kernel.c
- * @brief Main routines of the kernel
- */
-
+/************************************************************************
+* @file		kernel.c
+* @brief	C functions for the kernel. 
+* @date		18/11/23
+* @author	Antonio Giacomelli <antoniogiacomelli@protonmail.com>
+** (C) Copyright 2022-23 www.antoniogiacomelli.com
+***********************************************************************
 #include "kernel/kernel.h"
 
 /************************************************************************/
