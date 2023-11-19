@@ -159,6 +159,7 @@ void UART_Server_Task(void* args)
 			serviceUSART.puts(rcvd_msg);
 			HAL_Delay(500);
 		}
+		kYield();
 	}
 }
 
