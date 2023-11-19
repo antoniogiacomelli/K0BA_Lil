@@ -8,7 +8,6 @@ microkernel.
 
 The current features are:
 * Preemptive Scheduling (Fixed priority with time-slice) 
-* Cooperative Scheduling
 * Synchronization mechanisms: sleep/wakeup, semaphores and mutexes
 * ITC Mechanisms: Synchronous/Asynchronous Message Passing, PIPEs and FIFO queues.
 
