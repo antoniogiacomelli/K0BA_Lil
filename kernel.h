@@ -12,7 +12,9 @@
 
 /** @brief Kernel version string */
 #define KVERSION "0.1L"
-
+/** @brief HAL-dependent macros */
+#define KDISABLEIRQ() __disable_irq()
+#define KENABLEIRQ()  __enable_irq()
 /************************************************************************/
 /* Configuration Macros                                                 */
 /************************************************************************/
