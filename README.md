@@ -60,7 +60,7 @@ int main(void)
 	SysTick_Config(SystemCoreClock / 1000); /* BSP call: Configuring tick for 1ms*/
 	NVIC_SetPriority(SysTick_IRQn, 0); /*CMSIS HAL calls*/
 	NVIC_EnableIRQ(SysTick_IRQn);
-	NVIC_EnableIRQ(USART3_IRQn);
+	NVIC_EnableIRQ(USART3_IRQn); /* USART service is interrupt-driven */
 	MX_GPIO_Init(); /* BSP Call for GPIO init*/
 	__disable_irq();
 	/*************************/
