@@ -34,7 +34,7 @@ So far this kernel has been tested on MCUs based on: ARM Cortex-MO+, ARM Cortex-
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body 
+  * @brief          : Main program body of a system using K0BA
   ******************************************************************************
 
 #include "app/main.h"
