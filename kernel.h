@@ -141,7 +141,7 @@ struct __attribute__((aligned)) tcb {
 
 /* Globals */
 extern TCB_t tcbs[NTHREADS];/**< Task Control Block */
-extern uint32_t p_stacks[NTHREADS][STACK_SIZE]; /**< Process stack */
+extern uint32_t p_stacks[NTHREADS][STACK_SIZE]; /**< Stacks */
 extern TCB_t* RunPtr; /**< Pointer to the running thread */
 extern MBUFF_t mbuff[NMBUF]; /**< Total message buffers on the system*/
 extern MBUFF_t* mbufflist; /**< Free message buffers */
