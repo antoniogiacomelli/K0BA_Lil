@@ -8,6 +8,9 @@
 #include "kernel.h"
 /*include your CMSIS compliant HAL here*/
 
+#include "stm32f7xx_hal.h"
+#include "kernel/kernel.h"
+
 /************************************************************************/
 /*	Thread Management                                                  */
 /************************************************************************/
@@ -37,7 +40,7 @@ void kSetInitStack(uint8_t i)
 	p_stacks[i][STACK_SIZE-16]		= 0x04040404; //r4
 
 }
-static int32_t nOfAddedThreads = 0;
+static int32_t n_added_threads = 0;
 void TaskIdle(void *args)
 {
 	while(1)
@@ -62,11 +65,11 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 	kSetInitStack(pid);
 	p_stacks[pid][STACK_SIZE-2] = (int32_t)(t); // PC
 	p_stacks[pid][STACK_SIZE-8] = (int32_t)args; // R0
-	if (nOfAddedThreads == _NTHREADS-1)
+	if (n_added_threads == _NTHREADS-1)
 	{
 				tcbs[pid].next = &tcbs[0];
 	}
-	else if (nOfAddedThreads < _NTHREADS)
+	else if (n_added_threads < _NTHREADS)
 	{
 			tcbs[pid].next = &tcbs[pid+1];
 	}
@@ -74,7 +77,7 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 	{
 		return NOK;
 	}
-	nOfAddedThreads++;
+	n_added_threads++;
 	return OK;
 	}
 
@@ -328,7 +331,7 @@ void kRelease(MUTEX_t* m)
 	}
 }
 
-static inline void copyString_(uint8_t *dest, uint8_t* src, size_t size)
+static inline void copyString_(uint8_t *dest, const uint8_t* src, size_t size)
 {
 	for (size_t i = 0; i<size; ++i)
 	{
@@ -336,7 +339,7 @@ static inline void copyString_(uint8_t *dest, uint8_t* src, size_t size)
 	}
 
 }
-static inline void copyMSG_(MSG_t *dest, MSG_t* src, size_t size)
+static inline void copyMSG_(MSG_t *dest, const MSG_t* src, size_t size)
 {
 	for (size_t i = 0; i<size; ++i) { dest[i] = src[i] ; }
 
@@ -405,7 +408,7 @@ static int32_t put_mbuf(MBUFF_t *mp)
 	return OK;
 }
 
-int8_t kSendMsg(uint8_t *msg, uint8_t pid)
+int8_t kSendMsg(const uint8_t *msg, uint8_t pid)
 {
 	TCB_t *r_task;
 	r_task = &tcbs[pid];
@@ -605,17 +608,5 @@ uint8_t FifoGet(FIFO_t* me)
 	kRelease(&me->mutex);
 	kSemaSignal(&me->roomleft);
 	return get_data;
-}
-/***
- * Housekeeping
- */
-
-void kCheckNumberOfThreads(void)
-{
-	if (nOfAddedThreads != _NTHREADS)
-	{
-		Error_Handler();
-	}
-
 }
 
