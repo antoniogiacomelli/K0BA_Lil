@@ -5,7 +5,7 @@
 * @author	Antonio Giacomelli <antoniogiacomelli@protonmail.com>
 ** (C) Copyright 2022-23 www.antoniogiacomelli.com
 ***********************************************************************
-#include "kernel/kernel.h"
+#include "kernel.h"
 
 /************************************************************************/
 /*	Thread Management                                                  */
