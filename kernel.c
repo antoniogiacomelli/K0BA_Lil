@@ -1,11 +1,8 @@
 /*
- * kernel.c
- *
- *  Created on: Nov 10, 2023
- *      Author: anton
+ * @file kernel.c
+ * @brief Main routines of the kernel
  */
 
-#include "stm32f7xx_hal.h"
 #include "kernel/kernel.h"
 
 /************************************************************************/
