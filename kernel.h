@@ -7,17 +7,11 @@
  */
 #ifndef INC_KERNEL_H_
 #define INC_KERNEL_H_
-
-/**
- * @file kernel.h
- * @brief K0BA Lite - Kernel 0 for emBedded Arm
- * Copyright (C) 2023 www.antoniogiacomelli.com
- */
-
 #include <stdint.h>
 
 /** @brief Kernel version string */
 #define KVERSION "0.1L"
+
 
 /************************************************************************/
 /* Configuration Macros                                                 */
@@ -29,7 +23,7 @@
 #define OK	0 /**< Return code for success */
 #define NOK	-1 /**< Return code for failure */
 #define MSG_SIZE 64 /**< Message Size of the Mailbox (Message passing) */
-#define FIFO_SIZE 64 /**< FIFO queue size */
+#define FIFO_SIZE 64 /**< FIFO (Message Queue) size */
 #define NMBUF	5 /**< Number of Message Buffers on the system */
 #define PSIZE 64 /**< Pipe Size */
 #define NPIPE 5 /**< Number of total pipes on the system */
@@ -137,7 +131,7 @@ struct __attribute__((aligned)) tcb {
 
 /* Globals */
 extern TCB_t tcbs[NTHREADS];/**< Task Control Block */
-extern uint32_t p_stacks[NTHREADS][STACK_SIZE]; /**< Stacks */
+extern uint32_t p_stacks[NTHREADS][STACK_SIZE]; /**< Process stack */
 extern TCB_t* RunPtr; /**< Pointer to the running thread */
 extern MBUFF_t mbuff[NMBUF]; /**< Total message buffers on the system*/
 extern MBUFF_t* mbufflist; /**< Free message buffers */
@@ -196,7 +190,7 @@ extern void kMbufInitAll(void);
  * @param pid Process ID of the receiver
  * @return Return code indicating success (OK) or failure (NOK)
  */
-extern int8_t kSendMsg(uint8_t *msg, uint8_t pid);
+extern int8_t kSendMsg(const uint8_t *msg, uint8_t pid);
 
 /**
  * @brief Receives a synchronous message.
