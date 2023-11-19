@@ -29,7 +29,7 @@ An implementation with lightweight processes is under development.
 
 So far this kernel has been tested on MCUs based on: ARM Cortex-MO+, ARM Cortex-M3 and ARM Cortex-M7.
 
-###Initialization example, on an STM32 board using the provided HAL and BSP:
+###Initialization example, on an STM32 board using the vendor provided HAL and BSP:
 ```c
 /**
   ******************************************************************************
@@ -72,7 +72,7 @@ int main(void)
     	while(1)
     	;
 }
-
+```
 
 Major dependencies:
 * ARM GCC 
