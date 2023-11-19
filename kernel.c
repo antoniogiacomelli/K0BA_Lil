@@ -6,6 +6,7 @@
 ** (C) Copyright 2022-23 www.antoniogiacomelli.com
 ***********************************************************************
 #include "kernel.h"
+/*include your CMSIS compliant HAL here*/
 
 /************************************************************************/
 /*	Thread Management                                                  */
