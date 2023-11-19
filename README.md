@@ -21,6 +21,7 @@ To be improved:
 * Configuration
 * Return Values
 * Housekeeping/error checking
+* Portability (other compilers and HAL APIs)
   
 * The version available here uses a single stack pointer. Application threads and kernel threads share the same address
 space, there is no memory virtualization. Kernel calls are then simple function calls. This is an acceptable approach
