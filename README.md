@@ -141,11 +141,11 @@ void Task3(void* args)
 void UART_Server_Task(void* args)
 {
 	uint8_t rcvd_msg[MSG_SIZE] = {'\0'};
-	int ret = -1;
+	int8_t ret = NOK;
 	while(1)
 	{
 		ret = kRcvMsg(rcvd_msg);
-		if (ret != -1)
+		if (ret != NOK)
 		{
 			serviceUSART.puts(rcvd_msg);
 			HAL_Delay(500);
