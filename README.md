@@ -35,15 +35,8 @@ So far this kernel has been tested on the following MCUs: ARM Cortex-MO+, ARM Co
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body
+  * @brief          : Main program body 
   ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2023 www.antoniogiacomelli.com
-  * All rights reserved.
-  *
-  ******************************************************************************
-  */
 
 #include "app/main.h"
 #include "app/tasks.h"
@@ -55,30 +48,30 @@ USART_Interface serviceUSART = {0}; /*USART interface instance*/
 
 int main(void)
 {
-    HAL_Init(); // HAL API init
-    SystemClock_Config(); // HAL call to config system clock
-    __disable_irq();
-	  MX_GPIO_Init(); /* BSP Call for GPIO init*/
-	  kMbufInitAll(); /* kernel call to initialize the Message Buffer pool */
-	  kPipeInitAll(); /* kernel call to initialize the PIPEs pool */
-	  assert(kAddTask(TaskIdle, (void*)0, 0, 2) == OK); /* Adding task idle */
-	  assert(kAddTask(Task1, (void*)0, 1, 1) == OK); 
-	  assert(kAddTask(Task2, (void*)0, 2, 1) == OK); 
-	  assert(kAddTask(Task3, (void*)0, 3, 1) == OK);
-/* Adding a server-task - this task receives calls through synchronous                                                                
-   message passing from client tasks - it has max priority */
-	  assert(kAddTask(UART_Server_Task, (void*)0, 4, 0) == OK); 
-	  SysTick_Config(SystemCoreClock / 1000); /* BSP call: Configuring tick for 1ms*/
-	  NVIC_SetPriority(SysTick_IRQn, 0); /*CMSIS HAL calls*/
-	  NVIC_EnableIRQ(SysTick_IRQn);
-	  NVIC_EnableIRQ(USART3_IRQn);
-	  sUSART_Create(&serviceUSART); /*Creating UART service */
-	  serviceUSART.init();  /*Initializing uart service */
-	  serviceUSART.puts((const uint8_t*)"K0BA 0.1L is up\n\r");
-	  __enable_irq();
-	  kStart(); //initializes kernel
-    while(1)
-    ;
+	HAL_Init(); // HAL API init
+	SystemClock_Config(); // HAL call to config system clock
+	__disable_irq();
+	MX_GPIO_Init(); /* BSP Call for GPIO init*/
+	kMbufInitAll(); /* kernel call to initialize the Message Buffer pool */
+	kPipeInitAll(); /* kernel call to initialize the PIPEs pool */
+	assert(kAddTask(TaskIdle, (void*)0, 0, 2) == OK); /* Adding task idle */
+	assert(kAddTask(Task1, (void*)0, 1, 1) == OK); 
+	assert(kAddTask(Task2, (void*)0, 2, 1) == OK); 
+	assert(kAddTask(Task3, (void*)0, 3, 1) == OK);
+	/* Adding a server-task - this task receives calls through synchronous                                                          
+   	message passing from client tasks - it has max priority */
+	assert(kAddTask(UART_Server_Task, (void*)0, 4, 0) == OK); 
+	SysTick_Config(SystemCoreClock / 1000); /* BSP call: Configuring tick for 1ms*/
+	NVIC_SetPriority(SysTick_IRQn, 0); /*CMSIS HAL calls*/
+	NVIC_EnableIRQ(SysTick_IRQn);
+	NVIC_EnableIRQ(USART3_IRQn);
+	sUSART_Create(&serviceUSART); /*Creating UART service */
+	serviceUSART.init();  /*Initializing uart service */
+	serviceUSART.puts((const uint8_t*)"K0BA 0.1L is up\n\r");
+	__enable_irq();
+	kStart(); //initializes kernel
+    	while(1)
+    	;
 }
 
 
