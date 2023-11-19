@@ -5,11 +5,8 @@
 * @author	Antonio Giacomelli <antoniogiacomelli@protonmail.com>
 ** (C) Copyright 2022-23 www.antoniogiacomelli.com
 ***********************************************************************
-#include "kernel.h"
 /*include your CMSIS compliant HAL here*/
-
-#include "stm32f7xx_hal.h"
-#include "kernel/kernel.h"
+#include "kernel.h"
 
 /************************************************************************/
 /*	Thread Management                                                  */
