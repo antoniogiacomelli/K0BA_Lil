@@ -136,14 +136,14 @@ void Task2(void* args)
 }
 void Task3(void* args)
 {
-	const uint8_t msg3[] = "Task 3 is going to sleep 180 ticks\n\r";
+	const uint8_t msg3[] = "Task 3 is going to sleep 3000 ticks\n\r";
 	const uint8_t msg3_1[] = "Task 3 resumed\n\r";
 
 	while(1)
 	{
 		kSemaWait(&task3SEMA);
 		assert(kSendMsg(msg3, UART_SERVER) == OK);
-		kSleepTicks(180);
+		kSleepTicks(3000);
 		assert(kSendMsg(msg3_1, UART_SERVER) == OK);
 		/* wait for preemption */
 	}
