@@ -47,9 +47,16 @@ USART_Interface serviceUSART = {0}; /*USART interface instance*/
 
 int main(void)
 {
+	/* HAL dependent initializations */
 	HAL_Init(); // HAL API init
 	SystemClock_Config(); // HAL call to config system clock
+	SysTick_Config(SystemCoreClock / 1000); /* BSP call: Configuring tick for 1ms*/
+	NVIC_SetPriority(SysTick_IRQn, 0); /*CMSIS HAL calls*/
+	NVIC_EnableIRQ(SysTick_IRQn);
+	NVIC_EnableIRQ(USART3_IRQn);
 	__disable_irq();
+
+	/* Kernel Initialization */
 	MX_GPIO_Init(); /* BSP Call for GPIO init*/
 	kMbufInitAll(); /* kernel call to initialize the Message Buffer pool */
 	kPipeInitAll(); /* kernel call to initialize the PIPEs pool */
@@ -60,15 +67,13 @@ int main(void)
 	/* Adding a server-task - this task receives calls through synchronous                                                          
    	message passing from client tasks - it has max priority */
 	assert(kAddTask(UART_Server_Task, (void*)0, 4, 0) == OK); 
-	SysTick_Config(SystemCoreClock / 1000); /* BSP call: Configuring tick for 1ms*/
-	NVIC_SetPriority(SysTick_IRQn, 0); /*CMSIS HAL calls*/
-	NVIC_EnableIRQ(SysTick_IRQn);
-	NVIC_EnableIRQ(USART3_IRQn);
 	sUSART_Create(&serviceUSART); /*Creating UART service */
 	serviceUSART.init();  /*Initializing uart service */
 	serviceUSART.puts((const uint8_t*)"K0BA 0.1L is up\n\r");
+
 	__enable_irq();
-	kStart(); //initializes kernel
+	/* Boot K0BA */
+	kStart(); 
     	while(1)
     	;
 }
