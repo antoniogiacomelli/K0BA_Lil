@@ -29,7 +29,7 @@ An implementation with lightweight processes is under development.
 
 So far this kernel has been tested on MCUs based on: ARM Cortex-MO+, ARM Cortex-M3 and ARM Cortex-M7.
 
-###Initialization example, on an STM32 board using the vendor provided HAL and BSP:
+###Application example, on an STM32 board using the vendor provided HAL and BSP:
 ```c
 /**
   ******************************************************************************
@@ -80,6 +80,64 @@ int main(void)
 	kStart(); 
     	while(1)
     	;
+}
+  ******************************************************************************
+  * @file           : tasks.c
+  * @brief          : Application execution units
+  ******************************************************************************
+#include "kernel/kernel.h"
+#include "app/tasks.h"
+#include "stm32f7xx_hal.h"
+#include "../../Inc/services/usart_services.h"
+USART_Interface serviceUSART;
+
+/*TaskIdle is in kernel.c*/
+
+void Task1(void* args)
+{
+	const uint8_t msg1[]="Task 1\n\r";
+	while(1)
+	{
+		if (!kSendMsg(msg1, 4))
+			kYield();
+
+	}
+}
+void Task2(void* args)
+{
+	const uint8_t msg2[]="Task 2\n\r";
+
+	while(1)
+	{
+		if (!kSendMsg(msg2, 4))
+			kYield();
+	}
+}
+void Task3(void* args)
+{
+	const uint8_t msg3[] = "Task 3 is going to sleep 180 ticks\n\r";
+	const uint8_t msg3_1[] = "Task 3 resumed\n\r";
+
+	while(1)
+	{
+		kSendMsg(msg3, 4);
+		kSleepTicks(180);
+		kSendMsg(msg3_1, 4);
+	}
+}
+void UART_Server_Task(void* args)
+{
+	uint8_t rcvd_msg[MSG_SIZE] = {'\0'};
+	int8_t ret = -1;
+	while(1)
+	{
+		ret = kRcvMsg(rcvd_msg);
+		if (ret != -1)
+		{
+			serviceUSART.puts(rcvd_msg);
+			HAL_Delay(500);
+		}
+	}
 }
 ```
 
