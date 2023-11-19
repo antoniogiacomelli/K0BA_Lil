@@ -140,6 +140,8 @@ void Task3(void* args)
 
 	while(1)
 	{
+		assert(kSendMsg((const uint8_t*)"Task 3 will block waiting for signal\n\r",
+			UART_SERVER) == OK);
 		kSemaWait(&task3SEMA);
 		assert(kSendMsg(msg3, UART_SERVER) == OK);
 		kSleepTicks(3000);
@@ -168,5 +170,5 @@ void UART_Server_Task(void* args)
 
 *Demo output:*
 
-![image](https://github.com/antoniogiacomelli/K0BA_Kernel/assets/62488903/faacd47b-4de8-43b9-abe3-c754837d9818)
+![image](https://github.com/antoniogiacomelli/K0BA_Kernel/assets/62488903/c063ff43-398f-40c2-950c-f9f32b8638dc)
 
