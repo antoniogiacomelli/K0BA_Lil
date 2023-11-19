@@ -1,8 +1,7 @@
-# K0BA_Kernel
-Kernel 0 for emBedded Arm
+
 # K0BA
-*Kernel 0 For Embedded ARM* aims to be a microkernel for ARM Cortex-M microprocessors. 
-The figure below shows the target architecture of a whole software system using this
+*Kernel 0 For emBedded ARM* aims to be a microkernel for ARM Cortex-M microprocessors. 
+The figure below shows the target architecture of an entire software system using this
 microkernel.
 
 <img width="450" alt="microkernel" src="https://user-images.githubusercontent.com/62488903/209377097-07d90421-afe0-4749-adac-3a875641aa51.png">
