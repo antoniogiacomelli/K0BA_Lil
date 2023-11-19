@@ -14,7 +14,7 @@ The current features are:
 
 To be implemented:
 * Event flags
-* Time-triggered scheduling
+* Time-triggered scheduler option
 * Memory pools
 
 To be improved:
