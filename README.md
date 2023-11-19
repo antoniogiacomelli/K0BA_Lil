@@ -100,7 +100,7 @@ int main(void)
 
 #define UART_SERVER 4 // server task id
 USART_Interface serviceUSART; // UART service interface
-SEMA_t task3SEMA; // semaphore
+SEMA_t task3SEMA; 
 
 /* TaskIdle is in kernel.c */
 
