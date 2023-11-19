@@ -33,7 +33,7 @@
 #define OK	0 /**< Return code for success */
 #define NOK	-1 /**< Return code for failure */
 #define MSG_SIZE 64 /**< Message Size of the Mailbox (Message passing) */
-#define FIFO_SIZE 64 /**< FIFO (Message Queue) size */
+#define FIFO_SIZE 64 /**< FIFO queue size */
 #define NMBUF	5 /**< Number of Message Buffers on the system */
 #define PSIZE 64 /**< Pipe Size */
 #define NPIPE 5 /**< Number of total pipes on the system */
