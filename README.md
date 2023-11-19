@@ -155,7 +155,10 @@ void UART_Server_Task(void* args)
 
 
 ```
-![image](https://github.com/antoniogiacomelli/K0BA_Kernel/assets/62488903/aa991194-98b8-4b69-876c-1ad2e8d05961)
+
+Demo output:
+
+![image](https://github.com/antoniogiacomelli/K0BA_Kernel/assets/62488903/f60aa494-935d-4f46-9541-6569de1f1443)
 
 Major dependencies:
 * ARM GCC 
