@@ -168,5 +168,5 @@ void UART_Server_Task(void* args)
 
 *Demo output:*
 
-![image](https://github.com/antoniogiacomelli/K0BA_Kernel/assets/62488903/f60aa494-935d-4f46-9541-6569de1f1443)
+![image](https://github.com/antoniogiacomelli/K0BA_Kernel/assets/62488903/faacd47b-4de8-43b9-abe3-c754837d9818)
 
