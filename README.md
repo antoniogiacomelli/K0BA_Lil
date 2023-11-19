@@ -116,7 +116,7 @@ void Task1(void* args)
 				assert(kSendMsg((uint8_t*)"Signaling Task3 \n\r", UART_SERVER) == 0);
 				kSemaSignal(&task3SEMA);
 			}
-			kYield();
+			kYield(); /* yield cpu cooperatively */
 		}
 	}
 }
@@ -141,6 +141,7 @@ void Task3(void* args)
 		assert(kSendMsg(msg3, UART_SERVER) == OK);
 		kSleepTicks(180);
 		assert(kSendMsg(msg3_1, UART_SERVER) == OK);
+		/* wait for preemption */
 	}
 }
 void UART_Server_Task(void* args)
