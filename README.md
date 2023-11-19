@@ -29,7 +29,7 @@ An implementation with lightweight processes is under development.
 
 So far this kernel has been tested on MCUs based on: ARM Cortex-MO+, ARM Cortex-M3 and ARM Cortex-M7.
 
-###Application example, on an STM32 board using the vendor provided HAL and BSP:
+###Demo Application, on an STM32 board using the vendor provided HAL and BSP:
 ```c
 /**
   ******************************************************************************
@@ -81,26 +81,38 @@ int main(void)
     	while(1)
     	;
 }
-  ******************************************************************************
-  * @file           : tasks.c
-  * @brief          : Application execution units
-  ******************************************************************************
+
+******************************************************************************
+* @file           : tasks.c
+* @brief          : Demo Application execution units
+******************************************************************************
 #include "kernel/kernel.h"
 #include "app/tasks.h"
 #include "stm32f7xx_hal.h"
 #include "../../Inc/services/usart_services.h"
-USART_Interface serviceUSART;
-
-/*TaskIdle is in kernel.c*/
+#include <assert.h>
+#define UART_SERVER 4 // server task id
+USART_Interface serviceUSART; // UART service interface
+SEMA_t task3SEMA; // semaphore
 
 void Task1(void* args)
 {
+	kSemaInit(&task3SEMA, 0);
 	const uint8_t msg1[]="Task 1\n\r";
+	volatile uint8_t t3Counter = 0;
 	while(1)
 	{
-		if (!kSendMsg(msg1, 4))
+		if (OK == kSendMsg(msg1, UART_SERVER))
+		{
+			t3Counter++;
+			if (t3Counter >= 5)
+			{
+				t3Counter = 0;
+				assert(kSendMsg((const uint8_t*)"Signaling Task 3 \n\r, UART_SERVER == 0));
+				kSemaSignal(&task3SEMA);
+			}
 			kYield();
-
+		}
 	}
 }
 void Task2(void* args)
@@ -109,7 +121,7 @@ void Task2(void* args)
 
 	while(1)
 	{
-		if (!kSendMsg(msg2, 4))
+		if (OK == kSendMsg(msg2, UART_SERVER))
 			kYield();
 	}
 }
@@ -120,15 +132,16 @@ void Task3(void* args)
 
 	while(1)
 	{
-		kSendMsg(msg3, 4);
+		kSemaWait(&task3SEMA);
+		assert(kSendMsg(msg3, UART_SERVER) == OK);
 		kSleepTicks(180);
-		kSendMsg(msg3_1, 4);
+		assert(kSendMsg(msg3_1, UART_SERVER) == OK);
 	}
 }
 void UART_Server_Task(void* args)
 {
 	uint8_t rcvd_msg[MSG_SIZE] = {'\0'};
-	int8_t ret = -1;
+	int ret = -1;
 	while(1)
 	{
 		ret = kRcvMsg(rcvd_msg);
@@ -139,7 +152,10 @@ void UART_Server_Task(void* args)
 		}
 	}
 }
+
+
 ```
+![image](https://github.com/antoniogiacomelli/K0BA_Kernel/assets/62488903/aa991194-98b8-4b69-876c-1ad2e8d05961)
 
 Major dependencies:
 * ARM GCC 
