@@ -22,7 +22,11 @@ To be improved:
 * Return Values
 * Housekeeping/error checking
 * Portability (other compilers and HAL APIs)
-  
+
+Major dependencies:
+* ARM GCC 
+* CMSIS HAL
+
 The version available here uses a single stack pointer. Application threads and kernel threads share the same address
 space, there is no memory virtualization. Kernel calls are then simple function calls. This is an acceptable approach
 for small embedded systems.
@@ -30,7 +34,7 @@ An implementation with lightweight processes is under development.
 
 So far this kernel has been tested on MCUs based on: ARM Cortex-MO+, ARM Cortex-M3 and ARM Cortex-M7.
 
-###Demo Application, on an STM32 board using the vendor provided HAL and BSP:
+*Demo Application, on an STM32 board using the vendor provided HAL and BSP:*
 ```c
 
   /******************************************************************************
@@ -162,10 +166,7 @@ void UART_Server_Task(void* args)
 
 ```
 
-Demo output:
+*Demo output:*
 
 ![image](https://github.com/antoniogiacomelli/K0BA_Kernel/assets/62488903/f60aa494-935d-4f46-9541-6569de1f1443)
 
-Major dependencies:
-* ARM GCC 
-* CMSIS HAL
