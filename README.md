@@ -42,7 +42,8 @@ So far this kernel has been tested on MCUs based on: ARM Cortex-MO+, ARM Cortex-
 #include "kernel/kernel.h"
 #include <assert.h>
 #include <string.h>
-#include "../../Inc/services/usart_services.h" 
+#include "../../Inc/services/usart_services.h"
+
 USART_Interface serviceUSART = {0}; /*USART interface instance*/
 
 int main(void)
@@ -91,9 +92,12 @@ int main(void)
 #include "stm32f7xx_hal.h"
 #include "../../Inc/services/usart_services.h"
 #include <assert.h>
+
 #define UART_SERVER 4 // server task id
 USART_Interface serviceUSART; // UART service interface
 SEMA_t task3SEMA; // semaphore
+
+/* TaskIdle is in kernel.c */
 
 void Task1(void* args)
 {
