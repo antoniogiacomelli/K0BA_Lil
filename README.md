@@ -120,7 +120,7 @@ void Task1(void* args)
 				assert(kSendMsg((const uint8_t*)"Signaling Task3 \n\r", UART_SERVER) == 0);
 				kSemaSignal(&task3SEMA);
 			}
-			kYield(); /* yield cpu cooperatively */
+			kYield(); /* yields cpu cooperatively */
 		}
 	}
 }
