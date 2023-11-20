@@ -117,7 +117,7 @@ void Task1(void* args)
 			if (t3Counter >= 5)
 			{
 				t3Counter = 0;
-				assert(kSendMsg((const uint8_t*)"Signaling Task3 \n\r",
+				assert(kSendMsg((const uint8_t*)"Signaling task3SEMA\n\r",
 					UART_SERVER) == 0);
 				kSemaSignal(&task3SEMA);
 			}
@@ -142,7 +142,7 @@ void Task3(void* args)
 
 	while(1)
 	{
-		assert(kSendMsg((const uint8_t*)"Task 3 will block waiting for signal\n\r",
+		assert(kSendMsg((const uint8_t*)"Task 3 will block on semaphore\n\r",
 			UART_SERVER) == OK);
 		kSemaWait(&task3SEMA);
 		assert(kSendMsg(msg3, UART_SERVER) == OK);
@@ -172,5 +172,5 @@ void UART_Server_Task(void* args)
 
 *Demo output:*
 
-![image](https://github.com/antoniogiacomelli/K0BA_Kernel/assets/62488903/c063ff43-398f-40c2-950c-f9f32b8638dc)
+![image](https://github.com/antoniogiacomelli/K0BA_Kernel/assets/62488903/54114066-2ad8-4bfb-a5e3-d7058adbd6af)
 
