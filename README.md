@@ -7,7 +7,7 @@ microkernel.
 <img width="450" alt="microkernel" src="https://user-images.githubusercontent.com/62488903/209377097-07d90421-afe0-4749-adac-3a875641aa51.png">
 
 The current features are:
-* Preemptive Scheduling (Fixed priority with time-slice) 
+* Preemptive Scheduling with fixed-priority
 * Synchronization mechanisms: sleep/wakeup, semaphores and mutexes
 * ITC Mechanisms: Synchronous/Asynchronous Message Passing, PIPEs and FIFO queues.
 
