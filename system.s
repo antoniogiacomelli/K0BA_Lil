@@ -18,18 +18,18 @@
 .type kTaskSwitch, %function
 
 PendSV_Handler:
-	PUSH	{R4-R11}  //push R4-R11
-	LDR		R0,=RunPtr
+	PUSH		{R4-R11} // saves remaining registers 
+	LDR		R0,=RunPtr 
 	LDR		R1, [R0]
-	STR		SP, [R1]
+	STR		SP, [R1] // saves stack pointer
 	B		Schedule
 
 	Schedule:
 	BL		kTaskSwitch
-	B		Resume	    //resume kernel thread
+	B		Resume	   
 
 	Resume:
-	LDR		R1, =RunPtr			//R1 <- RunPtr updated
+	LDR		R1, =RunPtr			
 	LDR		R2, [R1]
 	LDR		SP, [R2]
 	POP		{R4-R11}
