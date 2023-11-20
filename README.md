@@ -31,7 +31,7 @@ space, there is no memory virtualization. Kernel calls are then simple function 
 for small embedded systems.
 An implementation with lightweight processes is under development.
 
-So far this kernel has been tested on MCUs based on: ARM Cortex-MO+, ARM Cortex-M3 and ARM Cortex-M7.
+So far this kernel has been tested ARM Cortex-M3 and M7 based MCUs.
 
 *Demo Application, on an STM32 board using the vendor provided HAL and BSP:*
 ```c
