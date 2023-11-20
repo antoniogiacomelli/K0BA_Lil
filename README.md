@@ -1,5 +1,5 @@
 
-# K0BA Lite
+# K0BA LITE
 *Kernel 0 For emBedded ARM* aims to be a microkernel for ARM Cortex-M microprocessors. 
 
 The figure below shows the target architecture of an entire embedded software system using this
@@ -39,7 +39,7 @@ So far this kernel has been tested on ARM Cortex-M3 and M7 based MCUs.
 
  *	*	*
 
-**Demo Application**
+**DEMO APPLICATION**
 
 This demo application was deployed on an STM32 prototyping board, using the HAL and BSP provided by the vendor.
 It demonstrates several kernel mechanisms: scheduling, context-switching, synchronization and message passing.
@@ -212,7 +212,7 @@ void UART_Server_Task(void* args)
 
 ```
 
-*Demo output:*
+**Demo output:**
 
 ![image](https://github.com/antoniogiacomelli/K0BA_Kernel/assets/62488903/54114066-2ad8-4bfb-a5e3-d7058adbd6af)
 
