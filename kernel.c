@@ -76,7 +76,7 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 	}
 	n_added_threads++;
 	return OK;
-	}
+}
 
 /************************************************************************/
 /* Scheduler                                                            */
