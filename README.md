@@ -157,6 +157,9 @@ void Task3(void* args)
 		/* wait for preemption */
 	}
 }
+/*
+ UART Server: only prints the received string
+*/
 void UART_Server_Task(void* args)
 {
 	uint8_t rcvd_msg[MSG_SIZE] = {'\0'};
