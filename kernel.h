@@ -17,7 +17,7 @@
 /* Configuration Macros                                                 */
 /************************************************************************/
 
-#define _NTHREADS 5 /**< Total number of application threads */
+#define _NTHREADS 4 /**< Total number of application threads */
 #define NTHREADS (_NTHREADS + 1)  /**< Number of threads including TaskIdle */
 #define STACK_SIZE 256 /** Stack size for each thread */
 #define OK	0 /**< Return code for success */
