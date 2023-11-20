@@ -50,6 +50,11 @@ void TaskIdle(void *args)
 
 int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 {
+	if (pid == 0)
+	{
+		if (t != TaskIdle)
+			assert(0); //ID 0 is reserved for task idle
+	}
 	tcbs[pid].block_sema = 0;
 	tcbs[pid].block_mutex = 0;
 	tcbs[pid].sleeping = 0;
