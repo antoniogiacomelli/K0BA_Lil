@@ -159,6 +159,8 @@ void Task3(void* args)
 }
 /*
  UART Server: only prints the received string
+ on a more complex system a server task could be
+ located within the service code
 */
 void UART_Server_Task(void* args)
 {
