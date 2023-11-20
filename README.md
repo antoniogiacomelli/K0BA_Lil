@@ -70,7 +70,8 @@ int main(void)
 	kMbufInitAll(); /* kernel call to initialize the Message Buffer pool */
 	kPipeInitAll(); /* kernel call to initialize the PIPEs pool */
         /* kAddTask(TaskFunction, void* arguments, unique ID, priority [highest=0]) */
-	assert(kAddTask(TaskIdle, (void*)0, 0, 2) == OK); /* Adding task idle, lowest piority. ID shall be 0 */
+	assert(kAddTask(TaskIdle, (void*)0, 0, 2) == OK); /* Adding task idle, lowest piority.
+                                                             ID must be 0 */
 	assert(kAddTask(Task1, (void*)0, 1, 1) == OK); 
 	assert(kAddTask(Task2, (void*)0, 2, 1) == OK); 
 	assert(kAddTask(Task3, (void*)0, 3, 1) == OK);
