@@ -43,6 +43,7 @@ So far this kernel has been tested on ARM Cortex-M3 and M7 based MCUs.
 
 This demo application was deployed on an STM32 prototyping board, using the HAL and BSP provided by the vendor.
 It demonstrates several kernel mechanisms: scheduling, context-switching, synchronization and message passing.
+
 Below, the main body function, initializing the hardware and the kernel.
 
 ```c
