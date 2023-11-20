@@ -78,7 +78,7 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 	}
 	else if (n_added_threads < NTHREADS)
 	{
-			tcbs[pid].next = &tcbs[pid+1];
+		tcbs[pid].next = &tcbs[pid+1];
 	}
 	else
 	{
