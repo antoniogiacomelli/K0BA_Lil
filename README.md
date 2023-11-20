@@ -102,7 +102,7 @@ int main(void)
     	;
 }
 ```
-Below the application tasks. Task 1, 2 and 3 call the  UART server task, which solely purpose 
+Below, the application tasks. Task 1, 2 and 3 call the  UART server task, which solely purpose 
 is to print messages on a PC terminal. Client-server architectures using Message Passing are 
 typical of microkernel implementations. Task 3 is blocked on *task3SEMA* semaphore until Task 1 
 counter reachs 5. Then, Task 1 signals the semaphore and Task 3 is unblocked. 
