@@ -122,7 +122,20 @@ It sleeps for 3000 ticks (or 3 seconds, given tick = 1ms), being resumed when ti
 USART_Interface serviceUSART; // UART service interface
 SEMA_t task3SEMA; 
 
-/* TaskIdle is in kernel.c */
+/* TaskIdle is in kernel.c:
+
+void TaskIdle(void *args)
+{
+	while(1)
+	{
+		__DSB();
+		__WFI();
+		__ISB();
+		kYield();
+	}
+}
+
+*/
 
 void Task1(void* args)
 {
