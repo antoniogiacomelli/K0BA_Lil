@@ -58,7 +58,7 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 		}
 		else
 		{
-			RunPtr = &tcbs[0];
+			RunPtr = &tcbs[0]; // first task to run is the IDLE
 		}
 	}
 	tcbs[pid].block_sema = 0;
