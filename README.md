@@ -113,7 +113,6 @@ void Task1(void* args)
 	while(1)
 	{
 		/* send msg1 to be printed by UART Server task */
-		*/
 		if (OK == kSendMsg(msg1, UART_SERVER))
 		{
 			t3Counter++;
