@@ -95,7 +95,6 @@ int main(void)
 ******************************************************************************/
 #include "kernel/kernel.h"
 #include "app/tasks.h"
-#include "stm32f7xx_hal.h"
 #include "../../Inc/services/usart_services.h"
 #include <assert.h>
 
