@@ -36,10 +36,10 @@ So far this kernel has been tested on MCUs based on: ARM Cortex-MO+, ARM Cortex-
 *Demo Application, on an STM32 board using the vendor provided HAL and BSP:*
 ```c
 
-  /******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body of a system using K0BA
-  ******************************************************************************/
+/******************************************************************************
+* @file           : main.c
+* @brief          : Main program body of a system using K0BA
+******************************************************************************/
 
 #include "app/main.h"
 #include "app/tasks.h"
