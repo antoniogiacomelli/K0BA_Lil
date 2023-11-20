@@ -111,6 +111,10 @@ void Task1(void* args)
 	volatile uint8_t t3Counter = 0;
 	while(1)
 	{
+		/* send msg1 to be printed by UART Server task (it only does that)
+                   if more commands were to be executed by this server an APDU
+                   message could be used, for instance
+		*/
 		if (OK == kSendMsg(msg1, UART_SERVER))
 		{
 			t3Counter++;
