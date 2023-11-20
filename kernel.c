@@ -62,11 +62,11 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 	kSetInitStack(pid);
 	p_stacks[pid][STACK_SIZE-2] = (int32_t)(t); // PC
 	p_stacks[pid][STACK_SIZE-8] = (int32_t)args; // R0
-	if (n_added_threads == _NTHREADS-1)
+	if (n_added_threads == NTHREADS-1)
 	{
 				tcbs[pid].next = &tcbs[0];
 	}
-	else if (n_added_threads < _NTHREADS)
+	else if (n_added_threads < NTHREADS)
 	{
 			tcbs[pid].next = &tcbs[pid+1];
 	}
