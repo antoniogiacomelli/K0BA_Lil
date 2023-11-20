@@ -298,19 +298,26 @@ void kLock(MUTEX_t* m)
 	{
 		m->lock = 1; //lock
 		m->owner = RunPtr; //set owner
+		__enable_irq();
+		return;
 	}
 	else //locked
 	{
 		if ((m->owner) != RunPtr) //not owner
 		{
 			RunPtr->block_mutex = (uint32_t*)m;
+			RunPtr->status = BLOCKED;
 			benqueue(&m->queue, RunPtr);
-			RunPtr->priority = RunPtr->rpriority; //restore real prio in case of prio inheritance
-			__enable_irq();
-			kYield();
+			// priority inheritance
+			if (RunPtr->priority < m->owner->priority)
+			{
+				m->owner->rpriority = m->owner->priority;
+				m->owner->priority = RunPtr->priority;
+			}
 		}
+		__enable_irq();
+		kYield();
 	}
-	__enable_irq();
 }
 
 void kRelease(MUTEX_t* m)
@@ -321,7 +328,6 @@ void kRelease(MUTEX_t* m)
 	{
 		m->lock = 0;
 		m->owner = 0;
-		__enable_irq();
 	}
 	else //unblock, set new owner
 	{
@@ -329,15 +335,10 @@ void kRelease(MUTEX_t* m)
 		t->block_mutex = 0;
 		t->status = READY;
 		m->owner = t;
-		// priority inheritance
-		if (RunPtr->priority < m->owner->priority)
-		{
-			m->owner->rpriority = m->owner->priority;
-			m->owner->priority = RunPtr->priority;
-		}
-		__enable_irq();
-		kYield();
+		RunPtr->priority = RunPtr->rpriority;
 	}
+	__enable_irq();
+	return;
 }
 
 static inline void copyString_(uint8_t *dest, const uint8_t* src, size_t size)
@@ -350,7 +351,10 @@ static inline void copyString_(uint8_t *dest, const uint8_t* src, size_t size)
 }
 static inline void copyMSG_(MSG_t *dest, const MSG_t* src, size_t size)
 {
-	for (size_t i = 0; i<size; ++i) { dest[i] = src[i] ; }
+	for (size_t i = 0; i<size; ++i) 
+	{ 
+		dest[i] = src[i] ; 
+	}
 
 }
 
