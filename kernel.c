@@ -53,7 +53,13 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 	if (pid == 0)
 	{
 		if (t != TaskIdle)
+		{
 			assert(0); //ID 0 is reserved for task idle
+		}
+		else
+		{
+			RunPtr = &tcbs[0];
+		}
 	}
 	tcbs[pid].block_sema = 0;
 	tcbs[pid].block_mutex = 0;
@@ -62,14 +68,13 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 	tcbs[pid].mlock.value = 1;
 	tcbs[pid].priority = priority;
 	tcbs[pid].rpriority = priority;
-	if (pid == 0)
-		RunPtr = &tcbs[0];
+	
 	kSetInitStack(pid);
 	p_stacks[pid][STACK_SIZE-2] = (int32_t)(t); // PC
 	p_stacks[pid][STACK_SIZE-8] = (int32_t)args; // R0
 	if (n_added_threads == NTHREADS-1)
 	{
-				tcbs[pid].next = &tcbs[0];
+		tcbs[pid].next = &tcbs[0];
 	}
 	else if (n_added_threads < NTHREADS)
 	{
