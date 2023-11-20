@@ -186,7 +186,7 @@ void UART_Server_Task(void* args)
 		if (ret != NOK)
 		{
 			serviceUSART.puts(rcvd_msg);
-			HAL_Delay(500);
+			HAL_Delay(500); /* 0.5s delay */
 		}
 		kYield();
 	}
