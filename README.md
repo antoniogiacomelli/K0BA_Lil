@@ -159,7 +159,7 @@ void Task3(void* args)
  UART Server: only prints the received string;
  on a more complex system a server task could be
  located within the service code, and use an APDU
- scheme to or similar to parse the received msg
+ scheme, or similar, to parse the received msg
 */
 void UART_Server_Task(void* args)
 {
