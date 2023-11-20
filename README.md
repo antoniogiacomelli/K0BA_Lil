@@ -182,7 +182,7 @@ void UART_Server_Task(void* args)
 	int8_t ret = NOK;
 	while(1)
 	{
-		ret = kRcvMsg(rcvd_msg);
+		ret = kRcvMsg(rcvd_msg); /* pends for msg */
 		if (ret != NOK)
 		{
 			serviceUSART.puts(rcvd_msg);
