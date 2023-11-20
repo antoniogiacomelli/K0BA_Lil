@@ -43,11 +43,7 @@ So far this kernel has been tested on ARM Cortex-M3 and M7 based MCUs.
 
 This demo application was deployed on an STM32 prototyping board, using the HAL and BSP provided by the vendor.
 It demonstrates several kernel mechanisms: scheduling, context-switching, synchronization and message passing.
-Task 1, 2 and 3 call the  UART server task, which solely purpose is to print messages on a PC terminal. 
-Client-server architectures using Message Passing are typical of microkernel implementations.
-Task 3 is blocked on *task3SEMA* semaphore until Task 1 counter reachs 5. Then, Task 1 signals the semaphore 
-and Task 3 is unblocked. It sleeps for 3000 ticks (or 3 seconds, given tick = 1ms), being resumed when time expires.
-
+Below, the main body function, initializing the hardware and the kernel.
 
 ```c
 
@@ -104,6 +100,14 @@ int main(void)
     	while(1)
     	;
 }
+```
+Below the application tasks. Task 1, 2 and 3 call the  UART server task, which solely purpose 
+is to print messages on a PC terminal. Client-server architectures using Message Passing are 
+typical of microkernel implementations. Task 3 is blocked on *task3SEMA* semaphore until Task 1 
+counter reachs 5. Then, Task 1 signals the semaphore and Task 3 is unblocked. 
+It sleeps for 3000 ticks (or 3 seconds, given tick = 1ms), being resumed when time expires.
+
+```c
 
 /******************************************************************************
 * @file           : tasks.c
