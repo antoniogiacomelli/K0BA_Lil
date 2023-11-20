@@ -81,8 +81,9 @@ int main(void)
 	sUSART_Create(&serviceUSART); /*Creating UART service */
 	serviceUSART.init();  /*Initializing uart service */
 	serviceUSART.puts((const uint8_t*)"K0BA 0.1L is up\n\r");
-	
+	 /************/
 	/* Boot K0BA */
+	/*************/
 	__enable_irq();
 	kStart(); 
     	while(1)
