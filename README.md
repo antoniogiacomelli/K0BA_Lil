@@ -1,39 +1,45 @@
 
 # K0BA Lite
 *Kernel 0 For emBedded ARM* aims to be a microkernel for ARM Cortex-M microprocessors. 
+
 The figure below shows the target architecture of an entire embedded software system using this
 microkernel.
 
 <img width="450" alt="microkernel" src="https://user-images.githubusercontent.com/62488903/209377097-07d90421-afe0-4749-adac-3a875641aa51.png">
 
-The current features are:
+*	*	*
+
+**The current features are:**
 * Preemptive Scheduling with fixed-priority
 * Synchronization mechanisms: sleep/wakeup (on events and time ticks), semaphores and mutexes
 * ITC Mechanisms: Synchronous/Asynchronous Message Passing, PIPEs and FIFO queues.
 
-To be implemented:
+**To be implemented:**
 * Event flags
 * Time-triggered scheduler option
 * Memory pools
 
-To be improved:
+**To be improved:**
 * Configuration
 * Return Values
 * Housekeeping/error checking
 * Portability (other compilers and HAL APIs)
 
-Major dependencies:
+**Major dependencies:**
 * ARM GCC 
 * CMSIS HAL
 
 The version available here uses a single stack pointer. Application threads and kernel threads share the same address
 space, there is no memory virtualization. Kernel calls are then simple function calls. This is an acceptable approach
 for small embedded systems.
+
 An implementation with lightweight processes is under development.
 
 So far this kernel has been tested on ARM Cortex-M3 and M7 based MCUs.
 
-*Demo Application, on an STM32 board using the vendor provided HAL and BSP:*
+ *	*	*
+
+**Demo Application, on an STM32 board using the vendor provided HAL and BSP:**
 ```c
 
 /******************************************************************************
