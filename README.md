@@ -117,7 +117,8 @@ void Task1(void* args)
 			if (t3Counter >= 5)
 			{
 				t3Counter = 0;
-				assert(kSendMsg((const uint8_t*)"Signaling Task3 \n\r", UART_SERVER) == 0);
+				assert(kSendMsg((const uint8_t*)"Signaling Task3 \n\r",
+					UART_SERVER) == 0);
 				kSemaSignal(&task3SEMA);
 			}
 			kYield(); /* yields cpu cooperatively */
