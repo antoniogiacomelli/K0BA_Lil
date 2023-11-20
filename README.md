@@ -30,8 +30,8 @@ microkernel.
 * CMSIS HAL
 
 The version available here (Lite) uses a single stack pointer. Application threads and kernel threads share the same address
-space, there is no memory virtualization. Kernel calls are then simple function calls and context-switching has minimal 
-overhead. This is an acceptable approach for small embedded systems.
+space, there is no memory virtualization. Kernel calls are then simple function calls and context-switch has minimal overhead. 
+This is an acceptable and widely used approach for small embedded systems.
 
 An implementation with lightweight processes is under development.
 
