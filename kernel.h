@@ -174,7 +174,7 @@ extern void kTaskSwitch(void);
 extern int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority);
 
 /**
- * @brief Yields the taskor to another task.
+ * @brief Yields the processor to another task.
  *        (Triggers PendSV)
  */
 extern void kYield(void);
