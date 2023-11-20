@@ -53,7 +53,7 @@ and Task 3 is unblocked. It sleeps for 3000 ticks (or 3 seconds, given tick = 1m
 
 /******************************************************************************
 * @file           : main.c
-* @brief          : Main program body of a system using K0BA
+* @brief          : Main program body of Demo Application
 ******************************************************************************/
 
 #include "app/main.h"
