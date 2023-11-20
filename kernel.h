@@ -114,9 +114,9 @@ typedef struct mbuff {
  * @brief Thread Control Block (TCB) structure representing each thread.
  */
 struct __attribute__((aligned)) tcb {
-    uint32_t* sp; /**< Last saved process stack */
+    uint32_t* sp; /**< Last saved task stack */
     struct tcb* next; /**< Next TCB */
-    uint8_t pid; /**< Process ID */
+    uint8_t pid; /**< task ID */
     uint32_t* block_sema; /**< Blocked semaphore */
     uint32_t* block_mutex; /**< Blocked mutex */
     uint32_t sleeping; /**< Sleep counter */
@@ -131,7 +131,7 @@ struct __attribute__((aligned)) tcb {
 
 /* Globals */
 extern TCB_t tcbs[NTHREADS];/**< Task Control Block */
-extern uint32_t p_stacks[NTHREADS][STACK_SIZE]; /**< Process stack */
+extern uint32_t p_stacks[NTHREADS][STACK_SIZE]; /**< Thread stack */
 extern TCB_t* RunPtr; /**< Pointer to the running thread */
 extern MBUFF_t mbuff[NMBUF]; /**< Total message buffers on the system*/
 extern MBUFF_t* mbufflist; /**< Free message buffers */
@@ -167,14 +167,14 @@ extern void kTaskSwitch(void);
  * @brief Adds a task to the kernel.
  * @param t Pointer to the task function
  * @param args Arguments for the task function
- * @param pid Process ID of the task
+ * @param pid  ID of the task
  * @param priority Priority of the task
  * @return Return code indicating success (OK) or failure (NOK)
  */
 extern int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority);
 
 /**
- * @brief Yields the processor to another task.
+ * @brief Yields the taskor to another task.
  *        (Triggers PendSV)
  */
 extern void kYield(void);
@@ -185,9 +185,9 @@ extern void kYield(void);
 extern void kMbufInitAll(void);
 
 /**
- * @brief Sends a synchronous message to a specified process.
+ * @brief Sends a synchronous message to a specified task.
  * @param msg Message to be sent
- * @param pid Process ID of the receiver
+ * @param pid task ID of the receiver
  * @return Return code indicating success (OK) or failure (NOK)
  */
 extern int8_t kSendMsg(const uint8_t *msg, uint8_t pid);
@@ -249,32 +249,32 @@ extern void kSemaInit(SEMA_t* s, int32_t value);
 
 /**
  * @brief Forces a sleeping task to wake-up
- * @param pid Process ID
+ * @param pid Task ID
  */
 extern void kWakeTicks(uint32_t pid);
 
 /**
- * @brief Puts the current process to sleep for a specified number of ticks.
+ * @brief Puts the current task to sleep for a specified number of ticks.
  * @param ticks Number of ticks to sleep
  */
 extern void kSleepTicks(uint32_t ticks);
 
 /**
- * @brief Puts the current process to sleep based on an event.
+ * @brief Puts the current task to sleep based on an event.
  * @param event Event identifier
  */
 extern void kSleep(EVENT_t event);
 
 /**
- * @brief Wakes up the process waiting for a specific event.
+ * @brief Wakes up the task waiting for a specific event.
  * @param event Event identifier
  */
 extern void kWake(EVENT_t event);
 
 /**
- * @brief Sends a message asynchronously to a specified process.
+ * @brief Sends a message asynchronously to a specified task.
  * @param msg Message to be sent
- * @param pid Process ID of the receiver
+ * @param pid task ID of the receiver
  * @return Return code indicating success (OK) or failure (NOK)
  */
 extern int8_t kAsendMsg(uint8_t* msg, uint8_t pid);
