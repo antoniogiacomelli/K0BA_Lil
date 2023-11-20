@@ -122,7 +122,7 @@ void Task1(void* args)
 			{
 				t3Counter = 0;
 				/* since the message passing is synchronous, there is no need
-				   to add (another) mutual exclusion to the shared resource */
+				   to add (another) mutual exclusion to the shared UART */
 				assert(kSendMsg((const uint8_t*)"Signaling task3SEMA\n\r",
 					UART_SERVER) == 0);
 				kSemaSignal(&task3SEMA);
