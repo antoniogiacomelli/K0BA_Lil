@@ -1,6 +1,6 @@
 
 # K0BA LITE
-*Kernel 0 For emBedded ARM* aims to be a microkernel for ARM Cortex-M microprocessors. 
+*K*ernel *0* for Em*b*edded *A*RM aims to be a microkernel for ARM Cortex-M microprocessors. 
 
 The figure below shows the target architecture of an entire embedded software system using this
 microkernel.
