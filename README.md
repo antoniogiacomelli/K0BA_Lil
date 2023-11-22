@@ -13,7 +13,7 @@ microkernel. It depicts a server-oriented (real-time) embedded operating system.
 * Preemptive Scheduling with fixed-priority
 * Synchronization mechanisms: sleep/wakeup (on events and time ticks), semaphores
   and mutexes (with priority inheritance)
-* ITC Mechanisms: Synchronous/Asynchronous Message Passing, PIPEs and FIFO queues.
+* ITC Mechanisms: Synchronous/Asynchronous Message Passing
 
 **To be implemented:**
 * Event flags
