@@ -78,30 +78,6 @@ typedef struct {
 } __attribute__((aligned)) MUTEX_t;
 
 /**
- * @brief FIFO Queue structure.
- */
-typedef struct {
-    uint32_t head;
-    uint32_t tail;
-    SEMA_t size;
-    SEMA_t roomleft;
-    MUTEX_t mutex;
-    uint8_t buffer[FIFO_SIZE];
-} __attribute__((aligned)) FIFO_t;
-
-/**
- * @brief Pipe structure for inter-task communication.
- */
-typedef struct {
-    int32_t head;
-    int32_t tail;
-    int32_t data;
-    int32_t room;
-    int32_t status;
-    uint8_t buf[PSIZE];
-} __attribute__((aligned)) PIPE_t;
-
-/**
  * @brief Message Buffer structure for Message Passing.
  */
 typedef struct mbuff {
@@ -138,7 +114,6 @@ extern MBUFF_t* mbufflist; /**< Free message buffers */
 extern SEMA_t nmbuf; /**< Counting semaphore for the number of available 
                            Message buffers */
 extern SEMA_t mlock; /**< Mutex to protect CR when getting/putting MBUFFs */
-extern PIPE_t pipe[NPIPE]; /**< Pool of pipes on the system */
 
 /* Kernel Prototypes */
 /**
@@ -198,35 +173,6 @@ extern int8_t kSendMsg(const uint8_t *msg, uint8_t pid);
  * @return Returns sender PID, if success, NOK if fail.
  */
 extern int8_t kRcvMsg(uint8_t *msg);
-
-/**
- * @brief Initializes all pipes.
- */
-extern void kPipeInitAll(void);
-
-/**
- * @brief Creates a new pipe.
- * @return Pointer to the created pipe
- */
-extern PIPE_t *kPipeCreate(void);
-
-/**
- * @brief Reads from a pipe.
- * @param p Pointer to the pipe
- * @param buf Buffer to store the read data
- * @param n Number of bytes to read
- * @return Number of bytes read
- */
-extern int32_t kPipeRead(PIPE_t *p, uint8_t *buf, size_t n);
-
-/**
- * @brief Writes to a pipe.
- * @param p Pointer to the pipe
- * @param buf Buffer containing data to write
- * @param n Number of bytes to write
- * @return Number of bytes written
- */
-extern uint32_t kPipeWrite(PIPE_t *p, uint8_t *buf, size_t n);
 
 /**
  * @brief Signals a semaphore.
@@ -295,25 +241,6 @@ extern void kDisableTaskSwitch(void);
  */
 extern void kEnableTaskSwitch(void);
 
-/**
- * @brief Initializes a FIFO queue.
- * @param me Pointer to the FIFO queue
- */
-extern void FifoInit(FIFO_t* me);
-
-/**
- * @brief Puts data into a FIFO queue.
- * @param me Pointer to the FIFO queue
- * @param data Data to put into the FIFO queue
- * @return Return code indicating success (OK) or failure (NOK)
- */
-extern int32_t FifoPut(FIFO_t* me, uint8_t data);
-/**
- * @brief Gets data from a FIFO queue
- * @param me Pointer to the FIFO queue
- * @return Data retrieved from the FIFO queue
- */
-extern uint8_t FifoGet(FIFO_t* me);
 
 /**
  * @brief Locks a mutex.
