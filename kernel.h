@@ -23,10 +23,7 @@
 #define OK	0 /**< Return code for success */
 #define NOK	-1 /**< Return code for failure */
 #define MSG_SIZE 64 /**< Size for each message buffer for Message Passsing */
-#define FIFO_SIZE 64 /**< FIFO queue size */
 #define NMBUF	5 /**< Number of Message Buffers on the system */
-#define PSIZE 64 /**< Pipe message size */
-#define NPIPE 5 /**< Number of total pipes on the system */
 
 /************************************************************************/
 /* Thread Management and ITC                                            */
