@@ -98,10 +98,10 @@ struct __attribute__((aligned)) tcb {
     uint32_t sleeping; /**< Sleep counter */
     SEMA_t nmsg; /**< New message semaphore */
     SEMA_t mlock; /**< Blocking semaphore for message queue */
-    MBUFF_t* mqueue; /**< Message queue */
+    MBUFF_t* mqueue; /**< Message queue/Mailbox*/
     uint8_t priority; /**< Priority: 0=highest */
     uint8_t rpriority;/**< Saved real priority in case of priority inheritance*/
-    uint32_t event; /**< Sleep/wake event */
+    EVENT_t event; /**< Sleep/wake event */
     thread_status_t status; /**< Thread status */
 };
 
