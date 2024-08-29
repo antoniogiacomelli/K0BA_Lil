@@ -12,8 +12,8 @@
 /************************************************************************/
 TCB_t tcbs[NTHREADS];				
 uint32_t p_stacks[NTHREADS][STACK_SIZE];   
-TCB_t* RunPtr;
-TCB_t* chosen; 
+TCB_t* RunPtr; /* running */
+TCB_t* chosen; /* scheduled */
 
 void kSetInitStack(uint8_t i)
 {
@@ -149,6 +149,7 @@ void kTaskSwitch(void) /* just update RunPtr */
 {
 	RunPtr = chosen;
         RunPtr->status = RUNNING;
+	chosen = NULL; /* clear scheduled task */
 }
 
 void kYield()
