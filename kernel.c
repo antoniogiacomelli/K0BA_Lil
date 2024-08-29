@@ -92,15 +92,9 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 /************************************************************************/
 /* Scheduler                                                            */
 /************************************************************************/
-void SysTick_Handler(void)
+static int32_t kTaskSwitch(void)
 {
-	HAL_IncTick();
-	kYield();
-}
-
-void kTaskSwitch(void)
-{
-	__disable_irq();
+	int32_t retVal = 0;
 	for (int i = 0; i<NTHREADS; i++)
 	{
 		if (tcbs[i].sleeping > 0)
@@ -117,7 +111,7 @@ void kTaskSwitch(void)
 	int32_t max = 255;
 	TCB_t* pt;
 	pt = RunPtr;
-	TCB_t* chosen=0;
+	TCB_t* chosen=0; 
 	do
 	{
 		pt = pt->next;
@@ -125,12 +119,31 @@ void kTaskSwitch(void)
 		{
 			max = pt->priority;
 			chosen = pt;
+			
 		}
+		
+	} while (RunPtr != pt);
+	if (chosen != NULL) /* need switch*/
+	{
 		RunPtr = chosen;
 		RunPtr->status = RUNNING;
-	} while (RunPtr != pt);
+		retVal=1;
+	}
+	return retVal;
+	
+}
+
+void SysTick_Handler(void)
+{
+	HAL_IncTick();
+	__disable_irq();
+	if (kTaskSwitch()) /* need switch */
+	{
+		kYield();
+	}
 	__enable_irq();
 }
+
 
 
 void kYield(void) /*triggers pendsv*/
