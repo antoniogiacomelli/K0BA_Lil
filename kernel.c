@@ -13,6 +13,7 @@
 TCB_t tcbs[NTHREADS];				
 uint32_t p_stacks[NTHREADS][STACK_SIZE];   
 TCB_t* RunPtr;
+TCB_t* chosen; 
 
 void kSetInitStack(uint8_t i)
 {
@@ -44,7 +45,6 @@ void TaskIdle(void *args)
 		__DSB();
 		__WFI();
 		__ISB();
-		kYield();
 	}
 }
 
@@ -92,7 +92,7 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 /************************************************************************/
 /* Scheduler                                                            */
 /************************************************************************/
-static int32_t kTaskSwitch(void)
+static int32_t kNeedTaskSwitch(void)
 {
 	int32_t retVal = 0;
 	for (int i = 0; i<NTHREADS; i++)
@@ -111,7 +111,7 @@ static int32_t kTaskSwitch(void)
 	int32_t max = 255;
 	TCB_t* pt;
 	pt = RunPtr;
-	TCB_t* chosen=0; 
+	chosen = NULL;
 	do
 	{
 		pt = pt->next;
@@ -125,8 +125,7 @@ static int32_t kTaskSwitch(void)
 	} while (RunPtr != pt);
 	if (chosen != NULL) /* need switch*/
 	{
-		RunPtr = chosen;
-		RunPtr->status = RUNNING;
+	
 		retVal=1;
 	}
 	return retVal;
@@ -137,14 +136,18 @@ void SysTick_Handler(void)
 {
 	HAL_IncTick();
 	__disable_irq();
-	if (kTaskSwitch()) /* need switch */
+	if (kNeedTaskSwitch()) /* need switch */
 	{
 		kYield();
 	}
 	__enable_irq();
 }
 
-
+void kTaskSwitch(void)
+{
+	RunPtr = chosen;
+	chose-> RUNNING;
+}
 
 void kYield(void) /*triggers pendsv*/
 {
