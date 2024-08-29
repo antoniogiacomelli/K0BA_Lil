@@ -154,8 +154,10 @@ void kTaskSwitch(void) /* just update RunPtr */
 
 void kYield()
 {
+	__disable_irq();
 	if (RunPtr->status == RUNNING) /* if yielded not blocked/sleeping, make it READY */
             RunPtr->status = READY;
+	__enable_irq();
 	SCB->ICSR |= SCB_ICSR_PENDSTSET_Msk; /* trigger systick */
 }
 
