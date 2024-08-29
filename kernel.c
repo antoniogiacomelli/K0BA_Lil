@@ -146,7 +146,7 @@ void SysTick_Handler(void)
 void kTaskSwitch(void)
 {
 	RunPtr = chosen;
-	chose-> RUNNING;
+        RunPtr->status = RUNNING;
 }
 
 void kYield(void) /*triggers pendsv*/
