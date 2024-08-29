@@ -121,7 +121,6 @@ void TaskIdle(void *args)
 		__DSB();
 		__WFI();
 		__ISB();
-		kYield();
 	}
 }
 
