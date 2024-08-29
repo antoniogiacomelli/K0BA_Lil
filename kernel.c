@@ -92,19 +92,9 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 /************************************************************************/
 /* Scheduler                                                            */
 /************************************************************************/
-static int32_t kNeedTaskSwitch(void)
+static inline void kSchedule(void) 
 {
-	int32_t retVal = 0; /* no context switch need, a priori */
-	for (int i = 0; i<NTHREADS; i++)
-	{
-		if (tcbs[i].sleeping > 0)
-		{
-			tcbs[i].sleeping--;
-			if (tcbs[i].sleeping == 0)
-				tcbs[i].status = READY;
-		}
-	}
-
+	
 	int32_t max = 255;
 	TCB_t* pt;
 	pt = RunPtr;
@@ -120,6 +110,22 @@ static int32_t kNeedTaskSwitch(void)
 		}
 		
 	} while (RunPtr != pt);
+}
+static int32_t kNeedTaskSwitch(void)
+{
+	int32_t retVal = 0; /* no context switch need, a priori */
+	for (int i = 0; i<NTHREADS; i++)
+	{
+		if (tcbs[i].sleeping > 0)
+		{
+			tcbs[i].sleeping--;
+			if (tcbs[i].sleeping == 0)
+				tcbs[i].status = READY;
+		}
+	}
+
+	kSchedule();
+	
 	if (chosen != NULL) /* need switch*/
 	{
 	        RunPtr->status = READY; /* make preempted task as READY */
@@ -131,11 +137,10 @@ static int32_t kNeedTaskSwitch(void)
 
 void SysTick_Handler(void)
 {
-	HAL_IncTick();
 	__disable_irq();
 	if (kNeedTaskSwitch()) /* need switch? */
 	{
-		kYield(); /* defer to pendsv */
+	  SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;  /* defer to pendsv */
 	}
 	__enable_irq();
 }
@@ -146,10 +151,13 @@ void kTaskSwitch(void) /* just update RunPtr */
         RunPtr->status = RUNNING;
 }
 
-void kYield(void) /*triggers pendsv*/
+void kYield()
 {
-	SCB->ICSR |= (1<<28);
+	if (RunPtr->status == RUNNING) /* if yielded not blocked/sleeping, make it READY */
+            RunPtr->status = READY;
+	SCB->ICSR |= SCB_ICSR_PENDSTSET_Msk; /* trigger systick */
 }
+
 
 void kSleepTicks(uint32_t ticks)
 {
