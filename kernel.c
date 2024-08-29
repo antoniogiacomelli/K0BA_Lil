@@ -94,7 +94,7 @@ int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 /************************************************************************/
 static int32_t kNeedTaskSwitch(void)
 {
-	int32_t retVal = 0;
+	int32_t retVal = 0; /* no context switch need, a priori */
 	for (int i = 0; i<NTHREADS; i++)
 	{
 		if (tcbs[i].sleeping > 0)
@@ -104,10 +104,7 @@ static int32_t kNeedTaskSwitch(void)
 				tcbs[i].status = READY;
 		}
 	}
-	if (RunPtr->status != BLOCKED && RunPtr->status != SLEEPING)
-	{
-		RunPtr->status = READY;
-	}
+
 	int32_t max = 255;
 	TCB_t* pt;
 	pt = RunPtr;
@@ -125,8 +122,8 @@ static int32_t kNeedTaskSwitch(void)
 	} while (RunPtr != pt);
 	if (chosen != NULL) /* need switch*/
 	{
-	
-		retVal=1;
+	        RunPtr->status = READY; /* make preempted task as READY */
+		retVal=1;               /* return 1 to signal context switching */
 	}
 	return retVal;
 	
@@ -136,14 +133,14 @@ void SysTick_Handler(void)
 {
 	HAL_IncTick();
 	__disable_irq();
-	if (kNeedTaskSwitch()) /* need switch */
+	if (kNeedTaskSwitch()) /* need switch? */
 	{
-		kYield();
+		kYield(); /* defer to pendsv */
 	}
 	__enable_irq();
 }
 
-void kTaskSwitch(void)
+void kTaskSwitch(void) /* just update RunPtr */
 {
 	RunPtr = chosen;
         RunPtr->status = RUNNING;
