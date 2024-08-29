@@ -158,9 +158,13 @@ void kYield()
 	if (RunPtr->status == RUNNING) /* if yielded not blocked/sleeping, make it READY */
             RunPtr->status = READY;
 	kSchedule();
+	if (chosen == NULL) /* there is not another task to run */
+	{
+		__enable_irq(); 
+		return;
+	}
 	SCB->ICSR |=  SCB_ICSR_PENDSVSET_Msk;
 	__enable_irq();
-	
 }
 
 
