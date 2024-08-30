@@ -1,6 +1,6 @@
 
 # K0BA LITE
-This is a **VERY SIMPLE** library-based microkernel for ARMv7M CPUs. (M3, M4, M7)
+This is a **VERY SIMPLE** library-based, logically structured as a microkernel for ARMv7M CPUs. (M3, M4, M7)
 
 The figure below shows the target architecture of an entire embedded software system using this
 microkernel. It depicts a server-oriented (real-time) embedded operating system.
@@ -20,6 +20,8 @@ microkernel. It depicts a server-oriented (real-time) embedded operating system.
 * ARM GCC 
 * CMSIS HAL
 
+The microkernel structure is achieved by each providing each Task Control Block with its own Message Queue, 
+and, then, a client-server programming model.
 The version available here is flat: application threads and kernel threads share the same address
 space, there is no memory isolation. Kernel calls are then simple function calls and context-switch and thread 
 communication has minimal overhead. 
