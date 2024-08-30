@@ -111,7 +111,7 @@ static inline void kSchedule(void)
 		
 	} while (RunPtr != pt);
 }
-static int32_t kNeedTaskSwitch(void)
+static int32_t kTickTaskSwitch_(void)
 {
 	int32_t retVal = 0; /* no context switch need, a priori */
 	for (int i = 0; i<NTHREADS; i++)
@@ -124,7 +124,7 @@ static int32_t kNeedTaskSwitch(void)
 		}
 	}
 
-	kSchedule();
+	kSchedule_();
 	
 	if (chosen != NULL) /* need switch*/
 	{
@@ -138,9 +138,9 @@ static int32_t kNeedTaskSwitch(void)
 void SysTick_Handler(void)
 {
 	__disable_irq();
-	if (kNeedTaskSwitch()) /* need switch? */
+	if (kTickTaskSwitch_()) /* need switch? */
 	{
-	  SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;  /* defer to pendsv */
+	  SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;  /* there is another task to run, defer full context switching to PendSV */
 	}
 	__enable_irq();
 }
@@ -152,17 +152,22 @@ void kTaskSwitch(void) /* just update RunPtr */
 	chosen = NULL; /* clear scheduled task */
 }
 
-void kYield()
+void kYield(void)
+{
+  asm volatile ("svc #0");
+}
+
+void SVC_Handler(void)
 {
 	__disable_irq();
 	if (RunPtr->status == RUNNING) /* if yielded not blocked/sleeping, make it READY */
             RunPtr->status = READY;
-	kSchedule();
+	kSchedule_(); 
 	if (chosen == NULL) /* there is not another task to run */
 	{
 		__enable_irq(); 
-		return;
-	}
+		return; /* return to caller, restoring context */
+	} /* there is another task to run, defer full context switching to PendSV */
 	SCB->ICSR |=  SCB_ICSR_PENDSVSET_Msk;
 	__enable_irq();
 }
