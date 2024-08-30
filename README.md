@@ -58,15 +58,12 @@ int main(void)
 	/*********************************/
 	/* HAL dependent initializations */
 	/*********************************/
-	HAL_Init(); // HAL API init
-	SystemClock_Config(); // HAL call to config system clock
-	SysTick_Config(SystemCoreClock / 1000); /* BSP call: Configuring tick for 1ms*/
- 	/*CMSIS HAL calls*/
-	NVIC_SetPriority(SysTick_IRQn, 0);
-	NVIC_EnableIRQ(SysTick_IRQn);
-	NVIC_EnableIRQ(USART3_IRQn); /* USART service is interrupt-driven */
-	MX_GPIO_Init(); /* BSP Call for GPIO init*/
-	__disable_irq();
+	/*
+            initialise your peripherals
+            configure NVIC interrupts with PendSV at the lowest
+            followed by SysTick and then SVC.
+            Peripheral interrupts are highest-priority
+         */
 	/*************************/
 	/* Kernel Initialization */
 	/************************/
@@ -75,9 +72,9 @@ int main(void)
         /* kAddTask(TaskFunction, void* arguments, unique ID, priority [highest=0]) */
 	assert(kAddTask(TaskIdle, (void*)0, 0, 2) == OK); /* Adding task idle, lowest piority.
                                                              ID must be 0 */
-	assert(kAddTask(Task1, (void*)0, 1, 1) == OK); 
-	assert(kAddTask(Task2, (void*)0, 2, 1) == OK); 
-	assert(kAddTask(Task3, (void*)0, 3, 1) == OK);
+	assert(kAddTask(Task1, (void*)0, 1, 1) == OK); /*
+	assert(kAddTask(Task2, (void*)0, 2, 1) == OK);   same-priority, will round-robin
+	assert(kAddTask(Task3, (void*)0, 3, 1) == OK); */
 	/* Adding a server-task - this task receives calls through synchronous                                                          
    	message passing from client tasks - it has highest priority */
 	assert(kAddTask(UART_Server_Task, (void*)0, 4, 0) == OK); 
