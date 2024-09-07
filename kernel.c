@@ -51,31 +51,49 @@ void TaskIdle(void *args)
 }
 int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 {
-	RunPtr = &tcbs[0]; /* init RunPtr to &tcbs[0] is needed */
-   	
-	tcbs[taskIndex].block_sema = 0;
-	tcbs[taskIndex].block_mutex = 0;
-	tcbs[taskIndex].sleeping = 0;
-	tcbs[taskIndex].nmsg.value = 0;
-	tcbs[taskIndex].mlock.value = 1;
-	tcbs[taskIndex].priority = priority;
-	tcbs[taskIndex].rpriority = priority;
-	
-	kSetInitStack(taskIndex);
-	p_stacks[taskIndex][STACK_SIZE-2] = (int32_t)(t); // PC
-	p_stacks[taskIndex][STACK_SIZE-8] = (int32_t)args; // R0
-	if (n_added_threads == NTHREADS-1)
+	if (taskIndex==0) /* add idle task */
 	{
-		tcbs[taskIndex].next = &tcbs[0];
-	}
-	else if (n_added_threads < NTHREADS)
-	{
-		tcbs[taskIndex].next = &tcbs[taskIndex+1];
+		tcbs[taskIndex].block_sema = 0;
+		tcbs[taskIndex].block_mutex = 0;
+		tcbs[taskIndex].sleeping = 0;
+		tcbs[taskIndex].nmsg.value = 0;
+		tcbs[taskIndex].mlock.value = 1;
+		tcbs[taskIndex].priority = 2;
+		tcbs[taskIndex].rpriority = 2;
+		
+		kSetInitStack(taskIndex);
+		p_stacks[taskIndex][STACK_SIZE-2] = (int32_t)(TaskIdle); // PC
+		p_stacks[taskIndex][STACK_SIZE-8] = (int32_t)0; // R0
 	}
 	else
 	{
-		return NOK;
+		RunPtr = &tcbs[0]; /* init RunPtr to &tcbs[0] is needed */
+	   	
+		tcbs[taskIndex].block_sema = 0;
+		tcbs[taskIndex].block_mutex = 0;
+		tcbs[taskIndex].sleeping = 0;
+		tcbs[taskIndex].nmsg.value = 0;
+		tcbs[taskIndex].mlock.value = 1;
+		tcbs[taskIndex].priority = priority;
+		tcbs[taskIndex].rpriority = priority;
+		
+		kSetInitStack(taskIndex);
+		p_stacks[taskIndex][STACK_SIZE-2] = (int32_t)(t); // PC
+		p_stacks[taskIndex][STACK_SIZE-8] = (int32_t)args; // R0
+		if (n_added_threads == NTHREADS-1)
+		{
+			tcbs[taskIndex].next = &tcbs[0];
+		}
+		else if (n_added_threads < NTHREADS)
+		{
+			tcbs[taskIndex].next = &tcbs[taskIndex+1];
+		}
+		else
+		{
+			return NOK;
+		}
 	}
+	taskIndex += 1;
 	n_added_threads++;
 	return OK;
 }
