@@ -15,7 +15,9 @@ uint32_t p_stacks[NTHREADS][STACK_SIZE];
 TCB_t* RunPtr; /* running */
 TCB_t* chosen; /* scheduled */
 
-void kSetInitStack(uint8_t i)
+static uint8_t _taskIndex=0;
+
+void kSetInitStack(uint8_t i, uint8_t pid)
 {
 	tcbs[i].sp				= &p_stacks[i][STACK_SIZE-16];
 	tcbs[i].pid				= i;
@@ -47,39 +49,28 @@ void TaskIdle(void *args)
 		__ISB();
 	}
 }
-
 int8_t kAddTask(Task t, void *args, uint8_t pid, uint8_t priority)
 {
-	if (pid == 0)
-	{
-		if (t != TaskIdle)
-		{
-			assert(0); //ID 0 is reserved for task idle
-		}
-		else
-		{
-			RunPtr = &tcbs[0]; /* init RunPtr to &tcbs[0] is needed
-   					      for kStart() */
-		}
-	}
-	tcbs[pid].block_sema = 0;
-	tcbs[pid].block_mutex = 0;
-	tcbs[pid].sleeping = 0;
-	tcbs[pid].nmsg.value = 0;
-	tcbs[pid].mlock.value = 1;
-	tcbs[pid].priority = priority;
-	tcbs[pid].rpriority = priority;
+	RunPtr = &tcbs[0]; /* init RunPtr to &tcbs[0] is needed */
+   	
+	tcbs[taskIndex].block_sema = 0;
+	tcbs[taskIndex].block_mutex = 0;
+	tcbs[taskIndex].sleeping = 0;
+	tcbs[taskIndex].nmsg.value = 0;
+	tcbs[taskIndex].mlock.value = 1;
+	tcbs[taskIndex].priority = priority;
+	tcbs[taskIndex].rpriority = priority;
 	
-	kSetInitStack(pid);
-	p_stacks[pid][STACK_SIZE-2] = (int32_t)(t); // PC
-	p_stacks[pid][STACK_SIZE-8] = (int32_t)args; // R0
+	kSetInitStack(taskIndex);
+	p_stacks[taskIndex][STACK_SIZE-2] = (int32_t)(t); // PC
+	p_stacks[taskIndex][STACK_SIZE-8] = (int32_t)args; // R0
 	if (n_added_threads == NTHREADS-1)
 	{
-		tcbs[pid].next = &tcbs[0];
+		tcbs[taskIndex].next = &tcbs[0];
 	}
 	else if (n_added_threads < NTHREADS)
 	{
-		tcbs[pid].next = &tcbs[pid+1];
+		tcbs[taskIndex].next = &tcbs[taskIndex+1];
 	}
 	else
 	{
@@ -182,10 +173,10 @@ void kSleepTicks(uint32_t ticks)
 	kYield();
 }
 
-void kWakeTicks(uint32_t pid)
+void kWakeTicks(uint32_t taskIndex)
 {
 	__disable_irq();
-	TCB_t* RunPtr_ = &tcbs[pid];
+	TCB_t* RunPtr_ = &tcbs[taskIndex];
 	RunPtr_->sleeping = 0;
 	RunPtr_->status = READY;
 	__enable_irq();
@@ -456,16 +447,16 @@ static int32_t put_mbuf(MBUFF_t *mp)
 	return OK;
 }
 
-int8_t kSendMsg(const uint8_t *msg, uint8_t pid)
+int8_t kSendMsg(const uint8_t *msg, uint8_t taskIndex)
 {
 	TCB_t *r_task;
-	r_task = &tcbs[pid];
+	r_task = &tcbs[taskIndex];
 	MBUFF_t *mp = get_mbuf();
 	if (mp == NULL)
 	{
 		return  NOK;
 	}
-	mp->sender_pid = RunPtr->pid;
+	mp->sender_taskIndex = RunPtr->taskIndex;
 	copyString_(mp->contents, msg, MSG_SIZE);
 	kSemaWait(&r_task->mlock);
 	menqueue(&r_task->mqueue, mp);
@@ -476,7 +467,7 @@ int8_t kSendMsg(const uint8_t *msg, uint8_t pid)
 
 int8_t kRcvMsg(uint8_t *msg)
 {
-	int pid=-1;
+	int taskIndex=-1;
 	kSemaWait(&RunPtr->nmsg);
 	kSemaWait(&RunPtr->mlock);
 	MBUFF_t *mp = mdequeue(&RunPtr->mqueue);
@@ -487,21 +478,21 @@ int8_t kRcvMsg(uint8_t *msg)
 	}
 	kSemaSignal(&RunPtr->mlock);
 	copyString_(msg, mp->contents, MSG_SIZE);
-	pid = mp->sender_pid;
+	taskIndex = mp->sender_taskIndex;
 	put_mbuf(mp);
-	return pid;
+	return taskIndex;
 }
 
-int8_t kAsendMsg(uint8_t* msg, uint8_t pid)
+int8_t kAsendMsg(uint8_t* msg, uint8_t taskIndex)
 {
 	TCB_t *r_task;
-	r_task = &tcbs[pid];
+	r_task = &tcbs[taskIndex];
 	MBUFF_t *mp = get_mbuf();
 	if (mp == NULL)
 	{
 		return NOK;
 	}
-	mp->sender_pid = RunPtr->pid;
+	mp->sender_taskIndex = RunPtr->taskIndex;
 	copyString_(mp->contents, msg, MSG_SIZE);
 	menqueue(&r_task->mqueue, mp);
 	kSemaSignal(&r_task->nmsg);
@@ -510,14 +501,14 @@ int8_t kAsendMsg(uint8_t* msg, uint8_t pid)
 
 int8_t kArecvMsg(uint8_t *msg)
 {
-	int pid;
+	int taskIndex;
 	MBUFF_t *mp = mdequeue(&RunPtr->mqueue);
 	if (mp == NULL)
 	{
 		return NOK;
 	}
 	copyString_(msg, mp->contents, MSG_SIZE);
-	pid = mp->sender_pid;
+	taskIndex = mp->sender_taskIndex;
 	put_mbuf(mp);
-	return pid;
+	return taskIndex;
 }
