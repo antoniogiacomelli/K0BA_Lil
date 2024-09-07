@@ -15,7 +15,7 @@ uint32_t p_stacks[NTHREADS][STACK_SIZE];
 TCB_t* RunPtr; /* running */
 TCB_t* chosen; /* scheduled */
 
-static uint8_t _taskIndex=0;
+static uint8_t taskIndex=0;
 
 void kSetInitStack(uint8_t i, uint8_t pid)
 {
