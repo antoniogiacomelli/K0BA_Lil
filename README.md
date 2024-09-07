@@ -32,7 +32,7 @@ This is an acceptable and widely used approach for small embedded systems.
 
 **# DEMO APPLICATION #**
 
-This demo application was deployed on a mainstream prototyping board, using the HAL and BSP provided by the vendor.
+This demo application was deployed on a M3 based MCU. 
 It demonstrates several kernel mechanisms: scheduling, context-switching, synchronization and message passing.
 
 Below, the main body function, initializing the hardware and the kernel.
