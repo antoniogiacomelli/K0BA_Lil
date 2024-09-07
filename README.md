@@ -1,6 +1,6 @@
 
 # K0BA LITE
-This is a **VERY SIMPLE** library-based, logically structured as a microkernel for ARMv7M CPUs. (M3, M4, M7)
+This is a **VERY SIMPLE** library-based, logically structured, microkernel for ARMv7M CPUs. (M3, M4, M7)
 
 The figure below shows the target architecture of an entire embedded software system using this
 microkernel. It depicts a server-oriented (real-time) embedded operating system.
