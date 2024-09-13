@@ -17,8 +17,8 @@ TCB_t* chosen; /* scheduled */
 
 static uint8_t taskIndex=0;
 static volatile uint32_t crState;
-void kEnterCR(void) {
-    // Save current PRIMASK value and disable interrupts
+void kEnterCR(void) 
+{
 	crState = __get_PRIMASK();
 	if (crState == 0)
 		__disable_irq();
@@ -26,7 +26,6 @@ void kEnterCR(void) {
 
 void kExitCR(void)
 {
-    // Restore the original PRIMASK value (re-enables or keeps disabled based on prior state)
     __set_PRIMASK(crState);
 }
 void kSetInitStack(uint8_t i, uint8_t pid)
