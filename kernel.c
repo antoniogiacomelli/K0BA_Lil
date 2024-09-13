@@ -16,7 +16,19 @@ TCB_t* RunPtr; /* running */
 TCB_t* chosen; /* scheduled */
 
 static uint8_t taskIndex=0;
+static volatile uint32_t crState;
+void kEnterCR(void) {
+    // Save current PRIMASK value and disable interrupts
+	crState = __get_PRIMASK();
+	if (crState == 0)
+		__disable_irq();
+}
 
+void kExitCR(void)
+{
+    // Restore the original PRIMASK value (re-enables or keeps disabled based on prior state)
+    __set_PRIMASK(crState);
+}
 void kSetInitStack(uint8_t i, uint8_t pid)
 {
 	tcbs[i].sp				= &p_stacks[i][STACK_SIZE-16];
@@ -146,12 +158,12 @@ static int32_t kTickTaskSwitch_(void)
 
 void SysTick_Handler(void)
 {
-	__disable_irq();
+	kEnterCR();
 	if (kTickTaskSwitch_()) /* need switch? */
 	{
 	  SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;  /* there is another task to run, defer full context switching to PendSV */
 	}
-	__enable_irq();
+	kExitCR();
 }
 
 void kTaskSwitch(void) /* just update RunPtr */
@@ -168,50 +180,50 @@ void kYield(void)
 
 void SVC_Handler(void)
 {
-	__disable_irq();
+	kEnterCR();
 	if (RunPtr->status == RUNNING) /* if yielded not blocked/sleeping, make it READY */
             RunPtr->status = READY;
 	kSchedule_(); 
 	if (chosen == NULL) /* there is not another task to run */
 	{
-		__enable_irq(); 
+		kExitCR(); 
 		return; /* return to caller, restoring context */
 	} /* there is another task to run, defer full context switching to PendSV */
 	SCB->ICSR |=  SCB_ICSR_PENDSVSET_Msk;
-	__enable_irq();
+	kExitCR();
 }
 
 
 void kSleepTicks(uint32_t ticks)
 {
-	__disable_irq();
+	kEnterCR();
 	RunPtr->sleeping = ticks;
 	RunPtr->status = SLEEPING;
-	__enable_irq();
+	kExitCR();
 	kYield();
 }
 
 void kWakeTicks(uint32_t taskIndex)
 {
-	__disable_irq();
+	kEnterCR();
 	TCB_t* RunPtr_ = &tcbs[taskIndex];
 	RunPtr_->sleeping = 0;
 	RunPtr_->status = READY;
-	__enable_irq();
+	kExitCR();
 }
 
 void kSleep(int32_t event)
 {
-	__disable_irq();
+	kEnterCR();
 	RunPtr->event = event;
 	RunPtr->status = SLEEPING;
-	__enable_irq();
+	kExitCR();
 	kYield();
 }
 
 void kWake(int32_t event)
 {
-	__disable_irq();
+	kEnterCR();
 	volatile uint32_t flag_wake=0;
 	for (size_t i = 1; i<NTHREADS; i++)
 	{
@@ -222,7 +234,7 @@ void kWake(int32_t event)
 			flag_wake=1;
 		}
 	}
-	__enable_irq();
+	kExitCR();
 	if (flag_wake)
 	{
 		kYield();
@@ -231,16 +243,16 @@ void kWake(int32_t event)
 
 void kDisableTaskSwitch()
 {
-	__disable_irq();
+	kEnterCR();
 	SysTick->CTRL &= 0xFFFFFFFE;
-	__enable_irq();
+	kExitCR();
 }
 
 void kEnableTaskSwitch()
 {
-	__disable_irq();
+	kEnterCR();
 	SysTick->CTRL |= 0x00000001;
-	__enable_irq();
+	kExitCR();
 }
 
 /************************************************************************/
@@ -248,20 +260,20 @@ void kEnableTaskSwitch()
 /************************************************************************/
 static void bsqueue_init(SEMA_t* s)
 {
-	__disable_irq();
+	kEnterCR();
 	s->queue.head = 0;
 	s->queue.tail = 0;
 	s->queue.init = 1;
-	__enable_irq();
+	kExitCR();
 }
 
 static void bmqueue_init(MUTEX_t* m)
 {
-	__disable_irq();
+	kEnterCR();
 	m->queue.head = 0;
 	m->queue.tail = 0;
 	m->queue.init = 1;
-	__enable_irq();
+	kExitCR();
 }
 
 static int benqueue(BQUEUE_t* me, TCB_t *p)
@@ -281,17 +293,17 @@ static TCB_t *bdequeue(BQUEUE_t *me)
 
 void kSemaInit(SEMA_t* s, int32_t value)
 {
-	__disable_irq();
+	kEnterCR();
 	s->value = value;
 	s->queue.init = 1;
 	s->queue.head = 0;
 	s->queue.tail = 0;
-	__enable_irq();
+	kExitCR();
 }
 
 void kSemaWait(SEMA_t* s)
 {
-	__disable_irq();
+	kEnterCR();
 	if (s->queue.init == 0)
 		bsqueue_init(s);
 	(s->value) = (s->value) - 1;
@@ -300,15 +312,15 @@ void kSemaWait(SEMA_t* s)
 		RunPtr->block_sema = (uint32_t*)s; // reason it is blocked
 		RunPtr->status = BLOCKED;
 		benqueue(&s->queue, RunPtr);
-		__enable_irq();
+		kExitCR();
 		kYield();
 	}
-	__enable_irq();
+	kExitCR();
 }
 
 void kSemaSignal(SEMA_t* s)
 {
-	__disable_irq();
+	kEnterCR();
 	TCB_t* next_tcb_ptr;
 	(s->value) = (s->value) + 1;
 	if ((s->value) <= 0)
@@ -321,28 +333,28 @@ void kSemaSignal(SEMA_t* s)
 		next_tcb_ptr->block_sema = 0;
 		next_tcb_ptr->status = READY;
 	}
-	__enable_irq();
+	kExitCR();
 }
 void kMutexInit(MUTEX_t* m, int value)
 {
-	__disable_irq();
+	kEnterCR();
 	m->lock = value;
 	m->queue.init = 1;
 	m->queue.head = 0;
 	m->queue.tail = 0;
-	__enable_irq();
+	kExitCR();
 }
 
 void kLock(MUTEX_t* m)
 {
-	__disable_irq();
+	kEnterCR();
 	if (m->queue.init == 0)
 		bmqueue_init(m);
 	if (m->lock == 0) //unlocked
 	{
 		m->lock = 1; //lock
 		m->owner = RunPtr; //set owner
-		__enable_irq();
+		kExitCR();
 		return;
 	}
 	else //locked
@@ -359,14 +371,14 @@ void kLock(MUTEX_t* m)
 				m->owner->priority = RunPtr->priority;
 			}
 		}
-		__enable_irq();
+		kExitCR();
 		kYield();
 	}
 }
 
 void kRelease(MUTEX_t* m)
 {
-	__disable_irq();
+	kEnterCR();
 	TCB_t* t;
 	if ((m->queue.head == 0) && (m->queue.tail == 0)) //no waiters
 	{
@@ -381,7 +393,7 @@ void kRelease(MUTEX_t* m)
 		m->owner = t;
 		RunPtr->priority = RunPtr->rpriority;
 	}
-	__enable_irq();
+	kExitCR();
 	return;
 }
 
