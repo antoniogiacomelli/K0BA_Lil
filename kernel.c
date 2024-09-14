@@ -396,7 +396,7 @@ void kRelease(MUTEX_t* m)
 	return;
 }
 
-static inline void copyString_(uint8_t *dest, const uint8_t* src, size_t size)
+static inline void copyString_(char *dest, const char_t* src, size_t size)
 {
 	for (size_t i = 0; i<size; ++i)
 	{
