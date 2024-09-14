@@ -182,7 +182,7 @@ void Task3(void* args)
 */
 void UART_Server_Task(void* args)
 {
-	uint8_t rcvd_msg[MSG_SIZE] = {'\0'};
+	char rcvd_msg[MSG_SIZE] = {'\0'};
 	int8_t ret = NOK;
 	while(1)
 	{
