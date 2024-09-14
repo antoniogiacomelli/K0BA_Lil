@@ -127,7 +127,7 @@ void TaskIdle(void *args)
 void Task1(void* args)
 {
 	kSemaInit(&task3SEMA, 0);
-	const uint8_t msg1[]="Task 1\n\r";
+	const char msg1[]="Task 1\n\r";
 	volatile uint8_t t3Counter = 0;
 	while(1)
 	{
@@ -150,7 +150,7 @@ void Task1(void* args)
 }
 void Task2(void* args)
 {
-	const uint8_t msg2[]="Task 2\n\r";
+	const char msg2[]="Task 2\n\r";
 
 	while(1)
 	{
@@ -160,8 +160,8 @@ void Task2(void* args)
 }
 void Task3(void* args)
 {
-	const uint8_t msg3[] = "Task 3 is going to sleep 3000 ticks\n\r";
-	const uint8_t msg3_1[] = "Task 3 resumed\n\r";
+	const char msg3[] = "Task 3 is going to sleep 3000 ticks\n\r";
+	const char msg3_1[] = "Task 3 resumed\n\r";
 
 	while(1)
 	{
