@@ -79,7 +79,7 @@ int main(void)
 	assert(kAddTask(UART_Server_Task, (void*)0, 4, 0) == OK); 
 	sUSART_Create(&serviceUSART); /*Creating UART service */
 	serviceUSART.init();  /*Initializing uart service */
-	serviceUSART.puts((const uint8_t*)"K0BA 0.1L is up\n\r");
+	serviceUSART.puts((const char*)"K0BA 0.1L is up\n\r");
 	 
 	/* Boot K0BA */
 	
