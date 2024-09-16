@@ -16,17 +16,20 @@ TCB_t* RunPtr; /* running */
 TCB_t* chosen; /* scheduled */
 
 static uint8_t taskIndex=0;
-static volatile uint32_t crState;
+volatile uint32_t crState;
 void kEnterCR(void) 
 {
 	crState = __get_PRIMASK();
 	if (crState == 0)
+	{
 		__disable_irq();
+		__ISB();
+	}
 }
-
 void kExitCR(void)
 {
     __set_PRIMASK(crState);
+    __ISB();
 }
 void kSetInitStack(uint8_t i, uint8_t pid)
 {
