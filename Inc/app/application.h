@@ -1,10 +1,3 @@
-/*
- * application.h
- *
- *  Created on: Oct 5, 2024
- *      Author: anton
- */
-
 #ifndef INC_APPLICATION_H_
 #define INC_APPLICATION_H_
 
