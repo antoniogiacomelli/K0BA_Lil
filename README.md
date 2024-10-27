@@ -31,7 +31,7 @@ This is a light-weight version with no memory isolation. Currently it supports A
   - Semaphores
   - Mutexes (with priority inheritance to avoid priority-inversion)
   - Condition Variables for finer-grained waiting logic
-  - Direct Task Signal
+  - Direct Task Signal - useful for signaling tasks that will handle deferred interrupts. 
   
 - **Inter-Task Communication:**
   - Mailboxes (with extended rendez-vous) for fully synchronous exchange
