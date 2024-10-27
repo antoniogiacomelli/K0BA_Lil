@@ -5,14 +5,11 @@
  ******************************************************************************
  ******************************************************************************
  * 	In this unit:
- * 					o Direct Task Pend/Signal
- *					o Sleep delay
- *					o Busy-wait delay
- *					o Sleep/Wake-Up (on Events)
- *					o Semaphores
- *					o Mutexes with priority inheritance
- *					o Condition Variables
- *					o Generic Events
+ * 					o System Message Buffers pool Management
+ *					o Mailbox
+ *					o Message Queue
+ *					o Pipes
+ *					o FIFOs
  *
  *****************************************************************************/
 
@@ -213,11 +210,11 @@ VOID kPipeInit(K_PIPE* const self)
 	kCondInit(&(self->condRoom));
 }
 
-SIZE kPipeRead(K_PIPE* const self, BYTE* destPtr, SIZE nBytes)
+INT32 kPipeRead(K_PIPE* const self, BYTE* destPtr, UINT32 nBytes)
 {
 	if (IS_NULL_PTR(self))
 		kErrHandler(FAULT_NULL_OBJ);
-	SIZE readBytes = 0;
+	UINT32 readBytes = 0;
 	if (nBytes == 0)
 		return 0;
 
@@ -249,11 +246,11 @@ SIZE kPipeRead(K_PIPE* const self, BYTE* destPtr, SIZE nBytes)
 	return 0;
 }
 
-SIZE kPipeWrite(K_PIPE* const self, const BYTE* srcPtr, SIZE nBytes)
+INT32 kPipeWrite(K_PIPE* const self, const BYTE* srcPtr, UINT32 nBytes)
 {
 	if (IS_NULL_PTR(self))
 		kErrHandler(FAULT_NULL_OBJ);
-	SIZE writeBytes = 0;
+	UINT32 writeBytes = 0;
 	if (nBytes == 0)
 		return 0;
 	if (nBytes <= 0)
