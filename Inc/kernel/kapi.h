@@ -73,6 +73,7 @@
 #include <kglobals.h>
 #include <ksch.h>
 
+
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
@@ -201,17 +202,20 @@ K_ERR kMesgBuffPut(K_MESGBUFF* const self);
  *\return SUCCESS/FAIL
  */
 
-K_ERR kMesgQPut(K_MESGQ* self, ADDR mesgPtr, SIZE mesgSize);
+K_ERR kMesgQPut(K_MESGQ* const self, ADDR mesgPtr, BYTE mesgSize);
 /**
  * \brief Receive from a message queue
  * \param self Message Queue address
  * \param rcvdMesgPtr Pointer to address which will store the message
  * \return Sender PID
  */
-PID kMesgQGet(K_MESGQ* self, ADDR rcvdMesgPtr);
+PID kMesgQGet(K_MESGQ* const self, ADDR rcvdMesgPtr);
 /**
  *\brief Initialises a Message Queue
  *\param self Messsage Queue address
+ *\param mesgPoolPtr Address of the message pool
+ *\param queueSize Number of items in the queue
+ *\param mesgSize Size of each item in bytes. sizeof() is recommended.
  *\return none
  */
 VOID kMesgQInit(K_MESGQ* const self, ADDR mesgPoolPtr, BYTE queueSize, \
@@ -508,5 +512,6 @@ ADDR kMemCpy(ADDR destPtr, const ADDR srcPtr, SIZE size);
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
+
 
 #endif /* INC_K_API_H_ */
