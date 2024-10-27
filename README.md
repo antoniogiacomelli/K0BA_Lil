@@ -1,6 +1,6 @@
 # K0BA Lite v0.1.0-beta
 
-*Kernel 0 For Embedded Applications* is a Real-Tim Kernel for constrained devices. 
+*Kernel 0 For Embedded Applications* is a Real-Time Kernel for constrained devices. 
 
 This is a light-weight version with no memory isolation. Currently it supports ARMv7M architecture.
 *There is a version with memory isolation* under development, in parallel.
