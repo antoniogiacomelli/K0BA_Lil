@@ -53,7 +53,7 @@ void Task2(void)
 {
 	while(1)
 	{
-			counter2++;
+		counter2++;
 
 	}
 }
