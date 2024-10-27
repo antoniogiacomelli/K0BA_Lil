@@ -51,6 +51,10 @@ void kSignal(PID taskID)
 		K_TCB* tcbGotPtr=&tcbs[pid];
 		kTCBQRem(&sleepingQueue, &tcbGotPtr);
 		kTCBQEnq(&readyQueue[tcbGotPtr->priority], tcbGotPtr);
+		if (READY_HIGHER_PRIO(tcbGotPtr))
+		{
+					K_PEND_CTXTSWTCH;
+		}
 	}
 	K_EXIT_CR;
 	return;
