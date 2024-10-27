@@ -25,7 +25,7 @@ UINT32 stack4[STACKSIZE];
 K_MEM mesgMem;
 K_MESGQ mesgq;
 K_MAILBOX mailbox;
-K_EVENT	  event1;
+K_EVENT	  rcvdMailFromTask5;
 struct MESG mesgPool[10]; /* the kernel must have access to this pool
  	 	 	 	 	 	 	 so it */
 #define SIZE_MESG sizeof(struct MESG)
@@ -69,8 +69,6 @@ VOID kApplicationInit(ADDR* args)
 	kMesgQInit(&mesgq, (ADDR)&mesgPool, 10, SIZE_MESG);
 	kMailboxInit(&mailbox);
 }
-//VOID kMesgQueueInit(K_MSGQ* const self, ADDR mesgPoolPtr, BYTE queueSize, SIZE mesgSize)
-
 
 void Task1(void)
 {
@@ -85,13 +83,14 @@ void Task1(void)
 void Task2(void)
 {
 	UINT32 rcvmesg;
-	PID id;
+	TID id;
 	while(1)
 	{
 		id = kMailboxPend(&mailbox, &rcvmesg);
-		if (id==5)
+		if (id==5) /* when Task4 (which ID is 5 acknowledges it received an exchange msg
+                              from Task2, task 2 wakes up every task sleeping on event1  */
 		{
-			kWake(&event1);
+			kWake(&rcvdMailFromTask5);
 		}
 	}
 }
@@ -102,7 +101,7 @@ void Task3(void)
 	UINT32 woke=0;
 	while(1)
 	{
-		kSleep(&event1);
+		kSleep(&rcvdMailFromTask5);
 		woke++;
 	}
 
