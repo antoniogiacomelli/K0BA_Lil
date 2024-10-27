@@ -32,11 +32,11 @@
  * development. It provides methods to access the kernel services.
  *
  * Every kernel primitive is on UPPERCASE. If preceded by a K_ it is
- * kernel data structure (e.g. K_SEMA is a semaphore) or enumerated type definition.
+ * kernel data structure (e.g. K_SEMA is a semaphore).
  * If not, it is an alias for standard C data or data pointer (e.g., BYTE,
  * INT32, ADDR, STRING: respectively, unsigned char, int, void* and const char*)
- * or represents system data that is not a structure itself:
- * (e.g., PRIO for priority, TID for task ID.)
+ * or rresents system data that is not a structure itself:
+ * (e.g., PRIO for priority, TID for task ID.
  *
  * A typical kernel service often receives a pointer to a kernel
  * object or a kernel parameter -  If it does not, it either acts on a
@@ -86,9 +86,9 @@
  * \param id Task ID
  * \param stackAddrPtr Pointer to the task stack
  * \param stackSize Size of the task stack
- * \param timeSlice Time-slice for the task (>1 to be set, 0 or 1 considers the systick period)
+ * \param timeSlice Time-slice for the task
  * \param priority Task priority
- * \param runToComplet Cooperative only function, to use in deferred handlers,
+ * \param runToCompl Cooperative only function, to use in deferred handlers,
  * 				  	   servers - once dispatched it is never preempted unless
  * 				  	   it blocks or yields.
  * \return K_SUCCESS on success, K_ERROR on failure
@@ -509,5 +509,6 @@ ADDR kMemCpy(ADDR destPtr, const ADDR srcPtr, SIZE size);
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
+
 
 #endif /* INC_K_API_H_ */

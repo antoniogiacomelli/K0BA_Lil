@@ -33,56 +33,92 @@ BYTE \mbox{\hyperlink{structk_pipe_ae0e10d8f9ac80f1f09f70f6492b9b695}{buffer}} \
 \doxysubsection{Detailed Description}
 Pipes. 
 
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00231}{231}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+
+
 \doxysubsection{Field Documentation}
-\Hypertarget{structk_pipe_ae0e10d8f9ac80f1f09f70f6492b9b695}\index{kPipe@{kPipe}!buffer@{buffer}}
-\index{buffer@{buffer}!kPipe@{kPipe}}
-\doxysubsubsection{\texorpdfstring{buffer}{buffer}}
-{\footnotesize\ttfamily \label{structk_pipe_ae0e10d8f9ac80f1f09f70f6492b9b695} 
-BYTE k\+Pipe\+::buffer\mbox{[}PIPE\+\_\+\+SIZE\mbox{]}}
-
-Data buffer \Hypertarget{structk_pipe_a03fe11d03d7aa1b858f63e5521d6e766}\index{kPipe@{kPipe}!condData@{condData}}
-\index{condData@{condData}!kPipe@{kPipe}}
-\doxysubsubsection{\texorpdfstring{condData}{condData}}
-{\footnotesize\ttfamily \label{structk_pipe_a03fe11d03d7aa1b858f63e5521d6e766} 
-struct \mbox{\hyperlink{structk_cond}{k\+Cond}} k\+Pipe\+::cond\+Data}
-
-Cond Var for readers \Hypertarget{structk_pipe_a10a5685ecceaa0f99ace8a65d34aa625}\index{kPipe@{kPipe}!condRoom@{condRoom}}
-\index{condRoom@{condRoom}!kPipe@{kPipe}}
-\doxysubsubsection{\texorpdfstring{condRoom}{condRoom}}
-{\footnotesize\ttfamily \label{structk_pipe_a10a5685ecceaa0f99ace8a65d34aa625} 
-struct \mbox{\hyperlink{structk_cond}{k\+Cond}} k\+Pipe\+::cond\+Room}
-
-Cond Var for writers \Hypertarget{structk_pipe_ab1dc9e73569f2f4eb9f4a95d4e67560b}\index{kPipe@{kPipe}!data@{data}}
-\index{data@{data}!kPipe@{kPipe}}
-\doxysubsubsection{\texorpdfstring{data}{data}}
-{\footnotesize\ttfamily \label{structk_pipe_ab1dc9e73569f2f4eb9f4a95d4e67560b} 
-UINT32 k\+Pipe\+::data}
-
-Number of bytes in the buffer \Hypertarget{structk_pipe_a95d5ac7ee08c2a7afb918a25e6ddaf6b}\index{kPipe@{kPipe}!head@{head}}
-\index{head@{head}!kPipe@{kPipe}}
-\doxysubsubsection{\texorpdfstring{head}{head}}
-{\footnotesize\ttfamily \label{structk_pipe_a95d5ac7ee08c2a7afb918a25e6ddaf6b} 
-UINT32 k\+Pipe\+::head}
-
-write index \Hypertarget{structk_pipe_a13145ab43e7794d15e1c9697973ea476}\index{kPipe@{kPipe}!mutex@{mutex}}
-\index{mutex@{mutex}!kPipe@{kPipe}}
-\doxysubsubsection{\texorpdfstring{mutex}{mutex}}
-{\footnotesize\ttfamily \label{structk_pipe_a13145ab43e7794d15e1c9697973ea476} 
-struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} k\+Pipe\+::mutex}
-
-Lock \Hypertarget{structk_pipe_a2c791ce56557be2decb8bfa7f7703f73}\index{kPipe@{kPipe}!room@{room}}
-\index{room@{room}!kPipe@{kPipe}}
-\doxysubsubsection{\texorpdfstring{room}{room}}
-{\footnotesize\ttfamily \label{structk_pipe_a2c791ce56557be2decb8bfa7f7703f73} 
-UINT32 k\+Pipe\+::room}
-
-Number of free slots in the buffer (bytes) \Hypertarget{structk_pipe_ae118df113478280bb8c21748156a124e}\index{kPipe@{kPipe}!tail@{tail}}
+\Hypertarget{structk_pipe_ae118df113478280bb8c21748156a124e}\index{kPipe@{kPipe}!tail@{tail}}
 \index{tail@{tail}!kPipe@{kPipe}}
 \doxysubsubsection{\texorpdfstring{tail}{tail}}
 {\footnotesize\ttfamily \label{structk_pipe_ae118df113478280bb8c21748156a124e} 
 UINT32 k\+Pipe\+::tail}
 
 read index 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00233}{233}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_pipe_a95d5ac7ee08c2a7afb918a25e6ddaf6b}\index{kPipe@{kPipe}!head@{head}}
+\index{head@{head}!kPipe@{kPipe}}
+\doxysubsubsection{\texorpdfstring{head}{head}}
+{\footnotesize\ttfamily \label{structk_pipe_a95d5ac7ee08c2a7afb918a25e6ddaf6b} 
+UINT32 k\+Pipe\+::head}
+
+write index 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00234}{234}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_pipe_ab1dc9e73569f2f4eb9f4a95d4e67560b}\index{kPipe@{kPipe}!data@{data}}
+\index{data@{data}!kPipe@{kPipe}}
+\doxysubsubsection{\texorpdfstring{data}{data}}
+{\footnotesize\ttfamily \label{structk_pipe_ab1dc9e73569f2f4eb9f4a95d4e67560b} 
+UINT32 k\+Pipe\+::data}
+
+Number of bytes in the buffer 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00235}{235}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_pipe_a2c791ce56557be2decb8bfa7f7703f73}\index{kPipe@{kPipe}!room@{room}}
+\index{room@{room}!kPipe@{kPipe}}
+\doxysubsubsection{\texorpdfstring{room}{room}}
+{\footnotesize\ttfamily \label{structk_pipe_a2c791ce56557be2decb8bfa7f7703f73} 
+UINT32 k\+Pipe\+::room}
+
+Number of free slots in the buffer (bytes) 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00236}{236}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_pipe_a10a5685ecceaa0f99ace8a65d34aa625}\index{kPipe@{kPipe}!condRoom@{condRoom}}
+\index{condRoom@{condRoom}!kPipe@{kPipe}}
+\doxysubsubsection{\texorpdfstring{condRoom}{condRoom}}
+{\footnotesize\ttfamily \label{structk_pipe_a10a5685ecceaa0f99ace8a65d34aa625} 
+struct \mbox{\hyperlink{structk_cond}{k\+Cond}} k\+Pipe\+::cond\+Room}
+
+Cond Var for writers 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00237}{237}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_pipe_a03fe11d03d7aa1b858f63e5521d6e766}\index{kPipe@{kPipe}!condData@{condData}}
+\index{condData@{condData}!kPipe@{kPipe}}
+\doxysubsubsection{\texorpdfstring{condData}{condData}}
+{\footnotesize\ttfamily \label{structk_pipe_a03fe11d03d7aa1b858f63e5521d6e766} 
+struct \mbox{\hyperlink{structk_cond}{k\+Cond}} k\+Pipe\+::cond\+Data}
+
+Cond Var for readers 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00238}{238}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_pipe_a13145ab43e7794d15e1c9697973ea476}\index{kPipe@{kPipe}!mutex@{mutex}}
+\index{mutex@{mutex}!kPipe@{kPipe}}
+\doxysubsubsection{\texorpdfstring{mutex}{mutex}}
+{\footnotesize\ttfamily \label{structk_pipe_a13145ab43e7794d15e1c9697973ea476} 
+struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} k\+Pipe\+::mutex}
+
+Lock 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00239}{239}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_pipe_ae0e10d8f9ac80f1f09f70f6492b9b695}\index{kPipe@{kPipe}!buffer@{buffer}}
+\index{buffer@{buffer}!kPipe@{kPipe}}
+\doxysubsubsection{\texorpdfstring{buffer}{buffer}}
+{\footnotesize\ttfamily \label{structk_pipe_ae0e10d8f9ac80f1f09f70f6492b9b695} 
+BYTE k\+Pipe\+::buffer\mbox{[}PIPE\+\_\+\+SIZE\mbox{]}}
+
+Data buffer 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00240}{240}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 

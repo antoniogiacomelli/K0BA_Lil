@@ -14,8 +14,7 @@ Mutex.
 \item 
 struct \mbox{\hyperlink{structk_list}{k\+List}} \mbox{\hyperlink{structk_mutex_a24ef4049c3e573da34d707ee238f71d2}{queue}}
 \item 
-\Hypertarget{structk_mutex_a0b2344ecd3c09fe8ff7c85769ba50dd2}\label{structk_mutex_a0b2344ecd3c09fe8ff7c85769ba50dd2} 
-BOOL {\bfseries lock}
+BOOL \mbox{\hyperlink{structk_mutex_a0b2344ecd3c09fe8ff7c85769ba50dd2}{lock}}
 \item 
 struct \mbox{\hyperlink{structk_tcb}{k\+Tcb}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structk_mutex_a2f58ba3a8325b0398cd6013540a1b895}{owner\+Ptr}}
 \end{DoxyCompactItemize}
@@ -24,20 +23,42 @@ struct \mbox{\hyperlink{structk_tcb}{k\+Tcb}} \texorpdfstring{$\ast$}{*} \mbox{\
 \doxysubsection{Detailed Description}
 Mutex. 
 
-\doxysubsection{Field Documentation}
-\Hypertarget{structk_mutex_a2f58ba3a8325b0398cd6013540a1b895}\index{kMutex@{kMutex}!ownerPtr@{ownerPtr}}
-\index{ownerPtr@{ownerPtr}!kMutex@{kMutex}}
-\doxysubsubsection{\texorpdfstring{ownerPtr}{ownerPtr}}
-{\footnotesize\ttfamily \label{structk_mutex_a2f58ba3a8325b0398cd6013540a1b895} 
-struct \mbox{\hyperlink{structk_tcb}{k\+Tcb}}\texorpdfstring{$\ast$}{*} k\+Mutex\+::owner\+Ptr}
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00119}{119}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
 
-0=unlocked, 1=locked \Hypertarget{structk_mutex_a24ef4049c3e573da34d707ee238f71d2}\index{kMutex@{kMutex}!queue@{queue}}
+
+
+\doxysubsection{Field Documentation}
+\Hypertarget{structk_mutex_a24ef4049c3e573da34d707ee238f71d2}\index{kMutex@{kMutex}!queue@{queue}}
 \index{queue@{queue}!kMutex@{kMutex}}
 \doxysubsubsection{\texorpdfstring{queue}{queue}}
 {\footnotesize\ttfamily \label{structk_mutex_a24ef4049c3e573da34d707ee238f71d2} 
 struct \mbox{\hyperlink{structk_list}{k\+List}} k\+Mutex\+::queue}
 
 Mutex waiting queue 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00121}{121}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_mutex_a0b2344ecd3c09fe8ff7c85769ba50dd2}\index{kMutex@{kMutex}!lock@{lock}}
+\index{lock@{lock}!kMutex@{kMutex}}
+\doxysubsubsection{\texorpdfstring{lock}{lock}}
+{\footnotesize\ttfamily \label{structk_mutex_a0b2344ecd3c09fe8ff7c85769ba50dd2} 
+BOOL k\+Mutex\+::lock}
+
+
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00122}{122}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_mutex_a2f58ba3a8325b0398cd6013540a1b895}\index{kMutex@{kMutex}!ownerPtr@{ownerPtr}}
+\index{ownerPtr@{ownerPtr}!kMutex@{kMutex}}
+\doxysubsubsection{\texorpdfstring{ownerPtr}{ownerPtr}}
+{\footnotesize\ttfamily \label{structk_mutex_a2f58ba3a8325b0398cd6013540a1b895} 
+struct \mbox{\hyperlink{structk_tcb}{k\+Tcb}}\texorpdfstring{$\ast$}{*} k\+Mutex\+::owner\+Ptr}
+
+0=unlocked, 1=locked 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00123}{123}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 

@@ -29,6 +29,10 @@ struct \mbox{\hyperlink{structk_mem}{k\+Mem}} \mbox{\hyperlink{structk_mesg_q_ad
 \doxysubsection{Detailed Description}
 Message Queue. 
 
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00185}{185}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+
+
 \doxysubsection{Field Documentation}
 \Hypertarget{structk_mesg_q_a9003b3c4465cae5019c23c31d6929c7f}\index{kMesgQ@{kMesgQ}!mesgList@{mesgList}}
 \index{mesgList@{mesgList}!kMesgQ@{kMesgQ}}
@@ -36,37 +40,61 @@ Message Queue.
 {\footnotesize\ttfamily \label{structk_mesg_q_a9003b3c4465cae5019c23c31d6929c7f} 
 struct \mbox{\hyperlink{structk_list}{k\+List}} k\+Mesg\+Q\+::mesg\+List}
 
-Linked list of messages \Hypertarget{structk_mesg_q_ad356b039c1defdfa4e086c6cf61a538b}\index{kMesgQ@{kMesgQ}!mesgMemCtrlBlk@{mesgMemCtrlBlk}}
-\index{mesgMemCtrlBlk@{mesgMemCtrlBlk}!kMesgQ@{kMesgQ}}
-\doxysubsubsection{\texorpdfstring{mesgMemCtrlBlk}{mesgMemCtrlBlk}}
-{\footnotesize\ttfamily \label{structk_mesg_q_ad356b039c1defdfa4e086c6cf61a538b} 
-struct \mbox{\hyperlink{structk_mem}{k\+Mem}} k\+Mesg\+Q\+::mesg\+Mem\+Ctrl\+Blk}
+Linked list of messages 
 
-Mem Ctrl Block of the associated mesg pool \Hypertarget{structk_mesg_q_ae884fca3ed787e539276b6367960de68}\index{kMesgQ@{kMesgQ}!mutex@{mutex}}
-\index{mutex@{mutex}!kMesgQ@{kMesgQ}}
-\doxysubsubsection{\texorpdfstring{mutex}{mutex}}
-{\footnotesize\ttfamily \label{structk_mesg_q_ae884fca3ed787e539276b6367960de68} 
-struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} k\+Mesg\+Q\+::mutex}
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00187}{187}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
 
-Mutex for accessing message queue \Hypertarget{structk_mesg_q_a443844717058594dddbdd49ec461722f}\index{kMesgQ@{kMesgQ}!semaItem@{semaItem}}
+\Hypertarget{structk_mesg_q_a443844717058594dddbdd49ec461722f}\index{kMesgQ@{kMesgQ}!semaItem@{semaItem}}
 \index{semaItem@{semaItem}!kMesgQ@{kMesgQ}}
 \doxysubsubsection{\texorpdfstring{semaItem}{semaItem}}
 {\footnotesize\ttfamily \label{structk_mesg_q_a443844717058594dddbdd49ec461722f} 
 struct \mbox{\hyperlink{structk_sema}{k\+Sema}} k\+Mesg\+Q\+::sema\+Item}
 
-Semaphore indicating a new message \Hypertarget{structk_mesg_q_a0e32beedd83db5fcd9da9f8ddc6511a5}\index{kMesgQ@{kMesgQ}!semaPool@{semaPool}}
+Semaphore indicating a new message 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00188}{188}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_mesg_q_ae884fca3ed787e539276b6367960de68}\index{kMesgQ@{kMesgQ}!mutex@{mutex}}
+\index{mutex@{mutex}!kMesgQ@{kMesgQ}}
+\doxysubsubsection{\texorpdfstring{mutex}{mutex}}
+{\footnotesize\ttfamily \label{structk_mesg_q_ae884fca3ed787e539276b6367960de68} 
+struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} k\+Mesg\+Q\+::mutex}
+
+Mutex for accessing message queue 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00189}{189}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_mesg_q_a0e32beedd83db5fcd9da9f8ddc6511a5}\index{kMesgQ@{kMesgQ}!semaPool@{semaPool}}
 \index{semaPool@{semaPool}!kMesgQ@{kMesgQ}}
 \doxysubsubsection{\texorpdfstring{semaPool}{semaPool}}
 {\footnotesize\ttfamily \label{structk_mesg_q_a0e32beedd83db5fcd9da9f8ddc6511a5} 
 struct \mbox{\hyperlink{structk_sema}{k\+Sema}} k\+Mesg\+Q\+::sema\+Pool}
 
-Counter Semaphore for associated the mesg pool \Hypertarget{structk_mesg_q_ac757ef5b83477c5304bdaf5c03b1f3f0}\index{kMesgQ@{kMesgQ}!semaRoom@{semaRoom}}
+Counter Semaphore for associated the mesg pool 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00190}{190}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_mesg_q_ac757ef5b83477c5304bdaf5c03b1f3f0}\index{kMesgQ@{kMesgQ}!semaRoom@{semaRoom}}
 \index{semaRoom@{semaRoom}!kMesgQ@{kMesgQ}}
 \doxysubsubsection{\texorpdfstring{semaRoom}{semaRoom}}
 {\footnotesize\ttfamily \label{structk_mesg_q_ac757ef5b83477c5304bdaf5c03b1f3f0} 
 struct \mbox{\hyperlink{structk_sema}{k\+Sema}} k\+Mesg\+Q\+::sema\+Room}
 
 Counter Semaphore for items in the queue 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00191}{191}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_mesg_q_ad356b039c1defdfa4e086c6cf61a538b}\index{kMesgQ@{kMesgQ}!mesgMemCtrlBlk@{mesgMemCtrlBlk}}
+\index{mesgMemCtrlBlk@{mesgMemCtrlBlk}!kMesgQ@{kMesgQ}}
+\doxysubsubsection{\texorpdfstring{mesgMemCtrlBlk}{mesgMemCtrlBlk}}
+{\footnotesize\ttfamily \label{structk_mesg_q_ad356b039c1defdfa4e086c6cf61a538b} 
+struct \mbox{\hyperlink{structk_mem}{k\+Mem}} k\+Mesg\+Q\+::mesg\+Mem\+Ctrl\+Blk}
+
+Mem Ctrl Block of the associated mesg pool 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00192}{192}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
