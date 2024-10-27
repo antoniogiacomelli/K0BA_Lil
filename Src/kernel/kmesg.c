@@ -146,7 +146,7 @@ VOID kMesgQInit(K_MESGQ* const self, ADDR mesgPoolPtr, BYTE queueSize,
 	K_EXIT_CR;
 }
 
-K_ERR kMesgQPut(K_MESGQ* const self, ADDR mesgPtr, SIZE mesgSize)
+K_ERR kMesgQPut(K_MESGQ* const self, ADDR mesgPtr, BYTE mesgSize)
 {
 	if (IS_NULL_PTR(self) || IS_NULL_PTR(mesgPtr))
 		kErrHandler(FAULT_NULL_OBJ);
@@ -319,7 +319,7 @@ K_ERR kFifoPut(K_FIFO* self, BYTE data)
 	kSemaSignal(&self->semaItem);
 	return K_SUCCESS;
 }
-BYTE FifoGet(K_FIFO* self)
+BYTE kFifoGet(K_FIFO* self)
 {
 	if (IS_NULL_PTR(self))
 	{
