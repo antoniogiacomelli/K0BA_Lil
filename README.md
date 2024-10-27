@@ -8,7 +8,7 @@ This is a light-weight version with no memory isolation. Currently it supports A
 > [!NOTE]
 > This is a work in progress.
 
-- See the wiki for usage example: https://github.com/antoniogiacomelli/K0BA_Lite/wiki
+- See the wiki for usage examples: https://github.com/antoniogiacomelli/K0BA_Lite/wiki
 - The API is mostly documented on: https://antoniogiacomelli.github.io/K0BA_Lite/
 
 *Logical Architecture:*
