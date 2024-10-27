@@ -59,9 +59,7 @@
 #ifndef INC_K_API_H_
 #define INC_K_API_H_
 
-#include <stm32f4xx_hal.h>
-#include <stm32f401xe.h>
-#include <cmsis_gcc.h>
+/* include your HAL here*/
 #include <stdarg.h>
 #include <stdio.h>
 #include <assert.h>
@@ -377,7 +375,14 @@ K_ERR kWake(K_EVENT* self);
  * APPLICATION TIMER AND DELAY
  *
  ******************************************************************************/
-
+/**
+ * \brief Initialises an application timer
+ * \param ticks initial tick count
+ * \param funPtr The callback when timer expires
+ * \param argsPtr Address to callback function arguments
+ * \param reload TRUE for reloading after timer-out. FALSE for an one-shot
+ * \return K_SUCCESS/K_ERROR
+ */
 
 
 K_ERR kTimerInit(STRING timerName, TICK ticks, CALLBACK funPtr, ADDR argsPtr,
@@ -505,7 +510,4 @@ ADDR kMemCpy(ADDR destPtr, const ADDR srcPtr, SIZE size);
 /******************************************************************************/
 /******************************************************************************/
 
-/**
-*  \}
- */
 #endif /* INC_K_API_H_ */

@@ -1,10 +1,19 @@
+
 /*****************************************************************************
  *
  * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]
  *
- ******************************************************************************
- ******************************************************************************
+ ******************************************************************************/
+/**
+ *\file kobjs.h
+ *\brief    Kernel objects
+ *\version  0.1.0
+ *\author   Antonio Giacomelli
  *
+ *
+ ******************************************************************************
+ * \verbatim
+ * 
  * 	In this header:
  *
  * 		o Definition of all kernel objects:
@@ -20,6 +29,7 @@
  *		 Timers						| ktimer.h
  *		 Tracer						| ktracer.c
  *
+ * \endverbatim 
  *****************************************************************************/
 #ifndef INC_KOBJS_H_
 #define INC_KOBJS_H_
@@ -29,8 +39,8 @@
 /*****************************************************************************/
 
 
-/*
- * Node structure for general circular doubly linked list
+/**
+ *\brief Node structure for general circular doubly linked list
  */
 struct kListNode
 {
@@ -38,8 +48,8 @@ struct kListNode
     struct kListNode* prevPtr; /* Pointer to previous node */
 };
 
-/*
- *  Circular doubly linked list structure
+/** 
+ *\brief  Circular doubly linked list structure
  */
 struct kList
 {
@@ -52,7 +62,9 @@ struct kList
 /*****************************************************************************/
 /*****************************************************************************/
 
-
+/**
+ * \brief Task Control Block
+ */
 struct kTcb
 {
     UINT32*         sp;           /* Saved stack pointer */
@@ -78,8 +90,8 @@ struct kTcb
 /*****************************************************************************/
 
 
-/*
- * Record of ticks
+/**
+ *\brief Record of ticks
  */
 struct kRunTime
 {
@@ -91,8 +103,8 @@ struct kRunTime
 /*****************************************************************************/
 /*****************************************************************************/
 
-/*
- *  Counter Semaphore
+/**
+ *\brief  Counter Semaphore
  */
 struct kSema
 {
@@ -101,8 +113,8 @@ struct kSema
 	struct kTcb*	ownerPtr;
 };
 
-/*
-* Mutex
+/**
+*\brief Mutex
 */
 
 struct kMutex
@@ -112,8 +124,8 @@ struct kMutex
     struct kTcb* 	ownerPtr; /* Pointer to current ownerPtr */
 };
 #if (K_CONF_COND_VAR == ON)
-/*
-* Condition Variables
+/**
+*\brief Condition Variables
 */
 
 struct kCond
@@ -122,8 +134,8 @@ struct kCond
 	struct kList	queue;
 };
 #endif
-/*
- * Generic Event
+/**
+ *\brief Generic Event
  */
 struct kEvent
 {
@@ -136,8 +148,8 @@ struct kEvent
 /*****************************************************************************/
 /*****************************************************************************/
 
-/*
- * Memory Pool Control Block
+/**
+ *\brief Memory Pool Control Block
  */
 
 struct kMem
@@ -150,23 +162,13 @@ struct kMem
 
 }__attribute__((aligned));
 #if ((K_CONF_MSG_QUEUE==ON) || (K_CONF_MAILBOX == ON))
-/*
-* Message contents within a message buffer
-*/
-#if 0
-union kMesg
-{
-	BYTE		mesgCHAR[MSG_SIZE]; /* Message in bytes */
-	UINT32		mesgU32;			   /* Message as unsigned integer 32-bit */
-};
-#endif
 
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
 
-/*
- * Message Buffer for Message and Mailbox
+/**
+ *\brief Message Buffer for Message and Mailbox
  */
 struct kMesgBuff
 {
@@ -178,8 +180,8 @@ struct kMesgBuff
 #endif
 
 #if (K_CONF_MSG_QUEUE==ON)
-/*
-*  Message Queue
+/**
+*\brief Message Queue
 */
 struct kMesgQ
 {
@@ -193,8 +195,8 @@ struct kMesgQ
 #endif
 #if (K_CONF_MAILBOX==ON)
 
-/*
- * Mailbox
+/**
+ *\brief Mailbox
  */
 struct kMail
 {
@@ -221,8 +223,8 @@ struct kMailbox
 #endif
 
 #if (K_CONF_PIPES==ON)
-/*
- *  Pipes
+/**
+ *\brief  Pipes
  */
 struct kPipe
 {
@@ -237,8 +239,8 @@ struct kPipe
 };
 #endif
 
-/*
- * FIFO (simple pipe)
+/** 
+ *\brief FIFO (simple pipe)
  */
 struct kFifo
 {
@@ -254,8 +256,8 @@ struct kFifo
 /*****************************************************************************/
 /*****************************************************************************/
 
-/*
- * Application Timer
+/**
+ *\brief Application Timer
  */
 struct kTimer
 {
@@ -273,8 +275,8 @@ struct kTimer
 /*****************************************************************************/
 
 #if (K_CONF_TRACE==ON)
-/*
- *  Tracer
+/**
+ *\brief  Tracer
  */
 struct kTraceData
 {
@@ -299,6 +301,6 @@ struct kTrace
 /******************************************************************************/
 /******************************************************************************/
 
-//[EOF]
+
 
 #endif /* INC_KOBJS_H_ */
