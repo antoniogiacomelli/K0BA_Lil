@@ -22,87 +22,48 @@ UINT32 stack4[STACKSIZE];
 *
 *******************************************************************************/
 
-K_MEM mesgMem;
-K_MESGQ mesgq;
-K_MAILBOX mailbox;
-K_EVENT	  rcvdMailFromTask5;
-struct MESG mesgPool[10]; /* the kernel must have access to this pool
- 	 	 	 	 	 	 	 so it */
-#define SIZE_MESG sizeof(struct MESG)
 
+volatile UINT32 counter1; counter2; counter3; counter4;
 
-
-volatile UINT32 counterA, counterB, counter1, counter2, counter3, counter4;
-
-/**
- ******************************************************************************
- *
- * Application Callbacks prototypes and/or definitions
- *
- ******************************************************************************/
-
-VOID callBackCount1(ADDR args)
-{
-
-	UNUSED(args);
-	counterA++;
-}
-VOID callBackCount2(ADDR args)
-{
-	UNUSED(args);
-	counterB++;
-
-}
-
-/**
- *******************************************************************************
+/******************************************************************************
  * Customise your application init
  *
  * Initialise kernel objects: mutexes, seamaphores, timers, etc.
  *******************************************************************************/
 VOID kApplicationInit(ADDR* args)
 {
-	UNUSED(args);
-	kTimerInit("Timer1", 20, callBackCount1, NULL, RELOAD); /* periodic app timer */
-	kTimerInit("Timer2", 15, callBackCount2, NULL, RELOAD); /* periodic app timer */
-
-	kMesgQInit(&mesgq, (ADDR)&mesgPool, 10, SIZE_MESG);    /* Mesg Queue Capacity=10  MESG items */
-	kMailboxInit(&mailbox);
+ UNUSED(args);
+ counter1=0;
+ counter2=0;
+ counter3=0;
+ counter4=0;
 }
 
 void Task1(void)
 {
-	UINT32 send = 0xABCDEFAA;
 
 	while(1)
 	{
-		kMailboxPost(&mailbox, &send, sizeof(send));
+		counter1++;
 	}
 }
 
 void Task2(void)
 {
-	UINT32 rcvmesg;
-	TID id;
 	while(1)
 	{
-		id = kMailboxPend(&mailbox, &rcvmesg);
-		if (id==5) /* when Task4 (which ID is 5 acknowledges it received an exchange msg
-                              from Task2, task 2 wakes up every task sleeping on event1  */
-		{
-			kWake(&rcvdMailFromTask5);
-		}
+			counter2++;
+
 	}
 }
 
 
 void Task3(void)
 {
-	UINT32 woke=0;
 	while(1)
 	{
-		kSleep(&rcvdMailFromTask5);
-		woke++;
+		counter3++;
+
 	}
 
 
@@ -110,10 +71,10 @@ void Task3(void)
 
 void Task4(void)
 {
-	UINT32 send = 0xABCDEF00;
 	while(1)
 	{
-		kMailboxPost(&mailbox, &send, sizeof(send));
+		counter4++;
+
 	}
 
 }
