@@ -32,11 +32,11 @@
  * development. It provides methods to access the kernel services.
  *
  * Every kernel primitive is on UPPERCASE. If preceded by a K_ it is
- * kernel data structure (e.g. K_SEMA is a semaphore).
+ * kernel data structure (e.g. K_SEMA is a semaphore) or enumerated type definition.
  * If not, it is an alias for standard C data or data pointer (e.g., BYTE,
  * INT32, ADDR, STRING: respectively, unsigned char, int, void* and const char*)
- * or rresents system data that is not a structure itself:
- * (e.g., PRIO for priority, TID for task ID.
+ * or represents system data that is not a structure itself:
+ * (e.g., PRIO for priority, TID for task ID.)
  *
  * A typical kernel service often receives a pointer to a kernel
  * object or a kernel parameter -  If it does not, it either acts on a
