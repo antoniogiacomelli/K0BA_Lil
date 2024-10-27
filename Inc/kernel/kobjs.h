@@ -13,7 +13,7 @@
  *
  ******************************************************************************
  * \verbatim
- * 
+ *
  * 	In this header:
  *
  * 		o Definition of all kernel objects:
@@ -29,7 +29,7 @@
  *		 Timers						| ktimer.h
  *		 Tracer						| ktracer.c
  *
- * \endverbatim 
+ * \endverbatim
  *****************************************************************************/
 #ifndef INC_KOBJS_H_
 #define INC_KOBJS_H_
@@ -44,16 +44,16 @@
  */
 struct kListNode
 {
-    struct kListNode* nextPtr; /* Pointer to next node */
-    struct kListNode* prevPtr; /* Pointer to previous node */
+    struct kListNode* nextPtr; /**< Pointer to next node */
+    struct kListNode* prevPtr; /**< Pointer to previous node */
 };
 
-/** 
+/**
  *\brief  Circular doubly linked list structure
  */
 struct kList
 {
-    struct kListNode  listDummy; /* Dummy node for head/tail management */
+    struct kListNode  listDummy; /**< Dummy node for head/tail management */
     STRING			  listName;
     UINT32            size;
 };
@@ -67,22 +67,22 @@ struct kList
  */
 struct kTcb
 {
-    UINT32*         sp;           /* Saved stack pointer */
-    K_TASK_STATUS   status;       /* Task status */
-    UINT32          runCnt;       /* Dispatch count */
-    UINT32*         stackAddrPtr; /* Stack address */
-    UINT32          stackSize;    /* Stack size */
-    PID           	pid;          /* System task ID */
-    TID         	uPid;         /* User-defined task ID */
-    PRIO          	priority;     /* Task priority (0-254) 255 is invalid */
-    PRIO			realPrio;	  /* Real priority (priority inheritance) */
-    TICK          	timeSlice;    /* Time-slice duration 		   */
-    TICK          	timeLeft;     /* Remaining time-slice 	   */
-    STRING          taskName;     /* Task name 				   */
-    TICK          	busyWaitTime; /* Delay in ticks 			   */
-    ADDR			pendingObj;	  /* Address obj task is blocked */
-    BOOL			runToCompl;	  /* Cooperative-only task 	   */
-    struct kListNode tcbNode;    /* Aggregated list node 	   */
+    UINT32*         sp;           /**< Saved stack pointer */
+    K_TASK_STATUS   status;       /**< Task status */
+    UINT32          runCnt;       /**< Dispatch count */
+    UINT32*         stackAddrPtr; /**< Stack address */
+    UINT32          stackSize;    /**< Stack size */
+    PID           	pid;          /**< System task ID */
+    TID         	uPid;         /**< User-defined task ID */
+    PRIO          	priority;     /**< Task priority (0-254) 255 is invalid */
+    PRIO			realPrio;	  /**< Real priority (priority inheritance) */
+    TICK          	timeSlice;    /**< Time-slice duration 		   */
+    TICK          	timeLeft;     /**< Remaining time-slice 	   */
+    STRING          taskName;     /**< Task name 				   */
+    TICK          	busyWaitTime; /**< Delay in ticks 			   */
+    ADDR			pendingObj;	  /**< Address obj task is blocked */
+    BOOL			runToCompl;	  /**< Cooperative-only task 	   */
+    struct kListNode tcbNode;    /**< Aggregated list node 	   */
 }__attribute__((aligned));
 
 /*****************************************************************************/
@@ -95,8 +95,8 @@ struct kTcb
  */
 struct kRunTime
 {
-    TICK  globalTick; /* Global system tick */
-    UINT32  nWraps;     /* Number of tick wraps */
+    TICK  globalTick; /**< Global system tick */
+    UINT32  nWraps;     /**< Number of tick wraps */
 };
 
 /*****************************************************************************/
@@ -108,9 +108,8 @@ struct kRunTime
  */
 struct kSema
 {
-	INT32   	  	value;		/* Semaphore value */
-	struct kList  	queue;		/* Semaphore waiting queue */
-	struct kTcb*	ownerPtr;
+	INT32   	  	value;		/**< Semaphore value */
+	struct kList  	queue;		/**< Semaphore waiting queue */
 };
 
 /**
@@ -119,9 +118,9 @@ struct kSema
 
 struct kMutex
 {
-    struct kList 	queue;	  /* Mutex waiting queue */
-    BOOL 			lock; 	  /* 0=unlocked, 1=locked */
-    struct kTcb* 	ownerPtr; /* Pointer to current ownerPtr */
+    struct kList 	queue;	  /**< Mutex waiting queue */
+    BOOL 			lock; 	  /** 0=unlocked, 1=locked */
+    struct kTcb* 	ownerPtr; /** Task owning the mutex */
 };
 #if (K_CONF_COND_VAR == ON)
 /**
@@ -130,8 +129,8 @@ struct kMutex
 
 struct kCond
 {
-	struct kMutex   condMutex;
-	struct kList	queue;
+	struct kMutex   condMutex; /**< Lock */
+	struct kList	queue;     /**< Waiting queue */
 };
 #endif
 /**
@@ -139,9 +138,9 @@ struct kCond
  */
 struct kEvent
 {
-	struct kList		 queue;
-	BOOL				 init;
-	UINT32			     eventID;
+	struct kList		 queue;   /**< Waiting queue */
+	BOOL				 init;    /**< Init flag */
+	UINT32			     eventID; /**< event ID */
 };
 
 /*****************************************************************************/
@@ -154,11 +153,11 @@ struct kEvent
 
 struct kMem
 {
-	BYTE*  			freeListPtr;   /* Free list pointer */
-    BYTE    		blkSize;       /* Block size */
-    BYTE    		nMaxBlocks;    /* Maximum number of blocks */
-    BYTE    		nFreeBlocks;   /* Number of free blocks */
-    struct kMutex	poolMutex;	   /* pool mutex; */
+	BYTE*  			freeListPtr;   /**< Free list pointer */
+    BYTE    		blkSize;       /**< Block size */
+    BYTE    		nMaxBlocks;    /**< Maximum number of blocks */
+    BYTE    		nFreeBlocks;   /**< Number of free blocks */
+    struct kMutex	poolMutex;	   /**< pool mutex; */
 
 }__attribute__((aligned));
 #if ((K_CONF_MSG_QUEUE==ON) || (K_CONF_MAILBOX == ON))
@@ -172,10 +171,10 @@ struct kMem
  */
 struct kMesgBuff
 {
-	struct kListNode		mesgNode;
-	TID						senderTid;
-	ADDR  					mesgPtr;
-	SIZE 	   			    mesgSize;
+	struct kListNode		mesgNode;  /**< Mesg Queue Node */
+	TID						senderTid; /**< Sender Task ID*/
+	ADDR  					mesgPtr;   /**< Pointer to message contents */
+	SIZE 	   			    mesgSize;  /**< Mesg size */
 }__attribute__((aligned));
 #endif
 
@@ -185,35 +184,38 @@ struct kMesgBuff
 */
 struct kMesgQ
 {
-	struct kList		 	 mesgList;		 /* Linked list of messages */
-	struct kSema     		 semaItem;	 /* Semaphore indicating a new message */
-	struct kMutex			 mutex;		 /* Mutex for accessing message queue */
-	struct kSema			 semaPool;
-	struct kSema			 semaRoom;
-	struct kMem				 mesgMemCtrlBlk;
+	struct kList		 	 mesgList;   /**< Linked list of messages */
+	struct kSema     		 semaItem;	 /**< Semaphore indicating a new message */
+	struct kMutex			 mutex;		 /**< Mutex for accessing message queue */
+	struct kSema			 semaPool;   /**< Counter Semaphore for associated the mesg pool */
+	struct kSema			 semaRoom;   /**< Counter Semaphore for items in the queue */
+	struct kMem				 mesgMemCtrlBlk; /**< Mem Ctrl Block of the associated mesg pool */
 };
 #endif
 #if (K_CONF_MAILBOX==ON)
 
 /**
- *\brief Mailbox
+ *\brief Mail within a mailbox
  */
 struct kMail
 {
-	TID					  senderTid;
-	ADDR  				  mesgPtr;
-	SIZE 	   			  mesgSize;
+	TID					  senderTid; /**< Sender TID */
+	ADDR  				  mesgPtr;   /**< Pointer to message contents */
+	SIZE 	   			  mesgSize;  /**< Message size */
 }__attribute__((aligned));
 
+/**
+ * \brief Mailbox
+ */
 struct kMailbox
 {
 #if (K_CONF_MAILBOX_ACK == ON)
-	struct kSema		 semaAck;
+	struct kSema		 semaAck; /**< Semaphore to ACK sender*/
 #endif
-	struct kSema  	 	 semaEmpty;
-	struct kMutex  	 	 mutex;
-	struct kSema  	 	 semaFull;
-	struct kMail	 	 mail;
+	struct kSema  	 	 semaEmpty; /**< Signal/Wait producer/consumer */
+	struct kMutex  	 	 mutex;     /**< Lock */
+	struct kSema  	 	 semaFull;  /**< Signal/Wait consumer/producer */
+	struct kMail	 	 mail;      /**< Message struct */
 } __attribute__((aligned));
 
 #endif
@@ -228,27 +230,27 @@ struct kMailbox
  */
 struct kPipe
 {
-	UINT32 			 tail;      // Where to read
-	UINT32			 head;      // Where to write
-	UINT32 			 data; 	    // Number of bytes in the buffer
-	UINT32 	   		 room;      // number of free entries in the buffer
-	struct kCond	 condRoom;
-	struct kCond 	 condData;
-	struct kMutex	 mutex;
-	BYTE		 	 buffer[PIPE_SIZE]; // The data
+	UINT32 			 tail;      /**< read index */
+	UINT32			 head;      /**< write index */
+	UINT32 			 data; 	    /**< Number of bytes in the buffer */
+	UINT32 	   		 room;      /**< Number of free slots in the buffer (bytes) */
+	struct kCond	 condRoom;  /**< Cond Var for writers */
+	struct kCond 	 condData;  /**< Cond Var for readers */
+	struct kMutex	 mutex;     /**< Lock */
+	BYTE		 	 buffer[PIPE_SIZE]; /**< Data buffer */
 };
 #endif
 
-/** 
+/**
  *\brief FIFO (simple pipe)
  */
 struct kFifo
 {
-	UINT32				head;
-	UINT32				tail;
-	struct kSema	    semaItem;
-	struct kSema		semaRoom;
-	struct kMutex		mutex;
+	UINT32				head; 		/**< write index */
+	UINT32				tail; 		/**< read index */
+	struct kSema	    semaItem;   /**< signal/wait consumer/producer */
+	struct kSema		semaRoom;   /**< signal/wait producer/consumer */
+	struct kMutex		mutex;      /**< Lock */
 	BYTE				buffer[FIFO_SIZE];
 }__attribute__((aligned)) ;
 
@@ -261,13 +263,13 @@ struct kFifo
  */
 struct kTimer
 {
-    STRING  	timerName;
-	TICK  		dTicks;
-	TICK		ticks;
-	BOOL		reload;
-	CALLBACK 	funPtr;
-	ADDR    	argsPtr;
-    K_TIMER* 	nextPtr;
+    STRING  	timerName; /**< Timer name */
+	TICK  		dTicks;    /**< Delta ticks */
+	TICK		ticks;     /**< Aboslute ticks */
+	BOOL		reload;    /**< Reload/Oneshot */
+	CALLBACK 	funPtr;    /**< Callback */
+	ADDR    	argsPtr;   /**< Arguments */
+    K_TIMER* 	nextPtr;   /**< Next timer in the queue */
 }__attribute__((aligned));
 
 /*****************************************************************************/
@@ -276,14 +278,14 @@ struct kTimer
 
 #if (K_CONF_TRACE==ON)
 /**
- *\brief  Tracer
+ *\brief  Tracer Data
  */
 struct kTraceData
 {
-	TICK 		timeStamp;
-	K_TRACEID 	event;
-	STRING	    info;
-	PID			pid;
+	TICK 		timeStamp; /**< Current ticks when logged */
+	K_TRACEID 	event;     /**< Event id */
+	STRING	    info;      /**< Info */
+	PID			pid;       /**< Which task was running */
 
 };
 

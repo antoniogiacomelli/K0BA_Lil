@@ -1,0 +1,57 @@
+\doxysection{k\+Mesg\+Buff Struct Reference}
+\hypertarget{structk_mesg_buff}{}\label{structk_mesg_buff}\index{kMesgBuff@{kMesgBuff}}
+
+
+Message Buffer for Message and Mailbox.  
+
+
+
+
+{\ttfamily \#include $<$kobjs.\+h$>$}
+
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structk_list_node}{k\+List\+Node}} \mbox{\hyperlink{structk_mesg_buff_ae3f2459009120b68c9bee83b25e3f159}{mesg\+Node}}
+\item 
+\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} \mbox{\hyperlink{structk_mesg_buff_a344a891f5993ea76532521dd833c003d}{sender\+Tid}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{structk_mesg_buff_a604eb27cc3849d93868f6260122656db}{mesg\+Ptr}}
+\item 
+SIZE \mbox{\hyperlink{structk_mesg_buff_abe41b660319a93319cd80568228ac77e}{mesg\+Size}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Message Buffer for Message and Mailbox. 
+
+\doxysubsection{Field Documentation}
+\Hypertarget{structk_mesg_buff_ae3f2459009120b68c9bee83b25e3f159}\index{kMesgBuff@{kMesgBuff}!mesgNode@{mesgNode}}
+\index{mesgNode@{mesgNode}!kMesgBuff@{kMesgBuff}}
+\doxysubsubsection{\texorpdfstring{mesgNode}{mesgNode}}
+{\footnotesize\ttfamily \label{structk_mesg_buff_ae3f2459009120b68c9bee83b25e3f159} 
+struct \mbox{\hyperlink{structk_list_node}{k\+List\+Node}} k\+Mesg\+Buff\+::mesg\+Node}
+
+Mesg Queue Node \Hypertarget{structk_mesg_buff_a604eb27cc3849d93868f6260122656db}\index{kMesgBuff@{kMesgBuff}!mesgPtr@{mesgPtr}}
+\index{mesgPtr@{mesgPtr}!kMesgBuff@{kMesgBuff}}
+\doxysubsubsection{\texorpdfstring{mesgPtr}{mesgPtr}}
+{\footnotesize\ttfamily \label{structk_mesg_buff_a604eb27cc3849d93868f6260122656db} 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} k\+Mesg\+Buff\+::mesg\+Ptr}
+
+Pointer to message contents \Hypertarget{structk_mesg_buff_abe41b660319a93319cd80568228ac77e}\index{kMesgBuff@{kMesgBuff}!mesgSize@{mesgSize}}
+\index{mesgSize@{mesgSize}!kMesgBuff@{kMesgBuff}}
+\doxysubsubsection{\texorpdfstring{mesgSize}{mesgSize}}
+{\footnotesize\ttfamily \label{structk_mesg_buff_abe41b660319a93319cd80568228ac77e} 
+SIZE k\+Mesg\+Buff\+::mesg\+Size}
+
+Mesg size \Hypertarget{structk_mesg_buff_a344a891f5993ea76532521dd833c003d}\index{kMesgBuff@{kMesgBuff}!senderTid@{senderTid}}
+\index{senderTid@{senderTid}!kMesgBuff@{kMesgBuff}}
+\doxysubsubsection{\texorpdfstring{senderTid}{senderTid}}
+{\footnotesize\ttfamily \label{structk_mesg_buff_a344a891f5993ea76532521dd833c003d} 
+\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} k\+Mesg\+Buff\+::sender\+Tid}
+
+Sender Task ID 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Git\+Koba/\+K0\+BA\+\_\+\+Lite/\+Inc/kernel/\mbox{\hyperlink{kobjs_8h}{kobjs.\+h}}\end{DoxyCompactItemize}

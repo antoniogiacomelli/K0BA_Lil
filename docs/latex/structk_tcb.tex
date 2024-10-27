@@ -1,0 +1,159 @@
+\doxysection{k\+Tcb Struct Reference}
+\hypertarget{structk_tcb}{}\label{structk_tcb}\index{kTcb@{kTcb}}
+
+
+Task Control Block.  
+
+
+
+
+{\ttfamily \#include $<$kobjs.\+h$>$}
+
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+UINT32 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structk_tcb_a28afa972935ceac9ff5f25467b98b81d}{sp}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a579cf6c310ff0b456010ecff26dceaa5}{K\+\_\+\+TASK\+\_\+\+STATUS}} \mbox{\hyperlink{structk_tcb_ab560057bda0f409afbe6d57d0b5a414d}{status}}
+\item 
+UINT32 \mbox{\hyperlink{structk_tcb_a9f25091ca6d683bce1513e3801c7ae35}{run\+Cnt}}
+\item 
+UINT32 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{structk_tcb_a0b40d973440e6e430199e44624ffa33b}{stack\+Addr\+Ptr}}
+\item 
+UINT32 \mbox{\hyperlink{structk_tcb_a6de70123a45e32462dde93615a16c586}{stack\+Size}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} \mbox{\hyperlink{structk_tcb_a688d16b35c857c9c1a45e45dd9dfb1f2}{pid}}
+\item 
+\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} \mbox{\hyperlink{structk_tcb_abb438ba6354a00b21c10fcb529b6e94e}{u\+Pid}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}} \mbox{\hyperlink{structk_tcb_aab090ca0775558f98973307129f278e4}{priority}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}} \mbox{\hyperlink{structk_tcb_a0faa9d21fae78b6257572ca1788681a4}{real\+Prio}}
+\item 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{structk_tcb_a46fc8f0b147a71a476a50653ebf823bb}{time\+Slice}}
+\item 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{structk_tcb_abd74dc26e7b7e58cf57b189267807eb9}{time\+Left}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}} \mbox{\hyperlink{structk_tcb_a233c31a775812d13eb78712526ba7e32}{task\+Name}}
+\item 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{structk_tcb_ab8f0f3d0fcd2d5aa24a8d8b45d564bb2}{busy\+Wait\+Time}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{structk_tcb_a3fb62d34d432a02697dc67ca44292507}{pending\+Obj}}
+\item 
+BOOL \mbox{\hyperlink{structk_tcb_afcbca47ac6132e31457017ee1c3cbc11}{run\+To\+Compl}}
+\item 
+struct \mbox{\hyperlink{structk_list_node}{k\+List\+Node}} \mbox{\hyperlink{structk_tcb_ae17c07c48f73ba57cb0e4eb69d9ab1f3}{tcb\+Node}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Task Control Block. 
+
+\doxysubsection{Field Documentation}
+\Hypertarget{structk_tcb_ab8f0f3d0fcd2d5aa24a8d8b45d564bb2}\index{kTcb@{kTcb}!busyWaitTime@{busyWaitTime}}
+\index{busyWaitTime@{busyWaitTime}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{busyWaitTime}{busyWaitTime}}
+{\footnotesize\ttfamily \label{structk_tcb_ab8f0f3d0fcd2d5aa24a8d8b45d564bb2} 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} k\+Tcb\+::busy\+Wait\+Time}
+
+Delay in ticks ~\newline
+ \Hypertarget{structk_tcb_a3fb62d34d432a02697dc67ca44292507}\index{kTcb@{kTcb}!pendingObj@{pendingObj}}
+\index{pendingObj@{pendingObj}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{pendingObj}{pendingObj}}
+{\footnotesize\ttfamily \label{structk_tcb_a3fb62d34d432a02697dc67ca44292507} 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} k\+Tcb\+::pending\+Obj}
+
+Address obj task is blocked \Hypertarget{structk_tcb_a688d16b35c857c9c1a45e45dd9dfb1f2}\index{kTcb@{kTcb}!pid@{pid}}
+\index{pid@{pid}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{pid}{pid}}
+{\footnotesize\ttfamily \label{structk_tcb_a688d16b35c857c9c1a45e45dd9dfb1f2} 
+\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} k\+Tcb\+::pid}
+
+System task ID \Hypertarget{structk_tcb_aab090ca0775558f98973307129f278e4}\index{kTcb@{kTcb}!priority@{priority}}
+\index{priority@{priority}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{priority}{priority}}
+{\footnotesize\ttfamily \label{structk_tcb_aab090ca0775558f98973307129f278e4} 
+\mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}} k\+Tcb\+::priority}
+
+Task priority (0-\/254) 255 is invalid \Hypertarget{structk_tcb_a0faa9d21fae78b6257572ca1788681a4}\index{kTcb@{kTcb}!realPrio@{realPrio}}
+\index{realPrio@{realPrio}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{realPrio}{realPrio}}
+{\footnotesize\ttfamily \label{structk_tcb_a0faa9d21fae78b6257572ca1788681a4} 
+\mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}} k\+Tcb\+::real\+Prio}
+
+Real priority (priority inheritance) \Hypertarget{structk_tcb_a9f25091ca6d683bce1513e3801c7ae35}\index{kTcb@{kTcb}!runCnt@{runCnt}}
+\index{runCnt@{runCnt}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{runCnt}{runCnt}}
+{\footnotesize\ttfamily \label{structk_tcb_a9f25091ca6d683bce1513e3801c7ae35} 
+UINT32 k\+Tcb\+::run\+Cnt}
+
+Dispatch count \Hypertarget{structk_tcb_afcbca47ac6132e31457017ee1c3cbc11}\index{kTcb@{kTcb}!runToCompl@{runToCompl}}
+\index{runToCompl@{runToCompl}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{runToCompl}{runToCompl}}
+{\footnotesize\ttfamily \label{structk_tcb_afcbca47ac6132e31457017ee1c3cbc11} 
+BOOL k\+Tcb\+::run\+To\+Compl}
+
+Cooperative-\/only task ~\newline
+ \Hypertarget{structk_tcb_a28afa972935ceac9ff5f25467b98b81d}\index{kTcb@{kTcb}!sp@{sp}}
+\index{sp@{sp}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{sp}{sp}}
+{\footnotesize\ttfamily \label{structk_tcb_a28afa972935ceac9ff5f25467b98b81d} 
+UINT32\texorpdfstring{$\ast$}{*} k\+Tcb\+::sp}
+
+Saved stack pointer \Hypertarget{structk_tcb_a0b40d973440e6e430199e44624ffa33b}\index{kTcb@{kTcb}!stackAddrPtr@{stackAddrPtr}}
+\index{stackAddrPtr@{stackAddrPtr}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{stackAddrPtr}{stackAddrPtr}}
+{\footnotesize\ttfamily \label{structk_tcb_a0b40d973440e6e430199e44624ffa33b} 
+UINT32\texorpdfstring{$\ast$}{*} k\+Tcb\+::stack\+Addr\+Ptr}
+
+Stack address \Hypertarget{structk_tcb_a6de70123a45e32462dde93615a16c586}\index{kTcb@{kTcb}!stackSize@{stackSize}}
+\index{stackSize@{stackSize}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{stackSize}{stackSize}}
+{\footnotesize\ttfamily \label{structk_tcb_a6de70123a45e32462dde93615a16c586} 
+UINT32 k\+Tcb\+::stack\+Size}
+
+Stack size \Hypertarget{structk_tcb_ab560057bda0f409afbe6d57d0b5a414d}\index{kTcb@{kTcb}!status@{status}}
+\index{status@{status}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{status}{status}}
+{\footnotesize\ttfamily \label{structk_tcb_ab560057bda0f409afbe6d57d0b5a414d} 
+\mbox{\hyperlink{ktypes_8h_a579cf6c310ff0b456010ecff26dceaa5}{K\+\_\+\+TASK\+\_\+\+STATUS}} k\+Tcb\+::status}
+
+Task status \Hypertarget{structk_tcb_a233c31a775812d13eb78712526ba7e32}\index{kTcb@{kTcb}!taskName@{taskName}}
+\index{taskName@{taskName}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{taskName}{taskName}}
+{\footnotesize\ttfamily \label{structk_tcb_a233c31a775812d13eb78712526ba7e32} 
+\mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}} k\+Tcb\+::task\+Name}
+
+Task name ~\newline
+ \Hypertarget{structk_tcb_ae17c07c48f73ba57cb0e4eb69d9ab1f3}\index{kTcb@{kTcb}!tcbNode@{tcbNode}}
+\index{tcbNode@{tcbNode}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{tcbNode}{tcbNode}}
+{\footnotesize\ttfamily \label{structk_tcb_ae17c07c48f73ba57cb0e4eb69d9ab1f3} 
+struct \mbox{\hyperlink{structk_list_node}{k\+List\+Node}} k\+Tcb\+::tcb\+Node}
+
+Aggregated list node ~\newline
+ \Hypertarget{structk_tcb_abd74dc26e7b7e58cf57b189267807eb9}\index{kTcb@{kTcb}!timeLeft@{timeLeft}}
+\index{timeLeft@{timeLeft}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{timeLeft}{timeLeft}}
+{\footnotesize\ttfamily \label{structk_tcb_abd74dc26e7b7e58cf57b189267807eb9} 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} k\+Tcb\+::time\+Left}
+
+Remaining time-\/slice ~\newline
+ \Hypertarget{structk_tcb_a46fc8f0b147a71a476a50653ebf823bb}\index{kTcb@{kTcb}!timeSlice@{timeSlice}}
+\index{timeSlice@{timeSlice}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{timeSlice}{timeSlice}}
+{\footnotesize\ttfamily \label{structk_tcb_a46fc8f0b147a71a476a50653ebf823bb} 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} k\+Tcb\+::time\+Slice}
+
+Time-\/slice duration ~\newline
+ \Hypertarget{structk_tcb_abb438ba6354a00b21c10fcb529b6e94e}\index{kTcb@{kTcb}!uPid@{uPid}}
+\index{uPid@{uPid}!kTcb@{kTcb}}
+\doxysubsubsection{\texorpdfstring{uPid}{uPid}}
+{\footnotesize\ttfamily \label{structk_tcb_abb438ba6354a00b21c10fcb529b6e94e} 
+\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} k\+Tcb\+::u\+Pid}
+
+User-\/defined task ID 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Git\+Koba/\+K0\+BA\+\_\+\+Lite/\+Inc/kernel/\mbox{\hyperlink{kobjs_8h}{kobjs.\+h}}\end{DoxyCompactItemize}

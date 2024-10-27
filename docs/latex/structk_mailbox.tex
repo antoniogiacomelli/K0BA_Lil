@@ -1,0 +1,65 @@
+\doxysection{k\+Mailbox Struct Reference}
+\hypertarget{structk_mailbox}{}\label{structk_mailbox}\index{kMailbox@{kMailbox}}
+
+
+Mailbox.  
+
+
+
+
+{\ttfamily \#include $<$kobjs.\+h$>$}
+
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{structk_mailbox_a0fe50a4eda8a5f24d6e909280834cfdb}{sema\+Ack}}
+\item 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{structk_mailbox_a0dfff092ccc28f4e6e903e5153dcf072}{sema\+Empty}}
+\item 
+struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} \mbox{\hyperlink{structk_mailbox_ab25946282e5e816850ba1d2690b19209}{mutex}}
+\item 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{structk_mailbox_abe94c7c8155f9773973efeb4f766a045}{sema\+Full}}
+\item 
+struct \mbox{\hyperlink{structk_mail}{k\+Mail}} \mbox{\hyperlink{structk_mailbox_a7de4648b512ee05f5841daf72cc7f04b}{mail}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Mailbox. 
+
+\doxysubsection{Field Documentation}
+\Hypertarget{structk_mailbox_a7de4648b512ee05f5841daf72cc7f04b}\index{kMailbox@{kMailbox}!mail@{mail}}
+\index{mail@{mail}!kMailbox@{kMailbox}}
+\doxysubsubsection{\texorpdfstring{mail}{mail}}
+{\footnotesize\ttfamily \label{structk_mailbox_a7de4648b512ee05f5841daf72cc7f04b} 
+struct \mbox{\hyperlink{structk_mail}{k\+Mail}} k\+Mailbox\+::mail}
+
+Message struct \Hypertarget{structk_mailbox_ab25946282e5e816850ba1d2690b19209}\index{kMailbox@{kMailbox}!mutex@{mutex}}
+\index{mutex@{mutex}!kMailbox@{kMailbox}}
+\doxysubsubsection{\texorpdfstring{mutex}{mutex}}
+{\footnotesize\ttfamily \label{structk_mailbox_ab25946282e5e816850ba1d2690b19209} 
+struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} k\+Mailbox\+::mutex}
+
+Lock \Hypertarget{structk_mailbox_a0fe50a4eda8a5f24d6e909280834cfdb}\index{kMailbox@{kMailbox}!semaAck@{semaAck}}
+\index{semaAck@{semaAck}!kMailbox@{kMailbox}}
+\doxysubsubsection{\texorpdfstring{semaAck}{semaAck}}
+{\footnotesize\ttfamily \label{structk_mailbox_a0fe50a4eda8a5f24d6e909280834cfdb} 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} k\+Mailbox\+::sema\+Ack}
+
+Semaphore to ACK sender \Hypertarget{structk_mailbox_a0dfff092ccc28f4e6e903e5153dcf072}\index{kMailbox@{kMailbox}!semaEmpty@{semaEmpty}}
+\index{semaEmpty@{semaEmpty}!kMailbox@{kMailbox}}
+\doxysubsubsection{\texorpdfstring{semaEmpty}{semaEmpty}}
+{\footnotesize\ttfamily \label{structk_mailbox_a0dfff092ccc28f4e6e903e5153dcf072} 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} k\+Mailbox\+::sema\+Empty}
+
+Signal/\+Wait producer/consumer \Hypertarget{structk_mailbox_abe94c7c8155f9773973efeb4f766a045}\index{kMailbox@{kMailbox}!semaFull@{semaFull}}
+\index{semaFull@{semaFull}!kMailbox@{kMailbox}}
+\doxysubsubsection{\texorpdfstring{semaFull}{semaFull}}
+{\footnotesize\ttfamily \label{structk_mailbox_abe94c7c8155f9773973efeb4f766a045} 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} k\+Mailbox\+::sema\+Full}
+
+Signal/\+Wait consumer/producer 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Git\+Koba/\+K0\+BA\+\_\+\+Lite/\+Inc/kernel/\mbox{\hyperlink{kobjs_8h}{kobjs.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,384 @@
+\doxysection{C\+:/\+Git\+Koba/\+K0\+BA\+\_\+\+Lite/\+Inc/kernel/ktypes.h File Reference}
+\hypertarget{ktypes_8h}{}\label{ktypes_8h}\index{C:/GitKoba/K0BA\_Lite/Inc/kernel/ktypes.h@{C:/GitKoba/K0BA\_Lite/Inc/kernel/ktypes.h}}
+
+
+Kernel Primitive Types and Typedefs.  
+
+
+{\ttfamily \#include $<$stddef.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{ktypes_8h_a65e9886d74aaee76545e83dd09011727}\label{ktypes_8h_a65e9886d74aaee76545e83dd09011727} 
+\#define {\bfseries false}~(unsigned int)0U;
+\begin{DoxyCompactList}\small\item\em C standard library primitives alias. \end{DoxyCompactList}\item 
+\Hypertarget{ktypes_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7}\label{ktypes_8h_a41f9c5fb8b08eb5dc3edce4dcb37fee7} 
+\#define {\bfseries true}~(unsigned int)1U;
+\item 
+\Hypertarget{ktypes_8h_abb452686968e48b67397da5f97445f5b}\label{ktypes_8h_abb452686968e48b67397da5f97445f5b} 
+\#define {\bfseries bool}
+\item 
+\Hypertarget{ktypes_8h_aa8cecfc5c5c054d2875c03e77b7be15d}\label{ktypes_8h_aa8cecfc5c5c054d2875c03e77b7be15d} 
+\#define {\bfseries TRUE}~true
+\item 
+\Hypertarget{ktypes_8h_aa93f0eb578d23995850d61f7d61c55c1}\label{ktypes_8h_aa93f0eb578d23995850d61f7d61c55c1} 
+\#define {\bfseries FALSE}~\mbox{\hyperlink{ktypes_8h_a65e9886d74aaee76545e83dd09011727}{false}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{ktypes_8h_a93a465affe68a17ecbdbc18b2520ba1c}\label{ktypes_8h_a93a465affe68a17ecbdbc18b2520ba1c} 
+typedef \+\_\+\+Bool {\bfseries BOOL}
+\item 
+typedef VOID \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}
+\begin{DoxyCompactList}\small\item\em Primitve aliases. \end{DoxyCompactList}\item 
+typedef const CHAR \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}
+\item 
+typedef BYTE \mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}}
+\item 
+typedef BYTE \mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}}
+\item 
+typedef BYTE \mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}}
+\item 
+typedef UINT32 \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}
+\item 
+typedef VOID(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{ktypes_8h_a7f8d2a7a115fefaafab965da3eb3970f}{TASKENTRY}}) (VOID)
+\item 
+typedef VOID(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{ktypes_8h_a5c5992905d3a3832f64f84f986702e1d}{CALLBACK}}) (\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}})
+\item 
+\Hypertarget{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}\label{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263} 
+typedef enum \mbox{\hyperlink{ktypes_8h_a6f2fa6b13e49281bc95f0cfd80b52e2c}{k\+Err}} {\bfseries K\+\_\+\+ERR}
+\begin{DoxyCompactList}\small\item\em Return values. \end{DoxyCompactList}\item 
+\Hypertarget{ktypes_8h_ac1290c0ebdca00aa1cffa7268e9aefa2}\label{ktypes_8h_ac1290c0ebdca00aa1cffa7268e9aefa2} 
+typedef enum \mbox{\hyperlink{ktypes_8h_afdeb3bb1b3731cc2cc2b39249f065a9c}{k\+Fault}} {\bfseries K\+\_\+\+FAULT}
+\begin{DoxyCompactList}\small\item\em Fault codes. \end{DoxyCompactList}\item 
+\Hypertarget{ktypes_8h_a579cf6c310ff0b456010ecff26dceaa5}\label{ktypes_8h_a579cf6c310ff0b456010ecff26dceaa5} 
+typedef enum \mbox{\hyperlink{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383}{k\+Task\+Status}} {\bfseries K\+\_\+\+TASK\+\_\+\+STATUS}
+\begin{DoxyCompactList}\small\item\em Task status. \end{DoxyCompactList}\item 
+\Hypertarget{ktypes_8h_adb8ba9b84714970b78c196f2c13b1043}\label{ktypes_8h_adb8ba9b84714970b78c196f2c13b1043} 
+typedef enum k\+Trace\+ID {\bfseries K\+\_\+\+TRACEID}
+\item 
+typedef struct \mbox{\hyperlink{structk_tcb}{k\+Tcb}} \mbox{\hyperlink{ktypes_8h_a7ff4700cf41a229369720c557d327dcf}{K\+\_\+\+TCB}}
+\item 
+typedef struct \mbox{\hyperlink{structk_timer}{k\+Timer}} \mbox{\hyperlink{ktypes_8h_a844771c2a7316cff5241bdfe48afb904}{K\+\_\+\+TIMER}}
+\item 
+typedef struct \mbox{\hyperlink{structk_mem}{k\+Mem}} \mbox{\hyperlink{ktypes_8h_acbc325a3d965a3786cec3261f9c8a222}{K\+\_\+\+MEM}}
+\item 
+typedef struct \mbox{\hyperlink{structk_list}{k\+List}} \mbox{\hyperlink{ktypes_8h_a37a85e25b89202d3d19e076199887a3d}{K\+\_\+\+LIST}}
+\item 
+typedef struct \mbox{\hyperlink{structk_list_node}{k\+List\+Node}} \mbox{\hyperlink{ktypes_8h_aa1e89221406cade599c68f3a2526e39d}{K\+\_\+\+LISTNODE}}
+\item 
+typedef struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{ktypes_8h_ae99b5f03b6445742aef10971078272bf}{K\+\_\+\+SEMA}}
+\item 
+typedef struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} \mbox{\hyperlink{ktypes_8h_ac9c8669db5cef7b72c8daeca644679a6}{K\+\_\+\+MUTEX}}
+\item 
+typedef struct \mbox{\hyperlink{structk_mesg_buff}{k\+Mesg\+Buff}} \mbox{\hyperlink{ktypes_8h_a08f20af129dfb30823236067282c8d18}{K\+\_\+\+MESGBUFF}}
+\item 
+typedef struct \mbox{\hyperlink{structk_mesg_q}{k\+MesgQ}} \mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}}
+\item 
+typedef struct \mbox{\hyperlink{structk_mailbox}{k\+Mailbox}} \mbox{\hyperlink{ktypes_8h_a78e51a00ac6a6c98c26e7501ac186af2}{K\+\_\+\+MAILBOX}}
+\item 
+typedef struct \mbox{\hyperlink{structk_cond}{k\+Cond}} \mbox{\hyperlink{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43}{K\+\_\+\+COND}}
+\item 
+typedef struct \mbox{\hyperlink{structk_fifo}{k\+Fifo}} \mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}}
+\item 
+typedef struct \mbox{\hyperlink{structk_pipe}{k\+Pipe}} \mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}}
+\item 
+typedef struct \mbox{\hyperlink{structk_event}{k\+Event}} \mbox{\hyperlink{ktypes_8h_a17de05a807688da02a45d805971b9f46}{K\+\_\+\+EVENT}}
+\item 
+typedef \mbox{\hyperlink{ktypes_8h_a37a85e25b89202d3d19e076199887a3d}{K\+\_\+\+LIST}} \mbox{\hyperlink{ktypes_8h_a78ed1197954b95d49e56f8cfa24b7231}{K\+\_\+\+TCBQ}}
+\item 
+typedef struct \mbox{\hyperlink{structk_trace}{k\+Trace}} \mbox{\hyperlink{ktypes_8h_a4de0b560dabdeae331a2eb015031fb81}{K\+\_\+\+TRACE}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{ktypes_8h_a6f2fa6b13e49281bc95f0cfd80b52e2c}\label{ktypes_8h_a6f2fa6b13e49281bc95f0cfd80b52e2c} 
+enum \mbox{\hyperlink{ktypes_8h_a6f2fa6b13e49281bc95f0cfd80b52e2c}{k\+Err}} \{ \newline
+{\bfseries K\+\_\+\+SUCCESS} = 0
+, {\bfseries K\+\_\+\+ERROR} = -\/1
+, {\bfseries K\+\_\+\+ERR\+\_\+\+NULL\+\_\+\+OBJ} = -\/2
+, {\bfseries K\+\_\+\+TASK\+\_\+\+TSLICE\+\_\+\+DUE} = 1
+, \newline
+{\bfseries K\+\_\+\+TIMER\+\_\+\+SUCCESS} = K\+\_\+\+SUCCESS
+, {\bfseries K\+\_\+\+TIMER\+\_\+\+EXPIRED} = 2
+, {\bfseries K\+\_\+\+TIMER\+\_\+\+NO\+\_\+\+EXPIRED} = K\+\_\+\+SUCCESS
+, {\bfseries K\+\_\+\+TIMER\+\_\+\+POOL\+\_\+\+EMPTY} = 4
+, \newline
+{\bfseries K\+\_\+\+ERR\+\_\+\+TIMER\+\_\+\+GET} = -\/3
+, {\bfseries K\+\_\+\+LIST\+\_\+\+SUCCESS} = K\+\_\+\+SUCCESS
+, {\bfseries K\+\_\+\+ERR\+\_\+\+LIST\+\_\+\+FAIL} = -\/4
+, {\bfseries K\+\_\+\+ERR\+\_\+\+LIST\+\_\+\+NULL\+\_\+\+OBJ} = -\/5
+, \newline
+{\bfseries K\+\_\+\+ERR\+\_\+\+LIST\+\_\+\+ITEM\+\_\+\+NOT\+\_\+\+FOUND} = -\/6
+, {\bfseries K\+\_\+\+ERR\+\_\+\+LIST\+\_\+\+EMPTY} = -\/7
+, {\bfseries K\+\_\+\+ERR\+\_\+\+MUTEX\+\_\+\+NOT\+\_\+\+LOCKED} = -\/8
+, {\bfseries K\+\_\+\+ERR\+\_\+\+MUTEX\+\_\+\+NOT\+\_\+\+OWNER} = -\/9
+, \newline
+{\bfseries K\+\_\+\+ERR\+\_\+\+EVENT\+\_\+\+NOT\+\_\+\+INIT} = -\/10
+ \}
+\begin{DoxyCompactList}\small\item\em Return values. \end{DoxyCompactList}\item 
+\Hypertarget{ktypes_8h_afdeb3bb1b3731cc2cc2b39249f065a9c}\label{ktypes_8h_afdeb3bb1b3731cc2cc2b39249f065a9c} 
+enum \mbox{\hyperlink{ktypes_8h_afdeb3bb1b3731cc2cc2b39249f065a9c}{k\+Fault}} \{ \newline
+{\bfseries FAULT\+\_\+\+TASK} = 1
+, {\bfseries FAULT\+\_\+\+NOT\+\_\+\+IDLE} = 2
+, {\bfseries FAULT\+\_\+\+READY\+\_\+\+QUEUE} = 3
+, {\bfseries FAULT\+\_\+\+DTIMER\+\_\+\+POOL\+\_\+\+EMPTY} = 4
+, \newline
+{\bfseries FAULT\+\_\+\+TCB\+\_\+\+NULL} = 5
+, {\bfseries FAULT\+\_\+\+LIST} = 6
+, {\bfseries FAULT\+\_\+\+NULL\+\_\+\+OBJ} = 7
+, {\bfseries FAULT\+\_\+\+MEM\+\_\+\+POOL\+\_\+\+INIT} = 8
+, \newline
+{\bfseries FAULT\+\_\+\+INVALID\+\_\+\+ARG} = 9
+, {\bfseries FAULT\+\_\+\+TASK\+\_\+\+STATUS} = 10
+, {\bfseries FAULT\+\_\+\+POOL\+\_\+\+PUT} = 11
+, {\bfseries FAULT\+\_\+\+EVENT\+\_\+\+NOT\+\_\+\+INIT} = 12
+ \}
+\begin{DoxyCompactList}\small\item\em Fault codes. \end{DoxyCompactList}\item 
+enum \mbox{\hyperlink{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383}{k\+Task\+Status}} \{ \newline
+{\bfseries INVALID} = 0
+, \mbox{\hyperlink{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383a6564f2f3e15be06b670547bbcaaf0798}{READY}}
+, \mbox{\hyperlink{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383a1061be6c3fb88d32829cba6f6b2be304}{RUNNING}}
+, \mbox{\hyperlink{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383a1c2114335a42993ac5cc5dbf65f83d41}{SUSPENDED}}
+, \newline
+\mbox{\hyperlink{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383a488282601451a751e0f0e770b15d4235}{SLEEPING}}
+, \mbox{\hyperlink{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383a376c1b6a3f75d283a2efacf737438d61}{BLOCKED}}
+ \}
+\begin{DoxyCompactList}\small\item\em Task status. \end{DoxyCompactList}\item 
+\Hypertarget{ktypes_8h_a0e4d610437c164916f61fd20617e4946}\label{ktypes_8h_a0e4d610437c164916f61fd20617e4946} 
+enum {\bfseries k\+Trace\+ID} \{ \newline
+{\bfseries NONE} =0
+, {\bfseries TIMER\+\_\+\+EN}
+, {\bfseries TIMER\+\_\+\+OUT}
+, {\bfseries PREEMPTED}
+, \newline
+{\bfseries PRIORITY\+\_\+\+BOOST}
+, {\bfseries PRIORITY\+\_\+\+RESTORED}
+, {\bfseries INTERRUPT}
+, {\bfseries TSIGNAL\+\_\+\+RCVD}
+, \newline
+{\bfseries TSIGNAL\+\_\+\+SENT}
+, {\bfseries TPEND\+\_\+\+SEMA}
+, {\bfseries TPEND\+\_\+\+MUTEX}
+, {\bfseries TPEND\+\_\+\+CVAR}
+, \newline
+{\bfseries TPEND\+\_\+\+SLEEP}
+, {\bfseries TWAKE}
+, {\bfseries TPEND}
+, {\bfseries MSG\+\_\+\+RCVD}
+, \newline
+{\bfseries MSG\+\_\+\+SENT}
+, {\bfseries LIST\+\_\+\+INSERT}
+, {\bfseries LIST\+\_\+\+REMOVED}
+, {\bfseries REMOVE\+\_\+\+EMPTY\+\_\+\+LIST}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Kernel Primitive Types and Typedefs. 
+
+\begin{DoxyVersion}{Version}
+0.\+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyAuthor}{Author}
+Antonio Giacomelli 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Typedef Documentation}
+\Hypertarget{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}\index{ktypes.h@{ktypes.h}!ADDR@{ADDR}}
+\index{ADDR@{ADDR}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{ADDR}{ADDR}}
+{\footnotesize\ttfamily \label{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7} 
+typedef VOID\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}
+
+
+
+Primitve aliases. 
+
+Generic address type \Hypertarget{ktypes_8h_a5c5992905d3a3832f64f84f986702e1d}\index{ktypes.h@{ktypes.h}!CALLBACK@{CALLBACK}}
+\index{CALLBACK@{CALLBACK}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{CALLBACK}{CALLBACK}}
+{\footnotesize\ttfamily \label{ktypes_8h_a5c5992905d3a3832f64f84f986702e1d} 
+typedef VOID(\texorpdfstring{$\ast$}{*} CALLBACK) (\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}})}
+
+Event callout (timers, signals, etc.) \Hypertarget{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43}\index{ktypes.h@{ktypes.h}!K\_COND@{K\_COND}}
+\index{K\_COND@{K\_COND}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_COND}{K\_COND}}
+{\footnotesize\ttfamily \label{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43} 
+typedef struct \mbox{\hyperlink{structk_cond}{k\+Cond}} \mbox{\hyperlink{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43}{K\+\_\+\+COND}}}
+
+Condition variable \Hypertarget{ktypes_8h_a17de05a807688da02a45d805971b9f46}\index{ktypes.h@{ktypes.h}!K\_EVENT@{K\_EVENT}}
+\index{K\_EVENT@{K\_EVENT}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_EVENT}{K\_EVENT}}
+{\footnotesize\ttfamily \label{ktypes_8h_a17de05a807688da02a45d805971b9f46} 
+typedef struct \mbox{\hyperlink{structk_event}{k\+Event}} \mbox{\hyperlink{ktypes_8h_a17de05a807688da02a45d805971b9f46}{K\+\_\+\+EVENT}}}
+
+Generic Event ~\newline
+ \Hypertarget{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}\index{ktypes.h@{ktypes.h}!K\_FIFO@{K\_FIFO}}
+\index{K\_FIFO@{K\_FIFO}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_FIFO}{K\_FIFO}}
+{\footnotesize\ttfamily \label{ktypes_8h_a8925e054d77f1ac244335e0919352a2a} 
+typedef struct \mbox{\hyperlink{structk_fifo}{k\+Fifo}} \mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}}}
+
+Thread-\/safe Fifo \Hypertarget{ktypes_8h_a37a85e25b89202d3d19e076199887a3d}\index{ktypes.h@{ktypes.h}!K\_LIST@{K\_LIST}}
+\index{K\_LIST@{K\_LIST}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_LIST}{K\_LIST}}
+{\footnotesize\ttfamily \label{ktypes_8h_a37a85e25b89202d3d19e076199887a3d} 
+typedef struct \mbox{\hyperlink{structk_list}{k\+List}} \mbox{\hyperlink{ktypes_8h_a37a85e25b89202d3d19e076199887a3d}{K\+\_\+\+LIST}}}
+
+Generic linked list \Hypertarget{ktypes_8h_aa1e89221406cade599c68f3a2526e39d}\index{ktypes.h@{ktypes.h}!K\_LISTNODE@{K\_LISTNODE}}
+\index{K\_LISTNODE@{K\_LISTNODE}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_LISTNODE}{K\_LISTNODE}}
+{\footnotesize\ttfamily \label{ktypes_8h_aa1e89221406cade599c68f3a2526e39d} 
+typedef struct \mbox{\hyperlink{structk_list_node}{k\+List\+Node}} \mbox{\hyperlink{ktypes_8h_aa1e89221406cade599c68f3a2526e39d}{K\+\_\+\+LISTNODE}}}
+
+Linked list node \Hypertarget{ktypes_8h_a78e51a00ac6a6c98c26e7501ac186af2}\index{ktypes.h@{ktypes.h}!K\_MAILBOX@{K\_MAILBOX}}
+\index{K\_MAILBOX@{K\_MAILBOX}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_MAILBOX}{K\_MAILBOX}}
+{\footnotesize\ttfamily \label{ktypes_8h_a78e51a00ac6a6c98c26e7501ac186af2} 
+typedef struct \mbox{\hyperlink{structk_mailbox}{k\+Mailbox}} \mbox{\hyperlink{ktypes_8h_a78e51a00ac6a6c98c26e7501ac186af2}{K\+\_\+\+MAILBOX}}}
+
+Mailbox \Hypertarget{ktypes_8h_acbc325a3d965a3786cec3261f9c8a222}\index{ktypes.h@{ktypes.h}!K\_MEM@{K\_MEM}}
+\index{K\_MEM@{K\_MEM}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_MEM}{K\_MEM}}
+{\footnotesize\ttfamily \label{ktypes_8h_acbc325a3d965a3786cec3261f9c8a222} 
+typedef struct \mbox{\hyperlink{structk_mem}{k\+Mem}} \mbox{\hyperlink{ktypes_8h_acbc325a3d965a3786cec3261f9c8a222}{K\+\_\+\+MEM}}}
+
+Memory partition control block \Hypertarget{ktypes_8h_a08f20af129dfb30823236067282c8d18}\index{ktypes.h@{ktypes.h}!K\_MESGBUFF@{K\_MESGBUFF}}
+\index{K\_MESGBUFF@{K\_MESGBUFF}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_MESGBUFF}{K\_MESGBUFF}}
+{\footnotesize\ttfamily \label{ktypes_8h_a08f20af129dfb30823236067282c8d18} 
+typedef struct \mbox{\hyperlink{structk_mesg_buff}{k\+Mesg\+Buff}} \mbox{\hyperlink{ktypes_8h_a08f20af129dfb30823236067282c8d18}{K\+\_\+\+MESGBUFF}}}
+
+Message Buffer for Mesg Queues ~\newline
+ \Hypertarget{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}\index{ktypes.h@{ktypes.h}!K\_MESGQ@{K\_MESGQ}}
+\index{K\_MESGQ@{K\_MESGQ}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_MESGQ}{K\_MESGQ}}
+{\footnotesize\ttfamily \label{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8} 
+typedef struct \mbox{\hyperlink{structk_mesg_q}{k\+MesgQ}} \mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}}}
+
+Message Queue \Hypertarget{ktypes_8h_ac9c8669db5cef7b72c8daeca644679a6}\index{ktypes.h@{ktypes.h}!K\_MUTEX@{K\_MUTEX}}
+\index{K\_MUTEX@{K\_MUTEX}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_MUTEX}{K\_MUTEX}}
+{\footnotesize\ttfamily \label{ktypes_8h_ac9c8669db5cef7b72c8daeca644679a6} 
+typedef struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} \mbox{\hyperlink{ktypes_8h_ac9c8669db5cef7b72c8daeca644679a6}{K\+\_\+\+MUTEX}}}
+
+Mutex ~\newline
+ \Hypertarget{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}\index{ktypes.h@{ktypes.h}!K\_PIPE@{K\_PIPE}}
+\index{K\_PIPE@{K\_PIPE}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_PIPE}{K\_PIPE}}
+{\footnotesize\ttfamily \label{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158} 
+typedef struct \mbox{\hyperlink{structk_pipe}{k\+Pipe}} \mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}}}
+
+Pipe ~\newline
+ \Hypertarget{ktypes_8h_ae99b5f03b6445742aef10971078272bf}\index{ktypes.h@{ktypes.h}!K\_SEMA@{K\_SEMA}}
+\index{K\_SEMA@{K\_SEMA}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_SEMA}{K\_SEMA}}
+{\footnotesize\ttfamily \label{ktypes_8h_ae99b5f03b6445742aef10971078272bf} 
+typedef struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{ktypes_8h_ae99b5f03b6445742aef10971078272bf}{K\+\_\+\+SEMA}}}
+
+Semaphore \Hypertarget{ktypes_8h_a7ff4700cf41a229369720c557d327dcf}\index{ktypes.h@{ktypes.h}!K\_TCB@{K\_TCB}}
+\index{K\_TCB@{K\_TCB}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_TCB}{K\_TCB}}
+{\footnotesize\ttfamily \label{ktypes_8h_a7ff4700cf41a229369720c557d327dcf} 
+typedef struct \mbox{\hyperlink{structk_tcb}{k\+Tcb}} \mbox{\hyperlink{ktypes_8h_a7ff4700cf41a229369720c557d327dcf}{K\+\_\+\+TCB}}}
+
+Task control block \Hypertarget{ktypes_8h_a78ed1197954b95d49e56f8cfa24b7231}\index{ktypes.h@{ktypes.h}!K\_TCBQ@{K\_TCBQ}}
+\index{K\_TCBQ@{K\_TCBQ}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_TCBQ}{K\_TCBQ}}
+{\footnotesize\ttfamily \label{ktypes_8h_a78ed1197954b95d49e56f8cfa24b7231} 
+typedef \mbox{\hyperlink{ktypes_8h_a37a85e25b89202d3d19e076199887a3d}{K\+\_\+\+LIST}} \mbox{\hyperlink{ktypes_8h_a78ed1197954b95d49e56f8cfa24b7231}{K\+\_\+\+TCBQ}}}
+
+Alias for the TCB Queue \Hypertarget{ktypes_8h_a844771c2a7316cff5241bdfe48afb904}\index{ktypes.h@{ktypes.h}!K\_TIMER@{K\_TIMER}}
+\index{K\_TIMER@{K\_TIMER}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_TIMER}{K\_TIMER}}
+{\footnotesize\ttfamily \label{ktypes_8h_a844771c2a7316cff5241bdfe48afb904} 
+typedef struct \mbox{\hyperlink{structk_timer}{k\+Timer}} \mbox{\hyperlink{ktypes_8h_a844771c2a7316cff5241bdfe48afb904}{K\+\_\+\+TIMER}}}
+
+Application timer control block \Hypertarget{ktypes_8h_a4de0b560dabdeae331a2eb015031fb81}\index{ktypes.h@{ktypes.h}!K\_TRACE@{K\_TRACE}}
+\index{K\_TRACE@{K\_TRACE}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{K\_TRACE}{K\_TRACE}}
+{\footnotesize\ttfamily \label{ktypes_8h_a4de0b560dabdeae331a2eb015031fb81} 
+typedef struct \mbox{\hyperlink{structk_trace}{k\+Trace}} \mbox{\hyperlink{ktypes_8h_a4de0b560dabdeae331a2eb015031fb81}{K\+\_\+\+TRACE}}}
+
+Tracer/\+Logger ~\newline
+ \Hypertarget{ktypes_8h_a6e12550767a1e9f0191fe57808809295}\index{ktypes.h@{ktypes.h}!PID@{PID}}
+\index{PID@{PID}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{PID}{PID}}
+{\footnotesize\ttfamily \label{ktypes_8h_a6e12550767a1e9f0191fe57808809295} 
+typedef BYTE \mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}}}
+
+System defined Task ID type \Hypertarget{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}\index{ktypes.h@{ktypes.h}!PRIO@{PRIO}}
+\index{PRIO@{PRIO}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{PRIO}{PRIO}}
+{\footnotesize\ttfamily \label{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817} 
+typedef BYTE \mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}}}
+
+Task priority type \Hypertarget{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}\index{ktypes.h@{ktypes.h}!STRING@{STRING}}
+\index{STRING@{STRING}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{STRING}{STRING}}
+{\footnotesize\ttfamily \label{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa} 
+typedef const CHAR\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}}
+
+Read-\/only String alias ~\newline
+ \Hypertarget{ktypes_8h_a7f8d2a7a115fefaafab965da3eb3970f}\index{ktypes.h@{ktypes.h}!TASKENTRY@{TASKENTRY}}
+\index{TASKENTRY@{TASKENTRY}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{TASKENTRY}{TASKENTRY}}
+{\footnotesize\ttfamily \label{ktypes_8h_a7f8d2a7a115fefaafab965da3eb3970f} 
+typedef VOID(\texorpdfstring{$\ast$}{*} TASKENTRY) (VOID)}
+
+Task entry function pointer \Hypertarget{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}\index{ktypes.h@{ktypes.h}!TICK@{TICK}}
+\index{TICK@{TICK}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{TICK}{TICK}}
+{\footnotesize\ttfamily \label{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143} 
+typedef UINT32 \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}}
+
+Tick count type \Hypertarget{ktypes_8h_aa91430ada220aeb4be678a150b5233df}\index{ktypes.h@{ktypes.h}!TID@{TID}}
+\index{TID@{TID}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{TID}{TID}}
+{\footnotesize\ttfamily \label{ktypes_8h_aa91430ada220aeb4be678a150b5233df} 
+typedef BYTE \mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}}}
+
+User defined Task ID 
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383}\index{ktypes.h@{ktypes.h}!kTaskStatus@{kTaskStatus}}
+\index{kTaskStatus@{kTaskStatus}!ktypes.h@{ktypes.h}}
+\doxysubsubsection{\texorpdfstring{kTaskStatus}{kTaskStatus}}
+{\footnotesize\ttfamily \label{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383} 
+enum \mbox{\hyperlink{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383}{k\+Task\+Status}}}
+
+
+
+Task status. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{READY@{READY}!ktypes.h@{ktypes.h}}\index{ktypes.h@{ktypes.h}!READY@{READY}}}\Hypertarget{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383a6564f2f3e15be06b670547bbcaaf0798}\label{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383} 
+READY&On the Ready Queue, waiting to be dispatched \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RUNNING@{RUNNING}!ktypes.h@{ktypes.h}}\index{ktypes.h@{ktypes.h}!RUNNING@{RUNNING}}}\Hypertarget{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383a1061be6c3fb88d32829cba6f6b2be304}\label{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383} 
+RUNNING&Running. CPU is taken. ~\newline
+ \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SUSPENDED@{SUSPENDED}!ktypes.h@{ktypes.h}}\index{ktypes.h@{ktypes.h}!SUSPENDED@{SUSPENDED}}}\Hypertarget{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383a1c2114335a42993ac5cc5dbf65f83d41}\label{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383} 
+SUSPENDED&Suspended itself waiting for a direct signal \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SLEEPING@{SLEEPING}!ktypes.h@{ktypes.h}}\index{ktypes.h@{ktypes.h}!SLEEPING@{SLEEPING}}}\Hypertarget{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383a488282601451a751e0f0e770b15d4235}\label{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383} 
+SLEEPING&Is sleeping waiting for a specific event (a timer, or a condition variable, etc. ~\newline
+ \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{BLOCKED@{BLOCKED}!ktypes.h@{ktypes.h}}\index{ktypes.h@{ktypes.h}!BLOCKED@{BLOCKED}}}\Hypertarget{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383a376c1b6a3f75d283a2efacf737438d61}\label{ktypes_8h_a73cd4b5143c8b37fdd158ddb99522383} 
+BLOCKED&Blocked on semaphore or mutex ~\newline
+ \\
+\hline
+
+\end{DoxyEnumFields}

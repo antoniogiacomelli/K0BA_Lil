@@ -59,7 +59,9 @@
 #ifndef INC_K_API_H_
 #define INC_K_API_H_
 
-/* include your HAL here*/
+#include <stm32f4xx_hal.h>
+#include <stm32f401xe.h>
+#include <cmsis_gcc.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <assert.h>
@@ -84,7 +86,7 @@
  * \param id Task ID
  * \param stackAddrPtr Pointer to the task stack
  * \param stackSize Size of the task stack
- * \param timeSlice Time-slice for the task
+ * \param timeSlice Time-slice for the task (>1 to be set, 0 or 1 considers the systick period)
  * \param priority Task priority
  * \param runToComplet Cooperative only function, to use in deferred handlers,
  * 				  	   servers - once dispatched it is never preempted unless
@@ -324,11 +326,9 @@ K_ERR kFifoInit(K_FIFO* const self);
  * \return K_ERROR/SUCCESS
  */
 K_ERR kFifoPut(K_FIFO* self, BYTE data);
-K_ERR kFifoInit(K_FIFO* const self);
 /**
  * \brief Get a single byte from a fifo
  * \param self FIFO address
- * \param data One-byte data
  * \return Read byte
  */
 BYTE FifoGet(K_FIFO* self);
