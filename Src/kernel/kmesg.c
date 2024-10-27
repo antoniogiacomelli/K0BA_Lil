@@ -5,14 +5,11 @@
  ******************************************************************************
  ******************************************************************************
  * 	In this unit:
- * 					o Direct Task Pend/Signal
- *					o Sleep delay
- *					o Busy-wait delay
- *					o Sleep/Wake-Up (on Events)
- *					o Semaphores
- *					o Mutexes with priority inheritance
- *					o Condition Variables
- *					o Generic Events
+ * 					o System Message Buffers pool Management
+ *					o Mailbox
+ *					o Message Queue
+ *					o Pipes
+ *					o FIFOs
  *
  *****************************************************************************/
 
