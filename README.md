@@ -1,24 +1,35 @@
-# K0BA
-*Kernel 0 For Embedded ARM* aims to be a microkernel for ARM Cortex-M microprocessors. 
+# K0BA Lite v0.1.0-beta
 
-<img width="450" alt="microkernel" src="https://user-images.githubusercontent.com/62488903/209377097-07d90421-afe0-4749-adac-3a875641aa51.png">
+*Kernel 0 For Embedded Applications* is a Real-Tim Kernel* 
 
-The current features are:
-* Preemptive Scheduling (Fixed priority with time-slice) 
-* Cooperative Scheduling
-* User space and Kernel space threads
-* System Calls
-* Synchronization mechanisms: sleep/wakeup, semaphores and mutexes
-* ITC Mechanisms: Mailboxes, FIFOs and Synch Message Passing
+This is a light-weight version with no memory isolation. Currently it supports ARMv7M architecture.
 
-To be Implemented:
-* Nested interrupts support
-* Priority Inheritance
-* MPU configuration to split kernel memory from user memory
+*Logical Architecture:*
 
-Major dependencies:
-* ARM GCC 
-* CMSIS HAL
+<img width="450" alt="kernel" src="https://github.com/antoniogiacomelli/K0BA_Lite/blob/main/layeredkernel.png">
 
-_The system was implemented on the top of a BSP for an Arduino Due (SAM3X8E) provided by Atmel, 
-but can be easily ported to any BSP that uses CMSIS HAL_
+**F E A T U R E S:**
+
+- **Priority Preemptive Scheduler with Rate-Monothonic Scheduling**
+  
+- **Synchronization:**:
+  - Sleep/WakeUp on Events
+  - Semaphores
+  - Mutexes (with priority inheritance)
+  - Condition Variables
+  - Direct Task Signal
+  
+- **Inter-task Communication:**
+  - Mailboxes (with extended rendez-vous)
+  - Message Queues with variable item-size
+  - Stream Buffers (Simple FIFOs and "UNIX-like" pipes)
+
+- **Memory Pools with fixed block-size for dynamic memory allocation**
+
+- **Application Timers (using delta queues for efficient handling)**
+
+
+**Major dependencies:**
+- ARM GCC 
+- CMSIS HAL
+
