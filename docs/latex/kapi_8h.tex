@@ -1,0 +1,979 @@
+\doxysection{C\+:/\+Git\+Koba/\+K0\+BA\+\_\+\+Lite/\+Inc/kernel/kapi.h File Reference}
+\hypertarget{kapi_8h}{}\label{kapi_8h}\index{C:/GitKoba/K0BA\_Lite/Inc/kernel/kapi.h@{C:/GitKoba/K0BA\_Lite/Inc/kernel/kapi.h}}
+
+
+Kernel API.  
+
+
+{\ttfamily \#include $<$stm32f4xx\+\_\+hal.\+h$>$}\newline
+{\ttfamily \#include $<$stm32f401xe.\+h$>$}\newline
+{\ttfamily \#include $<$cmsis\+\_\+gcc.\+h$>$}\newline
+{\ttfamily \#include $<$stdarg.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+{\ttfamily \#include $<$kmacros.\+h$>$}\newline
+{\ttfamily \#include $<$kconfig.\+h$>$}\newline
+{\ttfamily \#include $<$ktypes.\+h$>$}\newline
+{\ttfamily \#include $<$kobjs.\+h$>$}\newline
+{\ttfamily \#include $<$klist.\+h$>$}\newline
+{\ttfamily \#include $<$kerr.\+h$>$}\newline
+{\ttfamily \#include $<$kglobals.\+h$>$}\newline
+{\ttfamily \#include $<$ksch.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a48f3c3fd84739d330a90946f4028ed95}{k\+Create\+Task}} (const \mbox{\hyperlink{ktypes_8h_a7f8d2a7a115fefaafab965da3eb3970f}{TASKENTRY}} task\+Func\+Ptr, \mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}} \mbox{\hyperlink{kobjs_8h_a28b528b7c9c9838484d3a31e90e5cbc0}{task\+Name}}, const \mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} id, UINT32 \texorpdfstring{$\ast$}{*}const \mbox{\hyperlink{kobjs_8h_a3812e78a0b03c66892f2e309b501d6fb}{stack\+Addr\+Ptr}}, const UINT32 \mbox{\hyperlink{kobjs_8h_a82cabdcaee43fc729a1da5551d429f73}{stack\+Size}}, const \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{kobjs_8h_a631ef180fa18166aecfefd4d0a5c8ded}{time\+Slice}}, const \mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}} \mbox{\hyperlink{kobjs_8h_af7fd074fc4de0dd20ecdc5ab5bcbc36b}{priority}}, const BOOL \mbox{\hyperlink{kobjs_8h_a5992ac0fd137a5387003727b08f2e41d}{run\+To\+Compl}})
+\begin{DoxyCompactList}\small\item\em Create a new task with time-\/slice scheduling. \end{DoxyCompactList}\item 
+\Hypertarget{kapi_8h_ae4cf07219d0aac0010e96ae831fedc29}\label{kapi_8h_ae4cf07219d0aac0010e96ae831fedc29} 
+VOID {\bfseries k\+Yield} (VOID)
+\begin{DoxyCompactList}\small\item\em Yields the current task to allow a context switch. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a5e140b45265e7cd003968c4d82555c02}{k\+Sema\+Init}} (\mbox{\hyperlink{ktypes_8h_ae99b5f03b6445742aef10971078272bf}{K\+\_\+\+SEMA}} \texorpdfstring{$\ast$}{*}self, INT32 value)
+\begin{DoxyCompactList}\small\item\em Initialise a semaphore. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a51e0b6863fff70b1dcc672fce8b8fce8}{k\+Sema\+Wait}} (\mbox{\hyperlink{ktypes_8h_ae99b5f03b6445742aef10971078272bf}{K\+\_\+\+SEMA}} \texorpdfstring{$\ast$}{*}self)
+\begin{DoxyCompactList}\small\item\em Wait on a semaphore. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_ab27d93fdb536220c6050fcef8ceb8fb2}{k\+Sema\+Signal}} (\mbox{\hyperlink{ktypes_8h_ae99b5f03b6445742aef10971078272bf}{K\+\_\+\+SEMA}} \texorpdfstring{$\ast$}{*}self)
+\begin{DoxyCompactList}\small\item\em Signal a semaphore. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a69d5b9a9a21a31cfe06d02c4e614ab85}{k\+Mutex\+Init}} (\mbox{\hyperlink{ktypes_8h_ac9c8669db5cef7b72c8daeca644679a6}{K\+\_\+\+MUTEX}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Init a mutex. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a0fdc36bb0706a7ab9eeb608415ed9db2}{k\+Mutex\+Lock}} (\mbox{\hyperlink{ktypes_8h_ac9c8669db5cef7b72c8daeca644679a6}{K\+\_\+\+MUTEX}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Lock a mutex. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a6ac0d567312217162db7a5a2d1644b72}{k\+Mutex\+Unlock}} (\mbox{\hyperlink{ktypes_8h_ac9c8669db5cef7b72c8daeca644679a6}{K\+\_\+\+MUTEX}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Unlock a mutex. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a608475b78c7be986c883d807cde11be3}{k\+Mesg\+Buff\+Pool\+Init}} (VOID)
+\begin{DoxyCompactList}\small\item\em Initialise the mesg buffer memory pool. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_a08f20af129dfb30823236067282c8d18}{K\+\_\+\+MESGBUFF}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{kapi_8h_a0b84eca5333bcff386af89c9485a73f2}{k\+Mesg\+Buff\+Get}} (VOID)
+\begin{DoxyCompactList}\small\item\em Get a mesg buffer from the mesg buffer memory pool. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a56b4d01f037eb128ddd4212e4c27c4cd}{k\+Mesg\+Buff\+Put}} (\mbox{\hyperlink{ktypes_8h_a08f20af129dfb30823236067282c8d18}{K\+\_\+\+MESGBUFF}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Returns a mesg buffer to the mesg buffer memory pool. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a78bc31b137856c4cf8880599445f85bf}{k\+Mesg\+QPut}} (\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}self, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{kobjs_8h_af1e1389b08ae9291bc54899ca6877a22}{mesg\+Ptr}}, SIZE \mbox{\hyperlink{kobjs_8h_a44c2f18f4c12116758c37c108d56412e}{mesg\+Size}})
+\begin{DoxyCompactList}\small\item\em Send to a message queue. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} \mbox{\hyperlink{kapi_8h_aede8797b110c57766f6c4934919cb9c4}{k\+Mesg\+QGet}} (\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}self, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} rcvd\+Mesg\+Ptr)
+\begin{DoxyCompactList}\small\item\em Receive from a message queue. \end{DoxyCompactList}\item 
+VOID \mbox{\hyperlink{kapi_8h_a03c8ffe17c11842218167737a1d7e376}{k\+Mesg\+QInit}} (\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}const self, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} mesg\+Pool\+Ptr, BYTE queue\+Size, BYTE \mbox{\hyperlink{kobjs_8h_a44c2f18f4c12116758c37c108d56412e}{mesg\+Size}})
+\begin{DoxyCompactList}\small\item\em Initialises a Message Queue. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_ae80a6ee489dee1db07720492bcabf0f9}{k\+Mailbox\+Init}} (\mbox{\hyperlink{ktypes_8h_a78e51a00ac6a6c98c26e7501ac186af2}{K\+\_\+\+MAILBOX}} \texorpdfstring{$\ast$}{*}self)
+\begin{DoxyCompactList}\small\item\em Initialise a mailbox. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_ae1bb13af852fcd6ef9686d450bbed5c5}{k\+Mailbox\+Post}} (\mbox{\hyperlink{ktypes_8h_a78e51a00ac6a6c98c26e7501ac186af2}{K\+\_\+\+MAILBOX}} \texorpdfstring{$\ast$}{*}const self, const \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{kobjs_8h_af1e1389b08ae9291bc54899ca6877a22}{mesg\+Ptr}}, SIZE \mbox{\hyperlink{kobjs_8h_a44c2f18f4c12116758c37c108d56412e}{mesg\+Size}})
+\begin{DoxyCompactList}\small\item\em Post a message on a mailbox w. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} \mbox{\hyperlink{kapi_8h_a7f3c4a890867f53cffa98eeb476b6ed2}{k\+Mailbox\+Pend}} (\mbox{\hyperlink{ktypes_8h_a78e51a00ac6a6c98c26e7501ac186af2}{K\+\_\+\+MAILBOX}} \texorpdfstring{$\ast$}{*}const self, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} rcvd\+Mesg\+Ptr)
+\begin{DoxyCompactList}\small\item\em Retrieves a message from a mailbox. \end{DoxyCompactList}\item 
+VOID \mbox{\hyperlink{kapi_8h_a8cd73aba90711f08ce9a8c71501570ea}{k\+Cond\+Init}} (\mbox{\hyperlink{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43}{K\+\_\+\+COND}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Initialises a condition variable. \end{DoxyCompactList}\item 
+VOID \mbox{\hyperlink{kapi_8h_ac6bb0fa5d1873a8dbb3b9b42ceaee4bb}{k\+Cond\+Wait}} (\mbox{\hyperlink{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43}{K\+\_\+\+COND}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Wait on a condition variable. \end{DoxyCompactList}\item 
+VOID \mbox{\hyperlink{kapi_8h_aa998c6dc2a62dc3571c4c253317959b0}{k\+Cond\+Signal}} (\mbox{\hyperlink{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43}{K\+\_\+\+COND}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Signals a condition variable, to release one queued task, if any. \end{DoxyCompactList}\item 
+VOID \mbox{\hyperlink{kapi_8h_a712a1d7c1ce650f671eb3c9d26438663}{k\+Cond\+Wake}} (\mbox{\hyperlink{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43}{K\+\_\+\+COND}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Signal a condition variable, releasing all queued tasks. \end{DoxyCompactList}\item 
+VOID \mbox{\hyperlink{kapi_8h_af0f25d9a49970e081fdb0b83bd0f58bb}{k\+Pipe\+Init}} (\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Initialise a pipe. \end{DoxyCompactList}\item 
+INT32 \mbox{\hyperlink{kapi_8h_aa6b2c377e14b3cfcc6276728affd6799}{k\+Pipe\+Read}} (\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const self, BYTE \texorpdfstring{$\ast$}{*}dest\+Ptr, UINT32 n\+Bytes)
+\begin{DoxyCompactList}\small\item\em Read a stream of bytes from a pipe. \end{DoxyCompactList}\item 
+INT32 \mbox{\hyperlink{kapi_8h_aa0574e63aea244e0dbb93e85810a80e9}{k\+Pipe\+Write}} (\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const self, const BYTE \texorpdfstring{$\ast$}{*}src\+Ptr, UINT32 n\+Bytes)
+\begin{DoxyCompactList}\small\item\em Write a stream of bytes to a pipe. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a17ea271d2f7e832f5e25f0cddd5be416}{k\+Fifo\+Init}} (\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Initialise Simple thread-\/safe FIFO. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a86b01280ffdbecd237672fcda629096d}{k\+Fifo\+Put}} (\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}self, BYTE data)
+\begin{DoxyCompactList}\small\item\em Put a single byte on a fifo. \end{DoxyCompactList}\item 
+BYTE \mbox{\hyperlink{kapi_8h_a48360b960c673a4c739ece16f2279849}{k\+Fifo\+Get}} (\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}self)
+\begin{DoxyCompactList}\small\item\em Get a single byte from a fifo. \end{DoxyCompactList}\item 
+VOID \mbox{\hyperlink{kapi_8h_ad3fff4d18490f070b49954400ea87bb8}{k\+Pend}} (VOID)
+\begin{DoxyCompactList}\small\item\em Put the current task into a wait state to be waken from another task/\+ISR. \end{DoxyCompactList}\item 
+VOID \mbox{\hyperlink{kapi_8h_ad307debe191c41675701bd74419ca549}{k\+Signal}} (\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} task\+ID)
+\begin{DoxyCompactList}\small\item\em Direct Signal a task. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a5e984ba8366c030d17f2189a37c84b32}{k\+Sleep}} (\mbox{\hyperlink{ktypes_8h_a17de05a807688da02a45d805971b9f46}{K\+\_\+\+EVENT}} \texorpdfstring{$\ast$}{*}self)
+\begin{DoxyCompactList}\small\item\em Suspends a task waiting for a specific event. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_afcffb622d677db3d32245d027405d9e2}{k\+Wake}} (\mbox{\hyperlink{ktypes_8h_a17de05a807688da02a45d805971b9f46}{K\+\_\+\+EVENT}} \texorpdfstring{$\ast$}{*}self)
+\begin{DoxyCompactList}\small\item\em Wakes a task waiting for a specific event. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a0ccddeb9b1a4e1ddfa2c0aa00847cc13}{k\+Timer\+Init}} (\mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}} \mbox{\hyperlink{kobjs_8h_a2f5439521260e42a003d2b02e581506a}{timer\+Name}}, \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{kobjs_8h_a90802827a633145d5de8f3201f4d8023}{ticks}}, \mbox{\hyperlink{ktypes_8h_a5c5992905d3a3832f64f84f986702e1d}{CALLBACK}} \mbox{\hyperlink{kobjs_8h_a691fa461176432a4abb3489acfcc05c0}{fun\+Ptr}}, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{kobjs_8h_ac8ff5f8d594a4e5ebd00a6b139581c32}{args\+Ptr}}, BOOL \mbox{\hyperlink{kobjs_8h_a6b5c52a49f22e308fca08861639c290b}{reload}})
+\begin{DoxyCompactList}\small\item\em Initialises an application timer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a8fbfcd410836822cea4344ed4701ad92}{k\+Timer\+Pool\+Init}} (VOID)
+\begin{DoxyCompactList}\small\item\em Initialises the application timer pool. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_aee0b526a777ab8d7735552a7ecb5c0dc}{k\+Timer\+Put}} (\mbox{\hyperlink{ktypes_8h_a844771c2a7316cff5241bdfe48afb904}{K\+\_\+\+TIMER}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Put a timer back into the timer pool. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_a844771c2a7316cff5241bdfe48afb904}{K\+\_\+\+TIMER}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{kapi_8h_a107fe60a250ef615131d762a6632bea4}{k\+Timer\+Get}} (VOID)
+\begin{DoxyCompactList}\small\item\em Get a timer from the timer pool. \end{DoxyCompactList}\item 
+VOID \mbox{\hyperlink{kapi_8h_a64b9274a53aefb9160e43fffebb99c3d}{k\+Busy\+Delay}} (\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} delay)
+\begin{DoxyCompactList}\small\item\em Busy-\/wait the task for a specified delay in ticks. \end{DoxyCompactList}\item 
+VOID \mbox{\hyperlink{kapi_8h_a97a3c846dcf224ea5ebb1916830deea5}{k\+Sleep\+Delay}} (\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{kobjs_8h_a90802827a633145d5de8f3201f4d8023}{ticks}})
+\begin{DoxyCompactList}\small\item\em Puts the current task to sleep for a number of ticks. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a68daf3e9a789ad0de1534c230a60d4aa}{k\+Mem\+Init}} (\mbox{\hyperlink{ktypes_8h_acbc325a3d965a3786cec3261f9c8a222}{K\+\_\+\+MEM}} \texorpdfstring{$\ast$}{*}const self, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} const mem\+Pool\+Ptr, BYTE \mbox{\hyperlink{kobjs_8h_a798fb29e435afbd2e42488f7872f3b53}{blk\+Size}}, const BYTE num\+Blocks)
+\begin{DoxyCompactList}\small\item\em Memory Pool Control Block Initialisation. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{kapi_8h_a2c55f5846c425a42275d8e01226d3359}{k\+Mem\+Alloc}} (\mbox{\hyperlink{ktypes_8h_acbc325a3d965a3786cec3261f9c8a222}{K\+\_\+\+MEM}} \texorpdfstring{$\ast$}{*}const self)
+\begin{DoxyCompactList}\small\item\em Allocate memory from a block pool. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_ac946551c4ffbd02d42bcbe57858ef457}{k\+Mem\+Free}} (\mbox{\hyperlink{ktypes_8h_acbc325a3d965a3786cec3261f9c8a222}{K\+\_\+\+MEM}} \texorpdfstring{$\ast$}{*}const self, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} const block\+Ptr)
+\begin{DoxyCompactList}\small\item\em Free a memory block back to the block pool. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} \mbox{\hyperlink{kapi_8h_a73af70b4d444719e1b73137a0a539ed4}{k\+Get\+Task\+PID}} (\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} task\+ID)
+\begin{DoxyCompactList}\small\item\em Gets a task system ID. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}} \mbox{\hyperlink{kapi_8h_a216409ca714b6215ad02b67badb30442}{k\+Get\+Task\+Prio}} (\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} task\+ID)
+\begin{DoxyCompactList}\small\item\em Gets a task priorirty. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{kapi_8h_a7dac8882d749d372913a4bde40f13990}{k\+Tick\+Get}} (VOID)
+\begin{DoxyCompactList}\small\item\em Gets the current number of ticks. \end{DoxyCompactList}\item 
+SIZE \mbox{\hyperlink{kapi_8h_a11efbfc68d9db0cbdab58046cc9235e1}{k\+Str\+Len}} (\mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}} string)
+\begin{DoxyCompactList}\small\item\em Returns the size of a string. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{kapi_8h_a1b15aa024bacdc6fc95944acd445fbd0}{k\+Mem\+Cpy}} (\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} dest\+Ptr, const \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} src\+Ptr, SIZE size)
+\begin{DoxyCompactList}\small\item\em Deep copy data from one address to other. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Kernel API. 
+
+\begin{DoxyVersion}{Version}
+0.\+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyAuthor}{Author}
+Antonio Giacomelli
+\end{DoxyAuthor}
+\begin{DoxyVerb}*  ________________________________________
+* |                                        |--
+* | [TASK1][TASK2]  ....         [TASKN]   | application.c/application.h
+* |----------------------------------------|--
+* |                 API                    | this file
+* |----------------------------------------|--
+* |                                        |
+* |             K0BA KERNEL                | kobjs.h k*.c
+* |________________________________________|--
+* |                                        |
+* |        BOARD SUPPORT PACKAGE           |
+* |________________________________________|
+* |                                        |
+* |                CMIS HAL                |
+* |________________________________________|--
+*
+* This is the kernel API to be included within any application
+* development. It provides methods to access the kernel services.
+*
+* Every kernel primitive is on UPPERCASE. If preceded by a K_ it is
+* kernel data structure (e.g. K_SEMA is a semaphore).
+* If not, it is an alias for standard C data or data pointer (e.g., BYTE,
+* INT32, ADDR, STRING: respectively, unsigned char, int, void* and const char*)
+* or rresents system data that is not a structure itself:
+* (e.g., PRIO for priority, TID for task ID.
+*
+* A typical kernel service often receives a pointer to a kernel
+* object or a kernel parameter -  If it does not, it either acts on a
+* (2) singleton object (3) and/or on the (4) caller itself.
+*
+*  E.g., (1) kSemaWait(SEMA const* self): decreases a counter semaphore.
+*        (2) kSleepDelay(): there is a single list of timers dedicated for
+*                           keeping track of sleeping tasks.
+*        (3) kSignal(TID id): direct signals  task. Every task is assigned an
+*             unique ID.
+*        (4) kYield(): caller task is suspended
+*
+*\end{DoxyVerb}
+ 
+
+Definition in file \mbox{\hyperlink{kapi_8h_source}{kapi.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{kapi_8h_a48f3c3fd84739d330a90946f4028ed95}\index{kapi.h@{kapi.h}!kCreateTask@{kCreateTask}}
+\index{kCreateTask@{kCreateTask}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kCreateTask()}{kCreateTask()}}
+{\footnotesize\ttfamily \label{kapi_8h_a48f3c3fd84739d330a90946f4028ed95} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Create\+Task (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{ktypes_8h_a7f8d2a7a115fefaafab965da3eb3970f}{TASKENTRY}}}]{task\+Func\+Ptr}{, }\item[{\mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}}]{task\+Name}{, }\item[{const \mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}}}]{id}{, }\item[{UINT32 \texorpdfstring{$\ast$}{*}const}]{stack\+Addr\+Ptr}{, }\item[{const UINT32}]{stack\+Size}{, }\item[{const \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}}]{time\+Slice}{, }\item[{const \mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}}}]{priority}{, }\item[{const BOOL}]{run\+To\+Compl}{}\end{DoxyParamCaption})}
+
+
+
+Create a new task with time-\/slice scheduling. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em task\+Func\+Ptr} & Pointer to the task function \\
+\hline
+{\em task\+Name} & Task name \\
+\hline
+{\em id} & Task ID \\
+\hline
+{\em stack\+Addr\+Ptr} & Pointer to the task stack \\
+\hline
+{\em stack\+Size} & Size of the task stack \\
+\hline
+{\em time\+Slice} & Time-\/slice for the task \\
+\hline
+{\em priority} & Task priority \\
+\hline
+{\em run\+To\+Compl} & Cooperative only function, to use in deferred handlers, servers -\/ once dispatched it is never preempted unless it blocks or yields. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+SUCCESS on success, K\+\_\+\+ERROR on failure 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a5e140b45265e7cd003968c4d82555c02}\index{kapi.h@{kapi.h}!kSemaInit@{kSemaInit}}
+\index{kSemaInit@{kSemaInit}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kSemaInit()}{kSemaInit()}}
+{\footnotesize\ttfamily \label{kapi_8h_a5e140b45265e7cd003968c4d82555c02} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Sema\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ae99b5f03b6445742aef10971078272bf}{K\+\_\+\+SEMA}} \texorpdfstring{$\ast$}{*}}]{self}{, }\item[{INT32}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Initialise a semaphore. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Semaphore address \\
+\hline
+{\em value} & Initial value \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a51e0b6863fff70b1dcc672fce8b8fce8}\index{kapi.h@{kapi.h}!kSemaWait@{kSemaWait}}
+\index{kSemaWait@{kSemaWait}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kSemaWait()}{kSemaWait()}}
+{\footnotesize\ttfamily \label{kapi_8h_a51e0b6863fff70b1dcc672fce8b8fce8} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Sema\+Wait (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ae99b5f03b6445742aef10971078272bf}{K\+\_\+\+SEMA}} \texorpdfstring{$\ast$}{*}}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Wait on a semaphore. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Semaphore address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+SUCCESS / K\+\_\+\+ERROR 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_ab27d93fdb536220c6050fcef8ceb8fb2}\index{kapi.h@{kapi.h}!kSemaSignal@{kSemaSignal}}
+\index{kSemaSignal@{kSemaSignal}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kSemaSignal()}{kSemaSignal()}}
+{\footnotesize\ttfamily \label{kapi_8h_ab27d93fdb536220c6050fcef8ceb8fb2} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Sema\+Signal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ae99b5f03b6445742aef10971078272bf}{K\+\_\+\+SEMA}} \texorpdfstring{$\ast$}{*}}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Signal a semaphore. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Semaphore address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a69d5b9a9a21a31cfe06d02c4e614ab85}\index{kapi.h@{kapi.h}!kMutexInit@{kMutexInit}}
+\index{kMutexInit@{kMutexInit}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMutexInit()}{kMutexInit()}}
+{\footnotesize\ttfamily \label{kapi_8h_a69d5b9a9a21a31cfe06d02c4e614ab85} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mutex\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ac9c8669db5cef7b72c8daeca644679a6}{K\+\_\+\+MUTEX}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Init a mutex. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & mutex address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+SUCCESS/\+FAIL 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a0fdc36bb0706a7ab9eeb608415ed9db2}\index{kapi.h@{kapi.h}!kMutexLock@{kMutexLock}}
+\index{kMutexLock@{kMutexLock}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMutexLock()}{kMutexLock()}}
+{\footnotesize\ttfamily \label{kapi_8h_a0fdc36bb0706a7ab9eeb608415ed9db2} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mutex\+Lock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ac9c8669db5cef7b72c8daeca644679a6}{K\+\_\+\+MUTEX}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Lock a mutex. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & mutex address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+SUCCESS / K\+\_\+\+ERROR 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a6ac0d567312217162db7a5a2d1644b72}\index{kapi.h@{kapi.h}!kMutexUnlock@{kMutexUnlock}}
+\index{kMutexUnlock@{kMutexUnlock}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMutexUnlock()}{kMutexUnlock()}}
+{\footnotesize\ttfamily \label{kapi_8h_a6ac0d567312217162db7a5a2d1644b72} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mutex\+Unlock (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ac9c8669db5cef7b72c8daeca644679a6}{K\+\_\+\+MUTEX}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Unlock a mutex. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & mutex address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+SUCCESS/\+FAIL 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a608475b78c7be986c883d807cde11be3}\index{kapi.h@{kapi.h}!kMesgBuffPoolInit@{kMesgBuffPoolInit}}
+\index{kMesgBuffPoolInit@{kMesgBuffPoolInit}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMesgBuffPoolInit()}{kMesgBuffPoolInit()}}
+{\footnotesize\ttfamily \label{kapi_8h_a608475b78c7be986c883d807cde11be3} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mesg\+Buff\+Pool\+Init (\begin{DoxyParamCaption}\item[{VOID}]{}{}\end{DoxyParamCaption})}
+
+
+
+Initialise the mesg buffer memory pool. 
+
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+SUCCESS/\+K\+\_\+\+ERROR 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a0b84eca5333bcff386af89c9485a73f2}\index{kapi.h@{kapi.h}!kMesgBuffGet@{kMesgBuffGet}}
+\index{kMesgBuffGet@{kMesgBuffGet}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMesgBuffGet()}{kMesgBuffGet()}}
+{\footnotesize\ttfamily \label{kapi_8h_a0b84eca5333bcff386af89c9485a73f2} 
+\mbox{\hyperlink{ktypes_8h_a08f20af129dfb30823236067282c8d18}{K\+\_\+\+MESGBUFF}} \texorpdfstring{$\ast$}{*} k\+Mesg\+Buff\+Get (\begin{DoxyParamCaption}\item[{VOID}]{}{}\end{DoxyParamCaption})}
+
+
+
+Get a mesg buffer from the mesg buffer memory pool. 
+
+\begin{DoxyReturn}{Returns}
+Mesg Buffer address if successful, NULL if fails 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a56b4d01f037eb128ddd4212e4c27c4cd}\index{kapi.h@{kapi.h}!kMesgBuffPut@{kMesgBuffPut}}
+\index{kMesgBuffPut@{kMesgBuffPut}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMesgBuffPut()}{kMesgBuffPut()}}
+{\footnotesize\ttfamily \label{kapi_8h_a56b4d01f037eb128ddd4212e4c27c4cd} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mesg\+Buff\+Put (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a08f20af129dfb30823236067282c8d18}{K\+\_\+\+MESGBUFF}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Returns a mesg buffer to the mesg buffer memory pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Mesg Buffer address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+SUCCESS/\+K\+\_\+\+ERROR 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a78bc31b137856c4cf8880599445f85bf}\index{kapi.h@{kapi.h}!kMesgQPut@{kMesgQPut}}
+\index{kMesgQPut@{kMesgQPut}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMesgQPut()}{kMesgQPut()}}
+{\footnotesize\ttfamily \label{kapi_8h_a78bc31b137856c4cf8880599445f85bf} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mesg\+QPut (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}}]{self}{, }\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{mesg\+Ptr}{, }\item[{SIZE}]{mesg\+Size}{}\end{DoxyParamCaption})}
+
+
+
+Send to a message queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Message queue address \\
+\hline
+{\em mesg\+Ptr} & Message address \\
+\hline
+{\em mesg\+Size} & Message size \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+SUCCESS/\+FAIL 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_aede8797b110c57766f6c4934919cb9c4}\index{kapi.h@{kapi.h}!kMesgQGet@{kMesgQGet}}
+\index{kMesgQGet@{kMesgQGet}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMesgQGet()}{kMesgQGet()}}
+{\footnotesize\ttfamily \label{kapi_8h_aede8797b110c57766f6c4934919cb9c4} 
+\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} k\+Mesg\+QGet (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}}]{self}{, }\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{rcvd\+Mesg\+Ptr}{}\end{DoxyParamCaption})}
+
+
+
+Receive from a message queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Message Queue address \\
+\hline
+{\em rcvd\+Mesg\+Ptr} & Pointer to address which will store the message \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Sender PID 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a03c8ffe17c11842218167737a1d7e376}\index{kapi.h@{kapi.h}!kMesgQInit@{kMesgQInit}}
+\index{kMesgQInit@{kMesgQInit}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMesgQInit()}{kMesgQInit()}}
+{\footnotesize\ttfamily \label{kapi_8h_a03c8ffe17c11842218167737a1d7e376} 
+VOID k\+Mesg\+QInit (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{mesg\+Pool\+Ptr}{, }\item[{BYTE}]{queue\+Size}{, }\item[{BYTE}]{mesg\+Size}{}\end{DoxyParamCaption})}
+
+
+
+Initialises a Message Queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Messsage Queue address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_ae80a6ee489dee1db07720492bcabf0f9}\index{kapi.h@{kapi.h}!kMailboxInit@{kMailboxInit}}
+\index{kMailboxInit@{kMailboxInit}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMailboxInit()}{kMailboxInit()}}
+{\footnotesize\ttfamily \label{kapi_8h_ae80a6ee489dee1db07720492bcabf0f9} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mailbox\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a78e51a00ac6a6c98c26e7501ac186af2}{K\+\_\+\+MAILBOX}} \texorpdfstring{$\ast$}{*}}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Initialise a mailbox. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Pointer to a mailbox \\
+\hline
+\end{DoxyParams}
+\Hypertarget{kapi_8h_ae1bb13af852fcd6ef9686d450bbed5c5}\index{kapi.h@{kapi.h}!kMailboxPost@{kMailboxPost}}
+\index{kMailboxPost@{kMailboxPost}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMailboxPost()}{kMailboxPost()}}
+{\footnotesize\ttfamily \label{kapi_8h_ae1bb13af852fcd6ef9686d450bbed5c5} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mailbox\+Post (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a78e51a00ac6a6c98c26e7501ac186af2}{K\+\_\+\+MAILBOX}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{const \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{mesg\+Ptr}{, }\item[{SIZE}]{mesg\+Size}{}\end{DoxyParamCaption})}
+
+
+
+Post a message on a mailbox w. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Address of a mailbox structure \\
+\hline
+{\em mesg\+Ptr} & Message address \\
+\hline
+{\em mesg\+Size} & Message size \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em 0} & if success. -\/1 if fails. \\
+\hline
+\end{DoxyRetVals}
+\Hypertarget{kapi_8h_a7f3c4a890867f53cffa98eeb476b6ed2}\index{kapi.h@{kapi.h}!kMailboxPend@{kMailboxPend}}
+\index{kMailboxPend@{kMailboxPend}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMailboxPend()}{kMailboxPend()}}
+{\footnotesize\ttfamily \label{kapi_8h_a7f3c4a890867f53cffa98eeb476b6ed2} 
+\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} k\+Mailbox\+Pend (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a78e51a00ac6a6c98c26e7501ac186af2}{K\+\_\+\+MAILBOX}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{rcvd\+Mesg\+Ptr}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a message from a mailbox. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Address of a mailbox structure \\
+\hline
+{\em rcvd\+Mesg\+PPtr} & Address that will store the received mesg address \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Sender\textquotesingle{}s} & PID. -\/1 if fails. \\
+\hline
+\end{DoxyRetVals}
+\Hypertarget{kapi_8h_a8cd73aba90711f08ce9a8c71501570ea}\index{kapi.h@{kapi.h}!kCondInit@{kCondInit}}
+\index{kCondInit@{kCondInit}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kCondInit()}{kCondInit()}}
+{\footnotesize\ttfamily \label{kapi_8h_a8cd73aba90711f08ce9a8c71501570ea} 
+VOID k\+Cond\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43}{K\+\_\+\+COND}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Initialises a condition variable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Condition variable address \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+\Hypertarget{kapi_8h_ac6bb0fa5d1873a8dbb3b9b42ceaee4bb}\index{kapi.h@{kapi.h}!kCondWait@{kCondWait}}
+\index{kCondWait@{kCondWait}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kCondWait()}{kCondWait()}}
+{\footnotesize\ttfamily \label{kapi_8h_ac6bb0fa5d1873a8dbb3b9b42ceaee4bb} 
+VOID k\+Cond\+Wait (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43}{K\+\_\+\+COND}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Wait on a condition variable. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Condition variable address. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+\Hypertarget{kapi_8h_aa998c6dc2a62dc3571c4c253317959b0}\index{kapi.h@{kapi.h}!kCondSignal@{kCondSignal}}
+\index{kCondSignal@{kCondSignal}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kCondSignal()}{kCondSignal()}}
+{\footnotesize\ttfamily \label{kapi_8h_aa998c6dc2a62dc3571c4c253317959b0} 
+VOID k\+Cond\+Signal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43}{K\+\_\+\+COND}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Signals a condition variable, to release one queued task, if any. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Condition variable address. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em none} & \\
+\hline
+\end{DoxyRetVals}
+\Hypertarget{kapi_8h_a712a1d7c1ce650f671eb3c9d26438663}\index{kapi.h@{kapi.h}!kCondWake@{kCondWake}}
+\index{kCondWake@{kCondWake}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kCondWake()}{kCondWake()}}
+{\footnotesize\ttfamily \label{kapi_8h_a712a1d7c1ce650f671eb3c9d26438663} 
+VOID k\+Cond\+Wake (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ac6fe8e99571713b1a4bdd47a39636b43}{K\+\_\+\+COND}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Signal a condition variable, releasing all queued tasks. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Condition variable address. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_af0f25d9a49970e081fdb0b83bd0f58bb}\index{kapi.h@{kapi.h}!kPipeInit@{kPipeInit}}
+\index{kPipeInit@{kPipeInit}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kPipeInit()}{kPipeInit()}}
+{\footnotesize\ttfamily \label{kapi_8h_af0f25d9a49970e081fdb0b83bd0f58bb} 
+VOID k\+Pipe\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Initialise a pipe. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Pointer to the pipe \\
+\hline
+\end{DoxyParams}
+\Hypertarget{kapi_8h_aa6b2c377e14b3cfcc6276728affd6799}\index{kapi.h@{kapi.h}!kPipeRead@{kPipeRead}}
+\index{kPipeRead@{kPipeRead}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kPipeRead()}{kPipeRead()}}
+{\footnotesize\ttfamily \label{kapi_8h_aa6b2c377e14b3cfcc6276728affd6799} 
+INT32 k\+Pipe\+Read (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{BYTE \texorpdfstring{$\ast$}{*}}]{dest\+Ptr}{, }\item[{UINT32}]{n\+Bytes}{}\end{DoxyParamCaption})}
+
+
+
+Read a stream of bytes from a pipe. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Pointer to a pipe \\
+\hline
+{\em dest\+Ptr} & Address to store the read data \\
+\hline
+{\em n\+Bytes} & Number of bytes to be read \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Number} & of read bytes if success. -\/1 if fails. \\
+\hline
+\end{DoxyRetVals}
+\Hypertarget{kapi_8h_aa0574e63aea244e0dbb93e85810a80e9}\index{kapi.h@{kapi.h}!kPipeWrite@{kPipeWrite}}
+\index{kPipeWrite@{kPipeWrite}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kPipeWrite()}{kPipeWrite()}}
+{\footnotesize\ttfamily \label{kapi_8h_aa0574e63aea244e0dbb93e85810a80e9} 
+INT32 k\+Pipe\+Write (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{const BYTE \texorpdfstring{$\ast$}{*}}]{src\+Ptr}{, }\item[{UINT32}]{n\+Bytes}{}\end{DoxyParamCaption})}
+
+
+
+Write a stream of bytes to a pipe. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Pointer to a pipe \\
+\hline
+{\em src\+Ptr} & Address to get data \\
+\hline
+{\em n\+Bytes} & Number of bytes to be write \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyRetVals}{Return values}
+{\em Number} & of written bytes if success. -\/1 if fails. \\
+\hline
+\end{DoxyRetVals}
+\Hypertarget{kapi_8h_a17ea271d2f7e832f5e25f0cddd5be416}\index{kapi.h@{kapi.h}!kFifoInit@{kFifoInit}}
+\index{kFifoInit@{kFifoInit}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kFifoInit()}{kFifoInit()}}
+{\footnotesize\ttfamily \label{kapi_8h_a17ea271d2f7e832f5e25f0cddd5be416} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Fifo\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Initialise Simple thread-\/safe FIFO. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & FIFO address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+ERROR/\+SUCCESS 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a86b01280ffdbecd237672fcda629096d}\index{kapi.h@{kapi.h}!kFifoPut@{kFifoPut}}
+\index{kFifoPut@{kFifoPut}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kFifoPut()}{kFifoPut()}}
+{\footnotesize\ttfamily \label{kapi_8h_a86b01280ffdbecd237672fcda629096d} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Fifo\+Put (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}}]{self}{, }\item[{BYTE}]{data}{}\end{DoxyParamCaption})}
+
+
+
+Put a single byte on a fifo. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & FIFO address \\
+\hline
+{\em data} & One-\/byte data \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+ERROR/\+SUCCESS 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a48360b960c673a4c739ece16f2279849}\index{kapi.h@{kapi.h}!kFifoGet@{kFifoGet}}
+\index{kFifoGet@{kFifoGet}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kFifoGet()}{kFifoGet()}}
+{\footnotesize\ttfamily \label{kapi_8h_a48360b960c673a4c739ece16f2279849} 
+BYTE k\+Fifo\+Get (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Get a single byte from a fifo. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & FIFO address \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Read byte 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_ad3fff4d18490f070b49954400ea87bb8}\index{kapi.h@{kapi.h}!kPend@{kPend}}
+\index{kPend@{kPend}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kPend()}{kPend()}}
+{\footnotesize\ttfamily \label{kapi_8h_ad3fff4d18490f070b49954400ea87bb8} 
+VOID k\+Pend (\begin{DoxyParamCaption}\item[{VOID}]{}{}\end{DoxyParamCaption})}
+
+
+
+Put the current task into a wait state to be waken from another task/\+ISR. 
+
+\begin{DoxySeeAlso}{See also}
+\doxylink{kapi_8h_ad307debe191c41675701bd74419ca549}{k\+Signal} 
+\end{DoxySeeAlso}
+\Hypertarget{kapi_8h_ad307debe191c41675701bd74419ca549}\index{kapi.h@{kapi.h}!kSignal@{kSignal}}
+\index{kSignal@{kSignal}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kSignal()}{kSignal()}}
+{\footnotesize\ttfamily \label{kapi_8h_ad307debe191c41675701bd74419ca549} 
+VOID k\+Signal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}}}]{task\+ID}{}\end{DoxyParamCaption})}
+
+
+
+Direct Signal a task. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em task\+ID} & The ID of the task to signal \\
+\hline
+\end{DoxyParams}
+\Hypertarget{kapi_8h_a5e984ba8366c030d17f2189a37c84b32}\index{kapi.h@{kapi.h}!kSleep@{kSleep}}
+\index{kSleep@{kSleep}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kSleep()}{kSleep()}}
+{\footnotesize\ttfamily \label{kapi_8h_a5e984ba8366c030d17f2189a37c84b32} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Sleep (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a17de05a807688da02a45d805971b9f46}{K\+\_\+\+EVENT}} \texorpdfstring{$\ast$}{*}}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Suspends a task waiting for a specific event. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Pointer to a K\+\_\+\+EVENT object \\
+\hline
+\end{DoxyParams}
+\Hypertarget{kapi_8h_afcffb622d677db3d32245d027405d9e2}\index{kapi.h@{kapi.h}!kWake@{kWake}}
+\index{kWake@{kWake}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kWake()}{kWake()}}
+{\footnotesize\ttfamily \label{kapi_8h_afcffb622d677db3d32245d027405d9e2} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Wake (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a17de05a807688da02a45d805971b9f46}{K\+\_\+\+EVENT}} \texorpdfstring{$\ast$}{*}}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Wakes a task waiting for a specific event. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Pointer to a K\+\_\+\+EVENT object \\
+\hline
+\end{DoxyParams}
+\Hypertarget{kapi_8h_a0ccddeb9b1a4e1ddfa2c0aa00847cc13}\index{kapi.h@{kapi.h}!kTimerInit@{kTimerInit}}
+\index{kTimerInit@{kTimerInit}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kTimerInit()}{kTimerInit()}}
+{\footnotesize\ttfamily \label{kapi_8h_a0ccddeb9b1a4e1ddfa2c0aa00847cc13} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Timer\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}}]{timer\+Name}{, }\item[{\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}}]{ticks}{, }\item[{\mbox{\hyperlink{ktypes_8h_a5c5992905d3a3832f64f84f986702e1d}{CALLBACK}}}]{fun\+Ptr}{, }\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{args\+Ptr}{, }\item[{BOOL}]{reload}{}\end{DoxyParamCaption})}
+
+
+
+Initialises an application timer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ticks} & initial tick count \\
+\hline
+{\em fun\+Ptr} & The callback when timer expires \\
+\hline
+{\em args\+Ptr} & Address to callback function arguments \\
+\hline
+{\em reload} & TRUE for reloading after timer-\/out. FALSE for an one-\/shot \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+SUCCESS/\+K\+\_\+\+ERROR 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a8fbfcd410836822cea4344ed4701ad92}\index{kapi.h@{kapi.h}!kTimerPoolInit@{kTimerPoolInit}}
+\index{kTimerPoolInit@{kTimerPoolInit}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kTimerPoolInit()}{kTimerPoolInit()}}
+{\footnotesize\ttfamily \label{kapi_8h_a8fbfcd410836822cea4344ed4701ad92} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Timer\+Pool\+Init (\begin{DoxyParamCaption}\item[{VOID}]{}{}\end{DoxyParamCaption})}
+
+
+
+Initialises the application timer pool. 
+
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+SUCCESS/\+K\+\_\+\+ERROR 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_aee0b526a777ab8d7735552a7ecb5c0dc}\index{kapi.h@{kapi.h}!kTimerPut@{kTimerPut}}
+\index{kTimerPut@{kTimerPut}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kTimerPut()}{kTimerPut()}}
+{\footnotesize\ttfamily \label{kapi_8h_aee0b526a777ab8d7735552a7ecb5c0dc} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Timer\+Put (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a844771c2a7316cff5241bdfe48afb904}{K\+\_\+\+TIMER}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Put a timer back into the timer pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Pointer to the timer \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+SUCCESS on success, K\+\_\+\+ERROR on failure 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a107fe60a250ef615131d762a6632bea4}\index{kapi.h@{kapi.h}!kTimerGet@{kTimerGet}}
+\index{kTimerGet@{kTimerGet}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kTimerGet()}{kTimerGet()}}
+{\footnotesize\ttfamily \label{kapi_8h_a107fe60a250ef615131d762a6632bea4} 
+\mbox{\hyperlink{ktypes_8h_a844771c2a7316cff5241bdfe48afb904}{K\+\_\+\+TIMER}} \texorpdfstring{$\ast$}{*} k\+Timer\+Get (\begin{DoxyParamCaption}\item[{VOID}]{}{}\end{DoxyParamCaption})}
+
+
+
+Get a timer from the timer pool. 
+
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+SUCCESS on success, K\+\_\+\+ERROR on failure 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a64b9274a53aefb9160e43fffebb99c3d}\index{kapi.h@{kapi.h}!kBusyDelay@{kBusyDelay}}
+\index{kBusyDelay@{kBusyDelay}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kBusyDelay()}{kBusyDelay()}}
+{\footnotesize\ttfamily \label{kapi_8h_a64b9274a53aefb9160e43fffebb99c3d} 
+VOID k\+Busy\+Delay (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}}]{delay}{}\end{DoxyParamCaption})}
+
+
+
+Busy-\/wait the task for a specified delay in ticks. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em delay} & The delay time in ticks \\
+\hline
+\end{DoxyParams}
+\Hypertarget{kapi_8h_a97a3c846dcf224ea5ebb1916830deea5}\index{kapi.h@{kapi.h}!kSleepDelay@{kSleepDelay}}
+\index{kSleepDelay@{kSleepDelay}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kSleepDelay()}{kSleepDelay()}}
+{\footnotesize\ttfamily \label{kapi_8h_a97a3c846dcf224ea5ebb1916830deea5} 
+VOID k\+Sleep\+Delay (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}}]{ticks}{}\end{DoxyParamCaption})}
+
+
+
+Puts the current task to sleep for a number of ticks. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ticks} & Number of ticks to sleep \\
+\hline
+\end{DoxyParams}
+\Hypertarget{kapi_8h_a68daf3e9a789ad0de1534c230a60d4aa}\index{kapi.h@{kapi.h}!kMemInit@{kMemInit}}
+\index{kMemInit@{kMemInit}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMemInit()}{kMemInit()}}
+{\footnotesize\ttfamily \label{kapi_8h_a68daf3e9a789ad0de1534c230a60d4aa} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mem\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_acbc325a3d965a3786cec3261f9c8a222}{K\+\_\+\+MEM}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} const}]{mem\+Pool\+Ptr}{, }\item[{BYTE}]{blk\+Size}{, }\item[{const BYTE}]{num\+Blocks}{}\end{DoxyParamCaption})}
+
+
+
+Memory Pool Control Block Initialisation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Pointer to a pool control block \\
+\hline
+{\em mem\+Pool\+Ptr} & Address of a pool (typically an array) \textbackslash{} of objects to be handled \\
+\hline
+{\em blk\+Size} & Size of each block in bytes \\
+\hline
+{\em num\+Blocks} & Number of blocks \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+K\+\_\+\+ERROR/\+K\+\_\+\+SUCCESS 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a2c55f5846c425a42275d8e01226d3359}\index{kapi.h@{kapi.h}!kMemAlloc@{kMemAlloc}}
+\index{kMemAlloc@{kMemAlloc}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMemAlloc()}{kMemAlloc()}}
+{\footnotesize\ttfamily \label{kapi_8h_a2c55f5846c425a42275d8e01226d3359} 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} k\+Mem\+Alloc (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_acbc325a3d965a3786cec3261f9c8a222}{K\+\_\+\+MEM}} \texorpdfstring{$\ast$}{*}const}]{self}{}\end{DoxyParamCaption})}
+
+
+
+Allocate memory from a block pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Pointer to the block pool \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the allocated block, or NULL on failure 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_ac946551c4ffbd02d42bcbe57858ef457}\index{kapi.h@{kapi.h}!kMemFree@{kMemFree}}
+\index{kMemFree@{kMemFree}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMemFree()}{kMemFree()}}
+{\footnotesize\ttfamily \label{kapi_8h_ac946551c4ffbd02d42bcbe57858ef457} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mem\+Free (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_acbc325a3d965a3786cec3261f9c8a222}{K\+\_\+\+MEM}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} const}]{block\+Ptr}{}\end{DoxyParamCaption})}
+
+
+
+Free a memory block back to the block pool. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & Pointer to the block pool \\
+\hline
+{\em block\+Ptr} & Pointer to the block to free \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointer to the allocated memory. NULL on failure. 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a73af70b4d444719e1b73137a0a539ed4}\index{kapi.h@{kapi.h}!kGetTaskPID@{kGetTaskPID}}
+\index{kGetTaskPID@{kGetTaskPID}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kGetTaskPID()}{kGetTaskPID()}}
+{\footnotesize\ttfamily \label{kapi_8h_a73af70b4d444719e1b73137a0a539ed4} 
+\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} k\+Get\+Task\+PID (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}}}]{task\+ID}{}\end{DoxyParamCaption})}
+
+
+
+Gets a task system ID. 
+
+TRACER 
+\begin{DoxyParams}{Parameters}
+{\em task\+ID} & user-\/defined ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Task system ID 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a216409ca714b6215ad02b67badb30442}\index{kapi.h@{kapi.h}!kGetTaskPrio@{kGetTaskPrio}}
+\index{kGetTaskPrio@{kGetTaskPrio}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kGetTaskPrio()}{kGetTaskPrio()}}
+{\footnotesize\ttfamily \label{kapi_8h_a216409ca714b6215ad02b67badb30442} 
+\mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}} k\+Get\+Task\+Prio (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}}}]{task\+ID}{}\end{DoxyParamCaption})}
+
+
+
+Gets a task priorirty. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em task\+ID} & Task user-\/defined ID \\
+\hline
+\end{DoxyParams}
+\Hypertarget{kapi_8h_a7dac8882d749d372913a4bde40f13990}\index{kapi.h@{kapi.h}!kTickGet@{kTickGet}}
+\index{kTickGet@{kTickGet}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kTickGet()}{kTickGet()}}
+{\footnotesize\ttfamily \label{kapi_8h_a7dac8882d749d372913a4bde40f13990} 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} k\+Tick\+Get (\begin{DoxyParamCaption}\item[{VOID}]{}{}\end{DoxyParamCaption})}
+
+
+
+Gets the current number of ticks. 
+
+\begin{DoxyReturn}{Returns}
+Global system tick value 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a11efbfc68d9db0cbdab58046cc9235e1}\index{kapi.h@{kapi.h}!kStrLen@{kStrLen}}
+\index{kStrLen@{kStrLen}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kStrLen()}{kStrLen()}}
+{\footnotesize\ttfamily \label{kapi_8h_a11efbfc68d9db0cbdab58046cc9235e1} 
+SIZE k\+Str\+Len (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}}]{string}{}\end{DoxyParamCaption})}
+
+
+
+Returns the size of a string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em string} & A pointer to char \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+string length -\/ 1 (does not count \textquotesingle{}\textbackslash{}0\textquotesingle{}) 
+\end{DoxyReturn}
+\Hypertarget{kapi_8h_a1b15aa024bacdc6fc95944acd445fbd0}\index{kapi.h@{kapi.h}!kMemCpy@{kMemCpy}}
+\index{kMemCpy@{kMemCpy}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kMemCpy()}{kMemCpy()}}
+{\footnotesize\ttfamily \label{kapi_8h_a1b15aa024bacdc6fc95944acd445fbd0} 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} k\+Mem\+Cpy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{dest\+Ptr}{, }\item[{const \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{src\+Ptr}{, }\item[{SIZE}]{size}{}\end{DoxyParamCaption})}
+
+
+
+Deep copy data from one address to other. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dest\+Ptr} & Destination address \\
+\hline
+{\em src\+Ptr} & Source address \\
+\hline
+{\em size} & Number of bytes to be copied \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Destination address 
+\end{DoxyReturn}

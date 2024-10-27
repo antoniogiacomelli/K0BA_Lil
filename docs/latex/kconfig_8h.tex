@@ -1,0 +1,345 @@
+\doxysection{C\+:/\+Git\+Koba/\+K0\+BA\+\_\+\+Lite/\+Inc/kernel/kconfig.h File Reference}
+\hypertarget{kconfig_8h}{}\label{kconfig_8h}\index{C:/GitKoba/K0BA\_Lite/Inc/kernel/kconfig.h@{C:/GitKoba/K0BA\_Lite/Inc/kernel/kconfig.h}}
+
+
+Kernel Configuration File.  
+
+
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_aeed613812aec0541d867776a0a092437}{TIM\+\_\+\+ON}}~0
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a668217b99c245f63fa193a279be499d0}{PID\+\_\+\+IDLETASK}}~0
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a01271ebdaa8acb0495debc097747450b}{PID\+\_\+\+TIMHANDLER}}~1
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a51fcc1ce2e7a0c1f057fc1e2d54b5e2d}{PID\+\_\+\+INVALID}}~255
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a2dd285ed65b4eb1bee16f3f186335f21}{N\+\_\+\+USRTASKS}}~4
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a21d9543c516fffee84a7963224271f95}{STACKSIZE}}~128
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a9b17bb8e604500364510fcf583ba2831}{\+\_\+\+N\+\_\+\+SYSTASKS}}~2
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a51ca9914034cd3e92903476fd4eebbd6}{NTHREADS}}~(\mbox{\hyperlink{kconfig_8h_a2dd285ed65b4eb1bee16f3f186335f21}{N\+\_\+\+USRTASKS}} + \+\_\+\+N\+\_\+\+SYSTASKS)
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a032d44401ff37a857f8302901de266e3}{\+\_\+\+NPRIO}}~5
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a9287234affb49e18e6221cc3df3e5738}{NPRIO}}~(\mbox{\hyperlink{kconfig_8h_a032d44401ff37a857f8302901de266e3}{\+\_\+\+NPRIO}} + 1)
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a1e70a4e88f54126f863f08c41f2e312c}{TICK\+\_\+10\+MS}}~(System\+Core\+Clock/1000)
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a244b324cb35392ea1d69222cebfb9e9c}{TICK\+\_\+5\+MS}}~(System\+Core\+Clock/2000)
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_ad819070748c7f96aaebe03d72df770a1}{TICK\+\_\+1\+MS}}~(System\+Core\+Clock/10000)
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_aa86d11d266560cbc70794041eb86572e}{K\+\_\+\+CONF\+\_\+\+TICK\+\_\+\+PERIOD}}~\mbox{\hyperlink{kconfig_8h_a1e70a4e88f54126f863f08c41f2e312c}{TICK\+\_\+10\+MS}}
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a55a180b0de6a45ce7b52c0749d52645b}{K\+\_\+\+CONF\+\_\+\+TRACE}}~OFF
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_ac97dcfabd0f424e740a97c4d24c6d140}{K\+\_\+\+CONF\+\_\+\+MSG\+\_\+\+QUEUE}}~ON
+\begin{DoxyCompactList}\small\item\em Message Passing configuration. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{kconfig_8h_aa024a67ccbe20a8b066f7f01a1c9b118}{K\+\_\+\+CONF\+\_\+\+MAILBOX}}~ON
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_af94aefa983f618a9988898c0bc01aed7}{K\+\_\+\+CONF\+\_\+\+MAILBOX\+\_\+\+ACK}}~ON
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_adc9c4dbbd6d589bc0e2156b0193fe619}{MSGBUFF\+\_\+\+SIZE}}~sizeof(\mbox{\hyperlink{ktypes_8h_a08f20af129dfb30823236067282c8d18}{K\+\_\+\+MESGBUFF}})
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a821104b4705c10c75e0fb34c3baae166}{N\+\_\+\+MSGBUFF}}~10
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_ae81bb567adf7a88bf77d859f19b019db}{K\+\_\+\+CONF\+\_\+\+COND\+\_\+\+VAR}}~ON
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a677b9ae3f52c881a66fd1769f66242d7}{K\+\_\+\+CONF\+\_\+\+PIPES}}~ON
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_abc6a1fc471b3060f967ad4e5e1916f03}{PIPE\+\_\+\+SIZE}}~(35) /\texorpdfstring{$\ast$}{*} pipe size (bytes) \texorpdfstring{$\ast$}{*}/
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a6092455278a1ac67204e0dbe08f9d13f}{FIFO\+\_\+\+SIZE}}~(32)
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a5d4e4a6f927115e8b06316cfdc29beba}{N\+\_\+\+TIMERS}}~6        /\texorpdfstring{$\ast$}{*} number of application timers \texorpdfstring{$\ast$}{*}/
+\item 
+\#define \mbox{\hyperlink{kconfig_8h_a9552c41a5b5e71c374a545241bb477ed}{TIMER\+\_\+\+SIZE}}~sizeof(\mbox{\hyperlink{ktypes_8h_a844771c2a7316cff5241bdfe48afb904}{K\+\_\+\+TIMER}})     /\texorpdfstring{$\ast$}{*} application timer size \texorpdfstring{$\ast$}{*}/
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Kernel Configuration File. 
+
+\begin{DoxyVersion}{Version}
+0.\+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyAuthor}{Author}
+Antonio Giacomelli
+\end{DoxyAuthor}
+In this header kernel services are configured. 
+
+Definition in file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{kconfig_8h_aeed613812aec0541d867776a0a092437}\index{kconfig.h@{kconfig.h}!TIM\_ON@{TIM\_ON}}
+\index{TIM\_ON@{TIM\_ON}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{TIM\_ON}{TIM\_ON}}
+{\footnotesize\ttfamily \label{kconfig_8h_aeed613812aec0541d867776a0a092437} 
+\#define TIM\+\_\+\+ON~0}
+
+
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00031}{31}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a668217b99c245f63fa193a279be499d0}\index{kconfig.h@{kconfig.h}!PID\_IDLETASK@{PID\_IDLETASK}}
+\index{PID\_IDLETASK@{PID\_IDLETASK}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{PID\_IDLETASK}{PID\_IDLETASK}}
+{\footnotesize\ttfamily \label{kconfig_8h_a668217b99c245f63fa193a279be499d0} 
+\#define PID\+\_\+\+IDLETASK~0}
+
+ID of the idle task 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00033}{33}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a01271ebdaa8acb0495debc097747450b}\index{kconfig.h@{kconfig.h}!PID\_TIMHANDLER@{PID\_TIMHANDLER}}
+\index{PID\_TIMHANDLER@{PID\_TIMHANDLER}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{PID\_TIMHANDLER}{PID\_TIMHANDLER}}
+{\footnotesize\ttfamily \label{kconfig_8h_a01271ebdaa8acb0495debc097747450b} 
+\#define PID\+\_\+\+TIMHANDLER~1}
+
+ID of the timer handler task 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00034}{34}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a51fcc1ce2e7a0c1f057fc1e2d54b5e2d}\index{kconfig.h@{kconfig.h}!PID\_INVALID@{PID\_INVALID}}
+\index{PID\_INVALID@{PID\_INVALID}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{PID\_INVALID}{PID\_INVALID}}
+{\footnotesize\ttfamily \label{kconfig_8h_a51fcc1ce2e7a0c1f057fc1e2d54b5e2d} 
+\#define PID\+\_\+\+INVALID~255}
+
+Invalid PID 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00035}{35}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a2dd285ed65b4eb1bee16f3f186335f21}\index{kconfig.h@{kconfig.h}!N\_USRTASKS@{N\_USRTASKS}}
+\index{N\_USRTASKS@{N\_USRTASKS}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{N\_USRTASKS}{N\_USRTASKS}}
+{\footnotesize\ttfamily \label{kconfig_8h_a2dd285ed65b4eb1bee16f3f186335f21} 
+\#define N\+\_\+\+USRTASKS~4}
+
+Number of tasks 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00036}{36}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a21d9543c516fffee84a7963224271f95}\index{kconfig.h@{kconfig.h}!STACKSIZE@{STACKSIZE}}
+\index{STACKSIZE@{STACKSIZE}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{STACKSIZE}{STACKSIZE}}
+{\footnotesize\ttfamily \label{kconfig_8h_a21d9543c516fffee84a7963224271f95} 
+\#define STACKSIZE~128}
+
+Stack size in words for each task 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00037}{37}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a9b17bb8e604500364510fcf583ba2831}\index{kconfig.h@{kconfig.h}!\_N\_SYSTASKS@{\_N\_SYSTASKS}}
+\index{\_N\_SYSTASKS@{\_N\_SYSTASKS}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{\_N\_SYSTASKS}{\_N\_SYSTASKS}}
+{\footnotesize\ttfamily \label{kconfig_8h_a9b17bb8e604500364510fcf583ba2831} 
+\#define \+\_\+\+N\+\_\+\+SYSTASKS~2}
+
+
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00038}{38}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a51ca9914034cd3e92903476fd4eebbd6}\index{kconfig.h@{kconfig.h}!NTHREADS@{NTHREADS}}
+\index{NTHREADS@{NTHREADS}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{NTHREADS}{NTHREADS}}
+{\footnotesize\ttfamily \label{kconfig_8h_a51ca9914034cd3e92903476fd4eebbd6} 
+\#define NTHREADS~(\mbox{\hyperlink{kconfig_8h_a2dd285ed65b4eb1bee16f3f186335f21}{N\+\_\+\+USRTASKS}} + \+\_\+\+N\+\_\+\+SYSTASKS)}
+
+
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00039}{39}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a032d44401ff37a857f8302901de266e3}\index{kconfig.h@{kconfig.h}!\_NPRIO@{\_NPRIO}}
+\index{\_NPRIO@{\_NPRIO}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{\_NPRIO}{\_NPRIO}}
+{\footnotesize\ttfamily \label{kconfig_8h_a032d44401ff37a857f8302901de266e3} 
+\#define \+\_\+\+NPRIO~5}
+
+Number of priorities 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00040}{40}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a9287234affb49e18e6221cc3df3e5738}\index{kconfig.h@{kconfig.h}!NPRIO@{NPRIO}}
+\index{NPRIO@{NPRIO}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{NPRIO}{NPRIO}}
+{\footnotesize\ttfamily \label{kconfig_8h_a9287234affb49e18e6221cc3df3e5738} 
+\#define NPRIO~(\mbox{\hyperlink{kconfig_8h_a032d44401ff37a857f8302901de266e3}{\+\_\+\+NPRIO}} + 1)}
+
+
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00041}{41}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a1e70a4e88f54126f863f08c41f2e312c}\index{kconfig.h@{kconfig.h}!TICK\_10MS@{TICK\_10MS}}
+\index{TICK\_10MS@{TICK\_10MS}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{TICK\_10MS}{TICK\_10MS}}
+{\footnotesize\ttfamily \label{kconfig_8h_a1e70a4e88f54126f863f08c41f2e312c} 
+\#define TICK\+\_\+10\+MS~(System\+Core\+Clock/1000)}
+
+Tick period of 10ms 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00042}{42}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a244b324cb35392ea1d69222cebfb9e9c}\index{kconfig.h@{kconfig.h}!TICK\_5MS@{TICK\_5MS}}
+\index{TICK\_5MS@{TICK\_5MS}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{TICK\_5MS}{TICK\_5MS}}
+{\footnotesize\ttfamily \label{kconfig_8h_a244b324cb35392ea1d69222cebfb9e9c} 
+\#define TICK\+\_\+5\+MS~(System\+Core\+Clock/2000)}
+
+Tick period of 5ms 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00043}{43}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_ad819070748c7f96aaebe03d72df770a1}\index{kconfig.h@{kconfig.h}!TICK\_1MS@{TICK\_1MS}}
+\index{TICK\_1MS@{TICK\_1MS}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{TICK\_1MS}{TICK\_1MS}}
+{\footnotesize\ttfamily \label{kconfig_8h_ad819070748c7f96aaebe03d72df770a1} 
+\#define TICK\+\_\+1\+MS~(System\+Core\+Clock/10000)}
+
+Tick period of 1ms 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00044}{44}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_aa86d11d266560cbc70794041eb86572e}\index{kconfig.h@{kconfig.h}!K\_CONF\_TICK\_PERIOD@{K\_CONF\_TICK\_PERIOD}}
+\index{K\_CONF\_TICK\_PERIOD@{K\_CONF\_TICK\_PERIOD}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{K\_CONF\_TICK\_PERIOD}{K\_CONF\_TICK\_PERIOD}}
+{\footnotesize\ttfamily \label{kconfig_8h_aa86d11d266560cbc70794041eb86572e} 
+\#define K\+\_\+\+CONF\+\_\+\+TICK\+\_\+\+PERIOD~\mbox{\hyperlink{kconfig_8h_a1e70a4e88f54126f863f08c41f2e312c}{TICK\+\_\+10\+MS}}}
+
+System tick period 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00045}{45}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a55a180b0de6a45ce7b52c0749d52645b}\index{kconfig.h@{kconfig.h}!K\_CONF\_TRACE@{K\_CONF\_TRACE}}
+\index{K\_CONF\_TRACE@{K\_CONF\_TRACE}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{K\_CONF\_TRACE}{K\_CONF\_TRACE}}
+{\footnotesize\ttfamily \label{kconfig_8h_a55a180b0de6a45ce7b52c0749d52645b} 
+\#define K\+\_\+\+CONF\+\_\+\+TRACE~OFF}
+
+
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00046}{46}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_ac97dcfabd0f424e740a97c4d24c6d140}\index{kconfig.h@{kconfig.h}!K\_CONF\_MSG\_QUEUE@{K\_CONF\_MSG\_QUEUE}}
+\index{K\_CONF\_MSG\_QUEUE@{K\_CONF\_MSG\_QUEUE}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{K\_CONF\_MSG\_QUEUE}{K\_CONF\_MSG\_QUEUE}}
+{\footnotesize\ttfamily \label{kconfig_8h_ac97dcfabd0f424e740a97c4d24c6d140} 
+\#define K\+\_\+\+CONF\+\_\+\+MSG\+\_\+\+QUEUE~ON}
+
+
+
+Message Passing configuration. 
+
+Mesg Queue ON/\+OFF 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00064}{64}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_aa024a67ccbe20a8b066f7f01a1c9b118}\index{kconfig.h@{kconfig.h}!K\_CONF\_MAILBOX@{K\_CONF\_MAILBOX}}
+\index{K\_CONF\_MAILBOX@{K\_CONF\_MAILBOX}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{K\_CONF\_MAILBOX}{K\_CONF\_MAILBOX}}
+{\footnotesize\ttfamily \label{kconfig_8h_aa024a67ccbe20a8b066f7f01a1c9b118} 
+\#define K\+\_\+\+CONF\+\_\+\+MAILBOX~ON}
+
+Mailbox ON/\+OFF 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00065}{65}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_af94aefa983f618a9988898c0bc01aed7}\index{kconfig.h@{kconfig.h}!K\_CONF\_MAILBOX\_ACK@{K\_CONF\_MAILBOX\_ACK}}
+\index{K\_CONF\_MAILBOX\_ACK@{K\_CONF\_MAILBOX\_ACK}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{K\_CONF\_MAILBOX\_ACK}{K\_CONF\_MAILBOX\_ACK}}
+{\footnotesize\ttfamily \label{kconfig_8h_af94aefa983f618a9988898c0bc01aed7} 
+\#define K\+\_\+\+CONF\+\_\+\+MAILBOX\+\_\+\+ACK~ON}
+
+Mailbox extended rendez-\/vous 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00067}{67}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_adc9c4dbbd6d589bc0e2156b0193fe619}\index{kconfig.h@{kconfig.h}!MSGBUFF\_SIZE@{MSGBUFF\_SIZE}}
+\index{MSGBUFF\_SIZE@{MSGBUFF\_SIZE}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{MSGBUFF\_SIZE}{MSGBUFF\_SIZE}}
+{\footnotesize\ttfamily \label{kconfig_8h_adc9c4dbbd6d589bc0e2156b0193fe619} 
+\#define MSGBUFF\+\_\+\+SIZE~sizeof(\mbox{\hyperlink{ktypes_8h_a08f20af129dfb30823236067282c8d18}{K\+\_\+\+MESGBUFF}})}
+
+message buffer size ~\newline
+ 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00070}{70}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a821104b4705c10c75e0fb34c3baae166}\index{kconfig.h@{kconfig.h}!N\_MSGBUFF@{N\_MSGBUFF}}
+\index{N\_MSGBUFF@{N\_MSGBUFF}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{N\_MSGBUFF}{N\_MSGBUFF}}
+{\footnotesize\ttfamily \label{kconfig_8h_a821104b4705c10c75e0fb34c3baae166} 
+\#define N\+\_\+\+MSGBUFF~10}
+
+number of message buffer 
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00071}{71}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_ae81bb567adf7a88bf77d859f19b019db}\index{kconfig.h@{kconfig.h}!K\_CONF\_COND\_VAR@{K\_CONF\_COND\_VAR}}
+\index{K\_CONF\_COND\_VAR@{K\_CONF\_COND\_VAR}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{K\_CONF\_COND\_VAR}{K\_CONF\_COND\_VAR}}
+{\footnotesize\ttfamily \label{kconfig_8h_ae81bb567adf7a88bf77d859f19b019db} 
+\#define K\+\_\+\+CONF\+\_\+\+COND\+\_\+\+VAR~ON}
+
+
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00081}{81}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a677b9ae3f52c881a66fd1769f66242d7}\index{kconfig.h@{kconfig.h}!K\_CONF\_PIPES@{K\_CONF\_PIPES}}
+\index{K\_CONF\_PIPES@{K\_CONF\_PIPES}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{K\_CONF\_PIPES}{K\_CONF\_PIPES}}
+{\footnotesize\ttfamily \label{kconfig_8h_a677b9ae3f52c881a66fd1769f66242d7} 
+\#define K\+\_\+\+CONF\+\_\+\+PIPES~ON}
+
+
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00084}{84}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_abc6a1fc471b3060f967ad4e5e1916f03}\index{kconfig.h@{kconfig.h}!PIPE\_SIZE@{PIPE\_SIZE}}
+\index{PIPE\_SIZE@{PIPE\_SIZE}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{PIPE\_SIZE}{PIPE\_SIZE}}
+{\footnotesize\ttfamily \label{kconfig_8h_abc6a1fc471b3060f967ad4e5e1916f03} 
+\#define PIPE\+\_\+\+SIZE~(35) /\texorpdfstring{$\ast$}{*} pipe size (bytes) \texorpdfstring{$\ast$}{*}/}
+
+
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00086}{86}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a6092455278a1ac67204e0dbe08f9d13f}\index{kconfig.h@{kconfig.h}!FIFO\_SIZE@{FIFO\_SIZE}}
+\index{FIFO\_SIZE@{FIFO\_SIZE}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{FIFO\_SIZE}{FIFO\_SIZE}}
+{\footnotesize\ttfamily \label{kconfig_8h_a6092455278a1ac67204e0dbe08f9d13f} 
+\#define FIFO\+\_\+\+SIZE~(32)}
+
+
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00090}{90}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a5d4e4a6f927115e8b06316cfdc29beba}\index{kconfig.h@{kconfig.h}!N\_TIMERS@{N\_TIMERS}}
+\index{N\_TIMERS@{N\_TIMERS}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{N\_TIMERS}{N\_TIMERS}}
+{\footnotesize\ttfamily \label{kconfig_8h_a5d4e4a6f927115e8b06316cfdc29beba} 
+\#define N\+\_\+\+TIMERS~6        /\texorpdfstring{$\ast$}{*} number of application timers \texorpdfstring{$\ast$}{*}/}
+
+
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00094}{94}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
+\Hypertarget{kconfig_8h_a9552c41a5b5e71c374a545241bb477ed}\index{kconfig.h@{kconfig.h}!TIMER\_SIZE@{TIMER\_SIZE}}
+\index{TIMER\_SIZE@{TIMER\_SIZE}!kconfig.h@{kconfig.h}}
+\doxysubsubsection{\texorpdfstring{TIMER\_SIZE}{TIMER\_SIZE}}
+{\footnotesize\ttfamily \label{kconfig_8h_a9552c41a5b5e71c374a545241bb477ed} 
+\#define TIMER\+\_\+\+SIZE~sizeof(\mbox{\hyperlink{ktypes_8h_a844771c2a7316cff5241bdfe48afb904}{K\+\_\+\+TIMER}})     /\texorpdfstring{$\ast$}{*} application timer size \texorpdfstring{$\ast$}{*}/}
+
+
+
+Definition at line \mbox{\hyperlink{kconfig_8h_source_l00095}{95}} of file \mbox{\hyperlink{kconfig_8h_source}{kconfig.\+h}}.
+
