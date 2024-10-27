@@ -1,4 +1,4 @@
-# K0BA Lite v0.1.0-beta
+# K0BA Lite 
 
 *Kernel 0 For Embedded Applications* is a Real-Time Kernel for constrained devices. 
 
