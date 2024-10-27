@@ -34,9 +34,11 @@ This is a light-weight version with no memory isolation. Currently it supports A
   - Direct Task Signal
   
 - **Inter-Task Communication:**
-  - Mailboxes (with extended rendez-vous)
+  - Mailboxes (with extended rendez-vous) for fully synchronous exchange
   - Message Queues with variable item-size
-  - Stream Buffers (Simple FIFOs and "UNIX-like" pipes)
+  - PIPEs:
+    -- Simple FIFOs: these are simple circular buffers for one-producer to one-consumer.
+    -- "UNIX-like" Pipes: these are pipes that can be managed by several readers and writers. 
 
 - **Memory Management:**
   - Memory Pools with fixed block-size. This approach is deterministic and hinders fragmentation.
