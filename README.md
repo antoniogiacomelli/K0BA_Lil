@@ -16,7 +16,7 @@ This is a light-weight version with no memory isolation. Currently it supports A
   - Sleep/WakeUp on Events
   - Semaphores
   - Mutexes (with priority inheritance)
-  - Posix-Like Condition Variables
+  - Condition Variables
   - Direct Task Signal
   
 - **Inter-task Communication:**
