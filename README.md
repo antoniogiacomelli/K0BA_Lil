@@ -15,25 +15,33 @@ This is a light-weight version with no memory isolation. Currently it supports A
 
 <img width="450" alt="kernel" src="https://github.com/antoniogiacomelli/K0BA_Lite/blob/main/layeredkernel.png">
 
-# F E A T U R E S
-
+## FEATURES
+- **Clean API**
+   - Standardised easy-to-grasp API convention
+ 
+- **Minimal overhead**
+   - This "Lite" version is tuned for minimal overhead, focused on reducing indirection levels and
+     function calls. Rather than "a microkernel approach with opaque objects" the kernel is a *modular monolith*.
+   
 - **Priority Preemptive Scheduler with Rate-Monothonic Scheduling**
   
-- **Synchronisation:**:
+- **Inter-Task Synchronisation:**
   - Sleep/WakeUp on Events
   - Semaphores
   - Mutexes (with priority inheritance)
-  - Condition Variables
+  - Condition Variables for finer-grained waiting logic
   - Direct Task Signal
   
-- **Inter-task Communication:**
+- **Inter-Task Communication:**
   - Mailboxes (with extended rendez-vous)
   - Message Queues with variable item-size
   - Stream Buffers (Simple FIFOs and "UNIX-like" pipes)
 
-- **Memory Pools with fixed block-size for dynamic memory allocation**
+- **Memory Management:**
+  - Memory Pools with fixed block-size.
 
-- **Application Timers (using delta queues for efficient handling)**
+- **Application Timers**
+    - Periodic/One Shot timers with delta queues for efficient handling
 
 **Major dependencies:**
 - ARM GCC 
