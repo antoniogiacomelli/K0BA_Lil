@@ -63,10 +63,10 @@ VOID callBackCount2(ADDR args)
 VOID kApplicationInit(ADDR* args)
 {
 	UNUSED(args);
-	kTimerInit("Timer1", 20, callBackCount1, NULL, RELOAD);
-	kTimerInit("Timer2", 15, callBackCount2, NULL, RELOAD);
+	kTimerInit("Timer1", 20, callBackCount1, NULL, RELOAD); /* periodic app timer */
+	kTimerInit("Timer2", 15, callBackCount2, NULL, RELOAD); /* periodic app timer */
 
-	kMesgQInit(&mesgq, (ADDR)&mesgPool, 10, SIZE_MESG);
+	kMesgQInit(&mesgq, (ADDR)&mesgPool, 10, SIZE_MESG);    /* Mesg Queue Capacity=10  MESG items */
 	kMailboxInit(&mailbox);
 }
 
