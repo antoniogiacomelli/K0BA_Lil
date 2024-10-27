@@ -361,7 +361,7 @@ VOID kSignal(PID taskID);
 K_ERR kSleep(K_EVENT* self);
 
 /**
- * \brief Suspends a task waiting for a specific event
+ * \brief Wakes a task waiting for a specific event
  * \param self Pointer to a K_EVENT object
  */
 K_ERR kWake(K_EVENT* self);
@@ -505,4 +505,7 @@ ADDR kMemCpy(ADDR destPtr, const ADDR srcPtr, SIZE size);
 /******************************************************************************/
 /******************************************************************************/
 
+/**
+*  \}
+ */
 #endif /* INC_K_API_H_ */
