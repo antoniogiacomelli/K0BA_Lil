@@ -35,9 +35,6 @@ This is a light-weight version with no memory isolation. Currently it supports A
 
 - **Application Timers (using delta queues for efficient handling)**
 
-# See the Wiki for Usage examples: https://github.com/antoniogiacomelli/K0BA_Lite/wiki
-
-
 **Major dependencies:**
 - ARM GCC 
 - CMSIS HAL
