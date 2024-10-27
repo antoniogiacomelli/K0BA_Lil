@@ -1,0 +1,88 @@
+\doxysection{kconfig.\+h}
+\hypertarget{kconfig_8h_source}{}\label{kconfig_8h_source}\index{C:/GitKoba/K0BA\_Lite/Inc/kernel/kconfig.h@{C:/GitKoba/K0BA\_Lite/Inc/kernel/kconfig.h}}
+\mbox{\hyperlink{kconfig_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00001}00001\ \textcolor{comment}{\ /******************************************************************************}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00002}00002\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00003}00003\ \textcolor{comment}{\ *\ [K0BA\ -\/\ Kernel\ 0\ For\ Embedded\ Applications]\ |\ [VERSION:\ 0.1.0]}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00004}00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00005}00005\ \textcolor{comment}{\ ******************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00019}00019\ \textcolor{preprocessor}{\#ifndef\ INC\_K\_CONFIG\_H\_}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00020}00020\ \textcolor{preprocessor}{\#define\ INC\_K\_CONFIG\_H\_}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00022}00022\ \textcolor{preprocessor}{\#ifndef\ \_\_GNUC\_\_}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00023}00023\ \textcolor{preprocessor}{\#\ \ \ error\ "{}You\ need\ GCC\ as\ your\ compiler!"{}}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00024}00024\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00026}00026\ \textcolor{preprocessor}{\#ifndef\ \_\_KVERSION}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00027}00027\ \textcolor{preprocessor}{\#error\ "{}Missing\ kernel\ version."{}}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00028}00028\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00031}00031\ \textcolor{preprocessor}{\#define\ TIM\_ON\ 0}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00033}\mbox{\hyperlink{kconfig_8h_a668217b99c245f63fa193a279be499d0}{00033}}\ \textcolor{preprocessor}{\#define\ PID\_IDLETASK\ \ \ \ \ \ \ \ \ 0\ \ \ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00034}\mbox{\hyperlink{kconfig_8h_a01271ebdaa8acb0495debc097747450b}{00034}}\ \textcolor{preprocessor}{\#define\ PID\_TIMHANDLER\ \ \ \ \ \ \ 1\ \ \ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00035}\mbox{\hyperlink{kconfig_8h_a51fcc1ce2e7a0c1f057fc1e2d54b5e2d}{00035}}\ \textcolor{preprocessor}{\#define\ PID\_INVALID\ \ \ \ \ \ \ \ \ \ 255\ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00036}\mbox{\hyperlink{kconfig_8h_a2dd285ed65b4eb1bee16f3f186335f21}{00036}}\ \textcolor{preprocessor}{\#define\ N\_USRTASKS\ \ \ \ \ \ \ \ 4\ \ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00037}\mbox{\hyperlink{kconfig_8h_a21d9543c516fffee84a7963224271f95}{00037}}\ \textcolor{preprocessor}{\#define\ STACKSIZE\ \ \ \ \ \ \ \ 128\ \ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00038}00038\ \textcolor{preprocessor}{\#define\ \_N\_SYSTASKS\ \ \ \ \ \ \ 2}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00039}00039\ \textcolor{preprocessor}{\#define\ NTHREADS\ \ \ \ \ \ \ \ (N\_USRTASKS\ +\ \_N\_SYSTASKS)}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00040}\mbox{\hyperlink{kconfig_8h_a032d44401ff37a857f8302901de266e3}{00040}}\ \textcolor{preprocessor}{\#define\ \_NPRIO\ \ \ \ \ \ \ \ \ \ \ 5\ \ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00041}00041\ \textcolor{preprocessor}{\#define\ NPRIO\ \ \ \ \ \ \ \ \ \ \ \ (\_NPRIO\ +\ 1)}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00042}\mbox{\hyperlink{kconfig_8h_a1e70a4e88f54126f863f08c41f2e312c}{00042}}\ \textcolor{preprocessor}{\#define\ TICK\_10MS\ \ \ \ \ \ \ \ (SystemCoreClock/1000)\ \ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00043}\mbox{\hyperlink{kconfig_8h_a244b324cb35392ea1d69222cebfb9e9c}{00043}}\ \textcolor{preprocessor}{\#define\ TICK\_5MS\ \ \ \ \ \ \ \ \ (SystemCoreClock/2000)\ \ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00044}\mbox{\hyperlink{kconfig_8h_ad819070748c7f96aaebe03d72df770a1}{00044}}\ \textcolor{preprocessor}{\#define\ TICK\_1MS\ \ \ \ \ \ \ \ \ (SystemCoreClock/10000)\ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00045}\mbox{\hyperlink{kconfig_8h_aa86d11d266560cbc70794041eb86572e}{00045}}\ \textcolor{preprocessor}{\#define\ K\_CONF\_TICK\_PERIOD\ TICK\_10MS\ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00046}00046\ \textcolor{preprocessor}{\#define\ K\_CONF\_TRACE\ OFF}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00047}00047\ \textcolor{preprocessor}{\#if\ (K\_CONF\_TRACE)}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00049}00049\ \textcolor{preprocessor}{\ \ \ \ \#define\ TRACEBUFF\_SIZE\ \ \ \ 512}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00050}00050\ \textcolor{preprocessor}{\ \ \ \ \#define\ TRACE\_MAX\_CHAR\ \ \ \ 16}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00051}00051\ \textcolor{preprocessor}{\ \ \ \ \#define\ TRACE\_ONLY\_EVENT\ \ ON}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00053}00053\ \textcolor{preprocessor}{\ \ \ \ \#if\ \ \ \ \ (TRACE\_ONLY\_EVENT==ON)}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00054}00054\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#define\ K\_TRACE(event)\ kTrace(event,\ NULL)}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00055}00055\ \textcolor{preprocessor}{\ \ \ \ \#else}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00056}00056\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#define\ K\_TRACE(event,\ info)\ kTrace(event,\ info)}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00057}00057\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00058}00058\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00064}\mbox{\hyperlink{kconfig_8h_ac97dcfabd0f424e740a97c4d24c6d140}{00064}}\ \textcolor{preprocessor}{\#define\ K\_CONF\_MSG\_QUEUE\ \ \ \ \ \ \ \ \ \ \ \ ON\ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00065}\mbox{\hyperlink{kconfig_8h_aa024a67ccbe20a8b066f7f01a1c9b118}{00065}}\ \textcolor{preprocessor}{\#define\ K\_CONF\_MAILBOX\ \ \ \ \ \ \ \ \ \ \ \ \ \ ON\ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00066}00066\ \textcolor{preprocessor}{\#if\ (K\_CONF\_MAILBOX==ON)}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00067}\mbox{\hyperlink{kconfig_8h_af94aefa983f618a9988898c0bc01aed7}{00067}}\ \textcolor{preprocessor}{\ \ \ \ \#define\ K\_CONF\_MAILBOX\_ACK\ \ \ \ \ \ ON\ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00068}00068\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00069}00069\ \textcolor{preprocessor}{\#if\ ((K\_CONF\_MSG\_QUEUE\ ==\ ON))}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00070}\mbox{\hyperlink{kconfig_8h_adc9c4dbbd6d589bc0e2156b0193fe619}{00070}}\ \textcolor{preprocessor}{\ \ \ \ \#define\ MSGBUFF\_SIZE\ sizeof(K\_MESGBUFF)\ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00071}\mbox{\hyperlink{kconfig_8h_a821104b4705c10c75e0fb34c3baae166}{00071}}\ \textcolor{preprocessor}{\ \ \ \ \#define\ N\_MSGBUFF\ 10\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00072}00072\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00073}00073\ \textcolor{preprocessor}{\#if\ (K\_CONF\_MSG\_QUEUE\ ==\ ON)}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00074}00074\ \textcolor{preprocessor}{\ \ \ \ \#if\ (N\_MSGBUFF\ <=0\ )}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00075}00075\ \textcolor{preprocessor}{\ \ \ \ \#\ \ \ error\ "{}Number\ of\ message\ buffers\ must\ be\ greater\ than\ 0"{}}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00076}00076\ \textcolor{preprocessor}{\ \ \ \ \#endif}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00077}00077\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00078}00078\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00079}00079\ \textcolor{comment}{\ *\ Condition\ Variables}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00080}00080\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00081}00081\ \textcolor{preprocessor}{\#define\ K\_CONF\_COND\_VAR\ ON}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00083}00083\ \textcolor{comment}{/*\ \ Pipes\ Configuration\ */}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00084}00084\ \textcolor{preprocessor}{\#define\ K\_CONF\_PIPES\ \ \ \ ON}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00085}00085\ \textcolor{preprocessor}{\#if\ (K\_CONF\_PIPES==ON)}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00086}00086\ \textcolor{preprocessor}{\ \ \ \ \#define\ PIPE\_SIZE\ \ \ \ \ \ \ \ \ \ \ \ (35)\ }\textcolor{comment}{/*\ pipe\ size\ (bytes)\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00087}00087\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00089}00089\ \textcolor{comment}{/*FIFO\ */}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00090}00090\ \textcolor{preprocessor}{\#define\ FIFO\_SIZE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (32)}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00091}00091\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00092}00092\ \textcolor{comment}{\ *\ \ Application\ Timer\ Configuration}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00093}00093\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00094}00094\ \textcolor{preprocessor}{\#define\ N\_TIMERS\ \ \ \ 6\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ number\ of\ application\ timers\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00095}00095\ \textcolor{preprocessor}{\#define\ TIMER\_SIZE\ sizeof(K\_TIMER)\ \ \ \ \ \ \ \ \ }\textcolor{comment}{/*\ application\ timer\ size\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{kconfig_8h_source_l00097}00097\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ K\_CONFIG\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

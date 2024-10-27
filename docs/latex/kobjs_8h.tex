@@ -1,0 +1,607 @@
+\doxysection{C\+:/\+Git\+Koba/\+K0\+BA\+\_\+\+Lite/\+Inc/kernel/kobjs.h File Reference}
+\hypertarget{kobjs_8h}{}\label{kobjs_8h}\index{C:/GitKoba/K0BA\_Lite/Inc/kernel/kobjs.h@{C:/GitKoba/K0BA\_Lite/Inc/kernel/kobjs.h}}
+
+
+Kernel objects.  
+
+
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structk_list_node}{k\+List\+Node}}
+\begin{DoxyCompactList}\small\item\em Node structure for general circular doubly linked list. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_list}{k\+List}}
+\begin{DoxyCompactList}\small\item\em Circular doubly linked list structure. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_tcb}{k\+Tcb}}
+\begin{DoxyCompactList}\small\item\em Task Control Block. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_run_time}{k\+Run\+Time}}
+\begin{DoxyCompactList}\small\item\em Record of ticks. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}}
+\begin{DoxyCompactList}\small\item\em Counter Semaphore. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}}
+\begin{DoxyCompactList}\small\item\em Mutex. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_cond}{k\+Cond}}
+\begin{DoxyCompactList}\small\item\em Condition Variables. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_event}{k\+Event}}
+\begin{DoxyCompactList}\small\item\em Generic Event. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_mem}{k\+Mem}}
+\begin{DoxyCompactList}\small\item\em Memory Pool Control Block. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_mesg_buff}{k\+Mesg\+Buff}}
+\begin{DoxyCompactList}\small\item\em Message Buffer for Message and Mailbox. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_mesg_q}{k\+MesgQ}}
+\begin{DoxyCompactList}\small\item\em Message Queue. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_mail}{k\+Mail}}
+\begin{DoxyCompactList}\small\item\em Mail within a mailbox. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_mailbox}{k\+Mailbox}}
+\begin{DoxyCompactList}\small\item\em Mailbox. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_pipe}{k\+Pipe}}
+\begin{DoxyCompactList}\small\item\em Pipes. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_fifo}{k\+Fifo}}
+\begin{DoxyCompactList}\small\item\em FIFO (simple pipe) \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_timer}{k\+Timer}}
+\begin{DoxyCompactList}\small\item\em Application Timer. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_trace_data}{k\+Trace\+Data}}
+\begin{DoxyCompactList}\small\item\em Tracer Data. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structk_trace}{k\+Trace}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{kobjs_8h_ac6f31849bd12d9e2c5ad5cb9ffd70019}\label{kobjs_8h_ac6f31849bd12d9e2c5ad5cb9ffd70019} 
+struct \mbox{\hyperlink{structk_tcb}{k\+Tcb}} {\bfseries \+\_\+\+\_\+attribute\+\_\+\+\_\+} ((aligned))
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+UINT32 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{kobjs_8h_a2bcece12ca33745b8ad5f26fa21ff8d2}{sp}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a579cf6c310ff0b456010ecff26dceaa5}{K\+\_\+\+TASK\+\_\+\+STATUS}} \mbox{\hyperlink{kobjs_8h_a59b307226fb602d57e606f96c82749fd}{status}}
+\item 
+UINT32 \mbox{\hyperlink{kobjs_8h_a214f983abcfd1e99e2151d61ecb973e6}{run\+Cnt}}
+\item 
+UINT32 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{kobjs_8h_a3812e78a0b03c66892f2e309b501d6fb}{stack\+Addr\+Ptr}}
+\item 
+UINT32 \mbox{\hyperlink{kobjs_8h_a82cabdcaee43fc729a1da5551d429f73}{stack\+Size}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} \mbox{\hyperlink{kobjs_8h_a748a9dfe6ca5dbeb9bfb514f5d753ffe}{pid}}
+\item 
+\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} \mbox{\hyperlink{kobjs_8h_a0fbfe9eef77d897b197149d1cbde4812}{u\+Pid}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}} \mbox{\hyperlink{kobjs_8h_af7fd074fc4de0dd20ecdc5ab5bcbc36b}{priority}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}} \mbox{\hyperlink{kobjs_8h_a3429afb4fbb7617f4aa1d79d1851c362}{real\+Prio}}
+\item 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{kobjs_8h_a631ef180fa18166aecfefd4d0a5c8ded}{time\+Slice}}
+\item 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{kobjs_8h_a1f94c67a62392bbd85d07a5e82a6e69e}{time\+Left}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}} \mbox{\hyperlink{kobjs_8h_a28b528b7c9c9838484d3a31e90e5cbc0}{task\+Name}}
+\item 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{kobjs_8h_af32bab8fcda2796b5148dd4c37ab6603}{busy\+Wait\+Time}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{kobjs_8h_aeedf0e83620089571fdf0442a4b3a292}{pending\+Obj}}
+\item 
+BOOL \mbox{\hyperlink{kobjs_8h_a5992ac0fd137a5387003727b08f2e41d}{run\+To\+Compl}}
+\item 
+struct \mbox{\hyperlink{structk_list_node}{k\+List\+Node}} \mbox{\hyperlink{kobjs_8h_ac8342cc46a62f9d85d45777113038ed3}{tcb\+Node}}
+\item 
+\Hypertarget{kobjs_8h_ad2b1af1aa9398d470fb29140ba6b2b25}\label{kobjs_8h_ad2b1af1aa9398d470fb29140ba6b2b25} 
+struct \mbox{\hyperlink{structk_run_time}{k\+Run\+Time}} {\bfseries \+\_\+\+\_\+attribute\+\_\+\+\_\+}
+\item 
+BYTE \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{kobjs_8h_ad237c207862df4acf45be65d8e984fcc}{free\+List\+Ptr}}
+\item 
+BYTE \mbox{\hyperlink{kobjs_8h_a798fb29e435afbd2e42488f7872f3b53}{blk\+Size}}
+\item 
+BYTE \mbox{\hyperlink{kobjs_8h_a7c4b5a4c5aec4eb65931f6c06dde49ae}{n\+Max\+Blocks}}
+\item 
+BYTE \mbox{\hyperlink{kobjs_8h_ac6e80453765e90ad29feb85cf069faa2}{n\+Free\+Blocks}}
+\item 
+struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} \mbox{\hyperlink{kobjs_8h_a011721a08e0814acce2629cf18f2550d}{pool\+Mutex}}
+\item 
+struct \mbox{\hyperlink{structk_list_node}{k\+List\+Node}} \mbox{\hyperlink{kobjs_8h_ade4d45a820b2613ddeb88b70492b2821}{mesg\+Node}}
+\item 
+\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} \mbox{\hyperlink{kobjs_8h_a011fd0b4e119701714ded3d61b4b9e82}{sender\+Tid}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{kobjs_8h_af1e1389b08ae9291bc54899ca6877a22}{mesg\+Ptr}}
+\item 
+SIZE \mbox{\hyperlink{kobjs_8h_a44c2f18f4c12116758c37c108d56412e}{mesg\+Size}}
+\item 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{kobjs_8h_a4c4b901bae569ee3c22e556ede75e895}{sema\+Ack}}
+\item 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{kobjs_8h_a09fcee9932a1d142691fb9885189f40d}{sema\+Empty}}
+\item 
+struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} \mbox{\hyperlink{kobjs_8h_aeb9143af3018a4b8b298d6b49aaa2cf0}{mutex}}
+\item 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{kobjs_8h_ae918490a3d9f9550a9557cb9fdc3a075}{sema\+Full}}
+\item 
+struct \mbox{\hyperlink{structk_mail}{k\+Mail}} \mbox{\hyperlink{kobjs_8h_abb6031f47c9b33f16872d08922615c9b}{mail}}
+\item 
+UINT32 \mbox{\hyperlink{kobjs_8h_afd10c01080f053ba30bdce4b7abf4b8d}{head}}
+\item 
+UINT32 \mbox{\hyperlink{kobjs_8h_a46814b534471bd0b4318f94618c21da3}{tail}}
+\item 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{kobjs_8h_ac070c7fae7db086a7c6e7e4c3354cac3}{sema\+Item}}
+\item 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{kobjs_8h_a4db3afe2645fc125a9131e7f8fcbadf4}{sema\+Room}}
+\item 
+BYTE \mbox{\hyperlink{kobjs_8h_a1b1c58b74401f78e6284b17cdbb62be0}{buffer}} \mbox{[}FIFO\+\_\+\+SIZE\mbox{]}
+\item 
+\mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}} \mbox{\hyperlink{kobjs_8h_a2f5439521260e42a003d2b02e581506a}{timer\+Name}}
+\item 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{kobjs_8h_a59a1e289c3d3dd70e41475d1e910474f}{d\+Ticks}}
+\item 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} \mbox{\hyperlink{kobjs_8h_a90802827a633145d5de8f3201f4d8023}{ticks}}
+\item 
+BOOL \mbox{\hyperlink{kobjs_8h_a6b5c52a49f22e308fca08861639c290b}{reload}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a5c5992905d3a3832f64f84f986702e1d}{CALLBACK}} \mbox{\hyperlink{kobjs_8h_a691fa461176432a4abb3489acfcc05c0}{fun\+Ptr}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{kobjs_8h_ac8ff5f8d594a4e5ebd00a6b139581c32}{args\+Ptr}}
+\item 
+\mbox{\hyperlink{ktypes_8h_a844771c2a7316cff5241bdfe48afb904}{K\+\_\+\+TIMER}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{kobjs_8h_af85058a43b53246f974f2d2297e599b1}{next\+Ptr}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Kernel objects. 
+
+\begin{DoxyVersion}{Version}
+0.\+1.\+0 
+\end{DoxyVersion}
+\begin{DoxyAuthor}{Author}
+Antonio Giacomelli
+\end{DoxyAuthor}
+\begin{DoxyVerb}*
+*   In this header:
+*
+*       o Definition of all kernel objects:
+*
+*        OBJECT TYPE                | IMPLEMENTED IN
+*        ---------------------------------------------
+*        Lists                      | klist.c
+*        Task Control Block         | ktcb.c
+*        Run-time record            | ktick.c
+*        Inter-task synchronisation | ksynch.c
+*        Inter-task communication   | kmesg.c
+*        Memory Pool Control Block  | kmem.c
+*        Timers                     | ktimer.h
+*        Tracer                     | ktracer.c
+*
+* \end{DoxyVerb}
+ 
+
+Definition in file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{kobjs_8h_a2bcece12ca33745b8ad5f26fa21ff8d2}\index{kobjs.h@{kobjs.h}!sp@{sp}}
+\index{sp@{sp}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{sp}{sp}}
+{\footnotesize\ttfamily \label{kobjs_8h_a2bcece12ca33745b8ad5f26fa21ff8d2} 
+UINT32\texorpdfstring{$\ast$}{*} sp}
+
+Saved stack pointer 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00000}{0}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a59b307226fb602d57e606f96c82749fd}\index{kobjs.h@{kobjs.h}!status@{status}}
+\index{status@{status}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{status}{status}}
+{\footnotesize\ttfamily \label{kobjs_8h_a59b307226fb602d57e606f96c82749fd} 
+\mbox{\hyperlink{ktypes_8h_a579cf6c310ff0b456010ecff26dceaa5}{K\+\_\+\+TASK\+\_\+\+STATUS}} status}
+
+Task status 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00001}{1}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a214f983abcfd1e99e2151d61ecb973e6}\index{kobjs.h@{kobjs.h}!runCnt@{runCnt}}
+\index{runCnt@{runCnt}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{runCnt}{runCnt}}
+{\footnotesize\ttfamily \label{kobjs_8h_a214f983abcfd1e99e2151d61ecb973e6} 
+UINT32 run\+Cnt}
+
+Dispatch count 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00002}{2}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a3812e78a0b03c66892f2e309b501d6fb}\index{kobjs.h@{kobjs.h}!stackAddrPtr@{stackAddrPtr}}
+\index{stackAddrPtr@{stackAddrPtr}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{stackAddrPtr}{stackAddrPtr}}
+{\footnotesize\ttfamily \label{kobjs_8h_a3812e78a0b03c66892f2e309b501d6fb} 
+UINT32\texorpdfstring{$\ast$}{*} stack\+Addr\+Ptr}
+
+Stack address 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00003}{3}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a82cabdcaee43fc729a1da5551d429f73}\index{kobjs.h@{kobjs.h}!stackSize@{stackSize}}
+\index{stackSize@{stackSize}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{stackSize}{stackSize}}
+{\footnotesize\ttfamily \label{kobjs_8h_a82cabdcaee43fc729a1da5551d429f73} 
+UINT32 stack\+Size}
+
+Stack size 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00004}{4}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a748a9dfe6ca5dbeb9bfb514f5d753ffe}\index{kobjs.h@{kobjs.h}!pid@{pid}}
+\index{pid@{pid}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{pid}{pid}}
+{\footnotesize\ttfamily \label{kobjs_8h_a748a9dfe6ca5dbeb9bfb514f5d753ffe} 
+\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} pid}
+
+System task ID 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00005}{5}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a0fbfe9eef77d897b197149d1cbde4812}\index{kobjs.h@{kobjs.h}!uPid@{uPid}}
+\index{uPid@{uPid}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{uPid}{uPid}}
+{\footnotesize\ttfamily \label{kobjs_8h_a0fbfe9eef77d897b197149d1cbde4812} 
+\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} u\+Pid}
+
+User-\/defined task ID 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00006}{6}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_af7fd074fc4de0dd20ecdc5ab5bcbc36b}\index{kobjs.h@{kobjs.h}!priority@{priority}}
+\index{priority@{priority}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{priority}{priority}}
+{\footnotesize\ttfamily \label{kobjs_8h_af7fd074fc4de0dd20ecdc5ab5bcbc36b} 
+\mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}} priority}
+
+Task priority (0-\/254) 255 is invalid 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00007}{7}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a3429afb4fbb7617f4aa1d79d1851c362}\index{kobjs.h@{kobjs.h}!realPrio@{realPrio}}
+\index{realPrio@{realPrio}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{realPrio}{realPrio}}
+{\footnotesize\ttfamily \label{kobjs_8h_a3429afb4fbb7617f4aa1d79d1851c362} 
+\mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}} real\+Prio}
+
+Real priority (priority inheritance) 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00008}{8}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a631ef180fa18166aecfefd4d0a5c8ded}\index{kobjs.h@{kobjs.h}!timeSlice@{timeSlice}}
+\index{timeSlice@{timeSlice}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{timeSlice}{timeSlice}}
+{\footnotesize\ttfamily \label{kobjs_8h_a631ef180fa18166aecfefd4d0a5c8ded} 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} time\+Slice}
+
+Time-\/slice duration ~\newline
+ 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00009}{9}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a1f94c67a62392bbd85d07a5e82a6e69e}\index{kobjs.h@{kobjs.h}!timeLeft@{timeLeft}}
+\index{timeLeft@{timeLeft}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{timeLeft}{timeLeft}}
+{\footnotesize\ttfamily \label{kobjs_8h_a1f94c67a62392bbd85d07a5e82a6e69e} 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} time\+Left}
+
+Remaining time-\/slice ~\newline
+ 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00010}{10}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a28b528b7c9c9838484d3a31e90e5cbc0}\index{kobjs.h@{kobjs.h}!taskName@{taskName}}
+\index{taskName@{taskName}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{taskName}{taskName}}
+{\footnotesize\ttfamily \label{kobjs_8h_a28b528b7c9c9838484d3a31e90e5cbc0} 
+\mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}} task\+Name}
+
+Task name ~\newline
+ 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00011}{11}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_af32bab8fcda2796b5148dd4c37ab6603}\index{kobjs.h@{kobjs.h}!busyWaitTime@{busyWaitTime}}
+\index{busyWaitTime@{busyWaitTime}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{busyWaitTime}{busyWaitTime}}
+{\footnotesize\ttfamily \label{kobjs_8h_af32bab8fcda2796b5148dd4c37ab6603} 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} busy\+Wait\+Time}
+
+Delay in ticks ~\newline
+ 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00012}{12}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_aeedf0e83620089571fdf0442a4b3a292}\index{kobjs.h@{kobjs.h}!pendingObj@{pendingObj}}
+\index{pendingObj@{pendingObj}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{pendingObj}{pendingObj}}
+{\footnotesize\ttfamily \label{kobjs_8h_aeedf0e83620089571fdf0442a4b3a292} 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} pending\+Obj}
+
+Address obj task is blocked 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00013}{13}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a5992ac0fd137a5387003727b08f2e41d}\index{kobjs.h@{kobjs.h}!runToCompl@{runToCompl}}
+\index{runToCompl@{runToCompl}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{runToCompl}{runToCompl}}
+{\footnotesize\ttfamily \label{kobjs_8h_a5992ac0fd137a5387003727b08f2e41d} 
+BOOL run\+To\+Compl}
+
+Cooperative-\/only task ~\newline
+ 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00014}{14}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_ac8342cc46a62f9d85d45777113038ed3}\index{kobjs.h@{kobjs.h}!tcbNode@{tcbNode}}
+\index{tcbNode@{tcbNode}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{tcbNode}{tcbNode}}
+{\footnotesize\ttfamily \label{kobjs_8h_ac8342cc46a62f9d85d45777113038ed3} 
+struct \mbox{\hyperlink{structk_list_node}{k\+List\+Node}} tcb\+Node}
+
+Aggregated list node ~\newline
+ 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00015}{15}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_ad237c207862df4acf45be65d8e984fcc}\index{kobjs.h@{kobjs.h}!freeListPtr@{freeListPtr}}
+\index{freeListPtr@{freeListPtr}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{freeListPtr}{freeListPtr}}
+{\footnotesize\ttfamily \label{kobjs_8h_ad237c207862df4acf45be65d8e984fcc} 
+BYTE\texorpdfstring{$\ast$}{*} free\+List\+Ptr}
+
+Free list pointer 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00000}{0}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a798fb29e435afbd2e42488f7872f3b53}\index{kobjs.h@{kobjs.h}!blkSize@{blkSize}}
+\index{blkSize@{blkSize}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{blkSize}{blkSize}}
+{\footnotesize\ttfamily \label{kobjs_8h_a798fb29e435afbd2e42488f7872f3b53} 
+BYTE blk\+Size}
+
+Block size 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00001}{1}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a7c4b5a4c5aec4eb65931f6c06dde49ae}\index{kobjs.h@{kobjs.h}!nMaxBlocks@{nMaxBlocks}}
+\index{nMaxBlocks@{nMaxBlocks}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{nMaxBlocks}{nMaxBlocks}}
+{\footnotesize\ttfamily \label{kobjs_8h_a7c4b5a4c5aec4eb65931f6c06dde49ae} 
+BYTE n\+Max\+Blocks}
+
+Maximum number of blocks 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00002}{2}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_ac6e80453765e90ad29feb85cf069faa2}\index{kobjs.h@{kobjs.h}!nFreeBlocks@{nFreeBlocks}}
+\index{nFreeBlocks@{nFreeBlocks}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{nFreeBlocks}{nFreeBlocks}}
+{\footnotesize\ttfamily \label{kobjs_8h_ac6e80453765e90ad29feb85cf069faa2} 
+BYTE n\+Free\+Blocks}
+
+Number of free blocks 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00003}{3}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a011721a08e0814acce2629cf18f2550d}\index{kobjs.h@{kobjs.h}!poolMutex@{poolMutex}}
+\index{poolMutex@{poolMutex}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{poolMutex}{poolMutex}}
+{\footnotesize\ttfamily \label{kobjs_8h_a011721a08e0814acce2629cf18f2550d} 
+struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} pool\+Mutex}
+
+pool mutex; 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00004}{4}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_ade4d45a820b2613ddeb88b70492b2821}\index{kobjs.h@{kobjs.h}!mesgNode@{mesgNode}}
+\index{mesgNode@{mesgNode}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{mesgNode}{mesgNode}}
+{\footnotesize\ttfamily \label{kobjs_8h_ade4d45a820b2613ddeb88b70492b2821} 
+struct \mbox{\hyperlink{structk_list_node}{k\+List\+Node}} mesg\+Node}
+
+Mesg Queue Node 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00000}{0}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a011fd0b4e119701714ded3d61b4b9e82}\index{kobjs.h@{kobjs.h}!senderTid@{senderTid}}
+\index{senderTid@{senderTid}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{senderTid}{senderTid}}
+{\footnotesize\ttfamily \label{kobjs_8h_a011fd0b4e119701714ded3d61b4b9e82} 
+\mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}} sender\+Tid}
+
+Sender Task ID
+
+Sender TID 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00001}{1}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_af1e1389b08ae9291bc54899ca6877a22}\index{kobjs.h@{kobjs.h}!mesgPtr@{mesgPtr}}
+\index{mesgPtr@{mesgPtr}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{mesgPtr}{mesgPtr}}
+{\footnotesize\ttfamily \label{kobjs_8h_af1e1389b08ae9291bc54899ca6877a22} 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} mesg\+Ptr}
+
+Pointer to message contents 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00002}{2}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a44c2f18f4c12116758c37c108d56412e}\index{kobjs.h@{kobjs.h}!mesgSize@{mesgSize}}
+\index{mesgSize@{mesgSize}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{mesgSize}{mesgSize}}
+{\footnotesize\ttfamily \label{kobjs_8h_a44c2f18f4c12116758c37c108d56412e} 
+SIZE mesg\+Size}
+
+Mesg size
+
+Message size 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00003}{3}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a4c4b901bae569ee3c22e556ede75e895}\index{kobjs.h@{kobjs.h}!semaAck@{semaAck}}
+\index{semaAck@{semaAck}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{semaAck}{semaAck}}
+{\footnotesize\ttfamily \label{kobjs_8h_a4c4b901bae569ee3c22e556ede75e895} 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} sema\+Ack}
+
+Semaphore to ACK sender 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00001}{1}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a09fcee9932a1d142691fb9885189f40d}\index{kobjs.h@{kobjs.h}!semaEmpty@{semaEmpty}}
+\index{semaEmpty@{semaEmpty}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{semaEmpty}{semaEmpty}}
+{\footnotesize\ttfamily \label{kobjs_8h_a09fcee9932a1d142691fb9885189f40d} 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} sema\+Empty}
+
+Signal/\+Wait producer/consumer 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00003}{3}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_aeb9143af3018a4b8b298d6b49aaa2cf0}\index{kobjs.h@{kobjs.h}!mutex@{mutex}}
+\index{mutex@{mutex}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{mutex}{mutex}}
+{\footnotesize\ttfamily \label{kobjs_8h_aeb9143af3018a4b8b298d6b49aaa2cf0} 
+struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} mutex}
+
+Lock 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00004}{4}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_ae918490a3d9f9550a9557cb9fdc3a075}\index{kobjs.h@{kobjs.h}!semaFull@{semaFull}}
+\index{semaFull@{semaFull}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{semaFull}{semaFull}}
+{\footnotesize\ttfamily \label{kobjs_8h_ae918490a3d9f9550a9557cb9fdc3a075} 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} sema\+Full}
+
+Signal/\+Wait consumer/producer 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00005}{5}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_abb6031f47c9b33f16872d08922615c9b}\index{kobjs.h@{kobjs.h}!mail@{mail}}
+\index{mail@{mail}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{mail}{mail}}
+{\footnotesize\ttfamily \label{kobjs_8h_abb6031f47c9b33f16872d08922615c9b} 
+struct \mbox{\hyperlink{structk_mail}{k\+Mail}} mail}
+
+Message struct 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00006}{6}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_afd10c01080f053ba30bdce4b7abf4b8d}\index{kobjs.h@{kobjs.h}!head@{head}}
+\index{head@{head}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{head}{head}}
+{\footnotesize\ttfamily \label{kobjs_8h_afd10c01080f053ba30bdce4b7abf4b8d} 
+UINT32 head}
+
+write index 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00000}{0}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a46814b534471bd0b4318f94618c21da3}\index{kobjs.h@{kobjs.h}!tail@{tail}}
+\index{tail@{tail}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{tail}{tail}}
+{\footnotesize\ttfamily \label{kobjs_8h_a46814b534471bd0b4318f94618c21da3} 
+UINT32 tail}
+
+read index 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00001}{1}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_ac070c7fae7db086a7c6e7e4c3354cac3}\index{kobjs.h@{kobjs.h}!semaItem@{semaItem}}
+\index{semaItem@{semaItem}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{semaItem}{semaItem}}
+{\footnotesize\ttfamily \label{kobjs_8h_ac070c7fae7db086a7c6e7e4c3354cac3} 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} sema\+Item}
+
+signal/wait consumer/producer 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00002}{2}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a4db3afe2645fc125a9131e7f8fcbadf4}\index{kobjs.h@{kobjs.h}!semaRoom@{semaRoom}}
+\index{semaRoom@{semaRoom}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{semaRoom}{semaRoom}}
+{\footnotesize\ttfamily \label{kobjs_8h_a4db3afe2645fc125a9131e7f8fcbadf4} 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} sema\+Room}
+
+signal/wait producer/consumer 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00003}{3}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a1b1c58b74401f78e6284b17cdbb62be0}\index{kobjs.h@{kobjs.h}!buffer@{buffer}}
+\index{buffer@{buffer}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{buffer}{buffer}}
+{\footnotesize\ttfamily \label{kobjs_8h_a1b1c58b74401f78e6284b17cdbb62be0} 
+BYTE buffer\mbox{[}FIFO\+\_\+\+SIZE\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00005}{5}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a2f5439521260e42a003d2b02e581506a}\index{kobjs.h@{kobjs.h}!timerName@{timerName}}
+\index{timerName@{timerName}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{timerName}{timerName}}
+{\footnotesize\ttfamily \label{kobjs_8h_a2f5439521260e42a003d2b02e581506a} 
+\mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}} timer\+Name}
+
+Timer name 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00000}{0}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a59a1e289c3d3dd70e41475d1e910474f}\index{kobjs.h@{kobjs.h}!dTicks@{dTicks}}
+\index{dTicks@{dTicks}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{dTicks}{dTicks}}
+{\footnotesize\ttfamily \label{kobjs_8h_a59a1e289c3d3dd70e41475d1e910474f} 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} d\+Ticks}
+
+Delta ticks 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00001}{1}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a90802827a633145d5de8f3201f4d8023}\index{kobjs.h@{kobjs.h}!ticks@{ticks}}
+\index{ticks@{ticks}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{ticks}{ticks}}
+{\footnotesize\ttfamily \label{kobjs_8h_a90802827a633145d5de8f3201f4d8023} 
+\mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}} ticks}
+
+Aboslute ticks 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00002}{2}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a6b5c52a49f22e308fca08861639c290b}\index{kobjs.h@{kobjs.h}!reload@{reload}}
+\index{reload@{reload}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{reload}{reload}}
+{\footnotesize\ttfamily \label{kobjs_8h_a6b5c52a49f22e308fca08861639c290b} 
+BOOL reload}
+
+Reload/\+Oneshot 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00003}{3}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_a691fa461176432a4abb3489acfcc05c0}\index{kobjs.h@{kobjs.h}!funPtr@{funPtr}}
+\index{funPtr@{funPtr}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{funPtr}{funPtr}}
+{\footnotesize\ttfamily \label{kobjs_8h_a691fa461176432a4abb3489acfcc05c0} 
+\mbox{\hyperlink{ktypes_8h_a5c5992905d3a3832f64f84f986702e1d}{CALLBACK}} fun\+Ptr}
+
+Callback 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00004}{4}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_ac8ff5f8d594a4e5ebd00a6b139581c32}\index{kobjs.h@{kobjs.h}!argsPtr@{argsPtr}}
+\index{argsPtr@{argsPtr}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{argsPtr}{argsPtr}}
+{\footnotesize\ttfamily \label{kobjs_8h_ac8ff5f8d594a4e5ebd00a6b139581c32} 
+\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} args\+Ptr}
+
+Arguments 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00005}{5}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{kobjs_8h_af85058a43b53246f974f2d2297e599b1}\index{kobjs.h@{kobjs.h}!nextPtr@{nextPtr}}
+\index{nextPtr@{nextPtr}!kobjs.h@{kobjs.h}}
+\doxysubsubsection{\texorpdfstring{nextPtr}{nextPtr}}
+{\footnotesize\ttfamily \label{kobjs_8h_af85058a43b53246f974f2d2297e599b1} 
+\mbox{\hyperlink{ktypes_8h_a844771c2a7316cff5241bdfe48afb904}{K\+\_\+\+TIMER}}\texorpdfstring{$\ast$}{*} next\+Ptr}
+
+Next timer in the queue 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00006}{6}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+

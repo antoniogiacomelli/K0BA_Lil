@@ -59,10 +59,9 @@
 #ifndef INC_K_API_H_
 #define INC_K_API_H_
 
-#include <stm32f4xx_hal.h>
-#include <stm32f401xe.h>
+
+/* Include your CMIS HAL and BSP here */
 #include <cmsis_gcc.h>
-#include <stdarg.h>
 #include <stdio.h>
 #include <assert.h>
 #include <kmacros.h>

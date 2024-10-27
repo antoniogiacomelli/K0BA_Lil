@@ -1,0 +1,101 @@
+\doxysection{k\+Fifo Struct Reference}
+\hypertarget{structk_fifo}{}\label{structk_fifo}\index{kFifo@{kFifo}}
+
+
+FIFO (simple pipe)  
+
+
+
+
+{\ttfamily \#include $<$kobjs.\+h$>$}
+
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+UINT32 \mbox{\hyperlink{structk_fifo_ab7f410f029b200df07888bf77ea0b5de}{head}}
+\item 
+UINT32 \mbox{\hyperlink{structk_fifo_a4dfc62001c5e7b655e91f9ec382bf0f5}{tail}}
+\item 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{structk_fifo_a8ec83608292f6e3951a22b1eecac8cce}{sema\+Item}}
+\item 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} \mbox{\hyperlink{structk_fifo_a668319bbdb1565459e74065470d252b9}{sema\+Room}}
+\item 
+struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} \mbox{\hyperlink{structk_fifo_afe7dd27defa358dd56f0c3d1e9d18fe6}{mutex}}
+\item 
+BYTE \mbox{\hyperlink{structk_fifo_ab3924024924df2ccde3020600ac7a493}{buffer}} \mbox{[}FIFO\+\_\+\+SIZE\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+FIFO (simple pipe) 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00247}{247}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+
+
+\doxysubsection{Field Documentation}
+\Hypertarget{structk_fifo_ab7f410f029b200df07888bf77ea0b5de}\index{kFifo@{kFifo}!head@{head}}
+\index{head@{head}!kFifo@{kFifo}}
+\doxysubsubsection{\texorpdfstring{head}{head}}
+{\footnotesize\ttfamily \label{structk_fifo_ab7f410f029b200df07888bf77ea0b5de} 
+UINT32 k\+Fifo\+::head}
+
+write index 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00249}{249}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_fifo_a4dfc62001c5e7b655e91f9ec382bf0f5}\index{kFifo@{kFifo}!tail@{tail}}
+\index{tail@{tail}!kFifo@{kFifo}}
+\doxysubsubsection{\texorpdfstring{tail}{tail}}
+{\footnotesize\ttfamily \label{structk_fifo_a4dfc62001c5e7b655e91f9ec382bf0f5} 
+UINT32 k\+Fifo\+::tail}
+
+read index 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00250}{250}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_fifo_a8ec83608292f6e3951a22b1eecac8cce}\index{kFifo@{kFifo}!semaItem@{semaItem}}
+\index{semaItem@{semaItem}!kFifo@{kFifo}}
+\doxysubsubsection{\texorpdfstring{semaItem}{semaItem}}
+{\footnotesize\ttfamily \label{structk_fifo_a8ec83608292f6e3951a22b1eecac8cce} 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} k\+Fifo\+::sema\+Item}
+
+signal/wait consumer/producer 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00251}{251}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_fifo_a668319bbdb1565459e74065470d252b9}\index{kFifo@{kFifo}!semaRoom@{semaRoom}}
+\index{semaRoom@{semaRoom}!kFifo@{kFifo}}
+\doxysubsubsection{\texorpdfstring{semaRoom}{semaRoom}}
+{\footnotesize\ttfamily \label{structk_fifo_a668319bbdb1565459e74065470d252b9} 
+struct \mbox{\hyperlink{structk_sema}{k\+Sema}} k\+Fifo\+::sema\+Room}
+
+signal/wait producer/consumer 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00252}{252}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_fifo_afe7dd27defa358dd56f0c3d1e9d18fe6}\index{kFifo@{kFifo}!mutex@{mutex}}
+\index{mutex@{mutex}!kFifo@{kFifo}}
+\doxysubsubsection{\texorpdfstring{mutex}{mutex}}
+{\footnotesize\ttfamily \label{structk_fifo_afe7dd27defa358dd56f0c3d1e9d18fe6} 
+struct \mbox{\hyperlink{structk_mutex}{k\+Mutex}} k\+Fifo\+::mutex}
+
+Lock 
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00253}{253}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+\Hypertarget{structk_fifo_ab3924024924df2ccde3020600ac7a493}\index{kFifo@{kFifo}!buffer@{buffer}}
+\index{buffer@{buffer}!kFifo@{kFifo}}
+\doxysubsubsection{\texorpdfstring{buffer}{buffer}}
+{\footnotesize\ttfamily \label{structk_fifo_ab3924024924df2ccde3020600ac7a493} 
+BYTE k\+Fifo\+::buffer\mbox{[}FIFO\+\_\+\+SIZE\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{kobjs_8h_source_l00254}{254}} of file \mbox{\hyperlink{kobjs_8h_source}{kobjs.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Git\+Koba/\+K0\+BA\+\_\+\+Lite/\+Inc/kernel/\mbox{\hyperlink{kobjs_8h}{kobjs.\+h}}\end{DoxyCompactItemize}

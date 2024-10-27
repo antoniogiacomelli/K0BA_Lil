@@ -1,0 +1,231 @@
+\doxysection{kobjs.\+h}
+\hypertarget{kobjs_8h_source}{}\label{kobjs_8h_source}\index{C:/GitKoba/K0BA\_Lite/Inc/kernel/kobjs.h@{C:/GitKoba/K0BA\_Lite/Inc/kernel/kobjs.h}}
+\mbox{\hyperlink{kobjs_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00001}\mbox{\hyperlink{kobjs_8h_a798fb29e435afbd2e42488f7872f3b53}{00001}}\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00002}\mbox{\hyperlink{kobjs_8h_af1e1389b08ae9291bc54899ca6877a22}{00002}}\ \textcolor{comment}{/*****************************************************************************}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00003}\mbox{\hyperlink{kobjs_8h_a44c2f18f4c12116758c37c108d56412e}{00003}}\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00004}\mbox{\hyperlink{kobjs_8h_a691fa461176432a4abb3489acfcc05c0}{00004}}\ \textcolor{comment}{\ *\ [K0BA\ -\/\ Kernel\ 0\ For\ Embedded\ Applications]\ |\ [VERSION:\ 0.1.0]}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00005}\mbox{\hyperlink{kobjs_8h_ac8ff5f8d594a4e5ebd00a6b139581c32}{00005}}\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00006}\mbox{\hyperlink{kobjs_8h_abb6031f47c9b33f16872d08922615c9b}{00006}}\ \textcolor{comment}{\ ******************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00034}00034\ \textcolor{preprocessor}{\#ifndef\ INC\_KOBJS\_H\_}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00035}00035\ \textcolor{preprocessor}{\#define\ INC\_KOBJS\_H\_}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00037}00037\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00038}00038\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00039}00039\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00045}\mbox{\hyperlink{structk_list_node}{00045}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list_node}{kListNode}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00046}00046\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00047}\mbox{\hyperlink{structk_list_node_a63e3e876ee5eb80819c8b0af16a186cf}{00047}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list_node}{kListNode}}*\ \mbox{\hyperlink{structk_list_node_a63e3e876ee5eb80819c8b0af16a186cf}{nextPtr}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00048}\mbox{\hyperlink{structk_list_node_abbfd2705d077fe77c1b2b9db78f7c681}{00048}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list_node}{kListNode}}*\ \mbox{\hyperlink{structk_list_node_abbfd2705d077fe77c1b2b9db78f7c681}{prevPtr}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00049}00049\ \};}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00054}\mbox{\hyperlink{structk_list}{00054}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list}{kList}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00055}00055\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00056}\mbox{\hyperlink{structk_list_aeb2c010c6f22599f9717126a4cc517f0}{00056}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list_node}{kListNode}}\ \ \mbox{\hyperlink{structk_list_aeb2c010c6f22599f9717126a4cc517f0}{listDummy}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00057}00057\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ listName;}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00058}00058\ \ \ \ \ UINT32\ \ \ \ \ \ \ \ \ \ \ \ size;}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00059}00059\ \};}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00061}00061\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00062}00062\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00063}00063\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00068}\mbox{\hyperlink{structk_tcb}{00068}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_tcb}{kTcb}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00069}00069\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00070}\mbox{\hyperlink{structk_tcb_a28afa972935ceac9ff5f25467b98b81d}{00070}}\ \ \ \ \ UINT32*\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_a28afa972935ceac9ff5f25467b98b81d}{sp}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00071}\mbox{\hyperlink{structk_tcb_ab560057bda0f409afbe6d57d0b5a414d}{00071}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a579cf6c310ff0b456010ecff26dceaa5}{K\_TASK\_STATUS}}\ \ \ \mbox{\hyperlink{structk_tcb_ab560057bda0f409afbe6d57d0b5a414d}{status}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00072}\mbox{\hyperlink{structk_tcb_a9f25091ca6d683bce1513e3801c7ae35}{00072}}\ \ \ \ \ UINT32\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_a9f25091ca6d683bce1513e3801c7ae35}{runCnt}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00073}\mbox{\hyperlink{structk_tcb_a0b40d973440e6e430199e44624ffa33b}{00073}}\ \ \ \ \ UINT32*\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_a0b40d973440e6e430199e44624ffa33b}{stackAddrPtr}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00074}\mbox{\hyperlink{structk_tcb_a6de70123a45e32462dde93615a16c586}{00074}}\ \ \ \ \ UINT32\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_a6de70123a45e32462dde93615a16c586}{stackSize}};\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00075}\mbox{\hyperlink{structk_tcb_a688d16b35c857c9c1a45e45dd9dfb1f2}{00075}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_a688d16b35c857c9c1a45e45dd9dfb1f2}{pid}};\ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00076}\mbox{\hyperlink{structk_tcb_abb438ba6354a00b21c10fcb529b6e94e}{00076}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}}\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_abb438ba6354a00b21c10fcb529b6e94e}{uPid}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00077}\mbox{\hyperlink{structk_tcb_aab090ca0775558f98973307129f278e4}{00077}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_aab090ca0775558f98973307129f278e4}{priority}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00078}\mbox{\hyperlink{structk_tcb_a0faa9d21fae78b6257572ca1788681a4}{00078}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_a0faa9d21fae78b6257572ca1788681a4}{realPrio}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00079}\mbox{\hyperlink{structk_tcb_a46fc8f0b147a71a476a50653ebf823bb}{00079}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_a46fc8f0b147a71a476a50653ebf823bb}{timeSlice}};\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00080}\mbox{\hyperlink{structk_tcb_abd74dc26e7b7e58cf57b189267807eb9}{00080}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_abd74dc26e7b7e58cf57b189267807eb9}{timeLeft}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00081}\mbox{\hyperlink{structk_tcb_a233c31a775812d13eb78712526ba7e32}{00081}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_a233c31a775812d13eb78712526ba7e32}{taskName}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00082}\mbox{\hyperlink{structk_tcb_ab8f0f3d0fcd2d5aa24a8d8b45d564bb2}{00082}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_ab8f0f3d0fcd2d5aa24a8d8b45d564bb2}{busyWaitTime}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00083}\mbox{\hyperlink{structk_tcb_a3fb62d34d432a02697dc67ca44292507}{00083}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_a3fb62d34d432a02697dc67ca44292507}{pendingObj}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00084}\mbox{\hyperlink{structk_tcb_afcbca47ac6132e31457017ee1c3cbc11}{00084}}\ \ \ \ \ BOOL\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_tcb_afcbca47ac6132e31457017ee1c3cbc11}{runToCompl}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00085}\mbox{\hyperlink{structk_tcb_ae17c07c48f73ba57cb0e4eb69d9ab1f3}{00085}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list_node}{kListNode}}\ \mbox{\hyperlink{structk_tcb_ae17c07c48f73ba57cb0e4eb69d9ab1f3}{tcbNode}};\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00086}00086\ \}\_\_attribute\_\_((aligned));}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00088}00088\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00089}00089\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00090}00090\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00096}\mbox{\hyperlink{structk_run_time}{00096}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_run_time}{kRunTime}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00097}00097\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00098}\mbox{\hyperlink{structk_run_time_aed53ac52f605c7b68a699022ca026097}{00098}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}\ \ \mbox{\hyperlink{structk_run_time_aed53ac52f605c7b68a699022ca026097}{globalTick}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00099}\mbox{\hyperlink{structk_run_time_a800cba4224d9dc765df8e30ec8040fed}{00099}}\ \ \ \ \ UINT32\ \ \mbox{\hyperlink{structk_run_time_a800cba4224d9dc765df8e30ec8040fed}{nWraps}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00100}00100\ \};}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00102}00102\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00103}00103\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00104}00104\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00109}\mbox{\hyperlink{structk_sema}{00109}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_sema}{kSema}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00110}00110\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00111}\mbox{\hyperlink{structk_sema_a30ca18ce300f7a4c16693be17befac30}{00111}}\ \ \ \ \ INT32\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_sema_a30ca18ce300f7a4c16693be17befac30}{value}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00112}\mbox{\hyperlink{structk_sema_a85cc75467b807f0d8bdf4d32f0aca8a8}{00112}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list}{kList}}\ \ \ \mbox{\hyperlink{structk_sema_a85cc75467b807f0d8bdf4d32f0aca8a8}{queue}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00113}00113\ \};}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00119}\mbox{\hyperlink{structk_mutex}{00119}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mutex}{kMutex}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00120}00120\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00121}\mbox{\hyperlink{structk_mutex_a24ef4049c3e573da34d707ee238f71d2}{00121}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list}{kList}}\ \ \ \mbox{\hyperlink{structk_mutex_a24ef4049c3e573da34d707ee238f71d2}{queue}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00122}00122\ \ \ \ \ BOOL\ \ \ \ \ \ \ \ \ \ \ \ lock;\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00123}\mbox{\hyperlink{structk_mutex_a2f58ba3a8325b0398cd6013540a1b895}{00123}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_tcb}{kTcb}}*\ \ \ \ \mbox{\hyperlink{structk_mutex_a2f58ba3a8325b0398cd6013540a1b895}{ownerPtr}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00124}00124\ \};}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00125}00125\ \textcolor{preprocessor}{\#if\ (K\_CONF\_COND\_VAR\ ==\ ON)}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00130}\mbox{\hyperlink{structk_cond}{00130}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_cond}{kCond}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00131}00131\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00132}\mbox{\hyperlink{structk_cond_a744128ccedcf7a2022b1c32c09091e9a}{00132}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mutex}{kMutex}}\ \ \ \mbox{\hyperlink{structk_cond_a744128ccedcf7a2022b1c32c09091e9a}{condMutex}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00133}\mbox{\hyperlink{structk_cond_a9a84e571a996fecbcffbea8965bbc139}{00133}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list}{kList}}\ \ \ \mbox{\hyperlink{structk_cond_a9a84e571a996fecbcffbea8965bbc139}{queue}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00134}00134\ \};}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00135}00135\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00139}\mbox{\hyperlink{structk_event}{00139}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_event}{kEvent}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00140}00140\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00141}\mbox{\hyperlink{structk_event_aa31fc4d138e0b3039c9b45a823df2692}{00141}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list}{kList}}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_event_aa31fc4d138e0b3039c9b45a823df2692}{queue}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00142}\mbox{\hyperlink{structk_event_ad89fb77cb02e4a1b029d672d27f78bc6}{00142}}\ \ \ \ \ BOOL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_event_ad89fb77cb02e4a1b029d672d27f78bc6}{init}};\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00143}\mbox{\hyperlink{structk_event_a362fb2290b1af924292b3f77be922839}{00143}}\ \ \ \ \ UINT32\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_event_a362fb2290b1af924292b3f77be922839}{eventID}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00144}00144\ \};}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00146}00146\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00147}00147\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00148}00148\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00154}\mbox{\hyperlink{structk_mem}{00154}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mem}{kMem}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00155}00155\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00156}\mbox{\hyperlink{structk_mem_a94ebd14734367be3e7c07a847bd03d2a}{00156}}\ \ \ \ \ BYTE*\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mem_a94ebd14734367be3e7c07a847bd03d2a}{freeListPtr}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00157}\mbox{\hyperlink{structk_mem_a335b90b738b0cbbb76a045b1cbf61700}{00157}}\ \ \ \ \ BYTE\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mem_a335b90b738b0cbbb76a045b1cbf61700}{blkSize}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00158}\mbox{\hyperlink{structk_mem_af2955bb24ae86673652a7e648a9fbab3}{00158}}\ \ \ \ \ BYTE\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mem_af2955bb24ae86673652a7e648a9fbab3}{nMaxBlocks}};\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00159}\mbox{\hyperlink{structk_mem_a6b79e6d5fe66a091a2344111ba516713}{00159}}\ \ \ \ \ BYTE\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mem_a6b79e6d5fe66a091a2344111ba516713}{nFreeBlocks}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00160}\mbox{\hyperlink{structk_mem_ab11eddbdea2df7233d2801c74bb1c47f}{00160}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mutex}{kMutex}}\ \mbox{\hyperlink{structk_mem_ab11eddbdea2df7233d2801c74bb1c47f}{poolMutex}};\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00162}00162\ \}\_\_attribute\_\_((aligned));}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00163}00163\ \textcolor{preprocessor}{\#if\ ((K\_CONF\_MSG\_QUEUE==ON)\ ||\ (K\_CONF\_MAILBOX\ ==\ ON))}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00165}00165\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00166}00166\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00167}00167\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00172}\mbox{\hyperlink{structk_mesg_buff}{00172}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mesg_buff}{kMesgBuff}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00173}00173\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00174}\mbox{\hyperlink{structk_mesg_buff_ae3f2459009120b68c9bee83b25e3f159}{00174}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list_node}{kListNode}}\ \ \ \ \ \ \ \mbox{\hyperlink{structk_mesg_buff_ae3f2459009120b68c9bee83b25e3f159}{mesgNode}};\ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00175}\mbox{\hyperlink{structk_mesg_buff_a344a891f5993ea76532521dd833c003d}{00175}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mesg_buff_a344a891f5993ea76532521dd833c003d}{senderTid}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00176}\mbox{\hyperlink{structk_mesg_buff_a604eb27cc3849d93868f6260122656db}{00176}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mesg_buff_a604eb27cc3849d93868f6260122656db}{mesgPtr}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00177}\mbox{\hyperlink{structk_mesg_buff_abe41b660319a93319cd80568228ac77e}{00177}}\ \ \ \ \ SIZE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mesg_buff_abe41b660319a93319cd80568228ac77e}{mesgSize}};\ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00178}00178\ \}\_\_attribute\_\_((aligned));}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00179}00179\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00181}00181\ \textcolor{preprocessor}{\#if\ (K\_CONF\_MSG\_QUEUE==ON)}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00185}\mbox{\hyperlink{structk_mesg_q}{00185}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mesg_q}{kMesgQ}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00186}00186\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00187}\mbox{\hyperlink{structk_mesg_q_a9003b3c4465cae5019c23c31d6929c7f}{00187}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_list}{kList}}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mesg_q_a9003b3c4465cae5019c23c31d6929c7f}{mesgList}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00188}\mbox{\hyperlink{structk_mesg_q_a443844717058594dddbdd49ec461722f}{00188}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_sema}{kSema}}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mesg_q_a443844717058594dddbdd49ec461722f}{semaItem}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00189}\mbox{\hyperlink{structk_mesg_q_ae884fca3ed787e539276b6367960de68}{00189}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mutex}{kMutex}}\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mesg_q_ae884fca3ed787e539276b6367960de68}{mutex}};\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00190}\mbox{\hyperlink{structk_mesg_q_a0e32beedd83db5fcd9da9f8ddc6511a5}{00190}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_sema}{kSema}}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mesg_q_a0e32beedd83db5fcd9da9f8ddc6511a5}{semaPool}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00191}\mbox{\hyperlink{structk_mesg_q_ac757ef5b83477c5304bdaf5c03b1f3f0}{00191}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_sema}{kSema}}\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mesg_q_ac757ef5b83477c5304bdaf5c03b1f3f0}{semaRoom}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00192}\mbox{\hyperlink{structk_mesg_q_ad356b039c1defdfa4e086c6cf61a538b}{00192}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mem}{kMem}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mesg_q_ad356b039c1defdfa4e086c6cf61a538b}{mesgMemCtrlBlk}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00193}00193\ \};}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00194}00194\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00195}00195\ \textcolor{preprocessor}{\#if\ (K\_CONF\_MAILBOX==ON)}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00196}00196\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00200}\mbox{\hyperlink{structk_mail}{00200}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mail}{kMail}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00201}00201\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00202}\mbox{\hyperlink{structk_mail_ac103d9f05560caab298819ffcf57dbb0}{00202}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_aa91430ada220aeb4be678a150b5233df}{TID}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mail_ac103d9f05560caab298819ffcf57dbb0}{senderTid}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00203}\mbox{\hyperlink{structk_mail_ae9aed173e26d00543b8fbed0969e8c89}{00203}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mail_ae9aed173e26d00543b8fbed0969e8c89}{mesgPtr}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00204}\mbox{\hyperlink{structk_mail_a6626d05e376c844d8788e612c57fa784}{00204}}\ \ \ \ \ SIZE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mail_a6626d05e376c844d8788e612c57fa784}{mesgSize}};\ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00205}00205\ \}\_\_attribute\_\_((aligned));}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00210}\mbox{\hyperlink{structk_mailbox}{00210}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mailbox}{kMailbox}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00211}00211\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00212}00212\ \textcolor{preprocessor}{\#if\ (K\_CONF\_MAILBOX\_ACK\ ==\ ON)}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00213}\mbox{\hyperlink{structk_mailbox_a0fe50a4eda8a5f24d6e909280834cfdb}{00213}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_sema}{kSema}}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mailbox_a0fe50a4eda8a5f24d6e909280834cfdb}{semaAck}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00214}00214\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00215}\mbox{\hyperlink{structk_mailbox_a0dfff092ccc28f4e6e903e5153dcf072}{00215}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_sema}{kSema}}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mailbox_a0dfff092ccc28f4e6e903e5153dcf072}{semaEmpty}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00216}\mbox{\hyperlink{structk_mailbox_ab25946282e5e816850ba1d2690b19209}{00216}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mutex}{kMutex}}\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mailbox_ab25946282e5e816850ba1d2690b19209}{mutex}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00217}\mbox{\hyperlink{structk_mailbox_abe94c7c8155f9773973efeb4f766a045}{00217}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_sema}{kSema}}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mailbox_abe94c7c8155f9773973efeb4f766a045}{semaFull}};\ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00218}\mbox{\hyperlink{structk_mailbox_a7de4648b512ee05f5841daf72cc7f04b}{00218}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mail}{kMail}}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_mailbox_a7de4648b512ee05f5841daf72cc7f04b}{mail}};\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00219}00219\ \}\ \_\_attribute\_\_((aligned));}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00221}00221\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00222}00222\ \textcolor{preprocessor}{\#if\ (K\_CONF\_COND\_VAR==\ ON)}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00223}00223\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00225}00225\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00227}00227\ \textcolor{preprocessor}{\#if\ (K\_CONF\_PIPES==ON)}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00231}\mbox{\hyperlink{structk_pipe}{00231}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_pipe}{kPipe}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00232}00232\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00233}\mbox{\hyperlink{structk_pipe_ae118df113478280bb8c21748156a124e}{00233}}\ \ \ \ \ UINT32\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_pipe_ae118df113478280bb8c21748156a124e}{tail}};\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00234}\mbox{\hyperlink{structk_pipe_a95d5ac7ee08c2a7afb918a25e6ddaf6b}{00234}}\ \ \ \ \ UINT32\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_pipe_a95d5ac7ee08c2a7afb918a25e6ddaf6b}{head}};\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00235}\mbox{\hyperlink{structk_pipe_ab1dc9e73569f2f4eb9f4a95d4e67560b}{00235}}\ \ \ \ \ UINT32\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_pipe_ab1dc9e73569f2f4eb9f4a95d4e67560b}{data}};\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00236}\mbox{\hyperlink{structk_pipe_a2c791ce56557be2decb8bfa7f7703f73}{00236}}\ \ \ \ \ UINT32\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_pipe_a2c791ce56557be2decb8bfa7f7703f73}{room}};\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00237}\mbox{\hyperlink{structk_pipe_a10a5685ecceaa0f99ace8a65d34aa625}{00237}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_cond}{kCond}}\ \ \ \ \mbox{\hyperlink{structk_pipe_a10a5685ecceaa0f99ace8a65d34aa625}{condRoom}};\ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00238}\mbox{\hyperlink{structk_pipe_a03fe11d03d7aa1b858f63e5521d6e766}{00238}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_cond}{kCond}}\ \ \ \ \mbox{\hyperlink{structk_pipe_a03fe11d03d7aa1b858f63e5521d6e766}{condData}};\ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00239}\mbox{\hyperlink{structk_pipe_a13145ab43e7794d15e1c9697973ea476}{00239}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mutex}{kMutex}}\ \ \mbox{\hyperlink{structk_pipe_a13145ab43e7794d15e1c9697973ea476}{mutex}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00240}\mbox{\hyperlink{structk_pipe_ae0e10d8f9ac80f1f09f70f6492b9b695}{00240}}\ \ \ \ \ BYTE\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_pipe_ae0e10d8f9ac80f1f09f70f6492b9b695}{buffer}}[PIPE\_SIZE];\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00241}00241\ \};}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00242}00242\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00247}\mbox{\hyperlink{structk_fifo}{00247}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_fifo}{kFifo}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00248}00248\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00249}\mbox{\hyperlink{structk_fifo_ab7f410f029b200df07888bf77ea0b5de}{00249}}\ \ \ \ \ UINT32\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_fifo_ab7f410f029b200df07888bf77ea0b5de}{head}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00250}\mbox{\hyperlink{structk_fifo_a4dfc62001c5e7b655e91f9ec382bf0f5}{00250}}\ \ \ \ \ UINT32\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_fifo_a4dfc62001c5e7b655e91f9ec382bf0f5}{tail}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00251}\mbox{\hyperlink{structk_fifo_a8ec83608292f6e3951a22b1eecac8cce}{00251}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_sema}{kSema}}\ \ \ \ \ \ \ \mbox{\hyperlink{structk_fifo_a8ec83608292f6e3951a22b1eecac8cce}{semaItem}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00252}\mbox{\hyperlink{structk_fifo_a668319bbdb1565459e74065470d252b9}{00252}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_sema}{kSema}}\ \ \ \ \ \ \ \mbox{\hyperlink{structk_fifo_a668319bbdb1565459e74065470d252b9}{semaRoom}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00253}\mbox{\hyperlink{structk_fifo_afe7dd27defa358dd56f0c3d1e9d18fe6}{00253}}\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_mutex}{kMutex}}\ \ \ \ \ \mbox{\hyperlink{structk_fifo_afe7dd27defa358dd56f0c3d1e9d18fe6}{mutex}};\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00254}00254\ \ \ \ \ BYTE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ buffer[FIFO\_SIZE];}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00255}00255\ \}\_\_attribute\_\_((aligned))\ ;}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00257}00257\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00258}00258\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00259}00259\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00264}\mbox{\hyperlink{structk_timer}{00264}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_timer}{kTimer}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00265}00265\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00266}\mbox{\hyperlink{structk_timer_a6cbd7d781e6432211c8307f840078115}{00266}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}\ \ \ \ \mbox{\hyperlink{structk_timer_a6cbd7d781e6432211c8307f840078115}{timerName}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00267}\mbox{\hyperlink{structk_timer_a4637a6b587775d3e6070450ef1c17ce4}{00267}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_timer_a4637a6b587775d3e6070450ef1c17ce4}{dTicks}};\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00268}\mbox{\hyperlink{structk_timer_a1ba4e3085bb201430c67bdd9d1e83336}{00268}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_timer_a1ba4e3085bb201430c67bdd9d1e83336}{ticks}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00269}\mbox{\hyperlink{structk_timer_a88c83c8e2f52d7c03d736cc40c8251df}{00269}}\ \ \ \ \ BOOL\ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_timer_a88c83c8e2f52d7c03d736cc40c8251df}{reload}};\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00270}\mbox{\hyperlink{structk_timer_a357469eb3b20d88d3b436212c31f5cdd}{00270}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a5c5992905d3a3832f64f84f986702e1d}{CALLBACK}}\ \ \ \ \mbox{\hyperlink{structk_timer_a357469eb3b20d88d3b436212c31f5cdd}{funPtr}};\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00271}\mbox{\hyperlink{structk_timer_a541fc4cb052c674988487cce62b49cd9}{00271}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_timer_a541fc4cb052c674988487cce62b49cd9}{argsPtr}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00272}\mbox{\hyperlink{structk_timer_a1238517203f8c32d98320d01ccf904df}{00272}}\ \ \ \ \ \mbox{\hyperlink{structk_timer}{K\_TIMER}}*\ \ \ \ \ \mbox{\hyperlink{structk_timer_a1238517203f8c32d98320d01ccf904df}{nextPtr}};\ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00273}00273\ \}\_\_attribute\_\_((aligned));}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00275}00275\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00276}00276\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00277}00277\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00279}00279\ \textcolor{preprocessor}{\#if\ (K\_CONF\_TRACE==ON)}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00283}\mbox{\hyperlink{structk_trace_data}{00283}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_trace_data}{kTraceData}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00284}00284\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00285}\mbox{\hyperlink{structk_trace_data_a033d1b39da3980434216f1a8f0908153}{00285}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_ae4006e2f2f8b28f59a1981f53159c143}{TICK}}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_trace_data_a033d1b39da3980434216f1a8f0908153}{timeStamp}};\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00286}\mbox{\hyperlink{structk_trace_data_a7b9253ea5acdfb6187f4115d4e639cf9}{00286}}\ \ \ \ \ K\_TRACEID\ \ \ \mbox{\hyperlink{structk_trace_data_a7b9253ea5acdfb6187f4115d4e639cf9}{event}};\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00287}\mbox{\hyperlink{structk_trace_data_a6657cd391b202a71ce32ad599eb9cfdd}{00287}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}\ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_trace_data_a6657cd391b202a71ce32ad599eb9cfdd}{info}};\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00288}\mbox{\hyperlink{structk_trace_data_af7fbaf35220e9e6ca1b83173ff2e19eb}{00288}}\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}}\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_trace_data_af7fbaf35220e9e6ca1b83173ff2e19eb}{pid}};\ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00290}00290\ \};}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00291}00291\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00292}\mbox{\hyperlink{structk_trace}{00292}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_trace}{kTrace}}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00293}00293\ \{}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00294}00294\ \ \ \ \ UINT32\ \ \ head;}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00295}00295\ \ \ \ \ UINT32\ \ \ tail;}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00296}00296\ \ \ \ \ UINT32\ \ \ nAdded;}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00297}00297\ \ \ \ \ UINT32\ \ \ nWrap;}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00298}00298\ \ \ \ \ \mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}\ \ \ info;}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00299}00299\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structk_trace_data}{kTraceData}}\ buffer[TRACEBUFF\_SIZE];}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00300}00300\ \};}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00301}00301\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00302}00302\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00303}00303\ \textcolor{comment}{/******************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00304}00304\ \textcolor{comment}{/******************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00306}00306\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00307}00307\ }
+\DoxyCodeLine{\Hypertarget{kobjs_8h_source_l00308}00308\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ INC\_KOBJS\_H\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

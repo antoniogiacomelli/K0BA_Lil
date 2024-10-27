@@ -1,0 +1,131 @@
+\doxysection{klist.\+h}
+\hypertarget{klist_8h_source}{}\label{klist_8h_source}\index{C:/GitKoba/K0BA\_Lite/Inc/kernel/klist.h@{C:/GitKoba/K0BA\_Lite/Inc/kernel/klist.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00001}00001\ \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00002}00002\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00003}00003\ \textcolor{comment}{\ *\ \ \ \ \ [[K0BA\ -\/\ Kernel\ 0\ For\ Embedded\ Applications]\ |\ [VERSION:\ 0.1.0]]}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00004}00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00005}00005\ \textcolor{comment}{\ ******************************************************************************}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00006}00006\ \textcolor{comment}{\ ******************************************************************************}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00007}00007\ \textcolor{comment}{\ *\ \ In\ this\ header:}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00008}00008\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ o\ Private\ API:\ List\ ADT}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00009}00009\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00010}00010\ \textcolor{comment}{\ *****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00013}00013\ \textcolor{preprocessor}{\#ifndef\ INC\_KLIST\_H\_}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00014}00014\ \textcolor{preprocessor}{\#define\ INC\_KLIST\_H\_}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00016}00016\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00017}00017\ \textcolor{comment}{\ *\ \ Initialize\ a\ linked\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00018}00018\ \textcolor{comment}{\ *\ param\ self\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00019}00019\ \textcolor{comment}{\ *\ return\ K\_LIST\_SUCCESS\ on\ success,\ K\_ERR\_LIST\_FAIL\ on\ failure}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00020}00020\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00021}00021\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kListInit(\mbox{\hyperlink{structk_list}{K\_LIST}}*\ \textcolor{keyword}{const}\ self,\ \mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}\ listName);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00023}00023\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00024}00024\ \textcolor{comment}{\ *\ \ Remove\ a\ node\ after\ the\ specified\ reference\ node}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00025}00025\ \textcolor{comment}{\ *\ param\ self\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00026}00026\ \textcolor{comment}{\ *\ param\ refNodePtr\ Reference\ node}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00027}00027\ \textcolor{comment}{\ *\ param\ remNodePPtr\ Pointer\ to\ the\ node\ to\ be\ removed}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00028}00028\ \textcolor{comment}{\ *\ return\ K\_LIST\_SUCCESS\ on\ success,\ K\_ERR\_LIST\_FAIL\ on\ failure}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00029}00029\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00030}00030\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kListRemAfter(\mbox{\hyperlink{structk_list}{K\_LIST}}*\ \textcolor{keyword}{const}\ self,\ \mbox{\hyperlink{structk_list_node}{K\_LISTNODE}}*\ \textcolor{keyword}{const}\ refNodePtr,}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00031}00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_list_node}{K\_LISTNODE}}**\ \textcolor{keyword}{const}\ remNodePPtr);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00033}00033\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00034}00034\ \textcolor{comment}{\ *\ \ Insert\ a\ new\ node\ after\ the\ specified\ reference\ node}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00035}00035\ \textcolor{comment}{\ *\ param\ self\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00036}00036\ \textcolor{comment}{\ *\ param\ refNodePtr\ Reference\ node}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00037}00037\ \textcolor{comment}{\ *\ param\ newNodePtr\ New\ node\ to\ insert}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00038}00038\ \textcolor{comment}{\ *\ return\ K\_LIST\_SUCCESS\ on\ success,\ K\_ERR\_LIST\_FAIL\ on\ failure}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00039}00039\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00040}00040\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kListInsertAfter(\mbox{\hyperlink{structk_list}{K\_LIST}}*\ \textcolor{keyword}{const}\ self,\ \mbox{\hyperlink{structk_list_node}{K\_LISTNODE}}*\ \textcolor{keyword}{const}\ refNodePtr,}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00041}00041\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structk_list_node}{K\_LISTNODE}}*\ \textcolor{keyword}{const}\ newNodePtr);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00043}00043\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00044}00044\ \textcolor{comment}{\ *\ \ Get\ the\ tail\ node\ of\ the\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00045}00045\ \textcolor{comment}{\ *\ param\ self\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00046}00046\ \textcolor{comment}{\ *\ return\ Pointer\ to\ the\ tail\ node}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00047}00047\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00048}00048\ \mbox{\hyperlink{structk_list_node}{K\_LISTNODE}}*\ kListGetTail(\mbox{\hyperlink{structk_list}{K\_LIST}}*\ \textcolor{keyword}{const}\ self);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00050}00050\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00051}00051\ \textcolor{comment}{\ *\ \ Remove\ a\ node\ from\ the\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00052}00052\ \textcolor{comment}{\ *\ param\ selfPtr\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00053}00053\ \textcolor{comment}{\ *\ param\ remNodePtr\ Pointer\ to\ the\ node\ to\ remove}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00054}00054\ \textcolor{comment}{\ *\ return\ K\_LIST\_SUCCESS\ on\ success,\ K\_ERR\_LIST\_FAIL\ on\ failure}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00055}00055\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00056}00056\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kListRemove(\mbox{\hyperlink{structk_list}{K\_LIST}}*\ \textcolor{keyword}{const}\ selfPtr,\ \mbox{\hyperlink{structk_list_node}{K\_LISTNODE}}*\ \textcolor{keyword}{const}\ remNodePtr);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00058}00058\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00059}00059\ \textcolor{comment}{\ *\ \ Remove\ the\ head\ node\ of\ the\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00060}00060\ \textcolor{comment}{\ *\ param\ self\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00061}00061\ \textcolor{comment}{\ *\ param\ remNodePPtr\ Pointer\ to\ the\ node\ to\ be\ removed}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00062}00062\ \textcolor{comment}{\ *\ return\ K\_LIST\_SUCCESS\ on\ success,\ K\_ERR\_LIST\_FAIL\ on\ failure}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00063}00063\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00064}00064\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kListRemoveHead(\mbox{\hyperlink{structk_list}{K\_LIST}}*\ \textcolor{keyword}{const}\ self,\ \mbox{\hyperlink{structk_list_node}{K\_LISTNODE}}**\ \textcolor{keyword}{const}\ remNodePPtr);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00065}00065\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00066}00066\ \textcolor{comment}{\ *\ \ Add\ to\ the\ tail\ node\ of\ the\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00067}00067\ \textcolor{comment}{\ *\ param\ self\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00068}00068\ \textcolor{comment}{\ *\ param\ remNodePPtr\ Pointer\ to\ the\ node\ to\ be\ removed}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00069}00069\ \textcolor{comment}{\ *\ return\ K\_LIST\_SUCCESS\ on\ success,\ K\_ERR\_LIST\_FAIL\ on\ failure}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00070}00070\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00071}00071\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kListAddTail(\mbox{\hyperlink{structk_list}{K\_LIST}}*\ \textcolor{keyword}{const}\ self,\ \mbox{\hyperlink{structk_list_node}{K\_LISTNODE}}*\ \textcolor{keyword}{const}\ newNodePtr);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00072}00072\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00073}00073\ \textcolor{comment}{/*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00074}00074\ \textcolor{comment}{/*\ TCB\ QUEUE\ MANAGEMENT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00075}00075\ \textcolor{comment}{/*\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00076}00076\ \textcolor{comment}{/*****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00078}00078\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00079}00079\ \textcolor{comment}{\ *\ \ Initialize\ a\ TCB\ queue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00080}00080\ \textcolor{comment}{\ *\ param\ self\ Pointer\ to\ the\ queue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00081}00081\ \textcolor{comment}{\ *\ return\ K\_SUCCESS\ on\ success,\ K\_ERROR\ on\ failure}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00082}00082\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00083}00083\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kTCBQInit(\mbox{\hyperlink{structk_list}{K\_LIST}}*\ \textcolor{keyword}{const}\ self,\ \mbox{\hyperlink{ktypes_8h_a8b0456af8e7367c5741bf647a7356caa}{STRING}}\ listName);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00085}00085\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00086}00086\ \textcolor{comment}{\ *\ \ Enqueue\ a\ TCB\ into\ a\ TCB\ queue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00087}00087\ \textcolor{comment}{\ *\ param\ self\ Pointer\ to\ the\ queue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00088}00088\ \textcolor{comment}{\ *\ param\ tcbPtr\ Pointer\ to\ the\ TCB\ to\ enqueue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00089}00089\ \textcolor{comment}{\ *\ return\ K\_SUCCESS\ on\ success,\ K\_ERROR\ on\ failure}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00090}00090\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00091}00091\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kTCBQEnq(\mbox{\hyperlink{structk_list}{K\_LIST}}*\ \textcolor{keyword}{const}\ self,\ \mbox{\hyperlink{structk_tcb}{K\_TCB}}*\ \textcolor{keyword}{const}\ tcbPtr);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00092}00092\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00093}00093\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00094}00094\ \textcolor{comment}{\ *\ \ Dequeue\ a\ TCB\ from\ a\ TCB\ queue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00095}00095\ \textcolor{comment}{\ *\ param\ self\ Pointer\ to\ the\ queue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00096}00096\ \textcolor{comment}{\ *\ param\ tcbPPtr\ Pointer\ to\ the\ dequeued\ TCB}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00097}00097\ \textcolor{comment}{\ *\ return\ K\_SUCCESS\ on\ success,\ K\_ERROR\ on\ failure}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00098}00098\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00099}00099\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kTCBQDeq(\mbox{\hyperlink{structk_list}{K\_TCBQ}}*\ \textcolor{keyword}{const}\ self,\ \mbox{\hyperlink{structk_tcb}{K\_TCB}}**\ \textcolor{keyword}{const}\ tcbPPtr);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00101}00101\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00102}00102\ \textcolor{comment}{\ *\ \ Removes\ a\ specific\ TCB\ from\ a\ TCB\ queue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00103}00103\ \textcolor{comment}{\ *\ param\ self\ Pointer\ to\ the\ queue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00104}00104\ \textcolor{comment}{\ *\ param\ tcbPPtr\ Pointer\ to\ the\ TCB\ address\ (double\ pointer)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00105}00105\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ (e.g.:\ K\_TCB**\ tcbPPtr\ =\ \&tcbs[2])}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00106}00106\ \textcolor{comment}{\ *\ return\ K\_SUCCESS\ on\ success,\ K\_ERROR\ on\ failure}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00107}00107\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00108}00108\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kTCBQRem(\mbox{\hyperlink{structk_list}{K\_TCBQ}}*\ \textcolor{keyword}{const}\ self,\ \mbox{\hyperlink{structk_tcb}{K\_TCB}}**\ \textcolor{keyword}{const}\ tcbPPtr);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00109}00109\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00110}00110\ \textcolor{comment}{\ *\ \ Enqueue\ a\ task\ into\ the\ ready\ queue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00111}00111\ \textcolor{comment}{\ *\ param\ tcbPtr\ Pointer\ to\ the\ task\ TCB}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00112}00112\ \textcolor{comment}{\ *\ return\ none}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00113}00113\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00114}00114\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kReadyQEnq(\mbox{\hyperlink{structk_tcb}{K\_TCB}}*\ \textcolor{keyword}{const}\ tcbPtr);}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00116}00116\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00117}00117\ \textcolor{comment}{\ *\ \ Dequeue\ a\ task\ from\ the\ ready\ queue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00118}00118\ \textcolor{comment}{\ *\ param\ tcbPPtr\ Pointer\ to\ the\ dequeued\ task\ TCB}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00119}00119\ \textcolor{comment}{\ *\ param\ priority\ Priority\ of\ the\ task\ to\ dequeue}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00120}00120\ \textcolor{comment}{\ *\ return\ K\_SUCCESS\ on\ success,\ K\_ERROR\ on\ failure}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00121}00121\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00122}00122\ \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\_ERR}}\ kReadyQDeq(\mbox{\hyperlink{structk_tcb}{K\_TCB}}**\ \textcolor{keyword}{const}\ tcbPPtr,\ \mbox{\hyperlink{ktypes_8h_a1db6660542590dd96b6f0c7b76ea6817}{PRIO}}\ \mbox{\hyperlink{kobjs_8h_af7fd074fc4de0dd20ecdc5ab5bcbc36b}{priority}});}
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{klist_8h_source_l00125}00125\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ INC\_KLIST\_H\_\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}
