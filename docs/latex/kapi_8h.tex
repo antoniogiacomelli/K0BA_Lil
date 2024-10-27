@@ -42,9 +42,9 @@ VOID {\bfseries k\+Yield} (VOID)
 \begin{DoxyCompactList}\small\item\em Get a mesg buffer from the mesg buffer memory pool. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a56b4d01f037eb128ddd4212e4c27c4cd}{k\+Mesg\+Buff\+Put}} (\mbox{\hyperlink{ktypes_8h_a08f20af129dfb30823236067282c8d18}{K\+\_\+\+MESGBUFF}} \texorpdfstring{$\ast$}{*}const self)
 \begin{DoxyCompactList}\small\item\em Returns a mesg buffer to the mesg buffer memory pool. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a78bc31b137856c4cf8880599445f85bf}{k\+Mesg\+QPut}} (\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}self, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{kobjs_8h_af1e1389b08ae9291bc54899ca6877a22}{mesg\+Ptr}}, SIZE \mbox{\hyperlink{kobjs_8h_a44c2f18f4c12116758c37c108d56412e}{mesg\+Size}})
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a8666b6c5b21274033e0a16de652dd999}{k\+Mesg\+QPut}} (\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}const self, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} \mbox{\hyperlink{kobjs_8h_af1e1389b08ae9291bc54899ca6877a22}{mesg\+Ptr}}, BYTE \mbox{\hyperlink{kobjs_8h_a44c2f18f4c12116758c37c108d56412e}{mesg\+Size}})
 \begin{DoxyCompactList}\small\item\em Send to a message queue. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} \mbox{\hyperlink{kapi_8h_aede8797b110c57766f6c4934919cb9c4}{k\+Mesg\+QGet}} (\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}self, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} rcvd\+Mesg\+Ptr)
+\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} \mbox{\hyperlink{kapi_8h_ab99d932a3d1027d36813fdb6ffd02705}{k\+Mesg\+QGet}} (\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}const self, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} rcvd\+Mesg\+Ptr)
 \begin{DoxyCompactList}\small\item\em Receive from a message queue. \end{DoxyCompactList}\item 
 VOID \mbox{\hyperlink{kapi_8h_a03c8ffe17c11842218167737a1d7e376}{k\+Mesg\+QInit}} (\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}const self, \mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}} mesg\+Pool\+Ptr, BYTE queue\+Size, BYTE \mbox{\hyperlink{kobjs_8h_a44c2f18f4c12116758c37c108d56412e}{mesg\+Size}})
 \begin{DoxyCompactList}\small\item\em Initialises a Message Queue. \end{DoxyCompactList}\item 
@@ -352,11 +352,11 @@ Returns a mesg buffer to the mesg buffer memory pool.
 \begin{DoxyReturn}{Returns}
 K\+\_\+\+SUCCESS/\+K\+\_\+\+ERROR 
 \end{DoxyReturn}
-\Hypertarget{kapi_8h_a78bc31b137856c4cf8880599445f85bf}\index{kapi.h@{kapi.h}!kMesgQPut@{kMesgQPut}}
+\Hypertarget{kapi_8h_a8666b6c5b21274033e0a16de652dd999}\index{kapi.h@{kapi.h}!kMesgQPut@{kMesgQPut}}
 \index{kMesgQPut@{kMesgQPut}!kapi.h@{kapi.h}}
 \doxysubsubsection{\texorpdfstring{kMesgQPut()}{kMesgQPut()}}
-{\footnotesize\ttfamily \label{kapi_8h_a78bc31b137856c4cf8880599445f85bf} 
-\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mesg\+QPut (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}}]{self}{, }\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{mesg\+Ptr}{, }\item[{SIZE}]{mesg\+Size}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{kapi_8h_a8666b6c5b21274033e0a16de652dd999} 
+\mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} k\+Mesg\+QPut (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{mesg\+Ptr}{, }\item[{BYTE}]{mesg\+Size}{}\end{DoxyParamCaption})}
 
 
 
@@ -374,11 +374,11 @@ Send to a message queue.
 \begin{DoxyReturn}{Returns}
 SUCCESS/\+FAIL 
 \end{DoxyReturn}
-\Hypertarget{kapi_8h_aede8797b110c57766f6c4934919cb9c4}\index{kapi.h@{kapi.h}!kMesgQGet@{kMesgQGet}}
+\Hypertarget{kapi_8h_ab99d932a3d1027d36813fdb6ffd02705}\index{kapi.h@{kapi.h}!kMesgQGet@{kMesgQGet}}
 \index{kMesgQGet@{kMesgQGet}!kapi.h@{kapi.h}}
 \doxysubsubsection{\texorpdfstring{kMesgQGet()}{kMesgQGet()}}
-{\footnotesize\ttfamily \label{kapi_8h_aede8797b110c57766f6c4934919cb9c4} 
-\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} k\+Mesg\+QGet (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}}]{self}{, }\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{rcvd\+Mesg\+Ptr}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{kapi_8h_ab99d932a3d1027d36813fdb6ffd02705} 
+\mbox{\hyperlink{ktypes_8h_a6e12550767a1e9f0191fe57808809295}{PID}} k\+Mesg\+QGet (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a260b8e78eaf92928d7fdc7f3b1c590f8}{K\+\_\+\+MESGQ}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{\mbox{\hyperlink{ktypes_8h_a271989a0e5c0f5477b9200f7c8e139d7}{ADDR}}}]{rcvd\+Mesg\+Ptr}{}\end{DoxyParamCaption})}
 
 
 
@@ -407,6 +407,12 @@ Initialises a Message Queue.
 
 \begin{DoxyParams}{Parameters}
 {\em self} & Messsage Queue address \\
+\hline
+{\em mesg\+Pool\+Ptr} & Address of the message pool \\
+\hline
+{\em queue\+Size} & Number of items in the queue \\
+\hline
+{\em mesg\+Size} & Size of each item in bytes. sizeof() is recommended. \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
