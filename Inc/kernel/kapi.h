@@ -59,8 +59,7 @@
 #ifndef INC_K_API_H_
 #define INC_K_API_H_
 
-#include <stm32f4xx_hal.h>
-#include <stm32f401xe.h>
+/* ADD YOUR CMSIS HAL HERE*/
 #include <cmsis_gcc.h>
 #include <stdarg.h>
 #include <stdio.h>
