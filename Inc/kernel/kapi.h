@@ -23,7 +23,7 @@
  * |________________________________________|--
  * |                                        |
  * |        BOARD SUPPORT PACKAGE           |
- * |________________________________________| stm32f4*, cmsis*
+ * |________________________________________|
  * |                                        |
  * |                CMIS HAL                |
  * |________________________________________|--
@@ -302,7 +302,7 @@ VOID kPipeInit(K_PIPE* const self);
 *\param nBytes Number of bytes to be read
 *\retval Number of read bytes if success. -1 if fails.
 */
-SIZE kPipeRead(K_PIPE* const self, BYTE* destPtr, SIZE nBytes);
+INT32 kPipeRead(K_PIPE* const self, BYTE* destPtr, UINT32 nBytes);
 
 /**
 *\brief Write a stream of bytes to a pipe
@@ -311,7 +311,7 @@ SIZE kPipeRead(K_PIPE* const self, BYTE* destPtr, SIZE nBytes);
 *\param nBytes Number of bytes to be write
 *\retval Number of written bytes if success. -1 if fails.
 */
-SIZE kPipeWrite(K_PIPE* const self, const BYTE* srcPtr, SIZE nBytes);
+INT32 kPipeWrite(K_PIPE* const self, const BYTE* srcPtr, UINT32 nBytes);
 
 /**
  * \brief Initialise Simple thread-safe FIFO
@@ -331,7 +331,7 @@ K_ERR kFifoPut(K_FIFO* self, BYTE data);
  * \param self FIFO address
  * \return Read byte
  */
-BYTE FifoGet(K_FIFO* self);
+BYTE kFifoGet(K_FIFO* self);
 
 /******************************************************************************
  *
@@ -509,6 +509,5 @@ ADDR kMemCpy(ADDR destPtr, const ADDR srcPtr, SIZE size);
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
-
 
 #endif /* INC_K_API_H_ */

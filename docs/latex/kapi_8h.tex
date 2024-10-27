@@ -67,15 +67,15 @@ VOID \mbox{\hyperlink{kapi_8h_a712a1d7c1ce650f671eb3c9d26438663}{k\+Cond\+Wake}}
 \begin{DoxyCompactList}\small\item\em Signal a condition variable, releasing all queued tasks. \end{DoxyCompactList}\item 
 VOID \mbox{\hyperlink{kapi_8h_af0f25d9a49970e081fdb0b83bd0f58bb}{k\+Pipe\+Init}} (\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const self)
 \begin{DoxyCompactList}\small\item\em Initialise a pipe. \end{DoxyCompactList}\item 
-SIZE \mbox{\hyperlink{kapi_8h_adcb5afeae9ab0b08bb0595f03d30d0a8}{k\+Pipe\+Read}} (\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const self, BYTE \texorpdfstring{$\ast$}{*}dest\+Ptr, SIZE n\+Bytes)
+INT32 \mbox{\hyperlink{kapi_8h_aa6b2c377e14b3cfcc6276728affd6799}{k\+Pipe\+Read}} (\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const self, BYTE \texorpdfstring{$\ast$}{*}dest\+Ptr, UINT32 n\+Bytes)
 \begin{DoxyCompactList}\small\item\em Read a stream of bytes from a pipe. \end{DoxyCompactList}\item 
-SIZE \mbox{\hyperlink{kapi_8h_aba0b56d607baf2275ac09bac40c3de36}{k\+Pipe\+Write}} (\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const self, const BYTE \texorpdfstring{$\ast$}{*}src\+Ptr, SIZE n\+Bytes)
+INT32 \mbox{\hyperlink{kapi_8h_aa0574e63aea244e0dbb93e85810a80e9}{k\+Pipe\+Write}} (\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const self, const BYTE \texorpdfstring{$\ast$}{*}src\+Ptr, UINT32 n\+Bytes)
 \begin{DoxyCompactList}\small\item\em Write a stream of bytes to a pipe. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a17ea271d2f7e832f5e25f0cddd5be416}{k\+Fifo\+Init}} (\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}const self)
 \begin{DoxyCompactList}\small\item\em Initialise Simple thread-\/safe FIFO. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{ktypes_8h_ae043ffcc9242a3f2a517633a12ec4263}{K\+\_\+\+ERR}} \mbox{\hyperlink{kapi_8h_a86b01280ffdbecd237672fcda629096d}{k\+Fifo\+Put}} (\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}self, BYTE data)
 \begin{DoxyCompactList}\small\item\em Put a single byte on a fifo. \end{DoxyCompactList}\item 
-BYTE \mbox{\hyperlink{kapi_8h_a77c1cc357f0c085d916c3e580dff92be}{Fifo\+Get}} (\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}self)
+BYTE \mbox{\hyperlink{kapi_8h_a48360b960c673a4c739ece16f2279849}{k\+Fifo\+Get}} (\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}self)
 \begin{DoxyCompactList}\small\item\em Get a single byte from a fifo. \end{DoxyCompactList}\item 
 VOID \mbox{\hyperlink{kapi_8h_ad3fff4d18490f070b49954400ea87bb8}{k\+Pend}} (VOID)
 \begin{DoxyCompactList}\small\item\em Put the current task into a wait state to be waken from another task/\+ISR. \end{DoxyCompactList}\item 
@@ -135,7 +135,7 @@ Antonio Giacomelli
 * |________________________________________|--
 * |                                        |
 * |        BOARD SUPPORT PACKAGE           |
-* |________________________________________| stm32f4*, cmsis*
+* |________________________________________|
 * |                                        |
 * |                CMIS HAL                |
 * |________________________________________|--
@@ -569,11 +569,11 @@ Initialise a pipe.
 {\em self} & Pointer to the pipe \\
 \hline
 \end{DoxyParams}
-\Hypertarget{kapi_8h_adcb5afeae9ab0b08bb0595f03d30d0a8}\index{kapi.h@{kapi.h}!kPipeRead@{kPipeRead}}
+\Hypertarget{kapi_8h_aa6b2c377e14b3cfcc6276728affd6799}\index{kapi.h@{kapi.h}!kPipeRead@{kPipeRead}}
 \index{kPipeRead@{kPipeRead}!kapi.h@{kapi.h}}
 \doxysubsubsection{\texorpdfstring{kPipeRead()}{kPipeRead()}}
-{\footnotesize\ttfamily \label{kapi_8h_adcb5afeae9ab0b08bb0595f03d30d0a8} 
-SIZE k\+Pipe\+Read (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{BYTE \texorpdfstring{$\ast$}{*}}]{dest\+Ptr}{, }\item[{SIZE}]{n\+Bytes}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{kapi_8h_aa6b2c377e14b3cfcc6276728affd6799} 
+INT32 k\+Pipe\+Read (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{BYTE \texorpdfstring{$\ast$}{*}}]{dest\+Ptr}{, }\item[{UINT32}]{n\+Bytes}{}\end{DoxyParamCaption})}
 
 
 
@@ -593,11 +593,11 @@ Read a stream of bytes from a pipe.
 {\em Number} & of read bytes if success. -\/1 if fails. \\
 \hline
 \end{DoxyRetVals}
-\Hypertarget{kapi_8h_aba0b56d607baf2275ac09bac40c3de36}\index{kapi.h@{kapi.h}!kPipeWrite@{kPipeWrite}}
+\Hypertarget{kapi_8h_aa0574e63aea244e0dbb93e85810a80e9}\index{kapi.h@{kapi.h}!kPipeWrite@{kPipeWrite}}
 \index{kPipeWrite@{kPipeWrite}!kapi.h@{kapi.h}}
 \doxysubsubsection{\texorpdfstring{kPipeWrite()}{kPipeWrite()}}
-{\footnotesize\ttfamily \label{kapi_8h_aba0b56d607baf2275ac09bac40c3de36} 
-SIZE k\+Pipe\+Write (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{const BYTE \texorpdfstring{$\ast$}{*}}]{src\+Ptr}{, }\item[{SIZE}]{n\+Bytes}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{kapi_8h_aa0574e63aea244e0dbb93e85810a80e9} 
+INT32 k\+Pipe\+Write (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a95ae6b9503095c0f829de5a8ede83158}{K\+\_\+\+PIPE}} \texorpdfstring{$\ast$}{*}const}]{self}{, }\item[{const BYTE \texorpdfstring{$\ast$}{*}}]{src\+Ptr}{, }\item[{UINT32}]{n\+Bytes}{}\end{DoxyParamCaption})}
 
 
 
@@ -655,11 +655,11 @@ Put a single byte on a fifo.
 \begin{DoxyReturn}{Returns}
 K\+\_\+\+ERROR/\+SUCCESS 
 \end{DoxyReturn}
-\Hypertarget{kapi_8h_a77c1cc357f0c085d916c3e580dff92be}\index{kapi.h@{kapi.h}!FifoGet@{FifoGet}}
-\index{FifoGet@{FifoGet}!kapi.h@{kapi.h}}
-\doxysubsubsection{\texorpdfstring{FifoGet()}{FifoGet()}}
-{\footnotesize\ttfamily \label{kapi_8h_a77c1cc357f0c085d916c3e580dff92be} 
-BYTE Fifo\+Get (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}}]{self}{}\end{DoxyParamCaption})}
+\Hypertarget{kapi_8h_a48360b960c673a4c739ece16f2279849}\index{kapi.h@{kapi.h}!kFifoGet@{kFifoGet}}
+\index{kFifoGet@{kFifoGet}!kapi.h@{kapi.h}}
+\doxysubsubsection{\texorpdfstring{kFifoGet()}{kFifoGet()}}
+{\footnotesize\ttfamily \label{kapi_8h_a48360b960c673a4c739ece16f2279849} 
+BYTE k\+Fifo\+Get (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{ktypes_8h_a8925e054d77f1ac244335e0919352a2a}{K\+\_\+\+FIFO}} \texorpdfstring{$\ast$}{*}}]{self}{}\end{DoxyParamCaption})}
 
 
 
