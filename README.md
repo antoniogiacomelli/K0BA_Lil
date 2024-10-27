@@ -8,11 +8,11 @@ This is a light-weight version with no memory isolation. Currently it supports A
 
 <img width="450" alt="kernel" src="https://github.com/antoniogiacomelli/K0BA_Lite/blob/main/layeredkernel.png">
 
-**F E A T U R E S:**
+# F E A T U R E S
 
 - **Priority Preemptive Scheduler with Rate-Monothonic Scheduling**
   
-- **Synchronization:**:
+- **Synchronisation:**:
   - Sleep/WakeUp on Events
   - Semaphores
   - Mutexes (with priority inheritance)
