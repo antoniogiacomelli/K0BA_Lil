@@ -30,15 +30,15 @@ void Task5(void);
 /**
  ******************************************************************************
  *
- * TASKS SHARED OBJECTS
+ *  KERNEL DEPENDENT APPLICATION-SPECIFIC OBJECTS 
  *
- * You might want to declare them here as 'extern' objects
+ * You shall declare them here as 'extern' objects
  *
  **/
 
-struct MESG { int a; int b; }__attribute__((aligned));
-extern struct MESG mesgPool[10];
-extern K_MEM		MESGmem;
+struct MESG { int a; int b; }__attribute__((aligned)); /* a custom message */
+extern struct MESG mesgPool[10];   /* a pool of custom messages */
+extern K_MEM		MESGmem;           /* a memory control block of custom messages */
 
 
 #endif /* INC_APPLICATION_H_ */
