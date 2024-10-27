@@ -1,0 +1,195 @@
+\doxysection{kmacros.\+h}
+\hypertarget{kmacros_8h_source}{}\label{kmacros_8h_source}\index{C:/GitKoba/K0BA\_Lite/Inc/kernel/kmacros.h@{C:/GitKoba/K0BA\_Lite/Inc/kernel/kmacros.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00001}00001\ \textcolor{comment}{/******************************************************************************}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00002}00002\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00003}00003\ \textcolor{comment}{\ *\ \ \ \ \ [[K0BA\ -\/\ Kernel\ 0\ For\ Embedded\ Applications]\ |\ [VERSION:\ 0.1.0]]}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00004}00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00005}00005\ \textcolor{comment}{\ ******************************************************************************}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00006}00006\ \textcolor{comment}{\ ******************************************************************************}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00007}00007\ \textcolor{comment}{\ *\ \ In\ this\ header:}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00008}00008\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ o\ System\ Macros/Macros\ functions}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00009}00009\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00010}00010\ \textcolor{comment}{\ *****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00013}00013\ \textcolor{preprocessor}{\#ifndef\ K\_MACROS\_H}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00014}00014\ \textcolor{preprocessor}{\#define\ K\_MACROS\_H}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00016}00016\ \textcolor{preprocessor}{\#include\ <kversion.h>}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00018}00018\ \textcolor{preprocessor}{\#define\ ON\ \ \ \ \ 1}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00019}00019\ \textcolor{preprocessor}{\#define\ OFF\ \ \ \ 0}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00021}00021\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00022}00022\ \textcolor{comment}{\ *\ brief\ This\ is\ the\ offset\ w.r.t\ the\ top\ of\ a\ stack\ frame}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00023}00023\ \textcolor{comment}{\ *\ The\ numbers\ are\ unsigned.}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00024}00024\ \textcolor{comment}{\ *\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00026}00026\ \textcolor{preprocessor}{\#define\ PSR\_OFFSET\ \ 1\ }\textcolor{comment}{/*\ Program\ Status\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00027}00027\ \textcolor{preprocessor}{\#define\ PC\_OFFSET\ \ \ 2\ }\textcolor{comment}{/*\ Program\ Counter\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00028}00028\ \textcolor{preprocessor}{\#define\ LR\_OFFSET\ \ \ 3\ }\textcolor{comment}{/*\ Link\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00029}00029\ \textcolor{preprocessor}{\#define\ R12\_OFFSET\ \ 4\ }\textcolor{comment}{/*\ R12\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00030}00030\ \textcolor{preprocessor}{\#define\ R3\_OFFSET\ \ \ 5\ }\textcolor{comment}{/*\ R3\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00031}00031\ \textcolor{preprocessor}{\#define\ R2\_OFFSET\ \ \ 6\ }\textcolor{comment}{/*\ R2\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00032}00032\ \textcolor{preprocessor}{\#define\ R1\_OFFSET\ \ \ 7\ }\textcolor{comment}{/*\ R1\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00033}00033\ \textcolor{preprocessor}{\#define\ R0\_OFFSET\ \ \ 8\ }\textcolor{comment}{/*\ R0\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00034}00034\ \textcolor{preprocessor}{\#define\ R11\_OFFSET\ \ 9\ }\textcolor{comment}{/*\ R11\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00035}00035\ \textcolor{preprocessor}{\#define\ R10\_OFFSET\ \ 10\ }\textcolor{comment}{/*\ R10\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00036}00036\ \textcolor{preprocessor}{\#define\ R9\_OFFSET\ \ \ 11\ }\textcolor{comment}{/*\ R9\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00037}00037\ \textcolor{preprocessor}{\#define\ R8\_OFFSET\ \ \ 12\ }\textcolor{comment}{/*\ R8\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00038}00038\ \textcolor{preprocessor}{\#define\ R7\_OFFSET\ \ \ 13\ }\textcolor{comment}{/*\ R7\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00039}00039\ \textcolor{preprocessor}{\#define\ R6\_OFFSET\ \ \ 14\ }\textcolor{comment}{/*\ R6\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00040}00040\ \textcolor{preprocessor}{\#define\ R5\_OFFSET\ \ \ 15\ }\textcolor{comment}{/*\ R5\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00041}00041\ \textcolor{preprocessor}{\#define\ R4\_OFFSET\ \ \ 16\ }\textcolor{comment}{/*\ R4\ Register\ offset\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00044}00044\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00045}00045\ \textcolor{comment}{\ *\ brief\ Macro\ to\ get\ the\ address\ of\ the\ container\ structure}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00046}00046\ \textcolor{comment}{\ *\ param\ memberPtr\ Pointer\ to\ the\ member}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00047}00047\ \textcolor{comment}{\ *\ param\ containerType\ The\ type\ of\ the\ container\ structure}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00048}00048\ \textcolor{comment}{\ *\ param\ memberName\ The\ name\ of\ the\ member\ inside\ the\ structure}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00049}00049\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00051}00051\ \textcolor{preprocessor}{\#define\ K\_GET\_CONTAINER\_ADDR(memberPtr,\ containerType,\ memberName)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00052}00052\ \textcolor{preprocessor}{\ \ \ \ ((containerType\ *)((unsigned\ char\ *)(memberPtr)\ -\/\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00053}00053\ \textcolor{preprocessor}{\ \ \ \ \ offsetof(containerType,\ memberName)))}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00055}00055\ \textcolor{comment}{/*\ brief\ Critical\ region\ macro\ to\ declare\ a\ variable\ for\ critical}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00056}00056\ \textcolor{comment}{\ *\ region\ state\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00057}00057\ \textcolor{preprocessor}{\#define\ K\_CR\_AREA\ \ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00058}00058\ \textcolor{preprocessor}{\ \ \ \ UINT32\ crState}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00060}00060\ \textcolor{comment}{/*\ brief\ Macro\ to\ enter\ critical\ region\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00061}00061\ \textcolor{preprocessor}{\#define\ K\_ENTER\_CR\ \ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00062}00062\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ crState\ =\ kEnterCR();\ \}\ while(0U)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00064}00064\ \textcolor{comment}{/*\ brief\ Macro\ to\ exit\ critical\ region\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00065}00065\ \textcolor{preprocessor}{\#define\ K\_EXIT\_CR\ \ \ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00066}00066\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ kExitCR(crState);\ \}\ while(0U)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00067}00067\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00068}00068\ \textcolor{comment}{\ *\ brief\ Macro\ for\ unused\ variables}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00069}00069\ \textcolor{comment}{\ *\ param\ v\ The\ unused\ variable}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00070}00070\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00071}00071\ \textcolor{preprocessor}{\#if\ !defined(UNUSED)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00072}00072\ \textcolor{preprocessor}{\#define\ UNUSED(v)\ (void)v}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00073}00073\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00075}00075\ \textcolor{comment}{/*\ brief\ Trigger\ Context\ Switch\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00076}00076\ \textcolor{preprocessor}{\#define\ K\_PEND\_CTXTSWTCH\ K\_TRAP\_PENDSV;}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00078}00078\ \textcolor{preprocessor}{\#define\ READY\_HIGHER\_PRIO(ptr)\ ((ptr-\/>priority\ <\ runPtr-\/>priority)\ ?\ 1\ :\ 0)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00080}00080\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00081}00081\ \textcolor{comment}{\ *\ brief\ Max\ value\ for\ tick\ type}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00082}00082\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00083}00083\ \textcolor{preprocessor}{\#define\ K\_TICK\_TYPE\_MAX\ ((1ULL\ <<\ (8\ *\ sizeof(typeof(TICK))))\ -\/\ 1)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00084}00084\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00085}00085\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00086}00086\ \textcolor{comment}{\ *\ brief\ Max\ value\ for\ priority\ type}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00087}00087\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00088}00088\ \textcolor{preprocessor}{\#define\ K\_PRIO\_TYPE\_MAX\ ((1ULL\ <<\ (8\ *\ sizeof(typeof(PRIO))))\ -\/\ 1)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00091}00091\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00092}00092\ \textcolor{comment}{\ *\ brief\ Gets\ the\ size\ of\ the\ list}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00093}00093\ \textcolor{comment}{\ *\ param\ listPtr\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00094}00094\ \textcolor{comment}{\ *\ return\ Size\ of\ the\ list}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00095}00095\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00096}00096\ \textcolor{preprocessor}{\#define\ K\_LIST\_SIZE(listPtr)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00097}00097\ \textcolor{preprocessor}{\ \ \ \ listPtr-\/>size}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00099}00099\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00100}00100\ \textcolor{comment}{\ *\ brief\ Gets\ the\ head\ of\ the\ list}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00101}00101\ \textcolor{comment}{\ *\ param\ listPtr\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00102}00102\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00103}00103\ \textcolor{preprocessor}{\#define\ K\_LIST\_HEAD(listPtr)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00104}00104\ \textcolor{preprocessor}{\ \ \ \ listPtr-\/>listDummy.nextPtr}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00106}00106\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00107}00107\ \textcolor{comment}{\ *\ brief\ Gets\ the\ dummy\ node\ of\ the\ list}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00108}00108\ \textcolor{comment}{\ *\ param\ listPtr\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00109}00109\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00110}00110\ \textcolor{preprocessor}{\#define\ K\_LIST\_DUMMY(listPtr)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00111}00111\ \textcolor{preprocessor}{\ \ \ \ \&(listPtr-\/>listDummy)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00113}00113\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00114}00114\ \textcolor{comment}{\ *\ brief\ Gets\ the\ tail\ of\ the\ list}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00115}00115\ \textcolor{comment}{\ *\ param\ listPtr\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00116}00116\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00117}00117\ \textcolor{preprocessor}{\#define\ K\_LIST\_TAIL(listPtr)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00118}00118\ \textcolor{preprocessor}{\ \ \ \ listPtr-\/>listDummy.prevPtr}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00120}00120\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00121}00121\ \textcolor{comment}{\ *\ brief\ Checks\ if\ the\ list\ is\ empty}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00122}00122\ \textcolor{comment}{\ *\ param\ listPtr\ Pointer\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00123}00123\ \textcolor{comment}{\ *\ return\ TRUE\ if\ the\ list\ is\ empty,\ otherwise\ FALSE}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00124}00124\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00125}00125\ \textcolor{preprocessor}{\#define\ K\_LIST\_IS\_EMPTY(listPtr)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00126}00126\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ ((((listPtr-\/>listDummy.nextPtr)\ ==\ K\_LIST\_DUMMY(listPtr))\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00127}00127\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \&\&\ (K\_LIST\_SIZE(listPtr)\ ==\ 0)))}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00128}00128\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00129}00129\ \textcolor{comment}{\ *\ brief\ Gets\ the\ address\ of\ the\ container\ structure\ of\ a\ node}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00130}00130\ \textcolor{comment}{\ *\ param\ nodePtr\ Pointer\ to\ the\ node}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00131}00131\ \textcolor{comment}{\ *\ param\ containerType\ Type\ of\ the\ container}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00132}00132\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00133}00133\ \textcolor{preprocessor}{\#define\ K\_GET\_TCB\_ADDR(nodePtr,\ containerType)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00134}00134\ \textcolor{preprocessor}{\ \ \ \ K\_GET\_CONTAINER\_ADDR(nodePtr,\ containerType,\ tcbNode)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00138}00138\ \textcolor{comment}{/*brief\ Helper\ macro\ to\ get\ a\ message\ buffer\ from\ a\ mesg\ list\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00139}00139\ \textcolor{preprocessor}{\#define\ GET\_MSG\_BUFFER\_FROM\_NODE(nodePtr)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00140}00140\ \textcolor{preprocessor}{\ \ \ \ K\_GET\_CONTAINER\_ADDR(nodePtr,\ K\_MESGBUFF,\ mesgNode)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00143}00143\ \textcolor{preprocessor}{\#define\ IS\_NULL\_PTR(ptr)\ ((ptr)\ ==\ NULL\ ?\ 1\ :\ 0)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00146}00146\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00147}00147\ \textcolor{comment}{\ *\ brief\ Software\ interrupt\ (trap)\ for\ PendSV}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00148}00148\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00149}00149\ \textcolor{preprocessor}{\#define\ K\_TRAP\_PENDSV\ \ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00150}00150\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ SCB-\/>ICSR\ |=\ SCB\_ICSR\_PENDSVSET\_Msk;\ \}\ while(0U)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00151}00151\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00152}00152\ \textcolor{comment}{\ *\ brief\ Software\ interrupt\ (trap)\ for\ Supervisor\ Call}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00153}00153\ \textcolor{comment}{\ *\ param\ N\ Supervisor\ call\ number}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00154}00154\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00156}00156\ \textcolor{preprocessor}{\#define\ K\_TRAP\_SVC(N)\ \ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00157}00157\ \textcolor{preprocessor}{\ \ \ \ do\ \{\ asm\ volatile\ ("{}svc\ \%0"{}\ ::\ "{}i"{}\ (N));\ \}\ while(0U)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00158}00158\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00159}00159\ \textcolor{comment}{\ *\ brief\ Enables\ the\ system\ tick}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00160}00160\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00161}00161\ \textcolor{preprocessor}{\#define\ K\_TICK\_EN\ \ do\ \{\ SysTick-\/>CTRL\ |=\ 0xFFFFFFFF;\ \}\ while(0U)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00163}00163\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00164}00164\ \textcolor{comment}{\ *\ brief\ Disables\ the\ system\ tick}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00165}00165\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00166}00166\ \textcolor{preprocessor}{\#define\ K\_TICK\_DIS\ do\ \{\ SysTick-\/>CTRL\ \&=\ 0xFFFFFFFE;\ \}\ while(0U)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00168}00168\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00169}00169\ \textcolor{comment}{\ *\ brief\ Macro\ to\ convert\ version\ numbers\ to\ string.}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00170}00170\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00171}00171\ \textcolor{comment}{*/}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00172}00172\ \textcolor{preprocessor}{\#define\ STRINGIFY(x)\ \#x}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00173}00173\ \textcolor{preprocessor}{\#define\ TOSTRING(x)\ STRINGIFY(x)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00174}00174\ \textcolor{preprocessor}{\#ifndef\ \_\_KVERSION}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00175}00175\ \textcolor{preprocessor}{\#define\ \_\_KVERSION}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00176}00176\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00177}00177\ \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00178}00178\ \textcolor{comment}{\ *\ brief\ Macro\ to\ get\ the\ version\ as\ a\ string.}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00179}00179\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00180}00180\ \textcolor{preprocessor}{\#define\ VERSION\_STRING\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00181}00181\ \textcolor{preprocessor}{\ \ \ \ TOSTRING(VERSION.major)\ "{}."{}\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00182}00182\ \textcolor{preprocessor}{\ \ \ \ TOSTRING(VERSION.minor)\ "{}."{}\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00183}00183\ \textcolor{preprocessor}{\ \ \ \ TOSTRING(VERSION.patch)}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00185}00185\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00187}00187\ \textcolor{comment}{/*\ Timer\ Reload\ /\ Oneshot\ options\ */}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00188}00188\ \textcolor{preprocessor}{\#define\ RELOAD\ \ \ \ \ \ 1}}
+\DoxyCodeLine{\Hypertarget{kmacros_8h_source_l00189}00189\ \textcolor{preprocessor}{\#define\ ONESHOT\ \ \ \ \ 0}}
+
+\end{DoxyCode}
