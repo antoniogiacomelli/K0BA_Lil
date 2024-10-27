@@ -29,7 +29,7 @@ This is a light-weight version with no memory isolation. Currently it supports A
 - **Inter-Task Synchronisation:**
   - Sleep/WakeUp on Events
   - Semaphores
-  - Mutexes (with priority inheritance)
+  - Mutexes (with priority inheritance to avoid priority-inversion)
   - Condition Variables for finer-grained waiting logic
   - Direct Task Signal
   
