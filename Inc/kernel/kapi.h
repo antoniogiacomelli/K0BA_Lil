@@ -59,7 +59,8 @@
 #ifndef INC_K_API_H_
 #define INC_K_API_H_
 
-/* ADD YOUR CMSIS HAL HERE*/
+#include <stm32f4xx_hal.h>
+#include <stm32f401xe.h>
 #include <cmsis_gcc.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -312,6 +313,28 @@ SIZE kPipeRead(K_PIPE* const self, BYTE* destPtr, SIZE nBytes);
 */
 SIZE kPipeWrite(K_PIPE* const self, const BYTE* srcPtr, SIZE nBytes);
 
+/**
+ * \brief Initialise Simple thread-safe FIFO
+ * \param self FIFO address
+ * \return K_ERROR/SUCCESS
+ */
+K_ERR kFifoInit(K_FIFO* const self);
+/**
+ * \brief Put a single byte on a fifo
+ * \param self FIFO address
+ * \param data One-byte data
+ * \return K_ERROR/SUCCESS
+ */
+K_ERR kFifoPut(K_FIFO* self, BYTE data);
+K_ERR kFifoInit(K_FIFO* const self);
+/**
+ * \brief Get a single byte from a fifo
+ * \param self FIFO address
+ * \param data One-byte data
+ * \return Read byte
+ */
+BYTE FifoGet(K_FIFO* self);
+
 /******************************************************************************
  *
  * DIRECT TASK SIGNAL/PEND
@@ -482,7 +505,4 @@ ADDR kMemCpy(ADDR destPtr, const ADDR srcPtr, SIZE size);
 /******************************************************************************/
 /******************************************************************************/
 
-/**
-*  \}
- */
 #endif /* INC_K_API_H_ */
