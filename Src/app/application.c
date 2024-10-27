@@ -23,13 +23,14 @@ UINT32 stack4[STACKSIZE];
 *******************************************************************************/
 
 
-volatile UINT32 counter1; counter2; counter3; counter4;
 
 /******************************************************************************
  * Customise your application init
  *
  * Initialise kernel objects: mutexes, seamaphores, timers, etc.
  *******************************************************************************/
+volatile UINT32 counter1; counter2; counter3; counter4;
+
 VOID kApplicationInit(ADDR* args)
 {
  UNUSED(args);
