@@ -38,7 +38,7 @@ This is a light-weight version with no memory isolation. Currently it supports A
   - Stream Buffers (Simple FIFOs and "UNIX-like" pipes)
 
 - **Memory Management:**
-  - Memory Pools with fixed block-size.
+  - Memory Pools with fixed block-size. This approach is deterministic and hinders fragmentation.
 
 - **Application Timers**
     - Periodic/One Shot timers with delta queues for efficient handling
