@@ -11,7 +11,7 @@
 
 #include <kapi.h>
 
-PID kGetTaskPID(TID taskID)
+PID kGetTaskPID(TID const taskID)
 {
 	PID pid=0;
 	for (pid=0;pid<NTHREADS;pid++)
@@ -24,7 +24,7 @@ PID kGetTaskPID(TID taskID)
 	return pid;
 }
 
-PRIO kGetTaskPrio(TID taskID)
+PRIO kGetTaskPrio(TID const taskID)
 {
 	PID pid=kGetTaskPID(taskID);
 	return tcbs[pid].priority;

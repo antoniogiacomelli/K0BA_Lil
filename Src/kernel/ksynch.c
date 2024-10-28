@@ -40,7 +40,7 @@ void kPend(void)
 
 }
 
-void kSignal(PID taskID)
+void kSignal(PID const taskID)
 {
 
 	K_CR_AREA;
@@ -65,7 +65,7 @@ void kSignal(PID taskID)
  *******************************************************************************
  * SLEEP/WAKE ON EVENTS
  ******************************************************************************/
-static K_ERR kEventInit_(K_EVENT* self)
+static K_ERR kEventInit_(K_EVENT* const self)
 {
 
 	if(IS_NULL_PTR(self))

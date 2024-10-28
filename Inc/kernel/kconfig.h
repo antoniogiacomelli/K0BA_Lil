@@ -2,17 +2,12 @@
  *
  * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]
  *
- ******************************************************************************/
-
-/**
- * \file     kconfig.h
- * \brief    Kernel Configuration File
- * \version  0.1.0
- * \author   Antonio Giacomelli
+ ******************************************************************************
+ * 
+ * 	In this header:
+ * 					o Macros for kernel configuration
  *
- * \details  In this header kernel services are configured.
- *
- ******************************************************************************/
+ *****************************************************************************/
 
 
 
@@ -43,7 +38,7 @@
 #define TICK_5MS         (SystemCoreClock/2000)  /**< Tick period of 5ms */
 #define TICK_1MS         (SystemCoreClock/10000) /**<  Tick period of 1ms */
 #define K_CONF_TICK_PERIOD TICK_10MS /**< System tick period */
-#define K_CONF_TRACE OFF
+#define K_CONF_TRACE ON
 #if (K_CONF_TRACE)
 
 	#define TRACEBUFF_SIZE	  512

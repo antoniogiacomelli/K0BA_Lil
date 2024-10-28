@@ -304,7 +304,7 @@ K_ERR kFifoInit(K_FIFO* const self)
 	return K_SUCCESS;
 }
 
-K_ERR kFifoPut(K_FIFO* self, BYTE data)
+K_ERR kFifoPut(K_FIFO* const self, BYTE data)
 {
 	if (IS_NULL_PTR(self))
 	{
@@ -319,7 +319,7 @@ K_ERR kFifoPut(K_FIFO* self, BYTE data)
 	kSemaSignal(&self->semaItem);
 	return K_SUCCESS;
 }
-BYTE kFifoGet(K_FIFO* self)
+BYTE kFifoGet(K_FIFO* const self)
 {
 	if (IS_NULL_PTR(self))
 	{

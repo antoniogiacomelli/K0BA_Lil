@@ -58,9 +58,7 @@
 
 #ifndef INC_K_API_H_
 #define INC_K_API_H_
-
-
-/* Include your CMIS HAL and BSP here */
+/* PLACE YOUR CMSIS HAL AND BSP HERE */
 #include <cmsis_gcc.h>
 #include <stdio.h>
 #include <assert.h>
@@ -72,7 +70,6 @@
 #include <kerr.h>
 #include <kglobals.h>
 #include <ksch.h>
-
 
 /******************************************************************************/
 /******************************************************************************/
@@ -121,21 +118,21 @@ VOID kYield(VOID);
  *\param value Initial value
  *\return None
  */
-K_ERR kSemaInit(K_SEMA* self, INT32 value);
+K_ERR kSemaInit(K_SEMA* const self, INT32 value);
 
 /**
  *\brief Wait on a semaphore
  *\param self Semaphore address
  *\return K_SUCCESS / K_ERROR
  */
-K_ERR kSemaWait(K_SEMA* self);
+K_ERR kSemaWait(K_SEMA* const self);
 
 /**
  *\brief Signal a semaphore
  *\param self Semaphore address
  *\return None
  */
-K_ERR kSemaSignal(K_SEMA* self);
+K_ERR kSemaSignal(K_SEMA* const self);
 
 /*****************************************************************************
  *
@@ -232,7 +229,7 @@ VOID kMesgQInit(K_MESGQ* const self, ADDR mesgPoolPtr, BYTE queueSize, \
  *\brief Initialise a mailbox
  *\param self Pointer to a mailbox
  */
-K_ERR kMailboxInit(K_MAILBOX* self);
+K_ERR kMailboxInit(K_MAILBOX* const self);
 
 /**
  *\brief Post a message on a mailbox w
@@ -246,7 +243,7 @@ K_ERR kMailboxPost(K_MAILBOX* const self, const ADDR mesgPtr, SIZE mesgSize);
 /**
  *\brief Retrieves a message from a mailbox
  *\param self Address of a mailbox structure
- *\param rcvdMesgPPtr Address that will store the received mesg address
+ *\param rcvdMesgPtr Address that will store the received mesg address
  *\retval Sender's PID. -1 if fails.
  */
 PID kMailboxPend(K_MAILBOX* const self, ADDR rcvdMesgPtr);
@@ -328,13 +325,13 @@ K_ERR kFifoInit(K_FIFO* const self);
  * \param data One-byte data
  * \return K_ERROR/SUCCESS
  */
-K_ERR kFifoPut(K_FIFO* self, BYTE data);
+K_ERR kFifoPut(K_FIFO* const self, BYTE data);
 /**
  * \brief Get a single byte from a fifo
  * \param self FIFO address
  * \return Read byte
  */
-BYTE kFifoGet(K_FIFO* self);
+BYTE kFifoGet(K_FIFO* const self);
 
 /******************************************************************************
  *
@@ -353,19 +350,14 @@ VOID kPend(VOID);
  * \brief Direct Signal a task
  * \param taskID The ID of the task to signal
  */
-VOID kSignal(PID taskID);
+VOID kSignal(PID const taskID);
 
 /**
  * \brief Suspends a task waiting for a specific event
  * \param self Pointer to a K_EVENT object
  */
-K_ERR kSleep(K_EVENT* self);
+K_ERR kSleep(K_EVENT* const self);
 
-/**
- * \brief Wakes a task waiting for a specific event
- * \param self Pointer to a K_EVENT object
- */
-K_ERR kWake(K_EVENT* self);
 
 
 /******************************************************************************/
@@ -414,13 +406,13 @@ K_TIMER* kTimerGet(VOID);
  * \brief Busy-wait the task for a specified delay in ticks
  * \param delay The delay time in ticks
  */
-VOID kBusyDelay(TICK delay);
+VOID kBusyDelay(TICK const delay);
 
 /**
  * \brief Puts the current task to sleep for a number of ticks
  * \param ticks Number of ticks to sleep
  */
-VOID kSleepDelay(TICK ticks);
+VOID kSleepDelay(TICK const ticks);
 
 /******************************************************************************/
 /******************************************************************************/
@@ -442,7 +434,7 @@ VOID kSleepDelay(TICK ticks);
  * \param numBlocks Number of blocks
  * \return K_ERROR/K_SUCCESS
  */
-K_ERR kMemInit(K_MEM* const self, ADDR const memPoolPtr, BYTE blkSize,
+K_ERR kMemInit(K_MEM* const self, ADDR const memPoolPtr, BYTE const blkSize,
 		const BYTE numBlocks);
 
 /**
@@ -481,12 +473,12 @@ K_ERR kTrace(K_TRACEID event, CHAR* info);
  *\param taskID user-defined ID
  *\return Task system ID
  */
-TID kGetTaskPID(TID taskID);
+TID kGetTaskPID(TID const taskID);
 /**
  * \brief Gets a task priorirty
  * \param taskID Task user-defined ID
  */
-PRIO kGetTaskPrio(TID taskID);
+PRIO kGetTaskPrio(TID const taskID);
 /**
  * \brief Gets the current number of  ticks
  * \return Global system tick value

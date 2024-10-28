@@ -200,7 +200,7 @@ static void SleepTimerCbk_(ADDR args)
 	tcbToWakePtr->status=READY;
 }
 K_TCB* sleepTcbPtr = 0;
-void kSleepDelay(TICK ticks)
+void kSleepDelay(TICK const ticks)
 {
 	K_CR_AREA;
 	K_ENTER_CR;
@@ -225,7 +225,7 @@ void kSleepDelay(TICK ticks)
 	return;
 }
 
-VOID kBusyDelay(TICK delay)
+VOID kBusyDelay(TICK const delay)
 {
 	if (runPtr->busyWaitTime == 0)
 		runPtr->busyWaitTime = delay;
