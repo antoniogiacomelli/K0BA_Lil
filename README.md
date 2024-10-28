@@ -10,7 +10,7 @@ This is a light-weight version with no memory isolation. Currently it supports A
 > This is a work in progress.
 
 - See the wiki for usage examples: https://github.com/antoniogiacomelli/K0BA_Lite/wiki
-- The API is mostly documented on: https://antoniogiacomelli.github.io/K0BA_Lite/
+- The API is mostly documented on: [https://antoniogiacomelli.github.io/K0BA_Lite/](https://antoniogiacomelli.github.io/K0BA_Lite/kapi_8h.html)
 
 *Logical Architecture:*
 
