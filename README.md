@@ -42,8 +42,8 @@ This is a light-weight version with no memory isolation. Currently it supports A
 
 - **Memory Management:**
   - Memory Pools with fixed block-size. This approach is deterministic and has no fragmentation.
-  - Byte Pools, if you really want. They have a first-fit policy and a merge adjacent free blocks
-    on every free operation to prevent fragmentation on some level. 
+  - Byte Pools, if you really want. They have a first-fit policy and a try to merge adjacente blocks
+    when freeing. 
 
 - **Application Timers**
     - Periodic/One-Shot timers with delta queues for efficient handling
