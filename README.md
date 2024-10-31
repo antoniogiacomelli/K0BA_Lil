@@ -41,11 +41,12 @@ This is a light-weight version with no memory isolation. Currently it supports A
     - "Extended" Pipes: these are pipes that can be managed by several readers and writers. 
 
 - **Memory Management:**
-  - Memory Pools with fixed block-size. This approach is deterministic and hinders fragmentation.
-  - Byte Pools, if you really want it.
+  - Memory Pools with fixed block-size. This approach is deterministic and has no fragmentation.
+  - Byte Pools, if you really want. They have a first-fit policy and a merge adjacent free blocks
+    on every free operation to prevent fragmentation on some level. 
 
 - **Application Timers**
-    - Periodic/One Shot timers with delta queues for efficient handling
+    - Periodic/One-Shot timers with delta queues for efficient handling
 
 **Major dependencies:**
 - ARM GCC 
