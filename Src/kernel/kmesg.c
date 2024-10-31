@@ -17,6 +17,9 @@
 #define K_CODE
 #include "kapi.h"
 
+
+
+
 #if (K_DEF_MESGQ==ON)
 /*****************************************************************************
  *
@@ -168,7 +171,7 @@ K_ERR kMailboxPost(K_MAILBOX* self, const ADDR mesgPtr, SIZE mesgSize)
 	K_ENTER_CR;
 	kMemCpy(self->mail.mailPtr, mesgPtr, mesgSize);
 	self->mail.senderTid = runPtr->uPid;
-	self->mail.mesgSize = mesgSize;
+	self->mail.mailSize = mesgSize;
 	K_EXIT_CR;
 	kMutexUnlock(&self->mutex);
 	kSemaSignal(&self->semaFull);
@@ -177,26 +180,26 @@ K_ERR kMailboxPost(K_MAILBOX* self, const ADDR mesgPtr, SIZE mesgSize)
 	return K_SUCCESS;
 }
 
-PID kMailboxPend(K_MAILBOX* const self, ADDR rcvdMesgPtr)
+TID kMailboxPend(K_MAILBOX* const self, ADDR* mailPPtr, SIZE* sizePtr)
 {
-	if (IS_NULL_PTR(self) || IS_NULL_PTR(rcvdMesgPtr))
+	if (IS_NULL_PTR(self))
+	{
 		kErrHandler(FAULT_NULL_OBJ);
+	}
 	kSemaWait(&self->semaFull);
 	kSemaSignal(&self->semaAck); /*U ACK */
 	kMutexLock(&self->mutex);
-	K_CR_AREA;
-	K_ENTER_CR;
-	ADDR retAdrr = kMemCpy(rcvdMesgPtr, self->mail.mailPtr, self->mail.mesgSize);
-	if (retAddr==NULL)
+	if (*mailPPtr == NULL)
 	{
-		return K_ERROR;
+		kErrHandler(FAULT_NULL_OBJ);
+
 	}
+	*mailPPtr = self->mail.mailPtr;
+	if (sizePtr != NULL)
+		*sizePtr = self->mail.mailSize;
 	kMutexUnlock(&self->mutex);
 	kSemaSignal(&self->semaEmpty);
-	K_EXIT_CR;
-#if(K_DEF_MAILBOX_ACK == ON)
-	return  self->mail.senderTid;
-#endif
+	return self->mail.senderTid;
 
 }
 #endif /*(K_DEF_MAILBOX)*/
