@@ -9,38 +9,27 @@
  * 		o Task Queues Management
  *
  *******************************************************************************
- * 		  o Ready Queue:
- * 		  The Ready Queue is a table of FIFO queues. Each index is a priority:
+ * 		  o Global Ready Queue:
+ * 		  The Ready Queue is a table of FIFO queues each one dedicated to a
+ * 		  priority level.
  *
- * 		  		[][][][][][][][] <- highest priority tasks queue (0)
- * 		  		[][][][][][][][]
- *                     .
- *                     .
- *                     .
- *              [][][][][][][][] <- lowest priority tasks queue (NPRIO-1)
- *              --------------->
- *              First-In-Fist-Out
+ * 		  o Global Sleeping Queue:
+ * 		  The Sleeping Queue is a global single queue where tasks that suspended
+ * 		  themselves are placed.
  *
+ * 		  o Each semaphore/mutex/condition variable/sleep event has its
+ * 		  dedicated sleeping queue.
  *
- * 		  o Sleeping Queue:
- * 		  The Sleeping Queue is a single queue where tasks who SLEEPING them
- * 		  selves by pending or sleeping are placed. Since they depend on other
- * 		  tasks to be removed from the queue, and placed on the ready queue, a
- * 		  single Sleeping Queue is enough.
+ * 		  o Tasks are removed by the order they entered. If they were ordered
+ * 		  by priority, lower priority tasks would starve waiting for a resource.
  *
- * 		  Note each semaphore/mutex/condition variable/sleep event has its
- * 		  dedicated sleeping queue and tasks are removed by the order they
- * 		  entered. If they were ordered by priority, lower priority tasks
- * 		  would always starve waiting for a resource.
- *
- * 		  Once a higher priority task than the running task is made ready it
- * 		  will instantly preempt it.
+ * 		  o Once a higher priority task than the running task is made ready it
+ * 		  will instantly preempt the running taks.
  *
  *
  ******************************************************************************/
 
 
-#define INSTANT_PREEMPT_LOWER_PRIO
 
 
 /*******************************************************************************
@@ -49,7 +38,12 @@
  *
  ******************************************************************************/
 
-#include <kapi.h>
+#define K_CODE
+
+#include "kapi.h"
+
+
+#define INSTANT_PREEMPT_LOWER_PRIO
 
 K_ERR kTCBQInit(K_TCBQ* const self, STRING listName)
 {
@@ -126,7 +120,7 @@ K_TCB* kTCBQPeek(K_TCBQ* const self)
     return K_GET_CONTAINER_ADDR(nodePtr, K_TCB, tcbNode);
 }
 
-K_TCB* kTCBQSearchPID(K_TCBQ* const self, PID uPid)
+K_TCB* kTCBQSearchPID(K_TCBQ* const self, TID uPid)
 {
 	if (self == NULL || self->listDummy.nextPtr == &(self->listDummy))
     {
