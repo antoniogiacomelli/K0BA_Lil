@@ -109,7 +109,7 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr)
  * that cannot be circumvented either by a fixed-size pool or by -
  * the safest choice by far - a static memory allocation.
  *
- * So, it is up to application programmer to diminish the hazards by:
+ * So, it is up to application programmer to diminish the hazards:
  *
  *  o Do Not allocate and deallocate randomly. You got no UNIX here, son.
  *    It's hardcore emBedded <3 <goosebumps>
@@ -151,14 +151,14 @@ K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize)
     self->memPoolPtr = memPool;
     self->poolSize = poolSize;
     self->nFreeBytes = poolSize;
-    self->freeList= (0 << 8) | 0;
+    self->freeList= 0;
 
-    /* link each byte to the next */
+    /* 0->1->2... */
     for (BYTE i = 0; i < poolSize - 1; i++)
     {
         memPool[i] = i + 1;
     }
-    /* Sentinel */
+    /* ... a dummy or a sentinel. it is a matter of soft skills. */
     memPool[poolSize - 1] = 0xFF;
     return K_SUCCESS;
 }
@@ -192,30 +192,30 @@ ADDR kBytePoolAlloc(K_BYTEPOOL* const self, BYTE size)
 		return NULL;
 	}
 
-	/* Start from the first free block */
+	/*  first free block */
 	BYTE startIdx = (self->freeList >> 8) & 0xFF;
 	BYTE currIndex = startIdx;
 
-	/* Check for a contiguous chunk */
-	for (BYTE i = 1; i < size; i++) {
+	/* find a chunk */
+	for (BYTE i = 1; i < size; i++) 
+	{
 		if (currIndex == 0xFF || self->memPoolPtr[currIndex] != currIndex + 1) {
-			return NULL;  /* too fragmented or not contiguous */
+			return NULL;  /* oh.. wait */
 		}
 		currIndex = self->memPoolPtr[currIndex];
 	}
 
-	/* Capture the address of the starting block */
+	/* the address of the starting block */
 	ADDR retAddr = (ADDR)(self->memPoolPtr + startIdx);
 
-	/* Update `freeList` to point to the next block after the allocated chunk */
+	/*  next block after the allocated chunk */
 	BYTE nextFreeIndex = self->memPoolPtr[currIndex];
 	self->freeList = (nextFreeIndex << 8) | self->memPoolPtr[nextFreeIndex];
-	self->nFreeBytes -= size;
+	self->nFreeBytes -= size; 
 
+	/*yo got that chunk for yo trunk*/
 	return retAddr;
 }
-
-
 
 /*******************************************************************************
 * Free (returns to the pool) a chunk of bytes
@@ -246,14 +246,12 @@ K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, BYTE const siz
 	{
 		return K_ERR_MEM_FREE;
 	}
-
 	BYTE chunkIdx = chunkPtr - self->memPoolPtr;
 	BYTE nextIdx = chunkIdx + size;
 	if (chunkIdx >= self->poolSize)
 	{
 		return K_ERR_MEM_INVALID_ADDR;
 	}
-	/*try to merge  */
 	if (nextIdx < self->poolSize && nextIdx == (self->freeList >> 8))
 	{
 		self->freeList = (self->freeList & 0x00FF) | (chunkIdx << 8);
@@ -263,7 +261,7 @@ K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, BYTE const siz
 		self->memPoolPtr[chunkIdx] = self->freeList >> 8;
 		self->freeList = (UINT16)(chunkIdx << 8) | (self->freeList & 0x00FF);
 	}
-	self->nFreeBytes += size;
+	self->nFreeBytes += size; 
 
 	if (self->nFreeBytes > self->poolSize)
 	{
