@@ -88,7 +88,7 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr)
 	}
 	*(ADDR*)blockPtr = self->freeListPtr;
 	self->freeListPtr = blockPtr;
-	self->nFreeBlocks += 1U;
+	self->nFreeBlocks += 1;
 	return K_SUCCESS;
 }
 
@@ -155,7 +155,7 @@ K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize)
 	{
 		memPool[i] = i + 1;
 	}
-	/* Sentinel */
+	/* sentinel */
 	memPool[poolSize - 1] = 0xFF;
 	return K_SUCCESS;
 }
@@ -189,11 +189,11 @@ ADDR kBytePoolAlloc(K_BYTEPOOL* const self, BYTE size)
 		return NULL;
 	}
 
-	/* Start from the first free block */
+	/* start from the first free block */
 	BYTE startIdx = (self->freeList >> 8) & 0xFF;
 	BYTE currIndex = startIdx;
 
-	/* Check for a contiguous chunk */
+	/* grab contiguous chunk */
 	for (BYTE i = 1; i < size; i++) {
 		if (currIndex == 0xFF || self->memPoolPtr[currIndex] != currIndex + 1) {
 			return NULL;  /* too fragmented or not contiguous */
@@ -201,19 +201,15 @@ ADDR kBytePoolAlloc(K_BYTEPOOL* const self, BYTE size)
 		currIndex = self->memPoolPtr[currIndex];
 	}
 
-	/* Capture the address of the starting block */
+	/* get the address of the starting block */
 	ADDR retAddr = (ADDR)(self->memPoolPtr + startIdx);
 
-	/* Update `freeList` to point to the next block after the allocated chunk */
+	/* now freelist points to the next block after the allocated chunk */
 	BYTE nextFreeIndex = self->memPoolPtr[currIndex];
 	self->freeList = (nextFreeIndex << 8) | self->memPoolPtr[nextFreeIndex];
 	self->nFreeBytes -= size;
-
 	return retAddr;
 }
-
-
-
 /*******************************************************************************
  * Free (returns to the pool) a chunk of bytes
  *
