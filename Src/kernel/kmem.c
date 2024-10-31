@@ -18,7 +18,7 @@
  * BLOCK POOL CONTROL BLOCK
  *
  ******************************************************************************/
-//let me kick some old simplistic embeddded systems programming 
+//let me kick some old simplistic embeddded systems programming sht
  
 K_ERR kBlockPoolInit(K_BLOCKPOOL* const self, ADDR const memPoolPtr, \
 		BYTE blkSize, const BYTE numBlocks)
@@ -98,21 +98,21 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr)
  *
  ******************************************************************************
  *
- * Le heap, c'est chic...
  *
  * About BYTE POOLS.
  *
  * It is hard to find a trade-off for byte pools - a random chunk of bytes the
  * application can allocate and deallocate.
- * A safer version, with meta-data is counter-productive,  given you need
+ * A  safer version, with meta-data is counter-productive,  given you need
  * a record (a struct) to keep track of every itsy bitsy weenie BYTE.
- * In very constrained applications, it is also a bit hard to deem a situation
+ * It iss also a bit (or a byte) hard to think of  a situation
  * that cannot be circumvented either by a fixed-size pool or by -
  * the safest choice by far - a static memory allocation.
  *
- * So, it is up to the application programmer to diminish the hazards:
+ * So, it is up to application programmer to diminish the hazards by:
  *
  *  o Do Not allocate and deallocate randomly. You got no UNIX here, son.
+ *    It's hardcore emBedded <3 <goosebumps>
  *
  *  o TAKE THE OATH BEFORE THIS KERNEL:
  *    - to allocate, use, and free the EXACTLY size for each chunk you
@@ -127,8 +127,9 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr)
  *
  *  o The IDEAL use:
  *    - allocate and deallocate *multiples* of the pool size.
- *    - do it on a unidirectional manner, just as you would do with
+ *    - do it on unidirectional manner, just as you would do with
  *      synchronisation to avoid a 'deadlock'.
+ *
  *
  *******************************************************************************
  *
@@ -150,7 +151,7 @@ K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize)
     self->memPoolPtr = memPool;
     self->poolSize = poolSize;
     self->nFreeBytes = poolSize;
-    self->freeList= (0 << 8) | 1;
+    self->freeList= (0 << 8) | 0;
 
     /* link each byte to the next */
     for (BYTE i = 0; i < poolSize - 1; i++)
@@ -183,40 +184,37 @@ K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize)
  *       returned address
  *******************************************************************************
  */
+
 ADDR kBytePoolAlloc(K_BYTEPOOL* const self, BYTE size)
 {
-    if (self->nFreeBytes < size)
-    {
-        return NULL;
-    }
+	if (self->nFreeBytes < size)
+	{
+		return NULL;
+	}
 
-    /*unpack */
-    BYTE currIndex = (self->freeList >> 8) & 0xFF;
+	/* Start from the first free block */
+	BYTE startIdx = (self->freeList >> 8) & 0xFF;
+	BYTE currIndex = startIdx;
 
-    /*check boundaries*/
-    if (currIndex >= self->poolSize)
-    {
-        return NULL;
-    }
-    /*find a contiguous chunk size*/
-    for (BYTE i = 1; i < size; i++)
-    {
-        if (currIndex == 0xFF)
-        {
-            return NULL;  /*too fragmented*/
-        }
-        /*update*/
-        currIndex = self->memPoolPtr[currIndex];
-    }
+	/* Check for a contiguous chunk */
+	for (BYTE i = 1; i < size; i++) {
+		if (currIndex == 0xFF || self->memPoolPtr[currIndex] != currIndex + 1) {
+			return NULL;  /* too fragmented or not contiguous */
+		}
+		currIndex = self->memPoolPtr[currIndex];
+	}
 
-    /* freelist points to the next available block */
-    self->freeList = (currIndex << 8) | self->memPoolPtr[currIndex];
-    self->nFreeBytes -= size;
-    /*chunk address starts on the index afterwards memPoolPtr*/
-    ADDR retAddr =  (ADDR)(self->memPoolPtr + ((self->freeList >> 8) & 0xFF));
-    /*you got dat chunk fo yo trunk */
-    return retAddr;
+	/* Capture the address of the starting block */
+	ADDR retAddr = (ADDR)(self->memPoolPtr + startIdx);
+
+	/* Update `freeList` to point to the next block after the allocated chunk */
+	BYTE nextFreeIndex = self->memPoolPtr[currIndex];
+	self->freeList = (nextFreeIndex << 8) | self->memPoolPtr[nextFreeIndex];
+	self->nFreeBytes -= size;
+
+	return retAddr;
 }
+
 
 
 /*******************************************************************************
@@ -273,3 +271,4 @@ K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, BYTE const siz
 	}
 	return K_SUCCESS;
 }
+
