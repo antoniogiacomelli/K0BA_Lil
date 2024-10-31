@@ -18,8 +18,8 @@
  * BLOCK POOL CONTROL BLOCK
  *
  ******************************************************************************/
-/*let me kick some old simplistic embeddded systems programming sht
- */
+//let me kick some old simplistic embeddded systems programming 
+ 
 K_ERR kBlockPoolInit(K_BLOCKPOOL* const self, ADDR const memPoolPtr, \
 		BYTE blkSize, const BYTE numBlocks)
 {
@@ -98,21 +98,21 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr)
  *
  ******************************************************************************
  *
+ * Le heap, c'est chic...
  *
  * About BYTE POOLS.
  *
  * It is hard to find a trade-off for byte pools - a random chunk of bytes the
  * application can allocate and deallocate.
- * A more safer version, with meta-data is counter-productive,  given you need
- * a record (a struct) to keep track every of itsy bitsy weenie BYTE.
+ * A safer version, with meta-data is counter-productive,  given you need
+ * a record (a struct) to keep track of every itsy bitsy weenie BYTE.
  * In very constrained applications, it is also a bit hard to deem a situation
- * that cannot be circumvented using either by a fixed-size pool or by -
+ * that cannot be circumvented either by a fixed-size pool or by -
  * the safest choice by far - a static memory allocation.
  *
- * So, it is up to application programmer to diminish the hazards by:
+ * So, it is up to the application programmer to diminish the hazards:
  *
  *  o Do Not allocate and deallocate randomly. You got no UNIX here, son.
- *    It's hardcore emBedded <3 <goosebumps>
  *
  *  o TAKE THE OATH BEFORE THIS KERNEL:
  *    - to allocate, use, and free the EXACTLY size for each chunk you
@@ -127,9 +127,8 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr)
  *
  *  o The IDEAL use:
  *    - allocate and deallocate *multiples* of the pool size.
- *    - do it on unidirectional manner, just as you would do with
+ *    - do it on a unidirectional manner, just as you would do with
  *      synchronisation to avoid a 'deadlock'.
- *
  *
  *******************************************************************************
  *
