@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]
  *
  ******************************************************************************
  ******************************************************************************
@@ -10,9 +10,10 @@
  *
  *****************************************************************************/
 
+#define K_CODE
+#include "kapi.h"
 
-#include <kapi.h>
-#if (K_CONF_TRACE==ON)
+#if (K_DEF_TRACE==ON)
 K_TRACE kTracer;
 void kTraceInit(void)
 {
@@ -21,11 +22,13 @@ void kTraceInit(void)
 	kTracer.nAdded		= 0;
 	kTracer.nWrap		= 0;
 
-	for(UINT32 i=0; i<TRACEBUFF_SIZE; ++i)
+	for(UINT32 i=0; i<K_DEF_TRACEBUFF_SIZE; ++i)
 	{
 		kTracer.buffer[i].event=0;
 		kTracer.buffer[i].timeStamp=0;
+#if (K_DEF_TRACE_NO_INFO==OFF)
 		kTracer.buffer[i].info='\0';
+#endif
 	}
 }
 
@@ -37,11 +40,13 @@ K_ERR kTrace(K_TRACEID event, CHAR* info)
 	kTracer.buffer[kTracer.tail].event=event;
 	kTracer.buffer[kTracer.tail].timeStamp=kTickGet();
 	kTracer.buffer[kTracer.tail].pid=runPtr->pid;
+#if (K_DEF_TRACE_NO_INFO==OFF)
 	kTracer.buffer[kTracer.tail].info = info;
+#endif
 	kTracer.tail   += 1U;
-	kTracer.tail   %= TRACEBUFF_SIZE;
+	kTracer.tail   %= K_DEF_TRACEBUFF_SIZE;
 	kTracer.nAdded += 1U;
-	if (kTracer.nAdded == TRACEBUFF_SIZE-1)
+	if (kTracer.nAdded == K_DEF_TRACEBUFF_SIZE-1)
 	{
 		kTracer.nWrap += 1U;
 	}

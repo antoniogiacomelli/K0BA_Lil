@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -8,13 +8,21 @@
  * 					o Error handling and Checks
  *
  *****************************************************************************/
-#include <kapi.h>
+#define K_CODE
+
+#include "kapi.h"
+
 
 void kErrHandler(K_FAULT fault)  /* generic error handler */
 {
+#if (ERR_HANDLER==ON)
 	faultID=fault;
 	__disable_irq();
 	while (1);
+#else
+	return;
+#endif /*err handler*/
+
 }
 
 void kErrCheckPrioInversion(void)
@@ -33,7 +41,12 @@ void kErrCheckPrioInversion(void)
 	{
 		if (tcbs[i].status == READY)
 		{
-			assert(tcbs[i].priority >= prioRun);
+			if (tcbs[i].priority < prioRun)
+			{
+#if (PRIO_INV_FAULT == ON)
+				kErrHandler(FAULT_PRIO_INV);
+#endif
+			}
 		}
 	}
 	K_EXIT_CR;

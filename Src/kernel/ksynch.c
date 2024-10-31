@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications | [VERSION: 0.1.0]]
+ * [K0BA - Kernel 0 For Embedded Applications | [VERSION: 1.1.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -14,13 +14,13 @@
  *
  *****************************************************************************/
 
-#include <kapi.h>
+
+#define K_CODE
+#include "kapi.h"
 
 /******************************************************************************
  * DIRECT TASK PENDING/SIGNAL
  *****************************************************************************/
-
-
 void kPend(void)
 {
 	K_CR_AREA;
@@ -28,7 +28,7 @@ void kPend(void)
 	K_ERR ret = kTCBQEnq(&sleepingQueue, runPtr);
 	if (!ret)
 	{
-		runPtr->status=SUSPENDED;
+		runPtr->status=PENDING;
 		K_PEND_CTXTSWTCH;
 		K_EXIT_CR;
 	}
@@ -46,14 +46,15 @@ void kSignal(PID const taskID)
 	K_CR_AREA;
 	K_ENTER_CR;
 	PID pid = kGetTaskPID(taskID);
-	if (tcbs[pid].status == SUSPENDED)
+	if (tcbs[pid].status == PENDING)
 	{
 		K_TCB* tcbGotPtr=&tcbs[pid];
 		kTCBQRem(&sleepingQueue, &tcbGotPtr);
-		kTCBQEnq(&readyQueue[tcbGotPtr->priority], tcbGotPtr);
+		if(!kTCBQEnq(&readyQueue[tcbGotPtr->priority], tcbGotPtr))
+			tcbGotPtr->status=READY;
 		if (READY_HIGHER_PRIO(tcbGotPtr))
 		{
-					K_PEND_CTXTSWTCH;
+			K_PEND_CTXTSWTCH;
 		}
 	}
 	K_EXIT_CR;
@@ -103,7 +104,7 @@ K_ERR kSleep(K_EVENT* self)
 			{
 				runPtr->status=SLEEPING;
 				runPtr->pendingObj = (K_EVENT*)self;
-				K_TRAP_PENDSV;
+				K_PEND_CTXTSWTCH;
 				K_EXIT_CR;
 				return K_SUCCESS;
 			}
@@ -195,8 +196,8 @@ K_ERR kSemaWait(K_SEMA* const self)
 		{
 			runPtr->status = BLOCKED;
 			runPtr->pendingObj = (K_SEMA*)self;
-			K_EXIT_CR;
 			K_PEND_CTXTSWTCH;
+			K_EXIT_CR;
 			return K_SUCCESS;
 		}
 		kErrHandler(FAULT_LIST);
@@ -262,6 +263,7 @@ K_ERR kMutexInit(K_MUTEX* const self)
 		kErrHandler(FAULT_LIST);
 		return K_ERROR;
 	}
+	self->init=TRUE;
 	K_EXIT_CR;
 	return K_SUCCESS;
 }
@@ -269,6 +271,10 @@ K_ERR kMutexLock(K_MUTEX* const self)
 {
 	K_CR_AREA;
 	K_ENTER_CR;
+	if (self->init==FALSE)
+	{
+		assert(0);
+	}
 	if (IS_NULL_PTR(self))
 	{
 		kErrHandler(FAULT_NULL_OBJ);
@@ -300,8 +306,8 @@ K_ERR kMutexLock(K_MUTEX* const self)
 			runPtr->status = BLOCKED;
 			runPtr->pendingObj = (K_MUTEX*)self;
 			kTCBQEnq(&(self->queue), runPtr);
-			K_EXIT_CR;
 			K_PEND_CTXTSWTCH;
+			K_EXIT_CR;
 		}
 
 	K_EXIT_CR;
@@ -318,6 +324,10 @@ K_ERR kMutexUnlock(K_MUTEX* const self)
 		kErrHandler(FAULT_NULL_OBJ);
 		K_EXIT_CR;
 		return K_ERR_NULL_OBJ;
+	}
+	if (self->init==FALSE)
+	{
+		assert(0);
 	}
 	if ((self->lock == FALSE))
 	{
@@ -364,24 +374,30 @@ K_ERR kMutexUnlock(K_MUTEX* const self)
  * CONDITION VARIABLES
  ******************************************************************************/
 
-VOID kCondInit(K_COND* const self)
+K_ERR kCondInit(K_COND* const self)
 {
 	if (IS_NULL_PTR(self))
+	{
 		kErrHandler(FAULT_NULL_OBJ);
-	kMutexInit(&self->condMutex);  /* Initialize mutex (unlocked/no ownerPtr) */
-	kTCBQInit(&self->queue, "cvQ");
+		return K_ERR_NULL_OBJ;
+	}
+	assert(!kMutexInit(&self->condMutex));
+	assert(!kTCBQInit(&self->queue, "cvQ"));
+	return K_SUCCESS;
 }
 
 VOID kCondWait(K_COND* const self)
 {
 	if (IS_NULL_PTR(self))
-		kErrHandler(FAULT_NULL_OBJ);
+	{
+			kErrHandler(FAULT_NULL_OBJ);
+	}
 	K_CR_AREA;
 	K_ENTER_CR;
 	kMutexUnlock(&self->condMutex);
 	runPtr->status = SLEEPING;
 	kTCBQEnq(&self->queue, runPtr);
-	kYield();
+	K_PEND_CTXTSWTCH;
 	K_EXIT_CR;
 	kMutexLock(&self->condMutex);
 }
@@ -397,10 +413,15 @@ VOID kCondSignal(K_COND* const self)
 	kTCBQDeq(&self->queue, &nextTCBPtr);
 	if (IS_NULL_PTR(nextTCBPtr))
 		kErrHandler(FAULT_NULL_OBJ);
-	nextTCBPtr->status = READY;
-	kTCBQEnq(&readyQueue[nextTCBPtr->priority], nextTCBPtr);
-	K_EXIT_CR;
+	if (!kTCBQEnq(&readyQueue[nextTCBPtr->priority], nextTCBPtr))
+	{
+		if (READY_HIGHER_PRIO(nextTCBPtr))
+		{
+			K_PEND_CTXTSWTCH;
+		}
+	}
 	kMutexUnlock(&self->condMutex);
+	K_EXIT_CR;
 }
 
 VOID kCondWake(K_COND* const self)

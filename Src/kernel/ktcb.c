@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]
  *
  ******************************************************************************
  ******************************************************************************
@@ -11,9 +11,11 @@
  *****************************************************************************/
 
 
-#include <kapi.h>
-#include <ksystasks.h>
-static PID pPid=0;					 /*<* system pid for each task 	*/
+#define K_CODE
+#include "kapi.h"
+#include "ksystasks.h"
+
+static PID pPid=0;	/*<* system pid for each task 	*/
 
 static K_ERR kInitStack_(UINT32* const stackAddrPtr, const UINT32 stackSize,
 		const TASKENTRY taskFuncPtr); /*< init stacks */
@@ -46,13 +48,13 @@ static K_ERR kInitStack_(UINT32* const stackAddrPtr,
 	stackAddrPtr[stackSize-R6_OFFSET]	= 0x06060606; //r6
 	stackAddrPtr[stackSize-R5_OFFSET]	= 0x05050505; //r5
 	stackAddrPtr[stackSize-R4_OFFSET]	= 0x04040404; //r4
-	for (UINT32 j=17; j<=STACKSIZE; j++)
+	/*for (UINT32 j=17; j<=stackSize-1; j++)
 	{
 		if (stackSize-j == 0)
 			stackAddrPtr[stackSize-j]=0xDEADBEEF;
 		else
 			stackAddrPtr[stackSize-j]=0xDEADC0DE;
-	}
+	}*/
 
 	return K_SUCCESS;
 }
@@ -68,19 +70,25 @@ K_ERR kInitTcb_(const TASKENTRY taskFuncPtr, UINT32* const stackAddrPtr,
 		tcbs[pPid].status = READY;
 		tcbs[pPid].pid = pPid;
 
-		return K_SUCCESS; // ok
+		return K_SUCCESS;
 	}
 	return K_ERROR;
 }
-#if (K_CONF_SCH == K_SCH_PREEMP)
 
 K_ERR kCreateTask(const TASKENTRY taskFuncPtr, const char* taskName, const PID id,
 		UINT32* const stackAddrPtr, const UINT32 stackSize,
 		const TICK timeSlice, const PRIO priority, const BOOL runToCompl)
 
 {
+	assert(id!=255);
+
 	if (pPid==0)
 	{
+
+		for (UINT32 idx; idx<NTHREADS; idx++)
+		{
+			tidTbl[idx]=0xFF;
+		}
 		assert(kInitTcb_(IdleTask, idleStack, stackSize)
 				== K_SUCCESS);
 
@@ -91,8 +99,8 @@ K_ERR kCreateTask(const TASKENTRY taskFuncPtr, const char* taskName, const PID i
 		tcbs[pPid].uPid = 0;
 		tcbs[pPid].runToCompl = FALSE;
 		tcbs[pPid].timeSlice = 0;
-
-        uPidTbl[pPid]=0;
+		assert(tidTbl[pPid]==0xFF);
+		tidTbl[pPid]=0;
 		pPid+=1;
 
 	}
@@ -110,7 +118,8 @@ K_ERR kCreateTask(const TASKENTRY taskFuncPtr, const char* taskName, const PID i
 		tcbs[pPid].timeLeft = timeSlice;
 		tcbs[pPid].uPid = id;
 		tcbs[pPid].runToCompl = runToCompl;
-		uPidTbl[pPid]=id;
+		assert(tidTbl[pPid]==0xFF);
+		tidTbl[pPid]=id;
 		pPid+=1;
 		return K_SUCCESS;
 	}
@@ -118,47 +127,3 @@ K_ERR kCreateTask(const TASKENTRY taskFuncPtr, const char* taskName, const PID i
 
 	return K_ERROR;
 }
-#else
-
-K_ERR kCreateTask(const TASKENTRY taskFuncPtr, const char* taskName, const PID id,
-		UINT32* const stackAddrPtr, const UINT32 stackSize,
-		const PRIO priority, const BOOL runToCompl)
-
-{
-	if (pPid==0)
-	{
-		assert(kInitTcb(IdleTask, idleStack, stackSize)
-				== K_SUCCESS);
-
-
-		tcbs[pPid].priority = NPRIO-1;
-		tcbs[pPid].realPrio = NPRIO-1;
-		tcbs[pPid].taskName = "IdleTask";
-		tcbs[pPid].uPid = 0;
-		tcbs[pPid].runToCompl = FALSE;
-        uPidTbl[pPid]=0;
-		pPid+=1;
-
-	}
-	if (kInitTcb(taskFuncPtr, stackAddrPtr, stackSize) == K_SUCCESS)
-	{
-		if (priority > NPRIO-1)
-		{
-			assert(0);
-		}
-
-		tcbs[pPid].priority = priority;
-		tcbs[pPid].realPrio = priority;
-		tcbs[pPid].taskName = taskName;
-		tcbs[pPid].uPid = id;
-		tcbs[pPid].runToCompl = runToCompl;
-		uPidTbl[pPid]=id;
-		pPid+=1;
-		return K_SUCCESS;
-	}
-
-
-	return K_ERROR;
-}
-#endif
-

@@ -1,7 +1,18 @@
-
-#ifndef INC_KVERSION_H_
-#define INC_KVERSION_H_
-
+/******************************************************************************
+ *
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]]
+ *
+ ******************************************************************************
+ ******************************************************************************
+ * 	In this header:
+ * 					o Kernel Version record definition
+ * 					xx.xx.xx
+ * 					major minor patch
+ *
+ *****************************************************************************/
+#ifndef K_VERSION_H
+#define K_VERSION_H
+#define K_VALID_VERSION 0x010100
 struct kversion
 {
 	unsigned char major;
@@ -9,9 +20,6 @@ struct kversion
 	unsigned char patch;
 };
 
-
-
-
-
+unsigned int kGetVersion(void);
 
 #endif /* INC_KVERSION_H_ */

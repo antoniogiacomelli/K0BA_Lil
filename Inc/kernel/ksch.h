@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -9,8 +9,8 @@
  *
  *****************************************************************************/
 
-#ifndef INC_KSCH_H_
-#define INC_KSCH_H_
+#ifndef INC_KSCH_H
+#define INC_KSCH_H
 
 /*
  * brief Determines if the scheduler needs to reschedule a task
@@ -41,11 +41,15 @@ VOID kExitCR(UINT32 crState);
  */
 VOID kErrCheckPrioInversion(VOID);
 /*
- * brief Initializes the kernel
+ * brief Initialises the kernel
  */
 VOID kInitKernel(VOID);
 
-VOID kApplicationInit(ADDR* args);
+/*
+ * \brief Initialises application specific objects. It runs on SVC Handler.
+ *
+ */
+VOID kApplicationInit(VOID);
 
 
 #endif /* INC_KSCH_H_ */

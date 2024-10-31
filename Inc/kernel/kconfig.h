@@ -1,92 +1,76 @@
  /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]
  *
- ******************************************************************************
- * 
- * 	In this header:
- * 					o Macros for kernel configuration
+ ******************************************************************************/
+
+/**
+ * \file     kconfig.h
+ * \brief    Kernel Configuration File
+ * \version  1.1.0
+ * \author   Antonio Giacomelli
  *
- *****************************************************************************/
+ * \details  Kernel configuration definitions.
+ *
+ ******************************************************************************/
 
 
 
-#ifndef INC_K_CONFIG_H_
-#define INC_K_CONFIG_H_
-
-#ifndef __GNUC__
-#   error "You need GCC as your compiler!"
-#endif
-
-#ifndef __KVERSION
-#error "Missing kernel version."
-#endif
+#ifndef K_CONFIG_H
+#define K_CONFIG_H
 
 
-#define TIM_ON 0
+#define ON     1
+#define OFF    0
 
-#define PID_IDLETASK    	 0   /**<  ID of the idle task */
-#define PID_TIMHANDLER 		 1   /**< ID of the timer handler task */
-#define PID_INVALID			 255 /**< Invalid PID */
-#define N_USRTASKS    	  4	 /**<  Number of tasks */
-#define STACKSIZE        128  /**<  Stack size in words for each task */
-#define _N_SYSTASKS       2
-#define NTHREADS		(N_USRTASKS + _N_SYSTASKS)
-#define _NPRIO           5  /**< Number of priorities */
-#define NPRIO            (_NPRIO + 1)
-#define TICK_10MS        (SystemCoreClock/1000)  /**<  Tick period of 10ms */
-#define TICK_5MS         (SystemCoreClock/2000)  /**< Tick period of 5ms */
-#define TICK_1MS         (SystemCoreClock/10000) /**<  Tick period of 1ms */
-#define K_CONF_TICK_PERIOD TICK_10MS /**< System tick period */
-#define K_CONF_TRACE ON
-#if (K_CONF_TRACE)
+#define K_DEF_PID_IDLETASK  	  	 0      /**<  ID of the idle task */
+#define K_DEF_PID_TIMHANDLER 		 1      /**< ID of the timer handler task */
+#define K_DEF_PID_INVALID			 255    /**< Invalid PID */
+#define K_DEF_N_USRTASKS    	     4	    /**<  Number of tasks */
+#define K_DEF_N_PRIO	           	 5      /**< Number of user task different priorities */
+#define K_DEF_TICK_PERIOD 	 TICK_10MS  	/**< System tick period */
+#define K_DEF_FIFO_SIZE				 32		/**< FIFO size */
+#define K_DEF_N_TIMERS				  6 	/**< Number of system timers */
+#define K_DEF_ERRHANDLER			 ON 	/**< Kernel will stop on faults */
+#define K_DEF_PRIOINV_FAULT			 ON 	/**< Treat priority inversion as a fault */
 
-	#define TRACEBUFF_SIZE	  512
-	#define TRACE_MAX_CHAR 	  16
-	#define TRACE_ONLY_EVENT  ON
+#define K_DEF_MEMBLOCK_ALIGN_4 	ON	  /**< Make memory blocks aligned to 4 */
 
-	#if		(TRACE_ONLY_EVENT==ON)
-			#define K_TRACE(event) kTrace(event, NULL)
-	#else
-			#define K_TRACE(event, info) kTrace(event, info)
-	#endif
-#endif
-
+#define K_DEF_BYTEPOOL			ON    /**< K_BYTEPOOL ON/OFF */
 
 /**
 *\brief Message Passing configuration
 */
-#define K_CONF_MSG_QUEUE 			ON /**< Mesg Queue ON/OFF */
-#define K_CONF_MAILBOX	 			ON /**< Mailbox ON/OFF */
-#if (K_CONF_MAILBOX==ON)
-	#define K_CONF_MAILBOX_ACK		ON /**< Mailbox extended rendez-vous */
+#define K_DEF_MESGQ 			ON     /**< Mesg Queue ON/OFF */
+#define K_DEF_MAILBOX	 		ON     /**< Mailbox ON/OFF */
+
+
+#if (K_DEF_MAILBOX==ON)
+	#define K_DEF_MAIL_SIZE			 4	  /**< Max size of a mail in mailbox */
+	#define K_DEF_MAILBOX_ACK		ON    /**< Fully synchornous mailbox 	 */
 #endif
-#if ((K_CONF_MSG_QUEUE == ON))
-	#define MSGBUFF_SIZE sizeof(K_MESGBUFF) /**< message buffer size 	  */
-	#define N_MSGBUFF 10				    /**< number of message buffer */
+
+#if (K_DEF_MESGQ == ON)
+	#define K_DEF_N_MESGBUFF 10			  /**< Global message buffers number */
 #endif
-#if (K_CONF_MSG_QUEUE == ON)
-	#if (N_MSGBUFF <=0 )
-	#	error "Number of message buffers must be greater than 0"
-	#endif
-#endif
-/*
- * Condition Variables
- */
-#define K_CONF_COND_VAR ON
+
+#define K_DEF_COND ON				  /**< Condition Variables ON/OFF */
+
+#if (K_DEF_COND == ON)				  /*Need CondVars for Pipes*/
+	#define K_DEF_PIPE		   	  ON  /**< Pipes ON/OFF */
 
 /*  Pipes Configuration */
-#define K_CONF_PIPES 	ON
-#if (K_CONF_PIPES==ON)
-    #define PIPE_SIZE    	 	 (35) /* pipe size (bytes) */
+	#if (K_DEF_PIPE==ON)
+		#define K_DEF_PIPE_SIZE   (35) /**< Pipe size (bytes) */
+	#endif
 #endif
 
-/*FIFO */
-#define FIFO_SIZE				 (32)
-/*
- *  Application Timer Configuration
- */
-#define N_TIMERS 	6					   /* number of application timers */
-#define TIMER_SIZE sizeof(K_TIMER)		   /* application timer size */
+#define K_DEF_TRACE 		 ON				/**< Trace ON/OFF      */
+#if (K_DEF_TRACE==ON)
+	#define K_DEF_TRACEBUFF_SIZE	  64   /**< Trace Buffer size*/
+	#define K_DEF_TRACE_MAX_CHAR 	  16	/**< Max info bytes  */
+	#define K_DEF_TRACE_NO_INFO       ON	/**< No custom info on trace buffer */
+#endif
+
 
 #endif /* K_CONFIG_H */

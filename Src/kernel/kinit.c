@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]
  *
  ******************************************************************************
  ******************************************************************************
@@ -9,8 +9,10 @@
  * 										  start-up (via SVC #0)
  *
  *****************************************************************************/
+#define K_CODE
 
-#include <kapi.h>
+#include "kapi.h"
+#include "kpools.h"
 
 static void kInitRunTime_(void);
 static K_ERR kInitQueues_(void)
@@ -32,9 +34,13 @@ static void kInitRunTime_(void)
 	runTime.globalTick = 0;
 	runTime.nWraps = 0;
 }
-
+volatile UINT32 version;
 void kInitKernel(void)
 {
+
+	version = kGetVersion();
+	if (version != K_VALID_VERSION)
+		kErrHandler(FAULT_INVALID_KERNEL_VERSION);
 	kInitQueues_();
 	kInitRunTime_();
 	kMesgBuffPoolInit();
@@ -61,6 +67,6 @@ void kInitKernel(void)
 
 	kReadyQDeq(&runPtr, highestPrio);
 	__enable_irq();
-	K_TRAP_SVC(0);
+	K_START_APPLICATION;
 }
 

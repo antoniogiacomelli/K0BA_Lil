@@ -22,14 +22,15 @@ SAVEUCONTEXT:
     LDR R0, =runPtr           /* Load address of runPtr into R0 */
     LDR R1, [R0]              /* Load value of runPtr (pointer to task context) into R1 */
     STR R12, [R1]             /* Store updated stack pointer (PSP) into runPtr->sp */
+    DSB
     BX LR                     /* Return from function */
 
 .global RESTOREUCONTEXT
 .type RESTOREUCONTEXT, %function
 .thumb_func
 RESTOREUCONTEXT:
-    LDR R0, =runPtr           /* Load address of runPtr into R0 */
-    LDR R1, [R0]              /* Load value of runPtr (pointer to task context) into R1 */
+    LDR R0, =runPtr                 /* Load address of runPtr into R0 */
+    LDR R1, [R0]                   /* Load value of runPtr (pointer to task context) into R1 */
     LDR R3, [R1, #RUNCNTR_OFFSET]  /* Load run counter (runPtr->runCounter) */
     ADDS R3, #1               /* Increment run counter */
     STR R3, [R1, #RUNCNTR_OFFSET]  /* Store updated run counter back */
@@ -40,7 +41,7 @@ RESTOREUCONTEXT:
     LDR R2, [R1]              /* Load saved stack pointer (runPtr->sp) */
     LDMIA R2!, {R4-R11}       /* Restore registers R4-R11 */
     MSR PSP, R2               /* Update PSP with the new stack pointer */
-
+    DSB
     BX LR                     /* Return from function */
 
 
@@ -60,9 +61,11 @@ PendSV_Handler:
     LDR R1, =ISCR_CLRPSV
     STR R1, [R0]            /* Clear pendsv */
     MOV LR, #0xFFFFFFFD     /* Return to thread mode using PSP */
+    DSB
     CPSIE I                 /* CR end */
     ISB                     /* Flush pipeline */
     BX LR                   /* Dispatch scheduled task */
+
 .global SysTick_Handler
 .type SysTick_Handler, %function
 .thumb_func
@@ -82,10 +85,11 @@ SysTick_Handler:
     LDR R0, =SCB_ICSR      /* Load SCB_ICSR address */
     LDR R1, =ISCR_SETPSV   /* Load ISCR_SETPSV value */
     STR R1, [R0]           /* Set PendSV */
-    DMB
+    DSB
     CPSIE I
     ISB
     BX LR
+
 .global SVC_Handler
 .type SVC_Handler, %function
 .thumb_func
@@ -94,6 +98,7 @@ SVC_Handler:
     LDR R0, =STICK_CTRL     /* Load SysTick Control Status Register */
     MOVS R1, #0x0F          /* MOV 0b1111 to R1 */
     STR R1, [R0]            /* Store 0b1111 SysTick CSR */
+    DSB
     B kStartUp              /* Branch to start-up */
 
 .global kStartUp
@@ -114,6 +119,8 @@ SVC_Handler:
     LDMIA R2!, {R4-R11}      /* POP R4-R11 from runPtr's saved stack */
     MSR PSP, R2              /* Update PSP with new stack pointer after LDMIA */
     MOV LR, #0xFFFFFFFD      /* Return to thread mode using PSP */
+    DSB
     CPSIE I                  /* (End Critical Section) */
+    ISB
     BX LR                    /* Dispatch first task */
 

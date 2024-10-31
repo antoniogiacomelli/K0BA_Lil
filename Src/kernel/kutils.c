@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]
  *
  ******************************************************************************
  ******************************************************************************
@@ -9,14 +9,16 @@
  *
  *****************************************************************************/
 
-#include <kapi.h>
+
+#define K_CODE
+#include "kapi.h"
 
 PID kGetTaskPID(TID const taskID)
 {
 	PID pid=0;
 	for (pid=0;pid<NTHREADS;pid++)
 	{
-		if (uPidTbl[pid]==taskID)
+		if (tidTbl[pid]==taskID)
 			break;
 	}
 	if (pid == NTHREADS)

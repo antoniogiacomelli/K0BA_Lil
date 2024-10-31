@@ -5,16 +5,16 @@
  *      Author: anton
  */
 
-#ifndef INC_KSYSTASKS_H_
-#define INC_KSYSTASKS_H_
+#ifndef INC_KSYSTASKS_H
+#define INC_KSYSTASKS_H
 
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
 
 /* Tasks */
-extern UINT32 idleStack[STACKSIZE];
-extern UINT32 timerHandlerStack[STACKSIZE];
+extern UINT32 idleStack[IDLE_STACKSIZE];
+extern UINT32 timerHandlerStack[TIMHANDLER_STACKSIZE];
 
 void IdleTask(void);
 void TimerHandlerTask(void);

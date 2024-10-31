@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -65,7 +65,10 @@
 	   To remove the tail, we remove the dummy's previous node
 	   In both cases, the list adjusts itself
 ******************************************************************************/
-#include <kapi.h>
+
+#define K_CODE
+#include "kapi.h"
+
 static inline void kListNodeDel_(K_LISTNODE* nodePtr)
 {
     nodePtr->nextPtr->prevPtr = nodePtr->prevPtr;
@@ -80,7 +83,7 @@ K_ERR kListInit(K_LIST* const self, STRING listName)
 {
     if (self == NULL)
     {
-        return K_ERR_LIST_NULL_OBJ;
+        return K_ERR_NULL_OBJ;
     }
     /* Initialize the list to be circular by pointing to itself */
     self->listDummy.nextPtr = K_LIST_DUMMY(self);
@@ -88,7 +91,7 @@ K_ERR kListInit(K_LIST* const self, STRING listName)
     self->listName = listName;
     self->size = 0U;
 
-    return K_LIST_SUCCESS;
+    return K_SUCCESS;
 }
 
 K_ERR kListInsertAfter(K_LIST* const self, K_LISTNODE* const refNodePtr,
@@ -96,7 +99,7 @@ K_ERR kListInsertAfter(K_LIST* const self, K_LISTNODE* const refNodePtr,
 {
     if (self == NULL || newNodePtr == NULL || refNodePtr == NULL)
     {
-        return K_ERR_LIST_NULL_OBJ;
+        return K_ERR_NULL_OBJ;
     }
     newNodePtr->nextPtr = refNodePtr->nextPtr;
     refNodePtr->nextPtr->prevPtr = newNodePtr;
@@ -106,7 +109,7 @@ K_ERR kListInsertAfter(K_LIST* const self, K_LISTNODE* const refNodePtr,
     /* Increment the list size */
     self->size += 1;
     __DMB();
-    return K_LIST_SUCCESS;
+    return K_SUCCESS;
 }
 
 /* Remove a node from the list */
@@ -114,7 +117,7 @@ K_ERR kListRemove(K_LIST* const self, K_LISTNODE* const remNodePtr)
 {
     if (self == NULL || remNodePtr == NULL)
     {
-        return K_ERR_LIST_NULL_OBJ;
+        return K_ERR_NULL_OBJ;
     }
     if (self->size==0)
     {
@@ -124,7 +127,7 @@ K_ERR kListRemove(K_LIST* const self, K_LISTNODE* const remNodePtr)
     kListNodeDel_(remNodePtr);
     self->size -= 1;
     __DMB();
-    return K_LIST_SUCCESS;
+    return K_SUCCESS;
 }
 
 
@@ -133,7 +136,7 @@ K_ERR kListRemoveHead(K_LIST* const self, K_LISTNODE** const remNodePPtr)
 {
     if (self == NULL || remNodePPtr == NULL)
     {
-        return K_ERR_LIST_NULL_OBJ;
+        return K_ERR_NULL_OBJ;
     }
 
     /* If the list is empty */
@@ -150,14 +153,14 @@ K_ERR kListRemoveHead(K_LIST* const self, K_LISTNODE** const remNodePPtr)
     /* Decrement the list size */
     self->size -= 1;
     __DMB();
-    return K_LIST_SUCCESS;
+    return K_SUCCESS;
 }
 
 K_ERR kListAddTail(K_LIST* const self, K_LISTNODE* const newNodePtr)
 {
     if (self == NULL || newNodePtr == NULL)
     {
-        return K_ERR_LIST_NULL_OBJ;
+        return K_ERR_NULL_OBJ;
     }
     return kListInsertAfter(self, self->listDummy.prevPtr, newNodePtr);
 }
@@ -166,7 +169,7 @@ K_ERR kListRemoveTail(K_LIST* const self, K_LISTNODE** remNodePPtr)
 {
     if (self == NULL || remNodePPtr == NULL)
     {
-        return K_ERR_LIST_NULL_OBJ;
+        return K_ERR_NULL_OBJ;
     }
     if (K_LIST_IS_EMPTY(self))
     {
@@ -179,5 +182,5 @@ K_ERR kListRemoveTail(K_LIST* const self, K_LISTNODE** remNodePPtr)
     /* Decrement the list size */
     self->size -= 1;
     __DMB();
-    return K_LIST_SUCCESS;
+    return K_SUCCESS;
 }

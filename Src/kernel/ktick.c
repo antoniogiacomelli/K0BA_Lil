@@ -1,11 +1,17 @@
-/*
- * ktick.c
+/*******************************************************************************
  *
- *  Created on: Oct 21, 2024
- *      Author: anton
- */
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]
+ *
+ *******************************************************************************
+ *******************************************************************************
+ * 	In this unit:
+ *
+ * 		o System Tick Management
+ *
+ *******************************************************************************/
 
-#include <kapi.h>
+#define K_CODE
+#include "kapi.h"
 
 TICK kTickGet(void)
 {
@@ -18,7 +24,7 @@ static inline K_ERR kDecTimeSlice_(void);
 static K_ERR kDecTimeSlice_(void)
 {
 
-	if (runPtr->status == RUNNING)
+	if ((runPtr->status == RUNNING) && (runPtr->runToCompl == FALSE))
 	{
 		if (runPtr->busyWaitTime > 0)
 		{
@@ -58,22 +64,22 @@ BOOL kTickHandler(void)
 		runTime.nWraps += 1U;
 	}
 	K_ERR retTimeSlice = kDecTimeSlice_();
+
+	if ((runPtr->status == RUNNING) && (runPtr->runToCompl==TRUE))
+	{
+		if(!kTCBQEnq(&readyQueue[runPtr->priority], runPtr))
+					runPtr->status=READY;
+		return TRUE;
+	}
 	if (retTimeSlice == K_TASK_TSLICE_DUE)
 	{
 		timeSliceDueRet = TRUE;
 	}
-	if ((runPtr->runToCompl == TRUE) && (runPtr->status == RUNNING))
-	{
-		if (kTCBQEnq(&readyQueue[runPtr->priority], runPtr) == K_SUCCESS)
-		{
-			runPtr->status=READY;
-		}
-		runToCompl = TRUE;
-	}
+
 
 	if (dTimOneShotList || dTimReloadList)
 	{
-		kSignal(PID_TIMHANDLER);
+		kSignal(K_DEF_PID_TIMHANDLER);
 		deferRet = TRUE;
 
 	}

@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -8,7 +8,10 @@
  * 					o Critical Regions Enter/Exit
  *
  *****************************************************************************/
-#include <kapi.h>
+#define K_CODE
+
+#include "kapi.h"
+
 
 UINT32 kEnterCR(void)
 {
@@ -27,7 +30,6 @@ UINT32 kEnterCR(void)
 
 void kExitCR(UINT32 crState)
 {
-	asm volatile("DMB");
 	__set_PRIMASK(crState);
-	asm volatile("ISB");
+	asm volatile("DMB");
 }

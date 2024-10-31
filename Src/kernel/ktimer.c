@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]
  *
  ******************************************************************************
  ******************************************************************************
@@ -14,15 +14,17 @@
  *****************************************************************************/
 
 
-#include <kapi.h>
-#include <ksystasks.h>
+#define K_CODE
+#include "kapi.h"
+#include "ksystasks.h"
 
-K_MEM 		 timerMem;
+K_BLOCKPOOL	 timerMem;
 K_TIMER* 	 dTimReloadList=NULL; 		/**< periodic timers */
 K_TIMER*	 dTimOneShotList=NULL;		/**< reload	  timers */
-K_TIMER 	 timerPool[N_TIMERS];
+K_TIMER 	 timerPool[K_DEF_N_TIMERS];
 K_SEMA  	 timerSemaCnt;
 
+#define TIMER_SIZE sizeof(K_TIMER)
 
 static K_ERR kTimerListAdd_(K_TIMER** dTimList, STRING timerName,\
 		TICK tickCount,  CALLBACK funPtr, ADDR argsPtr, BOOL reload);
@@ -31,15 +33,15 @@ static K_ERR kTimerListAdd_(K_TIMER** dTimList, STRING timerName,\
 K_ERR kTimerPoolInit(VOID)
 {
 
-	kSemaInit(&timerSemaCnt, N_TIMERS);
-	return kMemInit(&timerMem, timerPool, TIMER_SIZE, N_TIMERS);
+	kSemaInit(&timerSemaCnt, K_DEF_N_TIMERS);
+	return kBlockPoolInit(&timerMem, (BYTE*)timerPool, TIMER_SIZE, K_DEF_N_TIMERS);
 }
 K_TIMER* kTimerGet(VOID)
 {
 
 	K_TIMER* retValPtr;
 	kMutexLock(&(timerMem.poolMutex));
-	retValPtr = (K_TIMER*)kMemAlloc(&timerMem);
+	retValPtr = (K_TIMER*)kBlockPoolAlloc(&timerMem);
 	kMutexUnlock(&(timerMem.poolMutex));
 	return retValPtr;
 }
@@ -48,7 +50,7 @@ K_ERR kTimerPut(K_TIMER* const self)
 {
 
 	kMutexLock(&(timerMem.poolMutex));
-	if (kMemFree(&timerMem, (ADDR)self) == 0)
+	if (kBlockPoolFree(&timerMem, (ADDR)self) == 0)
 	{
 		kMutexUnlock(&(timerMem.poolMutex));
 		return K_SUCCESS;
@@ -85,7 +87,7 @@ static K_ERR kTimerListAdd_(K_TIMER** selfPtr, STRING timerName, TICK ticks,
 	K_TIMER* newTimerPtr = kTimerGet();
 	if (newTimerPtr == NULL)
 	{
-		return K_ERR_TIMER_GET;
+		return K_ERROR;
 	}
 	newTimerPtr->timerName = timerName;
 	newTimerPtr->dTicks = ticks;
@@ -98,31 +100,29 @@ static K_ERR kTimerListAdd_(K_TIMER** selfPtr, STRING timerName, TICK ticks,
 	{
 
 		*selfPtr = newTimerPtr;
-		return K_TIMER_SUCCESS;
+		return K_SUCCESS;
 	}
 	K_TIMER* currListPtr = *selfPtr;
 	K_TIMER* prevListPtr = NULL;
 
-	/* Traverse the delta list to find the correct position based on relative
+	/* traverse the delta list to find the correct position based on relative
     time*/
 	while (currListPtr != NULL && currListPtr->dTicks
 			< newTimerPtr->dTicks)
 	{
-		// Adjust the relative time
 		newTimerPtr->dTicks -= currListPtr->dTicks;
 		prevListPtr = currListPtr;
 		currListPtr = currListPtr->nextPtr;
 	}
+	/* insert new timer */
+ 	newTimerPtr->nextPtr = currListPtr;
 
-	// Insert the new timer at the correct position
-	newTimerPtr->nextPtr = currListPtr;
-
-	// Adjust the remaining time of the next timer (if any)
-	if (currListPtr != NULL) {
+ 	/* adjust delta */
+ 	if (currListPtr != NULL)
+ 	{
 		currListPtr->dTicks -= newTimerPtr->dTicks;
 	}
-
-	// If the new timer is at the head, update the head pointer
+	/* im the head, here */
 	if (prevListPtr == NULL)
 	{
 		*selfPtr = newTimerPtr;
@@ -131,13 +131,11 @@ static K_ERR kTimerListAdd_(K_TIMER** selfPtr, STRING timerName, TICK ticks,
 	{
 		prevListPtr->nextPtr = newTimerPtr;
 	}
-	return K_TIMER_SUCCESS;
+	return K_SUCCESS;
 }
 static K_TIMER timReloadCpy={0};
 void kTimerHandler(void)
 {
-
-
 
 	if (dTimOneShotList->dTicks > 0)
 		dTimOneShotList->dTicks--;
@@ -148,20 +146,18 @@ void kTimerHandler(void)
 		K_TIMER* expTimerPtr = dTimOneShotList;
 		while (dTimOneShotList != NULL && dTimOneShotList->dTicks == 0)
 		{
-			K_CR_AREA;
-			K_ENTER_CR;
+			/* ... as long there is that tick, tick...*/
 			expTimerPtr = dTimOneShotList;
+			/* ... followed by that bump: */
 			dTimOneShotList->funPtr(dTimOneShotList->argsPtr);
 			kTimerPut(expTimerPtr);
 			dTimOneShotList=dTimOneShotList->nextPtr;
-			K_EXIT_CR;
 		}
 	}
 	K_TIMER* putRelTimerPtr=NULL;
 	while (dTimReloadList->dTicks == 0 && dTimReloadList)
 	{
-		K_CR_AREA;
-		K_ENTER_CR;
+
 		putRelTimerPtr=dTimReloadList;
 		kMemCpy(&timReloadCpy, dTimReloadList, TIMER_SIZE);
 		kTimerPut(putRelTimerPtr);
@@ -170,15 +166,12 @@ void kTimerHandler(void)
 		K_TIMER* insTimPtr = &timReloadCpy;
 		kTimerInit(insTimPtr->timerName, insTimPtr->ticks, insTimPtr->funPtr, \
 				   insTimPtr->argsPtr, insTimPtr->reload);
-		K_EXIT_CR;
 		if (dTimReloadList==NULL)
 		{
 				dTimReloadList=&timReloadCpy;
 				break;
 		}
-
 	}
-
 	return;
 }
 
@@ -200,7 +193,7 @@ static void SleepTimerCbk_(ADDR args)
 	tcbToWakePtr->status=READY;
 }
 K_TCB* sleepTcbPtr = 0;
-void kSleepDelay(TICK const ticks)
+void kSleepDelay(TICK ticks)
 {
 	K_CR_AREA;
 	K_ENTER_CR;
@@ -225,7 +218,7 @@ void kSleepDelay(TICK const ticks)
 	return;
 }
 
-VOID kBusyDelay(TICK const delay)
+VOID kBusyDelay(TICK delay)
 {
 	if (runPtr->busyWaitTime == 0)
 		runPtr->busyWaitTime = delay;

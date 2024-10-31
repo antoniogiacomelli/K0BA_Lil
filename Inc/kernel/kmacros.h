@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -15,8 +15,6 @@
 
 #include <kversion.h>
 
-#define ON     1
-#define OFF    0
 
 /*
  * brief This is the offset w.r.t the top of a stack frame
@@ -40,6 +38,16 @@
 #define R5_OFFSET   15 /* R5 Register offset */
 #define R4_OFFSET   16 /* R4 Register offset */
 
+#define IDLE_STACKSIZE 32
+#define TIMHANDLER_STACKSIZE 32
+
+#define MSGBUFF_SIZE sizeof(K_MESGBUFF)
+#define _N_SYSTASKS      	 2 /*idle task + tim handler*/
+#define NTHREADS			 (K_DEF_N_USRTASKS + _N_SYSTASKS)
+#define TICK_10MS        	(SystemCoreClock/1000)  /**<  Tick period of 10ms */
+#define TICK_5MS        	(SystemCoreClock/2000)  /**< Tick period of 5ms */
+#define TICK_1MS         	(SystemCoreClock/10000) /**<  Tick period of 1ms */
+#define NPRIO       (K_DEF_N_PRIO + 1)
 
 /*
  * brief Macro to get the address of the container structure
@@ -66,10 +74,9 @@
     do { kExitCR(crState); } while(0U)
 /*
  * brief Macro for unused variables
- * param v The unused variable
  */
 #if !defined(UNUSED)
-#define UNUSED(v) (void)v
+#define UNUSED(x) (void)x
 #endif
 
 /* brief Trigger Context Switch */
@@ -130,13 +137,13 @@
  * param nodePtr Pointer to the node
  * param containerType Type of the container
  */
-#define K_GET_TCB_ADDR(nodePtr, containerType) \
+#define K_LIST_GET_TCB_NODE(nodePtr, containerType) \
     K_GET_CONTAINER_ADDR(nodePtr, containerType, tcbNode)
 
 
 
 /*brief Helper macro to get a message buffer from a mesg list */
-#define GET_MSG_BUFFER_FROM_NODE(nodePtr) \
+#define K_LIST_GET_MESGBUFFER_NODE(nodePtr) \
     K_GET_CONTAINER_ADDR(nodePtr, K_MESGBUFF, mesgNode)
 
 
@@ -148,6 +155,7 @@
  */
 #define K_TRAP_PENDSV  \
     do { SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk; } while(0U)
+
 /*
  * brief Software interrupt (trap) for Supervisor Call
  * param N Supervisor call number
@@ -155,6 +163,10 @@
 
 #define K_TRAP_SVC(N)  \
     do { asm volatile ("svc %0" :: "i" (N)); } while(0U)
+
+
+#define K_START_APPLICATION \
+	do { asm volatile ("svc #0"); } while(0U)
 /*
  * brief Enables the system tick
  */
@@ -171,9 +183,7 @@
 */
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
-#ifndef __KVERSION
-#define __KVERSION
-#endif
+
 /*
  * brief Macro to get the version as a string.
  */
@@ -182,8 +192,14 @@
     TOSTRING(VERSION.minor) "." \
     TOSTRING(VERSION.patch)
 
-#endif
-
 /* Timer Reload / Oneshot options */
 #define RELOAD 		1
 #define ONESHOT		0
+
+#if		(K_DEF_TRACE_NO_INFO==ON)
+#define K_TRACE(event) kTrace(event, NULL)
+#else
+#define K_TRACE(event, info) kTrace(event, info)
+#endif
+
+#endif /*K_MACROS_H*/

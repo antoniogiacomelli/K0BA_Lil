@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -10,11 +10,12 @@
  *****************************************************************************/
 
 
-#include <kapi.h>
-#include <ksystasks.h>
+#define K_CODE
+#include "kapi.h"
+#include "ksystasks.h"
 
-UINT32 idleStack[STACKSIZE];
-UINT32 timerHandlerStack[STACKSIZE];
+UINT32 idleStack[IDLE_STACKSIZE];
+UINT32 timerHandlerStack[TIMHANDLER_STACKSIZE];
 
 void IdleTask(void)
 {
@@ -35,6 +36,7 @@ void TimerHandlerTask(void)
 
 		if(dTimOneShotList || dTimReloadList)
 		{
+
 			kTimerHandler();
 		}
 	}

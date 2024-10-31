@@ -1,9 +1,44 @@
-/*
- * ktcbq.c
+/*******************************************************************************
  *
- *  Created on: Oct 21, 2024
- *      Author: anton
- */
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]
+ *
+ *******************************************************************************
+ *******************************************************************************
+ * 	In this unit:
+ *
+ * 		o Task Queues Management
+ *
+ *******************************************************************************
+ * 		  o Ready Queue:
+ * 		  The Ready Queue is a table of FIFO queues. Each index is a priority:
+ *
+ * 		  		[][][][][][][][] <- highest priority tasks queue (0)
+ * 		  		[][][][][][][][]
+ *                     .
+ *                     .
+ *                     .
+ *              [][][][][][][][] <- lowest priority tasks queue (NPRIO-1)
+ *              --------------->
+ *              First-In-Fist-Out
+ *
+ *
+ * 		  o Sleeping Queue:
+ * 		  The Sleeping Queue is a single queue where tasks who SLEEPING them
+ * 		  selves by pending or sleeping are placed. Since they depend on other
+ * 		  tasks to be removed from the queue, and placed on the ready queue, a
+ * 		  single Sleeping Queue is enough.
+ *
+ * 		  Note each semaphore/mutex/condition variable/sleep event has its
+ * 		  dedicated sleeping queue and tasks are removed by the order they
+ * 		  entered. If they were ordered by priority, lower priority tasks
+ * 		  would always starve waiting for a resource.
+ *
+ * 		  Once a higher priority task than the running task is made ready it
+ * 		  will instantly preempt it.
+ *
+ *
+ ******************************************************************************/
+
 
 #define INSTANT_PREEMPT_LOWER_PRIO
 
@@ -15,6 +50,7 @@
  ******************************************************************************/
 
 #include <kapi.h>
+
 K_ERR kTCBQInit(K_TCBQ* const self, STRING listName)
 {
     if (IS_NULL_PTR(self))
@@ -22,10 +58,8 @@ K_ERR kTCBQInit(K_TCBQ* const self, STRING listName)
     	kErrHandler(FAULT_NULL_OBJ);
         return K_ERR_NULL_OBJ;
     }
-
-    return kListInit(self, listName);  // Initialize the list with size tracking
+    return kListInit(self, listName);
 }
-
 
 K_ERR kTCBQEnq(K_TCBQ* const self, K_TCB* const tcbPtr)
 {
@@ -33,26 +67,23 @@ K_ERR kTCBQEnq(K_TCBQ* const self, K_TCB* const tcbPtr)
     {
         return K_ERR_NULL_OBJ;
     }
-
-    return kListAddTail(self, &(tcbPtr->tcbNode));  // Use the generic kListInsert function
+    return kListAddTail(self, &(tcbPtr->tcbNode));
 }
+
 K_ERR kTCBQDeq(K_TCBQ* const self, K_TCB** const tcbPPtr)
 {
     if (self == NULL)
     {
-        assert(0);  // You may want to replace assert with a different error handler
+        assert(0);
     }
-
     K_LISTNODE* dequeuedNodePtr = NULL;
-    K_ERR retVal = kListRemoveHead(self, &dequeuedNodePtr);  // Dequeue the first item
+    K_ERR retVal = kListRemoveHead(self, &dequeuedNodePtr);
 
     if (retVal != K_SUCCESS)
     {
         kErrHandler(FAULT_LIST);
     }
-
-    // Retrieve the TCB from the list head node using the K_GET_CONTAINER_TYPE_PTR macro
-    *tcbPPtr = K_GET_TCB_ADDR(dequeuedNodePtr, K_TCB);
+    *tcbPPtr = K_LIST_GET_TCB_NODE(dequeuedNodePtr, K_TCB);
 
     if (*tcbPPtr == NULL)
     {
@@ -69,35 +100,28 @@ K_ERR kTCBQRem(K_TCBQ* const self, K_TCB** const tcbPPtr)
     {
         return K_ERROR;
     }
-
     K_LISTNODE* dequeuedNodePtr = &((*tcbPPtr)->tcbNode);
-    K_ERR retVal = kListRemove(self, dequeuedNodePtr);  // Remove the specific node
-
+    K_ERR retVal = kListRemove(self, dequeuedNodePtr);
     if (retVal != K_SUCCESS)
     {
         kErrHandler(FAULT_LIST);
         return retVal;
     }
-
-    // Retrieve the TCB from the list head node using the K_GET_CONTAINER_TYPE_PTR macro
-    *tcbPPtr = K_GET_TCB_ADDR(dequeuedNodePtr, K_TCB);
-
+    *tcbPPtr = K_LIST_GET_TCB_NODE(dequeuedNodePtr, K_TCB);
     if (*tcbPPtr == NULL)
     {
         kErrHandler(FAULT_TCB_NULL);
         return K_ERR_NULL_OBJ;
     }
-
     return K_SUCCESS;
 }
-// Peek the first element in the queue
+
 K_TCB* kTCBQPeek(K_TCBQ* const self)
 {
     if (self == NULL || self->listDummy.nextPtr == &(self->listDummy))
     {
-        return NULL;  // Return NULL if the list is empty
+        return NULL;
     }
-
     K_LISTNODE* nodePtr = self->listDummy.nextPtr;
     return K_GET_CONTAINER_ADDR(nodePtr, K_TCB, tcbNode);
 }
@@ -106,14 +130,14 @@ K_TCB* kTCBQSearchPID(K_TCBQ* const self, PID uPid)
 {
 	if (self == NULL || self->listDummy.nextPtr == &(self->listDummy))
     {
-	        return NULL;
+		return NULL;
     }
 	else
 	{
 		K_LISTNODE* currNodePtr = K_LIST_HEAD(self);
 		while(currNodePtr != &(self->listDummy))
 		{
-			K_TCB* currTcbPtr = K_GET_TCB_ADDR(currNodePtr, K_TCB);
+			K_TCB* currTcbPtr = K_LIST_GET_TCB_NODE(currNodePtr, K_TCB);
 			if (currTcbPtr->uPid == uPid)
 			{
 				return currTcbPtr;
@@ -124,8 +148,6 @@ K_TCB* kTCBQSearchPID(K_TCBQ* const self, PID uPid)
 	return NULL;
 }
 
-
-// Enqueue task to the ready queue
 K_ERR kReadyQEnq(K_TCB* const tcbPtr)
 {
 	K_CR_AREA;
@@ -146,21 +168,19 @@ K_ERR kReadyQEnq(K_TCB* const tcbPtr)
 		if (READY_HIGHER_PRIO(tcbPtr))
 		{
 			K_PEND_CTXTSWTCH;
-			K_EXIT_CR;
 		}
 #endif
+		K_EXIT_CR;
 		return K_SUCCESS;
 	}
 	K_EXIT_CR;
 	return K_ERROR;
 }
 
-// Dequeue task from the ready queue
 K_ERR kReadyQDeq(K_TCB** const tcbPPtr, PRIO priority)
 {
 	if (kTCBQDeq(&readyQueue[priority], tcbPPtr) == K_SUCCESS)
 	{
-
 		return K_SUCCESS;
 	}
 	else
@@ -168,5 +188,4 @@ K_ERR kReadyQDeq(K_TCB** const tcbPPtr, PRIO priority)
 		kErrHandler(FAULT_TCB_NULL);
 		return K_ERROR;
 	}
-
 }

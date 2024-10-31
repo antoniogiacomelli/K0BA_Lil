@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -13,24 +13,24 @@
  *
  *****************************************************************************/
 
-#include <kapi.h>
 
-K_MEM   		 mesgBuffMem; 			 /* global mesg pool control block */
-K_MESGBUFF	  	 mesgBuffPool[N_MSGBUFF]; /* global mesg pool */
-K_SEMA			 semaMesgCntr;
+#define K_CODE
+#include "kapi.h"
 
-
-
+#if (K_DEF_MESGQ==ON)
 /*****************************************************************************
  *
  * MESSAGE POOL
  *
  ****************************************************************************/
+K_BLOCKPOOL       mesgBuffMem; 			 /* global mesg pool control block */
+K_MESGBUFF	  	 mesgBuffPool[K_DEF_N_MESGBUFF]; /* global mesg pool */
+K_SEMA			 semaMesgCntr;
 
 K_ERR kMesgBuffPoolInit(VOID)
 {
-	K_ERR retVal = kMemInit(&mesgBuffMem, mesgBuffPool, MSGBUFF_SIZE, N_MSGBUFF);
-	kSemaInit(&semaMesgCntr, N_MSGBUFF);
+	K_ERR retVal = kBlockPoolInit(&mesgBuffMem, mesgBuffPool, MSGBUFF_SIZE, K_DEF_N_MESGBUFF);
+	kSemaInit(&semaMesgCntr, K_DEF_N_MESGBUFF);
 	return retVal;
 }
 
@@ -39,7 +39,7 @@ K_MESGBUFF* kMesgBuffGet()
 	K_CR_AREA;
 	K_ENTER_CR;
 	kSemaWait(&semaMesgCntr);
-	K_MESGBUFF* mesgPtr = kMemAlloc(&mesgBuffMem);
+	K_MESGBUFF* mesgPtr = kBlockPoolAlloc(&mesgBuffMem);
 	K_EXIT_CR;
 	return mesgPtr;
 }
@@ -49,7 +49,7 @@ K_ERR kMesgBuffPut(K_MESGBUFF* const self)
 
 	K_CR_AREA;
 	K_ENTER_CR;
-	if (!kMemFree(&mesgBuffMem, (ADDR)self))
+	if (!kBlockPoolFree(&mesgBuffMem, (ADDR)self))
 	{
 		kSemaSignal(&semaMesgCntr);
 		K_EXIT_CR;
@@ -59,71 +59,6 @@ K_ERR kMesgBuffPut(K_MESGBUFF* const self)
 	return K_ERROR;
 }
 
-
-/******************************************************************************
- *
- * INDIRECT MAILBOX WITH EXTENDED RENDEZVOUS
- *
- ****************************************************************************/
-K_ERR kMailboxInit(K_MAILBOX* const self)
-{
-	if (IS_NULL_PTR(self))
-		kErrHandler(FAULT_NULL_OBJ);
-	K_CR_AREA;
-	K_ENTER_CR;
-	if (IS_NULL_PTR(self))
-	{
-		kErrHandler(FAULT_NULL_OBJ);
-		K_EXIT_CR;
-		return K_ERROR;
-	}
-	assert(!kMutexInit(&(self->mutex))); /* data init as free to access */
-	assert(!kSemaInit(&(self->semaEmpty), 1)); /* mailbox init as empty */
-	assert(!kSemaInit(&(self->semaFull), 0));  /* mailbox init not full */
-#if (K_CONF_MAILBOX_ACK==ON)
-	assert(!kSemaInit(&(self->semaAck), 0));
-#endif
-	K_EXIT_CR;
-	return K_SUCCESS;
-}
-K_ERR kMailboxPost(K_MAILBOX* self, const ADDR mesgPtr, SIZE mesgSize)
-{
-	if (IS_NULL_PTR(self) || IS_NULL_PTR(mesgPtr))
-		kErrHandler(FAULT_NULL_OBJ);
-
-	assert(!kSemaWait(&self->semaEmpty)); /*D EMPTY*/
-	assert(!kMutexLock(&self->mutex));
-	K_CR_AREA;
-	K_ENTER_CR;
-	kMemCpy((ADDR)&self->mail.mesgPtr, mesgPtr, mesgSize);
-	self->mail.senderTid = runPtr->uPid;
-	self->mail.mesgSize = mesgSize;
-	K_EXIT_CR;
-	kMutexUnlock(&self->mutex);
-	kSemaSignal(&self->semaFull);
-	kSemaWait(&self->semaAck);
-	/*D ACK*/
-	return K_SUCCESS;
-}
-
-PID kMailboxPend(K_MAILBOX* const self, ADDR rcvdMesgPtr)
-{
-	if (IS_NULL_PTR(self) || IS_NULL_PTR(rcvdMesgPtr))
-		kErrHandler(FAULT_NULL_OBJ);
-	kSemaWait(&self->semaFull);
-	kSemaSignal(&self->semaAck); /*U ACK */
-	kMutexLock(&self->mutex);
-	K_CR_AREA;
-	K_ENTER_CR;
-	kMemCpy(rcvdMesgPtr, (ADDR)&self->mail.mesgPtr, self->mail.mesgSize);
-	kMutexUnlock(&self->mutex);
-	kSemaSignal(&self->semaEmpty);
-	K_EXIT_CR;
-#if(K_CONF_MAILBOX_ACK == ON)
-	return  self->mail.senderTid;
-#endif
-
-}
 /****************************************************************************
  *
  * INDIRECT BLOCKING MESSAGE QUEUE
@@ -138,11 +73,9 @@ VOID kMesgQInit(K_MESGQ* const self, ADDR mesgPoolPtr, BYTE queueSize,
 	assert(kSemaInit(&(self->semaItem), 0) == K_SUCCESS);
 	assert(kMutexInit(&(self->mutex)) == K_SUCCESS);
 	assert(kListInit(&self->mesgList, "MesgList") == K_SUCCESS);
-	kSemaInit(&self->semaRoom, queueSize);
-	kMemInit(&(self->mesgMemCtrlBlk), (ADDR)mesgPoolPtr, (BYTE)mesgSize,
-			queueSize);
-
-
+	assert(kSemaInit(&self->semaRoom, queueSize) == K_SUCCESS);
+	assert(kBlockPoolInit(&(self->mesgMemCtrlBlk), (ADDR)mesgPoolPtr, (BYTE)mesgSize,
+			queueSize)==K_SUCCESS);
 	K_EXIT_CR;
 }
 
@@ -155,9 +88,12 @@ K_ERR kMesgQPut(K_MESGQ* const self, ADDR mesgPtr, BYTE mesgSize)
 	K_CR_AREA;
 	K_ENTER_CR;
 	K_MESGBUFF* mesgBuffPtr = kMesgBuffGet();
-	mesgBuffPtr->mesgPtr = (ADDR)kMemAlloc(&self->mesgMemCtrlBlk);
+	mesgBuffPtr->mesgPtr = (ADDR)kBlockPoolAlloc(&self->mesgMemCtrlBlk);
 	if (mesgBuffPtr->mesgPtr == NULL)
-		assert(0);
+	{
+		K_EXIT_CR;
+		return K_ERR_MEM_ALLOC;
+	}
 	kMemCpy((ADDR)mesgBuffPtr->mesgPtr, mesgPtr, mesgSize);
 	mesgBuffPtr->senderTid = runPtr->uPid;
 	mesgBuffPtr->mesgSize = mesgSize;
@@ -178,10 +114,10 @@ PID kMesgQGet(K_MESGQ* const self, ADDR rcvdMesgPtr)
 	K_ENTER_CR;
 	K_LISTNODE* nodePtr;
 	kListRemoveHead(&self->mesgList, &nodePtr);
-	K_MESGBUFF* mesgBuffPtr =  GET_MSG_BUFFER_FROM_NODE(nodePtr);
+	K_MESGBUFF* mesgBuffPtr =  K_LIST_GET_MESGBUFFER_NODE(nodePtr);
 	kMemCpy(rcvdMesgPtr, (ADDR)mesgBuffPtr->mesgPtr, mesgBuffPtr->mesgSize);
 	PID senderPid = mesgBuffPtr->senderTid;
-	assert(!(kMemFree(&self->mesgMemCtrlBlk,  mesgBuffPtr->mesgPtr)));
+	assert(!(kBlockPoolFree(&self->mesgMemCtrlBlk,  mesgBuffPtr->mesgPtr)));
 	kMesgBuffPut(mesgBuffPtr);
 	K_EXIT_CR;
 	kMutexUnlock(&(self->mutex));
@@ -190,10 +126,85 @@ PID kMesgQGet(K_MESGQ* const self, ADDR rcvdMesgPtr)
 	return senderPid;
 }
 
+#endif /*K_DEF_MESGQ*/
 
+#if (K_DEF_MAILBOX==ON)
 /******************************************************************************
  *
- * PIPE/FIFO
+ * INDIRECT MAILBOX
+ *
+ ****************************************************************************/
+
+K_ERR kMailboxInit(K_MAILBOX* const self)
+{
+	if (IS_NULL_PTR(self))
+		kErrHandler(FAULT_NULL_OBJ);
+	K_CR_AREA;
+	K_ENTER_CR;
+	if (IS_NULL_PTR(self))
+	{
+		kErrHandler(FAULT_NULL_OBJ);
+		K_EXIT_CR;
+		return K_ERROR;
+	}
+
+	assert(!kMutexInit(&(self->mutex))); /* data init as free to access */
+	assert(!kSemaInit(&(self->semaEmpty), 1)); /* mailbox init as empty */
+	assert(!kSemaInit(&(self->semaFull), 0));  /* mailbox init not full */
+#if (K_DEF_MAILBOX_ACK==ON)
+	assert(!kSemaInit(&(self->semaAck), 0));
+#endif
+	self->mail.mailPtr = &(self->mail.mail[0]);
+	K_EXIT_CR;
+	return K_SUCCESS;
+}
+K_ERR kMailboxPost(K_MAILBOX* self, const ADDR mesgPtr, SIZE mesgSize)
+{
+	if (IS_NULL_PTR(self) || IS_NULL_PTR(mesgPtr))
+		kErrHandler(FAULT_NULL_OBJ);
+	assert(!kSemaWait(&self->semaEmpty)); /*D EMPTY*/
+	assert(!kMutexLock(&self->mutex));
+	K_CR_AREA;
+	K_ENTER_CR;
+	kMemCpy(self->mail.mailPtr, mesgPtr, mesgSize);
+	self->mail.senderTid = runPtr->uPid;
+	self->mail.mesgSize = mesgSize;
+	K_EXIT_CR;
+	kMutexUnlock(&self->mutex);
+	kSemaSignal(&self->semaFull);
+	kSemaWait(&self->semaAck);
+	/*D ACK*/
+	return K_SUCCESS;
+}
+
+PID kMailboxPend(K_MAILBOX* const self, ADDR rcvdMesgPtr)
+{
+	if (IS_NULL_PTR(self) || IS_NULL_PTR(rcvdMesgPtr))
+		kErrHandler(FAULT_NULL_OBJ);
+	kSemaWait(&self->semaFull);
+	kSemaSignal(&self->semaAck); /*U ACK */
+	kMutexLock(&self->mutex);
+	K_CR_AREA;
+	K_ENTER_CR;
+	ADDR retAdrr = kMemCpy(rcvdMesgPtr, self->mail.mailPtr, self->mail.mesgSize);
+	if (retAddr==NULL)
+	{
+		return K_ERROR;
+	}
+	kMutexUnlock(&self->mutex);
+	kSemaSignal(&self->semaEmpty);
+	K_EXIT_CR;
+#if(K_DEF_MAILBOX_ACK == ON)
+	return  self->mail.senderTid;
+#endif
+
+}
+#endif /*(K_DEF_MAILBOX)*/
+
+#if (K_DEF_PIPE==ON)
+/******************************************************************************
+ *
+ * PIPES
  *
  ******************************************************************************/
 
@@ -203,7 +214,7 @@ VOID kPipeInit(K_PIPE* const self)
 		kErrHandler(FAULT_NULL_OBJ);
 	self->head=0;
 	self->tail=0;
-	self->room=PIPE_SIZE;
+	self->room=K_DEF_PIPE_SIZE;
 	self->data=0;
 	kMutexInit(&(self->mutex));
 	kCondInit(&(self->condData));
@@ -224,7 +235,7 @@ INT32 kPipeRead(K_PIPE* const self, BYTE* destPtr, UINT32 nBytes)
 		while(self->data)  /* while there is data */
 		{
 			*destPtr++ = self->buffer[self->tail++]; /* read from the tail  */
-			self->tail %= PIPE_SIZE;  /* wrap around 	    */
+			self->tail %= K_DEF_PIPE_SIZE;  /* wrap around 	    */
 			self->data--;		  /* decrease data	    */
 			self->room++;		  /* increase room	    */
 			readBytes++;		  /* increase read bytes */
@@ -261,7 +272,7 @@ INT32 kPipeWrite(K_PIPE* const self, const BYTE* srcPtr, UINT32 nBytes)
 		while(self->room)  /* while there is room */
 		{
 			self->buffer[self->head++] = *srcPtr;
-			self->head %= PIPE_SIZE;
+			self->head %= K_DEF_PIPE_SIZE;
 			self->data++;
 			self->room--;
 			writeBytes++;
@@ -285,7 +296,13 @@ INT32 kPipeWrite(K_PIPE* const self, const BYTE* srcPtr, UINT32 nBytes)
 	}
 	return 0;
 }
+#endif /*K_DEF_PIPES*/
 
+/******************************************************************************
+ *
+ * FIFOS
+ *
+ ******************************************************************************/
 K_ERR kFifoInit(K_FIFO* const self)
 {
 	if (IS_NULL_PTR(self))
@@ -295,16 +312,16 @@ K_ERR kFifoInit(K_FIFO* const self)
 	}
 	self->head = 0;
 	self->tail = 0;
-	kSemaInit(&self->semaRoom, FIFO_SIZE);
+	kSemaInit(&self->semaRoom, K_DEF_FIFO_SIZE);
 	kSemaInit(&self->semaItem, 0);
 	kMutexInit(&self->mutex);
-	for (SIZE idx=0; idx<FIFO_SIZE; ++idx)
+	for (SIZE idx=0; idx<K_DEF_FIFO_SIZE; ++idx)
 		self->buffer[idx] = 0;
 
 	return K_SUCCESS;
 }
 
-K_ERR kFifoPut(K_FIFO* const self, BYTE data)
+K_ERR kFifoPut(K_FIFO* self, BYTE data)
 {
 	if (IS_NULL_PTR(self))
 	{
@@ -314,12 +331,12 @@ K_ERR kFifoPut(K_FIFO* const self, BYTE data)
 	kSemaWait(&self->semaRoom);
 	kMutexLock(&self->mutex);
 	self->buffer[self->head] = data; /* put on head */
-	self->head = (self->head + 1) % FIFO_SIZE;
+	self->head = (self->head + 1) % K_DEF_FIFO_SIZE;
 	kMutexUnlock(&self->mutex);
 	kSemaSignal(&self->semaItem);
 	return K_SUCCESS;
 }
-BYTE kFifoGet(K_FIFO* const self)
+BYTE kFifoGet(K_FIFO* self)
 {
 	if (IS_NULL_PTR(self))
 	{
@@ -329,7 +346,7 @@ BYTE kFifoGet(K_FIFO* const self)
 	kSemaWait(&self->semaItem);
 	kMutexLock(&self->mutex);
 	data = self->buffer[self->tail]; /* get from tail */
-	self->tail = (self->tail + 1) % FIFO_SIZE;
+	self->tail = (self->tail + 1) % K_DEF_FIFO_SIZE;
 	kMutexUnlock(&self->mutex);
 	kSemaSignal(&self->semaRoom);
 	return data;

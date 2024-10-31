@@ -1,13 +1,13 @@
  /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]
  *
  ******************************************************************************/
 
 /**
  * \file     kapi.h
  * \brief    Kernel API
- * \version  0.1.0
+ * \version  1.1.0
  * \author   Antonio Giacomelli
  *
  *
@@ -19,7 +19,7 @@
  * |                 API                    | this file
  * |----------------------------------------|--
  * |                                        |
- * |             K0BA KERNEL                | kobjs.h k*.c
+ * |             K0BA KERNEL                | k*.h k*.c
  * |________________________________________|--
  * |                                        |
  * |        BOARD SUPPORT PACKAGE           |
@@ -31,45 +31,45 @@
  * This is the kernel API to be included within any application
  * development. It provides methods to access the kernel services.
  *
- * Every kernel primitive is on UPPERCASE. If preceded by a K_ it is
- * kernel data structure (e.g. K_SEMA is a semaphore).
+ * Every kernel primitive is on UPPERCASE. If preceded by a K_ it is a
+ * kernel data structure (e.g. K_SEMA is a semaphore) or an enumarated
+ * typedef.
+ *
  * If not, it is an alias for standard C data or data pointer (e.g., BYTE,
  * INT32, ADDR, STRING: respectively, unsigned char, int, void* and const char*)
- * or rresents system data that is not a structure itself:
- * (e.g., PRIO for priority, TID for task ID.
+ * or represents system data that is not a structure itself:
+ * (e.g., PRIO for priority, TID for task ID.)
  *
  * A typical kernel service often receives a pointer to a kernel
- * object or a kernel parameter -  If it does not, it either acts on a
- * (2) singleton object (3) and/or on the (4) caller itself.
+ * object (typically 'K_TYPE* const self'. (1) If it does not,
+ * it either acts onsingleton object (2) and/or on the (3) caller itself.
  *
  *  E.g., (1) kSemaWait(SEMA const* self): decreases a counter semaphore.
  *        (2) kSleepDelay(): there is a single list of timers dedicated for
  *                           keeping track of sleeping tasks.
- *        (3) kSignal(TID id): direct signals  task. Every task is assigned an
+ *            kSignal(TID id): direct signals a task. Every task is assigned an
  *        	  unique ID.
- *        (4) kYield(): caller task is suspended
+ *        (3) kYield(): caller task is SLEEPING
  *
  *\endverbatim
  *
  ******************************************************************************
-
  */
-
-
-#ifndef INC_K_API_H_
-#define INC_K_API_H_
-/* PLACE YOUR CMSIS HAL AND BSP HERE */
-#include <cmsis_gcc.h>
-#include <stdio.h>
-#include <assert.h>
-#include <kmacros.h>
-#include <kconfig.h>
-#include <ktypes.h>
-#include <kobjs.h>
-#include <klist.h>
-#include <kerr.h>
-#include <kglobals.h>
-#include <ksch.h>
+#ifndef K_API_H
+#define K_API_H
+/*--------------------------------*/
+/*Include ARM GCC, ARM CMSIS-CORE */
+/*dependencies here				  */
+/*--------------------------------*/
+#include "kmacros.h"
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
+#include "kglobals.h"
+#include "klist.h"
+#include "kerr.h"
+#include "ksch.h"
+#include "kcheck.h"
 
 /******************************************************************************/
 /******************************************************************************/
@@ -80,10 +80,10 @@
  * \brief Create a new task with time-slice scheduling
  * \param taskFuncPtr Pointer to the task function
  * \param taskName Task name
- * \param id Task ID
+ * \param id user-defined Task ID - valid range: 1-254
  * \param stackAddrPtr Pointer to the task stack
- * \param stackSize Size of the task stack
- * \param timeSlice Time-slice for the task
+ * \param stackSize Size of the task stack (in WORDS!)
+ * \param timeSlice Time-slice for the task (only effective if greater than 1)
  * \param priority Task priority
  * \param runToCompl Cooperative only function, to use in deferred handlers,
  * 				  	   servers - once dispatched it is never preempted unless
@@ -91,11 +91,8 @@
  * \return K_SUCCESS on success, K_ERROR on failure
  */
 K_ERR kCreateTask(const TASKENTRY taskFuncPtr, STRING taskName,
-		const PID id,	UINT32* const stackAddrPtr, const UINT32 stackSize,
+		const TID id,	UINT32* const stackAddrPtr, const UINT32 stackSize,
 		const TICK timeSlice, const PRIO priority, const BOOL runToCompl);
-
-
-
 
 /******************************************************************************/
 /******************************************************************************/
@@ -144,7 +141,7 @@ K_ERR kSemaSignal(K_SEMA* const self);
 /**
  *\brief Init a mutex
  *\param self mutex address
- *\return SUCCESS/FAIL
+ *\return K_SUCCESS / K_ERROR
  */
 
 K_ERR kMutexInit(K_MUTEX* const self);
@@ -152,14 +149,14 @@ K_ERR kMutexInit(K_MUTEX* const self);
 /**
  *\brief Lock a mutex
  *\param self mutex address
- *\return K_SUCCESS / K_ERROR
+ *\return K_SUCCESS or a specific error
  */
 K_ERR kMutexLock(K_MUTEX* const self);
 
 /**
  *\brief Unlock a mutex
  *\param self mutex address
- *\return SUCCESS/FAIL
+ *\return K_SUCCESS or a specific error
  */
 K_ERR kMutexUnlock(K_MUTEX* const self);
 
@@ -169,26 +166,6 @@ K_ERR kMutexUnlock(K_MUTEX* const self);
 /* MESSAGE QUEUE															  */
 /*																			  */
 /******************************************************************************/
-
-
-/**
- *\brief Initialise the mesg buffer memory pool
- *\return K_SUCCESS/K_ERROR
- */
-K_ERR kMesgBuffPoolInit(VOID);
-/**
- *\brief Get a mesg buffer from the mesg buffer memory pool
- *\return Mesg Buffer address if successful, NULL if fails
- */
-K_MESGBUFF* kMesgBuffGet(VOID);
-
-/**
- *\brief Returns a mesg buffer to the mesg buffer memory pool
- *\param self Mesg Buffer address
- *\return K_SUCCESS/K_ERROR
- */
-K_ERR kMesgBuffPut(K_MESGBUFF* const self);
-
 
 
 /**
@@ -243,10 +220,16 @@ K_ERR kMailboxPost(K_MAILBOX* const self, const ADDR mesgPtr, SIZE mesgSize);
 /**
  *\brief Retrieves a message from a mailbox
  *\param self Address of a mailbox structure
- *\param rcvdMesgPtr Address that will store the received mesg address
- *\retval Sender's PID. -1 if fails.
+ *\param mailPPtr Pointer-to-pointer to variable that will store the received
+ *\				  mail
+ *\param sizePtr  Address of the variable to store the mail size. You can
+ *				  pass 'NULL' if you sure wha is the size. (Default size is
+ *				  4 bytes)
+ *\retval Sender's TID. -1 if fails.
  */
-PID kMailboxPend(K_MAILBOX* const self, ADDR rcvdMesgPtr);
+TID kMailboxPend(K_MAILBOX* const self, ADDR* mailPPtr, SIZE* sizePtr);
+
+#if (K_DEF_COND==ON)
 /*****************************************************************************
  *
  * CONDITION VARIABLE
@@ -256,9 +239,9 @@ PID kMailboxPend(K_MAILBOX* const self, ADDR rcvdMesgPtr);
 /**
  * \brief Initialises a condition variable.
  * \param self Condition variable address
- * \retval none
+ * \retval K_SUCCESS/K_ERROR
  */
-VOID kCondInit(K_COND* const self);
+K_ERR kCondInit(K_COND* const self);
 
 /**
  * \brief Wait on a condition variable.
@@ -276,13 +259,17 @@ VOID kCondWait(K_COND* const self);
 VOID kCondSignal(K_COND* const self);
 
 /**
- * \brief Signal a condition variable,
+ * \brief Broad cast signal a condition variable
  * releasing all queued tasks.
  * \param self Condition variable address.
  * \return none
  */
 VOID kCondWake(K_COND* const self);
 
+#endif /* K_DEF_COND */
+
+
+#if (K_DEF_PIPE==ON)
 /******************************************************************************/
 /*																			  */
 /* PIPES																	  */
@@ -313,6 +300,8 @@ INT32 kPipeRead(K_PIPE* const self, BYTE* destPtr, UINT32 nBytes);
 */
 INT32 kPipeWrite(K_PIPE* const self, const BYTE* srcPtr, UINT32 nBytes);
 
+
+#endif /*K_DEF_PIPES*/
 /**
  * \brief Initialise Simple thread-safe FIFO
  * \param self FIFO address
@@ -372,44 +361,26 @@ K_ERR kSleep(K_EVENT* const self);
  ******************************************************************************/
 /**
  * \brief Initialises an application timer
+ * \param timerName a STRING (const char*) label for the timer
  * \param ticks initial tick count
  * \param funPtr The callback when timer expires
  * \param argsPtr Address to callback function arguments
  * \param reload TRUE for reloading after timer-out. FALSE for an one-shot
  * \return K_SUCCESS/K_ERROR
  */
-
-
 K_ERR kTimerInit(STRING timerName, TICK ticks, CALLBACK funPtr, ADDR argsPtr,
 				 BOOL reload);
 
 /**
- * \brief Initialises the application timer pool
- * \return K_SUCCESS/K_ERROR
- */
-K_ERR kTimerPoolInit(VOID);
-
-/**
- * \brief Put a timer back into the timer pool
- * \param self Pointer to the timer
- * \return K_SUCCESS on success, K_ERROR on failure
- */
-K_ERR kTimerPut(K_TIMER* const self);
-
-/**
- * \brief Get a timer from the timer pool
- * \return K_SUCCESS on success, K_ERROR on failure
- */
-K_TIMER* kTimerGet(VOID);
-
-/**
- * \brief Busy-wait the task for a specified delay in ticks
+ * \brief Busy-wait the task for a specified delay in ticks.
+ *        Task does not suspend.
  * \param delay The delay time in ticks
  */
 VOID kBusyDelay(TICK const delay);
 
 /**
- * \brief Puts the current task to sleep for a number of ticks
+ * \brief Put the current task to sleep for a number of ticks.
+ *        Task switches to SLEEPING state.
  * \param ticks Number of ticks to sleep
  */
 VOID kSleepDelay(TICK const ticks);
@@ -420,7 +391,7 @@ VOID kSleepDelay(TICK const ticks);
 
 /*******************************************************************************
  *
- * MEMORY POOL
+ * BLOCK MEMORY POOL
  *
  ******************************************************************************/
 
@@ -434,7 +405,7 @@ VOID kSleepDelay(TICK const ticks);
  * \param numBlocks Number of blocks
  * \return K_ERROR/K_SUCCESS
  */
-K_ERR kMemInit(K_MEM* const self, ADDR const memPoolPtr, BYTE const blkSize,
+K_ERR kBlockPoolInit(K_BLOCKPOOL* const self, ADDR const memPoolPtr, BYTE blkSize, \
 		const BYTE numBlocks);
 
 /**
@@ -442,7 +413,7 @@ K_ERR kMemInit(K_MEM* const self, ADDR const memPoolPtr, BYTE const blkSize,
  * \param self Pointer to the block pool
  * \return Pointer to the allocated block, or NULL on failure
  */
-ADDR kMemAlloc(K_MEM* const self);
+ADDR kBlockPoolAlloc(K_BLOCKPOOL* const self);
 
 /**
  * \brief Free a memory block back to the block pool
@@ -450,16 +421,149 @@ ADDR kMemAlloc(K_MEM* const self);
  * \param blockPtr Pointer to the block to free
  * \return Pointer to the allocated memory. NULL on failure.
  */
-K_ERR kMemFree(K_MEM* const self, ADDR const blockPtr);
+K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr);
+
+
+/*******************************************************************************
+*
+* BYTE MEMORY POOL
+*
+******************************************************************************/
 
 /**
- ******************************************************************************
+*
+* \details
+*
+* Le heap, c'est chic...
+*
+* About BYTE POOLS.
+*
+* It is hard to find a trade-off for byte pools - a random chunk of bytes the
+* application can allocate and deallocate.
+* A more safer version, with meta-data is counter-productive,  given you need
+* a record (a struct) to keep track every of itsy bitsy weenie BYTE.
+* In very constrained applications, it is also a bit hard to deem a situation
+* that cannot be circumvented using either by a fixed-size pool or by -
+* the safest choice by far - a static memory allocation.
+*
+* So, it is up to application programmer to diminish the hazards by:
+*
+*  o Do Not allocate and deallocate randomly. You got no UNIX here, son.
+*    It's hardcore emBedded \m/
+*
+*  o TAKE THE OATH BEFORE THIS KERNEL:
+*    - to allocate, use, and free the EXACTLY size for each chunk you
+*      requested. In this order.
+*
+*  o If you write out of the boundaries you have allocated - too sad, too bad
+*    end of story.
+*
+*  o Check for NULL returns. Take a look on the pool. If it is too fragmented
+*    so you won't find a contiguous chunk the size you need, you are
+*    better off reinitialising the pool.
+*
+*  o The IDEAL use:
+*    - allocate and deallocate *multiples* of the pool size.
+*    - do it on unidirectional manner, just as you would do with
+*      synchronisation to avoid a 'deadlock'.
+*
+* \verbatim
+*
+* - - DEPICTION - -
+*
+* You associate a pool (an array) of BYTEs to a BYTE POOL CONTROL BLOCK
+* (K_BYTEPOOL)
+*
+* * - allocated byte
+* | free byte
+* x sentinel
+*
+* o INITIALISATION:
+*
+* [||||||||||||||||||||||||||||||||||||||x]
+*  ^freelist
+* [------------- poolSize-1--------------)
+*
+*
+* o ALLOCATION:
+*
+* - allocated byte
+* | free byte
+* x sentinel
+*
+* Pool before allocation::
+* [-----|||||||||||||||||||||||||||||||||x]
+*       ^freelist
+*
+* Size Requested by application: ||||||
+*
+* Pool after allocation:
+*
+* [----------||||||||||||||||||||||||||||x]
+*       -----^freeList updated
+*       |
+*       returned ADDR
+*
+* o FREE:
+* Returns to the pool a chunk of bytes
+*
+* Fragmented Pool
+*   [-------||---||||||||||||||||||||||||||x]
+*      ^ Application asks to free: ||||
+*
+* After Freeing:
+*   [--||||-||---||||||||||||||||||||||||||x]
+*      ^..·.^·...^
+*      freeList
+*
+* After Merging Adjacent Free Block:
+*   [--||||||----||||||||||||||||||||||||||x]
+*      ^....·....^
+*      freeList
+*  \endverbatim
+*******************************************************************************/
+
+
+#if (K_DEF_BYTEPOOL==ON)
+
+/**
+ * \brief Initialises a Byte pool control block.
+ * \param self Pointer to the byte pool control block
+ * \param memPool The memory to be associated to this Control Block
+ * \param poolSize Pool size. MAX: 255 bytes
+ * \return K_SUCCESS or K_ERR_MEM_INIT
+ */
+K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize);
+/**
+ * \brief Allocates a chunk of bytes from a byte pool
+ * \param self Pointer to the Byte Pool Control Block associated
+ *             to a byte pool
+ * \param size Number of required bytes + 1
+ * \return ADDRess of the byte chunk. NULL when failure allocating.
+ */
+ADDR kBytePoolAlloc(K_BYTEPOOL* const self, BYTE const size);
+
+/**
+ * \brief Deallocates a chunk of bytes (give it back to the pool)
+ * \param self Pointer to the Byte Pool Control Block associated
+ *             to a byte pool
+ * \param chunkPtr Address of the chunk
+ * \param size     Chunk size. Be sure to free the same number
+ *                 of you bytes you allocated.
+ * \return K_SUCCESS / K_ERR_MEM_FREE / K_ERR_MEM_INVALID_ADDR
+ */
+K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, \
+		BYTE const size);
+
+
+#endif /*K_DEF_BYTEPOOL*/
+/******************************************************************************
  *
  * TRACER
  *
  ******************************************************************************/
-#if (K_CONF_TRACER == ON)
-void kTraceInit();
+#if (K_DEF_TRACER == ON)
+VOID kTraceInit(VOID);
 K_ERR kTrace(K_TRACEID event, CHAR* info);
 #endif
 
@@ -476,7 +580,7 @@ K_ERR kTrace(K_TRACEID event, CHAR* info);
 TID kGetTaskPID(TID const taskID);
 /**
  * \brief Gets a task priorirty
- * \param taskID Task user-defined ID
+ * \param taskID user-defined Task ID
  */
 PRIO kGetTaskPrio(TID const taskID);
 /**
@@ -506,4 +610,4 @@ ADDR kMemCpy(ADDR destPtr, const ADDR srcPtr, SIZE size);
 /******************************************************************************/
 
 
-#endif /* INC_K_API_H_ */
+#endif /* K_API_H */

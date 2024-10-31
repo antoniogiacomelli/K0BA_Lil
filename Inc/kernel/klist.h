@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.1.0]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -10,13 +10,13 @@
  *****************************************************************************/
 
 
-#ifndef INC_KLIST_H_
-#define INC_KLIST_H_
+#ifndef INC_KLIST_H
+#define INC_KLIST_H
 
 /*
  *  Initialize a linked list
  * param self Pointer to the list
- * return K_LIST_SUCCESS on success, K_ERR_LIST_FAIL on failure
+ * return K_SUCCESS on success, K_ERROR on failure
  */
 K_ERR kListInit(K_LIST* const self, STRING listName);
 
@@ -25,7 +25,7 @@ K_ERR kListInit(K_LIST* const self, STRING listName);
  * param self Pointer to the list
  * param refNodePtr Reference node
  * param remNodePPtr Pointer to the node to be removed
- * return K_LIST_SUCCESS on success, K_ERR_LIST_FAIL on failure
+ * return K_SUCCESS on success, K_ERROR on failure
  */
 K_ERR kListRemAfter(K_LIST* const self, K_LISTNODE* const refNodePtr,
 		K_LISTNODE** const remNodePPtr);
@@ -35,7 +35,7 @@ K_ERR kListRemAfter(K_LIST* const self, K_LISTNODE* const refNodePtr,
  * param self Pointer to the list
  * param refNodePtr Reference node
  * param newNodePtr New node to insert
- * return K_LIST_SUCCESS on success, K_ERR_LIST_FAIL on failure
+ * return K_SUCCESS on success, K_ERROR on failure
  */
 K_ERR kListInsertAfter(K_LIST* const self, K_LISTNODE* const refNodePtr,
 		K_LISTNODE* const newNodePtr);
@@ -51,7 +51,7 @@ K_LISTNODE* kListGetTail(K_LIST* const self);
  *  Remove a node from the list
  * param selfPtr Pointer to the list
  * param remNodePtr Pointer to the node to remove
- * return K_LIST_SUCCESS on success, K_ERR_LIST_FAIL on failure
+ * return K_SUCCESS on success, K_ERROR on failure
  */
 K_ERR kListRemove(K_LIST* const selfPtr, K_LISTNODE* const remNodePtr);
 
@@ -59,14 +59,14 @@ K_ERR kListRemove(K_LIST* const selfPtr, K_LISTNODE* const remNodePtr);
  *  Remove the head node of the list
  * param self Pointer to the list
  * param remNodePPtr Pointer to the node to be removed
- * return K_LIST_SUCCESS on success, K_ERR_LIST_FAIL on failure
+ * return K_SUCCESS on success, K_ERROR on failure
  */
 K_ERR kListRemoveHead(K_LIST* const self, K_LISTNODE** const remNodePPtr);
 /*
  *  Add to the tail node of the list
  * param self Pointer to the list
  * param remNodePPtr Pointer to the node to be removed
- * return K_LIST_SUCCESS on success, K_ERR_LIST_FAIL on failure
+ * return K_SUCCESS on success, K_ERROR on failure
  */
 K_ERR kListAddTail(K_LIST* const self, K_LISTNODE* const newNodePtr);
 /*****************************************************************************/
