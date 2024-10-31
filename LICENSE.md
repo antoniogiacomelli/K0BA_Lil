@@ -1,9 +1,5 @@
 Permission is hereby granted to access and view the source code of this repository (the "Software") for personal, educational, or research purposes only, under the following conditions:
 
-No Distribution: You may not reproduce, distribute, sublicense, or sell copies of the Software in any form or by any means, electronic, mechanical, photocopying, recording, or otherwise, without express written permission from the copyright holder.
-
-No Modification: You may not modify, adapt, translate, reverse-engineer, decompile, disassemble, or create derivative works based on the Software or any part thereof.
-
 No Commercial Use: The Software may not be used for commercial purposes without prior written authorization from the copyright holder.
 
 No Copying: You may not copy, share, or transmit the Software in any format without explicit permission from the copyright holder.
