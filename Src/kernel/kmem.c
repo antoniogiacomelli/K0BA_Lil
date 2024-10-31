@@ -148,14 +148,16 @@ K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize)
 	self->memPoolPtr = memPool;
 	self->poolSize = poolSize;
 	self->nFreeBytes = poolSize;
-	self->freeList= (0 << 8) | 0;
+	self->freeList= (0 << 8) | 0; /* this number is also called '0'.
+									wrote like this to be clear about
+									how the indexing works */
 
 	/* link each byte to the next */
 	for (BYTE i = 0; i < poolSize - 1; i++)
 	{
 		memPool[i] = i + 1;
 	}
-	/* sentinel */
+	/* a sentinel. or a soft-skilled dummy */
 	memPool[poolSize - 1] = 0xFF;
 	return K_SUCCESS;
 }
@@ -191,23 +193,25 @@ ADDR kBytePoolAlloc(K_BYTEPOOL* const self, BYTE size)
 
 	/* start from the first free block */
 	BYTE startIdx = (self->freeList >> 8) & 0xFF;
-	BYTE currIndex = startIdx;
+	BYTE currIdx = startIdx;
 
 	/* grab contiguous chunk */
 	for (BYTE i = 1; i < size; i++) {
-		if (currIndex == 0xFF || self->memPoolPtr[currIndex] != currIndex + 1) {
+		if (currIdx == 0xFF || self->memPoolPtr[currIdx] != currIdx + 1)
+		{
 			return NULL;  /* too fragmented or not contiguous */
 		}
-		currIndex = self->memPoolPtr[currIndex];
+		currIdx = self->memPoolPtr[currIdx];
 	}
 
 	/* get the address of the starting block */
 	ADDR retAddr = (ADDR)(self->memPoolPtr + startIdx);
 
 	/* now freelist points to the next block after the allocated chunk */
-	BYTE nextFreeIndex = self->memPoolPtr[currIndex];
-	self->freeList = (nextFreeIndex << 8) | self->memPoolPtr[nextFreeIndex];
+	BYTE nextFreeIdx = self->memPoolPtr[currIdx];
+	self->freeList = (nextFreeIdx << 8) | self->memPoolPtr[nextFreeIdx];
 	self->nFreeBytes -= size;
+	/* yo got that chunk for yo trunk */
 	return retAddr;
 }
 /*******************************************************************************
@@ -231,9 +235,10 @@ ADDR kBytePoolAlloc(K_BYTEPOOL* const self, BYTE size)
  *   [--||||||----||||||||||||||||||||||||||x]
  *      ^....·....^
  *      freeList
- *******************************************************************************/
+ ******************************************************************************/
 
-K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, BYTE const size)
+K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, \
+		BYTE const size)
 {
 	if (chunkPtr == NULL || size == 0)
 	{

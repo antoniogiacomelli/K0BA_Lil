@@ -179,21 +179,17 @@ K_ERR kMailboxPost(K_MAILBOX* self, const ADDR mesgPtr, SIZE mesgSize)
 
 TID kMailboxPend(K_MAILBOX* const self, const ADDR recvMailPtr)
 {
-	if (IS_NULL_PTR(self))
+	if (IS_NULL_PTR(self) || IS_NULL_PTR(recvMailPtr))
 	{
 		kErrHandler(FAULT_NULL_OBJ);
 	}
 	kSemaWait(&self->semaFull);
 	kSemaSignal(&self->semaAck); /*U ACK */
 	kMutexLock(&self->mutex);
-	if (*mailPPtr == NULL)
-	{
-		kErrHandler(FAULT_NULL_OBJ);
-
-	}
-	kMemCpy(recvMailPtr, self->mail.mailPtr, mesgSize);
-	if (sizePtr != NULL)
-		*sizePtr = self->mail.mailSize;
+	K_CR_AREA;
+	K_ENTER_CR;
+	kMemCpy(recvMailPtr, self->mail.mailPtr, self->mail.mailSize);
+	K_EXIT_CR;
 	kMutexUnlock(&self->mutex);
 	kSemaSignal(&self->semaEmpty);
 	return self->mail.senderTid;

@@ -49,7 +49,9 @@
  *                           keeping track of sleeping tasks.
  *            kSignal(TID id): direct signals a task. Every task is assigned an
  *        	  unique ID.
- *        (3) kYield(): caller task is SLEEPING
+ *        (3) kYield(): caller task yields, and get back to the READY QUEUE.
+ *            kPend():  caller tasks suspend itself - status: PENDING - waiting
+ *                      for a direct signal.
  *
  *\endverbatim
  *
@@ -58,8 +60,9 @@
 #ifndef K_API_H
 #define K_API_H
 /*--------------------------------*/
-/* place your ARM GCC and CMSIS   */
-/* dependencies here              */
+#include <stm32f4xx_hal.h>
+#include <stm32f401xe.h>
+#include <cmsis_gcc.h>
 /*--------------------------------*/
 #include "kmacros.h"
 #include "kconfig.h"
