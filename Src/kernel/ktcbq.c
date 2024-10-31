@@ -40,6 +40,7 @@
  ******************************************************************************/
 
 
+#define INSTANT_PREEMPT_LOWER_PRIO
 
 
 /*******************************************************************************
@@ -47,9 +48,8 @@
  * TASK	QUEUE MANAGEMENT
  *
  ******************************************************************************/
-#define K_CODE
+
 #include <kapi.h>
-#define INSTANT_PREEMPT_LOWER_PRIO
 
 K_ERR kTCBQInit(K_TCBQ* const self, STRING listName)
 {

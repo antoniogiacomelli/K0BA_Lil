@@ -151,9 +151,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ae1bb13af852fcd6ef9686d450bbed5c5" id="r_ae1bb13af852fcd6ef9686d450bbed5c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1bb13af852fcd6ef9686d450bbed5c5">kMailboxPost</a> (<a class="el" href="ktypes_8h.html#a78e51a00ac6a6c98c26e7501ac186af2">K_MAILBOX</a> *const self, const <a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a> <a class="el" href="kobjs_8h.html#af1e1389b08ae9291bc54899ca6877a22">mesgPtr</a>, SIZE <a class="el" href="kobjs_8h.html#a44c2f18f4c12116758c37c108d56412e">mesgSize</a>)</td></tr>
 <tr class="memdesc:ae1bb13af852fcd6ef9686d450bbed5c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Post a message on a mailbox w.  <br /></td></tr>
 <tr class="separator:ae1bb13af852fcd6ef9686d450bbed5c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c56dda10c823c6068e65a8fecf3f32e" id="r_a2c56dda10c823c6068e65a8fecf3f32e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#aa91430ada220aeb4be678a150b5233df">TID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c56dda10c823c6068e65a8fecf3f32e">kMailboxPend</a> (<a class="el" href="ktypes_8h.html#a78e51a00ac6a6c98c26e7501ac186af2">K_MAILBOX</a> *const self, <a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a> *mailPPtr, SIZE *sizePtr)</td></tr>
-<tr class="memdesc:a2c56dda10c823c6068e65a8fecf3f32e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a message from a mailbox.  <br /></td></tr>
-<tr class="separator:a2c56dda10c823c6068e65a8fecf3f32e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b2b258b1404b496acbb9a59f8f43210" id="r_a5b2b258b1404b496acbb9a59f8f43210"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#aa91430ada220aeb4be678a150b5233df">TID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b2b258b1404b496acbb9a59f8f43210">kMailboxPend</a> (<a class="el" href="ktypes_8h.html#a78e51a00ac6a6c98c26e7501ac186af2">K_MAILBOX</a> *const self, const <a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a> recvMailPtr)</td></tr>
+<tr class="memdesc:a5b2b258b1404b496acbb9a59f8f43210"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a message from a mailbox.  <br /></td></tr>
+<tr class="separator:a5b2b258b1404b496acbb9a59f8f43210"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab52d9b450304c6e34a094cfe058f2327" id="r_ab52d9b450304c6e34a094cfe058f2327"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab52d9b450304c6e34a094cfe058f2327">kCondInit</a> (<a class="el" href="ktypes_8h.html#ac6fe8e99571713b1a4bdd47a39636b43">K_COND</a> *const self)</td></tr>
 <tr class="memdesc:ab52d9b450304c6e34a094cfe058f2327"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises a condition variable.  <br /></td></tr>
 <tr class="separator:ab52d9b450304c6e34a094cfe058f2327"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -500,8 +500,8 @@ Functions</h2></td></tr>
 <p>Initialises a Byte pool control block. </p>
 <p>Le heap, c'est chic...</p>
 <p>About BYTE POOLS.</p>
-<p>It is hard to find a trade-off for byte pools - a random chunk of bytes the application can allocate and deallocate. A more safer version, with meta-data is counter-productive, given you need a record (a struct) to keep track every of itsy bitsy weenie BYTE. In very constrained applications, it is also a bit hard to deem a situation that cannot be circumvented using either by a fixed-size pool or by - the safest choice by far - a static memory allocation.</p>
-<p>So, it is up to application programmer to diminish the hazards by:</p>
+<p>It is hard to find a trade-off for byte pools - a random chunk of bytes the application can allocate and deallocate. A safer version, with meta-data is counter-productive, given you need a record (a struct) to keep track of every itsy bitsy weenie BYTE. In very constrained applications, it is also a bit hard to deem a situation that cannot be circumvented either by a fixed-size pool or by - the safest choice by far - a static memory allocation.</p>
+<p>So, it is up to the application programmer to diminish the hazards:</p>
 <p>o Do Not allocate and deallocate randomly. You got no UNIX here, son. It's hardcore emBedded \m/</p>
 <p>o TAKE THE OATH BEFORE THIS KERNEL:</p><ul>
 <li>to allocate, use, and free the EXACTLY size for each chunk you requested. In this order.</li>
@@ -510,7 +510,7 @@ Functions</h2></td></tr>
 <p>o Check for NULL returns. Take a look on the pool. If it is too fragmented so you won't find a contiguous chunk the size you need, you are better off reinitialising the pool.</p>
 <p>o The IDEAL use:</p><ul>
 <li>allocate and deallocate <em>multiples</em> of the pool size.</li>
-<li>do it on unidirectional manner, just as you would do with synchronisation to avoid a 'deadlock'.</li>
+<li>do it on a unidirectional manner, just as you would do with synchronisation to avoid a 'deadlock'.</li>
 </ul>
 <pre class="fragment">*
 * - - DEPICTION - -
@@ -921,8 +921,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a2c56dda10c823c6068e65a8fecf3f32e" name="a2c56dda10c823c6068e65a8fecf3f32e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c56dda10c823c6068e65a8fecf3f32e">&#9670;&#160;</a></span>kMailboxPend()</h2>
+<a id="a5b2b258b1404b496acbb9a59f8f43210" name="a5b2b258b1404b496acbb9a59f8f43210"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b2b258b1404b496acbb9a59f8f43210">&#9670;&#160;</a></span>kMailboxPend()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -935,12 +935,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a> *</td>          <td class="paramname"><span class="paramname"><em>mailPPtr</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">SIZE *</td>          <td class="paramname"><span class="paramname"><em>sizePtr</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a></td>          <td class="paramname"><span class="paramname"><em>recvMailPtr</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -949,8 +944,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">self</td><td>Address of a mailbox structure </td></tr>
-    <tr><td class="paramname">mailPPtr</td><td>Pointer-to-pointer to variable that will store the received \ mail </td></tr>
-    <tr><td class="paramname">sizePtr</td><td>Address of the variable to store the mail size. You can pass 'NULL' if you sure wha is the size. (Default size is 4 bytes) </td></tr>
+    <tr><td class="paramname">recvMailPtr</td><td>Pointer to variable that will store the received \ mail </td></tr>
   </table>
   </dd>
 </dl>

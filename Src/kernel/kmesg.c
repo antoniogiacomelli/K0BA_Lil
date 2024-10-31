@@ -17,9 +17,6 @@
 #define K_CODE
 #include "kapi.h"
 
-
-
-
 #if (K_DEF_MESGQ==ON)
 /*****************************************************************************
  *
@@ -180,7 +177,7 @@ K_ERR kMailboxPost(K_MAILBOX* self, const ADDR mesgPtr, SIZE mesgSize)
 	return K_SUCCESS;
 }
 
-TID kMailboxPend(K_MAILBOX* const self, ADDR* mailPPtr, SIZE* sizePtr)
+TID kMailboxPend(K_MAILBOX* const self, const ADDR recvMailPtr)
 {
 	if (IS_NULL_PTR(self))
 	{
@@ -194,7 +191,7 @@ TID kMailboxPend(K_MAILBOX* const self, ADDR* mailPPtr, SIZE* sizePtr)
 		kErrHandler(FAULT_NULL_OBJ);
 
 	}
-	*mailPPtr = self->mail.mailPtr;
+	kMemCpy(recvMailPtr, self->mail.mailPtr, mesgSize);
 	if (sizePtr != NULL)
 		*sizePtr = self->mail.mailSize;
 	kMutexUnlock(&self->mutex);

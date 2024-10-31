@@ -34,7 +34,12 @@
 #define K_DEF_ERRHANDLER			 ON 	/**< Kernel will stop on faults */
 #define K_DEF_PRIOINV_FAULT			 ON 	/**< Treat priority inversion as a fault */
 
+/**
+ * \brief These macros are to turn features ON/OFF and some configurations
+ */
+
 #define K_DEF_MEMBLOCK_ALIGN_4 	ON	  /**< Make memory blocks aligned to 4 */
+
 
 #define K_DEF_BYTEPOOL			ON    /**< K_BYTEPOOL ON/OFF */
 
@@ -50,13 +55,13 @@
 	#define K_DEF_MAILBOX_ACK		ON    /**< Fully synchornous mailbox 	 */
 #endif
 
-#if (K_DEF_MESGQ == ON)
+#if ((K_DEF_MESGQ == ON))
 	#define K_DEF_N_MESGBUFF 10			  /**< Global message buffers number */
 #endif
 
 #define K_DEF_COND ON				  /**< Condition Variables ON/OFF */
 
-#if (K_DEF_COND == ON)				  /*Need CondVars for Pipes*/
+#if (K_DEF_COND == ON)				  /**< you need condition variables for pipes */
 	#define K_DEF_PIPE		   	  ON  /**< Pipes ON/OFF */
 
 /*  Pipes Configuration */

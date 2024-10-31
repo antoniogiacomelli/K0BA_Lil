@@ -1,0 +1,106 @@
+import tkinter as tk
+from tkinter import messagebox, filedialog
+
+class RTOSConfigGUI:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("RTOS Configuration Generator")
+
+        # Variables for configurations
+        self.kernel_version = tk.StringVar()
+        self.time_slice = tk.BooleanVar(value=True)
+        self.nthreads = tk.IntVar(value=5)
+        self.stack_size = tk.IntVar(value=128)
+        self.tick_period = tk.StringVar(value="TICK_10MS")
+        self.trace_enabled = tk.BooleanVar(value=True)
+        self.message_queue = tk.BooleanVar(value=True)
+        self.pipe_type = tk.IntVar(value=2)  # 1 for Simple, 2 for Extended
+
+        self.build_gui()
+
+    def build_gui(self):
+        # Kernel Version
+        tk.Label(self.root, text="Kernel Version:").grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        tk.Entry(self.root, textvariable=self.kernel_version).grid(row=0, column=1, padx=5, pady=5)
+
+        # Time Slice Scheduling
+        tk.Checkbutton(self.root, text="Enable Time-Slice Scheduling", variable=self.time_slice).grid(row=1, columnspan=2, sticky="w")
+
+        # Number of Threads
+        tk.Label(self.root, text="Number of Threads:").grid(row=2, column=0, padx=5, pady=5, sticky="w")
+        tk.Spinbox(self.root, from_=1, to=32, textvariable=self.nthreads).grid(row=2, column=1, padx=5, pady=5)
+
+        # Stack Size
+        tk.Label(self.root, text="Stack Size (words):").grid(row=3, column=0, padx=5, pady=5, sticky="w")
+        tk.Spinbox(self.root, from_=64, to=1024, textvariable=self.stack_size).grid(row=3, column=1, padx=5, pady=5)
+
+        # Tick Period
+        tk.Label(self.root, text="Tick Period:").grid(row=4, column=0, padx=5, pady=5, sticky="w")
+        tk.OptionMenu(self.root, self.tick_period, "TICK_10MS", "TICK_5MS", "TICK_1MS").grid(row=4, column=1, padx=5, pady=5)
+
+        # Trace Enabled
+        tk.Checkbutton(self.root, text="Enable Trace", variable=self.trace_enabled).grid(row=5, columnspan=2, sticky="w")
+
+        # Message Queue Configuration
+        tk.Checkbutton(self.root, text="Enable Message Queue", variable=self.message_queue).grid(row=6, columnspan=2, sticky="w")
+
+        # Pipe Type
+        tk.Label(self.root, text="Pipe Type:").grid(row=7, column=0, padx=5, pady=5, sticky="w")
+        tk.Radiobutton(self.root, text="Simple", variable=self.pipe_type, value=1).grid(row=7, column=1, sticky="w")
+        tk.Radiobutton(self.root, text="Extended", variable=self.pipe_type, value=2).grid(row=8, column=1, sticky="w")
+
+        # Generate Button
+        tk.Button(self.root, text="Generate Config", command=self.generate_config).grid(row=9, columnspan=2, pady=10)
+
+    def generate_config(self):
+        # Validate kernel version
+        if not self.kernel_version.get():
+            messagebox.showerror("Error", "Kernel version is required!")
+            return
+
+        # Generate the configuration content
+        config_content = self.build_config_content()
+
+        # Save the config file
+        file_path = filedialog.asksaveasfilename(defaultextension=".h", filetypes=[("Header Files", "*.h")])
+        if file_path:
+            with open(file_path, "w") as f:
+                f.write(config_content)
+            messagebox.showinfo("Success", "Configuration file generated successfully!")
+
+    def build_config_content(self):
+        # Build the config file content based on the inputs
+        content = f"""
+#ifndef INC_K_CONFIG_H_
+#define INC_K_CONFIG_H_
+
+#ifndef __GNUC__
+#   error "You need GCC as your compiler!"
+#endif
+
+#ifndef __KVERSION
+#error "Missing kernel version unit"
+#endif
+
+#define KVERSION {self.kernel_version.get()}
+
+#define K_CONF_SCH_TSLICE {'ON' if self.time_slice.get() else 'OFF'}
+#define _NTHREADS {self.nthreads.get()}
+#define STACKSIZE {self.stack_size.get()}
+#define NTHREADS (_NTHREADS + 1)
+
+#define K_CONF_TICK_PERIOD {self.tick_period.get()}
+
+#define K_CONF_TRACE {'ON' if self.trace_enabled.get() else 'OFF'}
+#define K_CONF_MSG_QUEUE {'ON' if self.message_queue.get() else 'OFF'}
+#define PIPE_TYPE {'EXTENDED_PIPE' if self.pipe_type.get() == 2 else 'SIMPLE_PIPE'}
+
+#endif /* INC_K_CONFIG_H_ */
+"""
+        return content
+
+# Run the GUI
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = RTOSConfigGUI(root)
+    root.mainloop()

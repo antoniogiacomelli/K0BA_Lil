@@ -89,7 +89,7 @@ var searchData=
   ['kmail_86',['kMail',['../structk_mail.html',1,'']]],
   ['kmailbox_87',['kMailbox',['../structk_mailbox.html',1,'']]],
   ['kmailboxinit_88',['kMailboxInit',['../kapi_8h.html#acbaef72af9e65f988ce1cffcf7a9a642',1,'kapi.h']]],
-  ['kmailboxpend_89',['kMailboxPend',['../kapi_8h.html#a2c56dda10c823c6068e65a8fecf3f32e',1,'kapi.h']]],
+  ['kmailboxpend_89',['kMailboxPend',['../kapi_8h.html#a5b2b258b1404b496acbb9a59f8f43210',1,'kapi.h']]],
   ['kmailboxpost_90',['kMailboxPost',['../kapi_8h.html#ae1bb13af852fcd6ef9686d450bbed5c5',1,'kapi.h']]],
   ['kmemblock_91',['kMemBlock',['../structk_mem_block.html',1,'']]],
   ['kmembyte_92',['kMemByte',['../structk_mem_byte.html',1,'']]],

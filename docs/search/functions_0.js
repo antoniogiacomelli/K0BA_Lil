@@ -18,7 +18,7 @@ var searchData=
   ['kgettaskpid_15',['kGetTaskPID',['../kapi_8h.html#a8eada4d7f3ba5bf67f053e6a8cdcee20',1,'kapi.h']]],
   ['kgettaskprio_16',['kGetTaskPrio',['../kapi_8h.html#a8189505316e09d0441d1ff24385e51f1',1,'kapi.h']]],
   ['kmailboxinit_17',['kMailboxInit',['../kapi_8h.html#acbaef72af9e65f988ce1cffcf7a9a642',1,'kapi.h']]],
-  ['kmailboxpend_18',['kMailboxPend',['../kapi_8h.html#a2c56dda10c823c6068e65a8fecf3f32e',1,'kapi.h']]],
+  ['kmailboxpend_18',['kMailboxPend',['../kapi_8h.html#a5b2b258b1404b496acbb9a59f8f43210',1,'kapi.h']]],
   ['kmailboxpost_19',['kMailboxPost',['../kapi_8h.html#ae1bb13af852fcd6ef9686d450bbed5c5',1,'kapi.h']]],
   ['kmemcpy_20',['kMemCpy',['../kapi_8h.html#a1b15aa024bacdc6fc95944acd445fbd0',1,'kapi.h']]],
   ['kmesgqget_21',['kMesgQGet',['../kapi_8h.html#ab99d932a3d1027d36813fdb6ffd02705',1,'kapi.h']]],

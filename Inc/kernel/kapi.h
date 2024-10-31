@@ -58,8 +58,8 @@
 #ifndef K_API_H
 #define K_API_H
 /*--------------------------------*/
-/*Include ARM GCC, ARM CMSIS-CORE */
-/*dependencies here				  */
+/* place your ARM GCC and CMSIS   */
+/* dependencies here              */
 /*--------------------------------*/
 #include "kmacros.h"
 #include "kconfig.h"
@@ -220,14 +220,12 @@ K_ERR kMailboxPost(K_MAILBOX* const self, const ADDR mesgPtr, SIZE mesgSize);
 /**
  *\brief Retrieves a message from a mailbox
  *\param self Address of a mailbox structure
- *\param mailPPtr Pointer-to-pointer to variable that will store the received
- *\				  mail
- *\param sizePtr  Address of the variable to store the mail size. You can
- *				  pass 'NULL' if you sure wha is the size. (Default size is
- *				  4 bytes)
+ *\param recvMailPtr Pointer to variable that will store the received
+ *\				     mail
  *\retval Sender's TID. -1 if fails.
  */
-TID kMailboxPend(K_MAILBOX* const self, ADDR* mailPPtr, SIZE* sizePtr);
+TID kMailboxPend(K_MAILBOX* const self, const ADDR recvMailPtr);
+
 
 #if (K_DEF_COND==ON)
 /*****************************************************************************

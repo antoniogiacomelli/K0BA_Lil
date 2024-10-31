@@ -174,7 +174,7 @@ struct kMemByte
 #if ((K_DEF_MESGQ==ON))
 
 /**
- *\brief Message Buffer for Message Queues
+ *\brief Message Buffer for Message and Mailbox
  */
 struct kMesgBuff
 {
