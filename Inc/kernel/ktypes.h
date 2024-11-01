@@ -19,8 +19,8 @@
 
 
 
-#ifndef K_TYPES_H
-#define K_TYPES_H
+#ifndef KTYPES_H
+#define KTYPES_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -60,7 +60,7 @@ typedef _Bool       	BOOL;
 /* Yes, Windows-Like. Deal with it. */
 
 typedef VOID*             ADDR;     /**< Generic address type */
-typedef const CHAR*       STRING;   /**< Read-only String alias   */
+typedef const CHAR *STRING; /**< Read-only String alias   */
 typedef BYTE              PID;      /**< System defined Task ID type */
 typedef BYTE		      TID;	    /**< User defined Task ID */
 typedef BYTE	          PRIO;     /**< Task priority type */
@@ -171,4 +171,4 @@ typedef struct kEvent		K_EVENT;	 /**< Generic Event	 */
 typedef K_LIST              K_TCBQ;      /**< Alias for the TCB Queue */
 typedef struct kTrace  	    K_TRACE;	 /**< Tracer/Logger			*/
 
-#endif /* K_TYPES_H */
+#endif /* KTYPES_H */

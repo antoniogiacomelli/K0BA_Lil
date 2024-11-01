@@ -1,4 +1,4 @@
- /******************************************************************************
+/******************************************************************************
  *
  * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]
  *
@@ -14,12 +14,12 @@
  * \verbatim
  *  ________________________________________
  * |                                        |--
- * | [TASK1][TASK2]  ....         [TASKN]   | application.c/application.h
+ * | [TASK1][TASK2]  ....         [TASKN]   | application.c
  * |----------------------------------------|--
- * |                 API                    | this file
+ * |                 API                    | 
  * |----------------------------------------|--
  * |                                        |
- * |             K0BA KERNEL                | k*.h k*.c
+ * |             K0BA KERNEL                | k*.c
  * |________________________________________|--
  * |                                        |
  * |        BOARD SUPPORT PACKAGE           |
@@ -29,10 +29,11 @@
  * |________________________________________|--
  *
  * This is the kernel API to be included within any application
- * development. It provides methods to access the kernel services.
+ * development. By default, it is placed in the application.h 
+ * It provides methods to access the kernel services.
  *
- * Every kernel primitive is on UPPERCASE. If preceded by a K_ it is a
- * kernel data structure (e.g. K_SEMA is a semaphore) or an enumarated
+ * Every kernel primitive is on UPPERCASE. If preceded by a K_, it is a
+ * kernel data structure (e.g. K_SEMA is a semaphore) or an enumerated
  * typedef.
  *
  * If not, it is an alias for standard C data or data pointer (e.g., BYTE,
@@ -42,7 +43,7 @@
  *
  * A typical kernel service often receives a pointer to a kernel
  * object (typically 'K_TYPE* const self'. (1) If it does not,
- * it either acts onsingleton object (2) and/or on the (3) caller itself.
+ * it acts on a singleton object (2) and/or on the (3) caller itself.
  *
  *  E.g., (1) kSemaWait(SEMA const* self): decreases a counter semaphore.
  *        (2) kSleepDelay(): there is a single list of timers dedicated for
@@ -57,18 +58,16 @@
  *
  ******************************************************************************
  */
-#ifndef K_API_H
-#define K_API_H
+#ifndef KAPI_H
+#define KAPI_H
 
 #include "kconfig.h"
 #include "ktypes.h"
 #include "kobjs.h"
 
-
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
-
 
 /**
  * \brief Create a new task with time-slice scheduling
@@ -84,8 +83,8 @@
  * 				  	   it blocks or yields.
  * \return K_SUCCESS on success, K_ERROR on failure
  */
-K_ERR kCreateTask(const TASKENTRY taskFuncPtr, STRING taskName,
-		const TID id,	UINT32* const stackAddrPtr, const UINT32 stackSize,
+K_ERR kCreateTask(const TASKENTRY taskFuncPtr, STRING taskName, const TID id,
+		UINT32 *const stackAddrPtr, const UINT32 stackSize,
 		const TICK timeSlice, const PRIO priority, const BOOL runToCompl);
 
 /******************************************************************************/
@@ -102,28 +101,27 @@ VOID kYield(VOID);
 /*																			*/
 /****************************************************************************/
 
-
 /**
  *\brief Initialise a semaphore
  *\param self Semaphore address
  *\param value Initial value
  *\return None
  */
-K_ERR kSemaInit(K_SEMA* const self, INT32 value);
+K_ERR kSemaInit(K_SEMA *const self, INT32 value);
 
 /**
  *\brief Wait on a semaphore
  *\param self Semaphore address
  *\return K_SUCCESS / K_ERROR
  */
-K_ERR kSemaWait(K_SEMA* const self);
+K_ERR kSemaWait(K_SEMA *const self);
 
 /**f
  *\brief Signal a semaphore
  *\param self Semaphore address
  *\return None
  */
-K_ERR kSemaSignal(K_SEMA* const self);
+K_ERR kSemaSignal(K_SEMA *const self);
 
 /*****************************************************************************
  *
@@ -131,29 +129,27 @@ K_ERR kSemaSignal(K_SEMA* const self);
  *
  ****************************************************************************/
 
-
 /**
  *\brief Init a mutex
  *\param self mutex address
  *\return K_SUCCESS / K_ERROR
  */
 
-K_ERR kMutexInit(K_MUTEX* const self);
+K_ERR kMutexInit(K_MUTEX *const self);
 
 /**
  *\brief Lock a mutex
  *\param self mutex address
  *\return K_SUCCESS or a specific error
  */
-K_ERR kMutexLock(K_MUTEX* const self);
+K_ERR kMutexLock(K_MUTEX *const self);
 
 /**
  *\brief Unlock a mutex
  *\param self mutex address
  *\return K_SUCCESS or a specific error
  */
-K_ERR kMutexUnlock(K_MUTEX* const self);
-
+K_ERR kMutexUnlock(K_MUTEX *const self);
 
 /******************************************************************************/
 /*																			  */
@@ -161,7 +157,6 @@ K_ERR kMutexUnlock(K_MUTEX* const self);
 /*																			  */
 /******************************************************************************/
 #if (K_DEF_MESGQ == ON)
-
 
 /**
  *\brief Send to a message queue
@@ -171,14 +166,14 @@ K_ERR kMutexUnlock(K_MUTEX* const self);
  *\return SUCCESS/FAIL
  */
 
-K_ERR kMesgQPut(K_MESGQ* const self, ADDR mesgPtr, BYTE mesgSize);
+K_ERR kMesgQPut(K_MESGQ *const self, ADDR mesgPtr, BYTE mesgSize);
 /**
  * \brief Receive from a message queue
  * \param self Message Queue address
  * \param rcvdMesgPtr Pointer to address which will store the message
  * \return Sender PID
  */
-PID kMesgQGet(K_MESGQ* const self, ADDR rcvdMesgPtr);
+PID kMesgQGet(K_MESGQ *const self, ADDR rcvdMesgPtr);
 /**
  *\brief Initialises a Message Queue
  *\param self Messsage Queue address
@@ -187,10 +182,9 @@ PID kMesgQGet(K_MESGQ* const self, ADDR rcvdMesgPtr);
  *\param mesgSize Size of each item in bytes. sizeof() is recommended.
  *\return none
  */
-VOID kMesgQInit(K_MESGQ* const self, ADDR mesgPoolPtr, BYTE queueSize, \
-				   BYTE mesgSize);
+VOID kMesgQInit(K_MESGQ *const self, ADDR mesgPoolPtr, BYTE queueSize,
+		BYTE mesgSize);
 #endif /*K_DEF_MESGQ*/
-
 
 /******************************************************************************/
 /*																			  */
@@ -203,7 +197,7 @@ VOID kMesgQInit(K_MESGQ* const self, ADDR mesgPoolPtr, BYTE queueSize, \
  *\brief Initialise a mailbox
  *\param self Pointer to a mailbox
  */
-K_ERR kMailboxInit(K_MAILBOX* const self);
+K_ERR kMailboxInit(K_MAILBOX *const self);
 
 /**
  *\brief Post a message on a mailbox w
@@ -212,7 +206,8 @@ K_ERR kMailboxInit(K_MAILBOX* const self);
  *\param mailSize Message size
  *\retval 0 if success. -1 if fails.
  */
-K_ERR kMailboxPost(K_MAILBOX* const self, const ADDR mailPtr, const SIZE mailSize);
+K_ERR kMailboxPost(K_MAILBOX *const self, const ADDR mailPtr,
+		const SIZE mailSize);
 
 /**
  *\brief Retrieves a message from a mailbox
@@ -221,7 +216,7 @@ K_ERR kMailboxPost(K_MAILBOX* const self, const ADDR mailPtr, const SIZE mailSiz
  *\				     mail
  *\retval Sender's TID. -1 if fails.
  */
-TID kMailboxPend(K_MAILBOX* const self, const ADDR recvMailPtr);
+TID kMailboxPend(K_MAILBOX *const self, const ADDR recvMailPtr);
 
 #endif /*K_DEF_MAILBOX*/
 /*****************************************************************************
@@ -236,14 +231,14 @@ TID kMailboxPend(K_MAILBOX* const self, const ADDR recvMailPtr);
  * \param self Condition variable address
  * \retval K_SUCCESS/K_ERROR
  */
-K_ERR kCondInit(K_COND* const self);
+K_ERR kCondInit(K_COND *const self);
 
 /**
  * \brief Wait on a condition variable.
  * \param self Condition variable address.
  * \retval none
  */
-VOID kCondWait(K_COND* const self);
+VOID kCondWait(K_COND *const self);
 
 /**
  * \brief Signals a condition variable,
@@ -251,7 +246,7 @@ VOID kCondWait(K_COND* const self);
  * \param self Condition variable address.
  * \retval none
  */
-VOID kCondSignal(K_COND* const self);
+VOID kCondSignal(K_COND *const self);
 
 /**
  * \brief Broad cast signal a condition variable
@@ -259,10 +254,9 @@ VOID kCondSignal(K_COND* const self);
  * \param self Condition variable address.
  * \return none
  */
-VOID kCondWake(K_COND* const self);
+VOID kCondWake(K_COND *const self);
 
 #endif /* K_DEF_COND */
-
 
 /******************************************************************************/
 /*																			  */
@@ -272,29 +266,28 @@ VOID kCondWake(K_COND* const self);
 #if (K_DEF_PIPE==ON)
 
 /**
-*\brief Initialise a pipe
-*\param self Pointer to the pipe
-*/
-VOID kPipeInit(K_PIPE* const self);
+ *\brief Initialise a pipe
+ *\param self Pointer to the pipe
+ */
+VOID kPipeInit(K_PIPE *const self);
 
 /**
-*\brief Read a stream of bytes from a pipe
-*\param self Pointer to a pipe
-*\param destPtr Address to store the read data
-*\param nBytes Number of bytes to be read
-*\retval Number of read bytes if success. -1 if fails.
-*/
-INT32 kPipeRead(K_PIPE* const self, BYTE* destPtr, UINT32 nBytes);
+ *\brief Read a stream of bytes from a pipe
+ *\param self Pointer to a pipe
+ *\param destPtr Address to store the read data
+ *\param nBytes Number of bytes to be read
+ *\retval Number of read bytes if success. -1 if fails.
+ */
+INT32 kPipeRead(K_PIPE *const self, BYTE *destPtr, UINT32 nBytes);
 
 /**
-*\brief Write a stream of bytes to a pipe
-*\param self Pointer to a pipe
-*\param srcPtr Address to get data
-*\param nBytes Number of bytes to be write
-*\retval Number of written bytes if success. -1 if fails.
-*/
-INT32 kPipeWrite(K_PIPE* const self, const BYTE* srcPtr, UINT32 nBytes);
-
+ *\brief Write a stream of bytes to a pipe
+ *\param self Pointer to a pipe
+ *\param srcPtr Address to get data
+ *\param nBytes Number of bytes to be write
+ *\retval Number of written bytes if success. -1 if fails.
+ */
+INT32 kPipeWrite(K_PIPE *const self, const BYTE *srcPtr, UINT32 nBytes);
 
 #endif /*K_DEF_PIPES*/
 
@@ -309,20 +302,20 @@ INT32 kPipeWrite(K_PIPE* const self, const BYTE* srcPtr, UINT32 nBytes);
  * \param self FIFO address
  * \return K_ERROR/SUCCESS
  */
-K_ERR kFifoInit(K_FIFO* const self);
+K_ERR kFifoInit(K_FIFO *const self);
 /**
  * \brief Put a single byte on a fifo
  * \param self FIFO address
  * \param data One-byte data
  * \return K_ERROR/SUCCESS
  */
-K_ERR kFifoPut(K_FIFO* const self, BYTE data);
+K_ERR kFifoPut(K_FIFO *const self, BYTE data);
 /**
  * \brief Get a single byte from a fifo
  * \param self FIFO address
  * \return Read byte
  */
-BYTE kFifoGet(K_FIFO* const self);
+BYTE kFifoGet(K_FIFO *const self);
 
 /******************************************************************************
  *
@@ -341,28 +334,25 @@ VOID kPend(VOID);
  * \brief Direct Signal a task
  * \param taskID The ID of the task to signal
  */
-VOID kSignal(PID const taskID);
+VOID kSignal(const PID taskID);
 
 /**
  * \brief Suspends a task waiting for a specific event
  * \param self Pointer to a K_EVENT object
  * \return K_SUCCESS/K_ERROR
  */
-K_ERR kSleep(K_EVENT* const self);
-
+K_ERR kSleep(K_EVENT *const self);
 
 /**
  * \brief Wakes a task waiting for a specific event
  * \param self Pointer to a K_EVENT object
  * \return K_SUCCESS/K_ERROR
  */
-K_ERR kWake(K_EVENT* const self);
-
+K_ERR kWake(K_EVENT *const self);
 
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
-
 
 /*******************************************************************************
  *
@@ -379,21 +369,21 @@ K_ERR kWake(K_EVENT* const self);
  * \return K_SUCCESS/K_ERROR
  */
 K_ERR kTimerInit(STRING timerName, TICK ticks, CALLBACK funPtr, ADDR argsPtr,
-				 BOOL reload);
+		BOOL reload);
 
 /**
  * \brief Busy-wait the task for a specified delay in ticks.
  *        Task does not suspend.
  * \param delay The delay time in ticks
  */
-VOID kBusyDelay(TICK const delay);
+VOID kBusyDelay(const TICK delay);
 
 /**
  * \brief Put the current task to sleep for a number of ticks.
  *        Task switches to SLEEPING state.
  * \param ticks Number of ticks to sleep
  */
-VOID kSleepDelay(TICK const ticks);
+VOID kSleepDelay(const TICK ticks);
 
 /******************************************************************************/
 /******************************************************************************/
@@ -405,7 +395,6 @@ VOID kSleepDelay(TICK const ticks);
  *
  ******************************************************************************/
 
-
 /**
  * \brief Memory Pool Control Block Initialisation
  * \param self Pointer to a pool control block
@@ -415,15 +404,15 @@ VOID kSleepDelay(TICK const ticks);
  * \param numBlocks Number of blocks
  * \return K_ERROR/K_SUCCESS
  */
-K_ERR kBlockPoolInit(K_BLOCKPOOL* const self, ADDR const memPoolPtr, BYTE blkSize, \
-		const BYTE numBlocks);
+K_ERR kBlockPoolInit(K_BLOCKPOOL *const self, const ADDR memPoolPtr,
+		BYTE blkSize, const BYTE numBlocks);
 
 /**
  * \brief Allocate memory from a block pool
  * \param self Pointer to the block pool
  * \return Pointer to the allocated block, or NULL on failure
  */
-ADDR kBlockPoolAlloc(K_BLOCKPOOL* const self);
+ADDR kBlockPoolAlloc(K_BLOCKPOOL *const self);
 
 /**
  * \brief Free a memory block back to the block pool
@@ -431,108 +420,106 @@ ADDR kBlockPoolAlloc(K_BLOCKPOOL* const self);
  * \param blockPtr Pointer to the block to free
  * \return Pointer to the allocated memory. NULL on failure.
  */
-K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr);
-
+K_ERR kBlockPoolFree(K_BLOCKPOOL *const self, const ADDR blockPtr);
 
 /*******************************************************************************
-*
-* BYTE MEMORY POOL
-*
-******************************************************************************/
+ *
+ * BYTE MEMORY POOL
+ *
+ ******************************************************************************/
 
 /**
-*
-* \details
-*
-* Le heap, c'est chic...
-*
-* About BYTE POOLS.
-*
-* It is hard to find a trade-off for byte pools - a random chunk of bytes the
-* application can allocate and deallocate.
-* A safer version, with meta-data is counter-productive,  given you need
-* a record (a struct) to keep track of every itsy bitsy weenie BYTE.
-* In very constrained applications, it is also a bit hard to deem a situation
-* that cannot be circumvented either by a fixed-size pool or by -
-* the safest choice by far - a static memory allocation.
-*
-* So, it is up to the application programmer to diminish the hazards:
-*
-*  o Do Not allocate and deallocate randomly. You got no UNIX here, son.
-*    It's hardcore emBedded \m/
-*
-*  o TAKE THE OATH BEFORE THIS KERNEL:
-*    - to allocate, use, and free the EXACTLY size for each chunk you
-*      requested. In this order.
-*
-*  o If you write out of the boundaries you have allocated - too sad, too bad
-*    end of story.
-*
-*  o Check for NULL returns. Take a look on the pool. If it is too fragmented
-*    so you won't find a contiguous chunk the size you need, you are
-*    better off reinitialising the pool.
-*
-*  o The IDEAL use:
-*    - allocate and deallocate *multiples* of the pool size.
-*    - do it on a unidirectional manner, just as you would do with
-*      synchronisation to avoid a 'deadlock'.
-*
-* \verbatim
-*
-* - - DEPICTION - -
-*
-* You associate a pool (an array) of BYTEs to a BYTE POOL CONTROL BLOCK
-* (K_BYTEPOOL)
-*
-* * - allocated byte
-* | free byte
-* x sentinel
-*
-* o INITIALISATION:
-*
-* [||||||||||||||||||||||||||||||||||||||x]
-*  ^freelist
-* [------------- poolSize-1--------------)
-*
-*
-* o ALLOCATION:
-*
-* - allocated byte
-* | free byte
-* x sentinel
-*
-* Pool before allocation::
-* [-----|||||||||||||||||||||||||||||||||x]
-*       ^freelist
-*
-* Size Requested by application: ||||||
-*
-* Pool after allocation:
-*
-* [----------||||||||||||||||||||||||||||x]
-*       -----^freeList updated
-*       |
-*       returned ADDR
-*
-* o FREE:
-* Returns to the pool a chunk of bytes
-*
-* Fragmented Pool
-*   [-------||---||||||||||||||||||||||||||x]
-*      ^ Application asks to free: ||||
-*
-* After Freeing:
-*   [--||||-||---||||||||||||||||||||||||||x]
-*      ^..·.^·...^
-*      freeList
-*
-* After Merging Adjacent Free Block:
-*   [--||||||----||||||||||||||||||||||||||x]
-*      ^....·....^
-*      freeList
-*  \endverbatim
-*******************************************************************************/
-
+ *
+ * \details
+ *
+ * Le heap, c'est chic...
+ *
+ * About BYTE POOLS.
+ *
+ * It is hard to find a trade-off for byte pools - a random chunk of bytes the
+ * application can allocate and deallocate.
+ * A safer version, with meta-data is counter-productive,  given you need
+ * a record (a struct) to keep track of every itsy bitsy weenie BYTE.
+ * In very constrained applications, it is also a bit hard to deem a situation
+ * that cannot be circumvented either by a fixed-size pool or by -
+ * the safest choice by far - a static memory allocation.
+ *
+ * So, it is up to the application programmer to diminish the hazards:
+ *
+ *  o Do Not allocate and deallocate randomly. You got no UNIX here, son.
+ *    It's hardcore emBedded \m/
+ *
+ *  o TAKE THE OATH BEFORE THIS KERNEL:
+ *    - to allocate, use, and free the EXACTLY size for each chunk you
+ *      requested. In this order.
+ *
+ *  o If you write out of the boundaries you have allocated - too sad, too bad
+ *    end of story.
+ *
+ *  o Check for NULL returns. Take a look on the pool. If it is too fragmented
+ *    so you won't find a contiguous chunk the size you need, you are
+ *    better off reinitialising the pool.
+ *
+ *  o The IDEAL use:
+ *    - allocate and deallocate *multiples* of the pool size.
+ *    - do it on a unidirectional manner, just as you would do with
+ *      synchronisation to avoid a 'deadlock'.
+ *
+ * \verbatim
+ *
+ * - - DEPICTION - -
+ *
+ * You associate a pool (an array) of BYTEs to a BYTE POOL CONTROL BLOCK
+ * (K_BYTEPOOL)
+ *
+ * * - allocated byte
+ * | free byte
+ * x sentinel
+ *
+ * o INITIALISATION:
+ *
+ * [||||||||||||||||||||||||||||||||||||||x]
+ *  ^freelist
+ * [------------- poolSize-1--------------)
+ *
+ *
+ * o ALLOCATION:
+ *
+ * - allocated byte
+ * | free byte
+ * x sentinel
+ *
+ * Pool before allocation::
+ * [-----|||||||||||||||||||||||||||||||||x]
+ *       ^freelist
+ *
+ * Size Requested by application: ||||||
+ *
+ * Pool after allocation:
+ *
+ * [----------||||||||||||||||||||||||||||x]
+ *       -----^freeList updated
+ *       |
+ *       returned ADDR
+ *
+ * o FREE:
+ * Returns to the pool a chunk of bytes
+ *
+ * Fragmented Pool
+ *   [-------||---||||||||||||||||||||||||||x]
+ *      ^ Application asks to free: ||||
+ *
+ * After Freeing:
+ *   [--||||-||---||||||||||||||||||||||||||x]
+ *      ^..·.^·...^
+ *      freeList
+ *
+ * After Merging Adjacent Free Block:
+ *   [--||||||----||||||||||||||||||||||||||x]
+ *      ^....·....^
+ *      freeList
+ *  \endverbatim
+ *******************************************************************************/
 
 #if (K_DEF_BYTEPOOL==ON)
 
@@ -543,8 +530,8 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr);
  * \param poolSize Pool size. MAX: 255 bytes
  * \return K_SUCCESS or K_ERR_MEM_INIT
  */
-K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* const memPool, \
-		BYTE const poolSize);
+K_ERR kBytePoolInit(K_BYTEPOOL *const self, BYTE *const memPool,
+		const BYTE poolSize);
 /**
  * \brief Allocates a chunk of bytes from a byte pool
  * \param self Pointer to the Byte Pool Control Block associated
@@ -552,7 +539,7 @@ K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* const memPool, \
  * \param size Number of required bytes + 1
  * \return ADDRess of the byte chunk. NULL when failure allocating.
  */
-ADDR kBytePoolAlloc(K_BYTEPOOL* const self, const BYTE size);
+ADDR kBytePoolAlloc(K_BYTEPOOL *const self, const BYTE size);
 
 /**
  * \brief Deallocates a chunk of bytes (give it back to the pool)
@@ -563,12 +550,10 @@ ADDR kBytePoolAlloc(K_BYTEPOOL* const self, const BYTE size);
  *                 of you bytes you allocated.
  * \return K_SUCCESS / K_ERR_MEM_FREE / K_ERR_MEM_INVALID_ADDR
  */
-K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, \
-		BYTE const size);
-
+K_ERR kBytePoolFree(K_BYTEPOOL *const self, BYTE *const chunkPtr,
+		const BYTE size);
 
 #endif /*K_DEF_BYTEPOOL*/
-
 
 /*******************************************************************************
  *
@@ -580,12 +565,12 @@ K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, \
  *\param taskID user-defined ID
  *\return Task system ID
  */
-TID kGetTaskPID(TID const taskID);
+TID kGetTaskPID(const TID taskID);
 /**
  * \brief Gets a task priorirty
  * \param taskID user-defined Task ID
  */
-PRIO kGetTaskPrio(TID const taskID);
+PRIO kGetTaskPrio(const TID taskID);
 /**
  * \brief Gets the current number of  ticks
  * \return Global system tick value
@@ -607,10 +592,8 @@ SIZE kStrLen(STRING string);
  */
 ADDR kMemCpy(ADDR destPtr, const ADDR srcPtr, SIZE size);
 
-
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/
 
-
-#endif /* K_API_H */
+#endif /* KAPI_H */

@@ -9,8 +9,8 @@
  *
  *****************************************************************************/
 
-#ifndef INC_KSCH_H
-#define INC_KSCH_H
+#ifndef KSCH_H
+#define KSCH_H
 
 /*
  * brief Determines if the scheduler needs to reschedule a task
@@ -52,4 +52,4 @@ VOID kInit(VOID);
 VOID kApplicationInit(VOID);
 
 
-#endif /* INC_KSCH_H_ */
+#endif /* KSCH_H */

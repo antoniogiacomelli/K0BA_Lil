@@ -9,19 +9,17 @@
  *
  *****************************************************************************/
 
-
-#ifndef K_CHECK_H
-#define K_CHECK_H
-
+#ifndef KCHECK_H
+#define KCHECK_H
 
 #ifndef __GNUC__
 #   error "You need GCC as your compiler!"
 #endif
 
 #if (K_DEF_MESGQ == ON)
-	#if (K_DEF_N_MESGBUFF <=0 )
-	#	error "Number of message buffers must be greater than 0"
-	#endif
+#if (K_DEF_N_MESGBUFF <=0 )
+#	error "Number of message buffers must be greater than 0"
+#endif
 #endif
 
 #ifndef K_DEF_VERSION
@@ -33,5 +31,4 @@
 #error "You need a compiler with stddef.h library."
 #endif
 
-
-#endif /* K_CHECK_H */
+#endif /* KCHECK_H */

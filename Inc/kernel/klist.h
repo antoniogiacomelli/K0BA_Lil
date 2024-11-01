@@ -10,8 +10,8 @@
  *****************************************************************************/
 
 
-#ifndef INC_KLIST_H
-#define INC_KLIST_H
+#ifndef KLIST_H
+#define KLIST_H
 
 /*
  *  Initialize a linked list
@@ -122,4 +122,4 @@ K_ERR kReadyQEnq(K_TCB* const tcbPtr);
 K_ERR kReadyQDeq(K_TCB** const tcbPPtr, PRIO priority);
 
 
-#endif /* INC_KLIST_H_ */
+#endif /* KLIST_H */

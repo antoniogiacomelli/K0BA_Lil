@@ -10,8 +10,8 @@
  * 					major minor patch
  *
  *****************************************************************************/
-#ifndef K_VERSION_H
-#define K_VERSION_H
+#ifndef KVERSION_H
+#define KVERSION_H
 #define K_VALID_VERSION 0x010100
 struct kversion
 {
@@ -22,4 +22,4 @@ struct kversion
 
 unsigned int kGetVersion(void);
 
-#endif /* INC_KVERSION_H_ */
+#endif /* KVERSION_H */

@@ -92,56 +92,54 @@ $(function(){ initResizable(false); });
   <div class="headertitle"><div class="title">kconfig.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="kconfig_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment"> /******************************************************************************</span></div>
+<a href="kconfig_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/******************************************************************************</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> *</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> ******************************************************************************/</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#ifndef K_CONFIG_H</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define K_CONFIG_H</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#ifndef KCONFIG_H</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#define KCONFIG_H</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#define ON     1</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#define OFF    0</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#define ON     1</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#define OFF    0</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="kconfig_8h.html#ac6cccabfb3e4f2dbb7d8f056b9eec807">   26</a></span><span class="preprocessor">#define K_DEF_N_USRTASKS             4      </span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a226e304b0c026eedd96c87f7ed4273fd">   27</a></span><span class="preprocessor">#define K_DEF_N_PRIO                 5      </span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a7a8de31c70b921f043f9258a6db81c83">   28</a></span><span class="preprocessor">#define K_DEF_TICK_PERIOD    TICK_10MS      </span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="kconfig_8h.html#ad6b3ce2343ab1b740af283036a3c817b">   29</a></span><span class="preprocessor">#define K_DEF_FIFO_SIZE              32     </span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a02696195fd211a1f01fdc5a8ad3971a6">   30</a></span><span class="preprocessor">#define K_DEF_N_TIMERS                6     </span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="kconfig_8h.html#aecef26cd080162730e4a6598651a94fb">   31</a></span><span class="preprocessor">#define K_DEF_ERRHANDLER             ON     </span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a04d97b1803ccb44e39433277b6297c08">   32</a></span><span class="preprocessor">#define K_DEF_PRIOINV_FAULT          ON     </span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="kconfig_8h.html#ada78e23423897b7d1a0aa48b899f1895">   38</a></span><span class="preprocessor">#define K_DEF_MEMBLOCK_ALIGN_4  ON    </span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="kconfig_8h.html#abd046b39e6815278ffd261d844428915">   41</a></span><span class="preprocessor">#define K_DEF_BYTEPOOL          ON    </span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a258fd29b655e73073376d9948b82d617">   46</a></span><span class="preprocessor">#define K_DEF_MESGQ             ON     </span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a657c9fc22fd62924dd56256a31174a51">   47</a></span><span class="preprocessor">#define K_DEF_MAILBOX           ON     </span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#if (K_DEF_MAILBOX==ON)</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a5211f8b100664bdeb40596e1cab37ef0">   51</a></span><span class="preprocessor">    #define K_DEF_MAIL_SIZE          4    </span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#if ((K_DEF_MESGQ == ON))</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a70ee1160058cfea62a2f4fc76015453c">   55</a></span><span class="preprocessor">    #define K_DEF_N_MESGBUFF 10           </span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a580b1564147590cb7acf73d9b1f24608">   58</a></span><span class="preprocessor">#define K_DEF_COND ON                 </span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#if (K_DEF_COND == ON)                </span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a61067ee3b559c615c46dd74541b6321f">   61</a></span><span class="preprocessor">    #define K_DEF_PIPE            ON  </span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="comment">/*  Pipes Configuration */</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">    #if (K_DEF_PIPE==ON)</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a58b3a610806f86a8999c2d6d2543c747">   65</a></span><span class="preprocessor">        #define K_DEF_PIPE_SIZE   (35) </span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">    #endif</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a355cacbd35b1f135ea395ad9a19a10cb">   69</a></span><span class="preprocessor">#define K_DEF_TRACE          ON             </span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#if (K_DEF_TRACE==ON)</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="kconfig_8h.html#adefd34fee88c6c728bece069a0d2d5d9">   71</a></span><span class="preprocessor">    #define K_DEF_TRACEBUFF_SIZE      64   </span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a21210f5cecf76b55071f08e8058374a2">   72</a></span><span class="preprocessor">    #define K_DEF_TRACE_MAX_CHAR      16    </span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="kconfig_8h.html#acd3f5e3adb71ae08ba19859be8364cb8">   73</a></span><span class="preprocessor">    #define K_DEF_TRACE_NO_INFO       ON    </span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif </span><span class="comment">/* K_CONFIG_H */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="kconfig_8h.html#ac6cccabfb3e4f2dbb7d8f056b9eec807">   23</a></span><span class="preprocessor">#define K_DEF_N_USRTASKS             4 </span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a226e304b0c026eedd96c87f7ed4273fd">   24</a></span><span class="preprocessor">#define K_DEF_N_PRIO                 5 </span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a7a8de31c70b921f043f9258a6db81c83">   25</a></span><span class="preprocessor">#define K_DEF_TICK_PERIOD    TICK_10MS      </span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="kconfig_8h.html#ad6b3ce2343ab1b740af283036a3c817b">   26</a></span><span class="preprocessor">#define K_DEF_FIFO_SIZE              32     </span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a02696195fd211a1f01fdc5a8ad3971a6">   27</a></span><span class="preprocessor">#define K_DEF_N_TIMERS                6     </span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="kconfig_8h.html#aecef26cd080162730e4a6598651a94fb">   28</a></span><span class="preprocessor">#define K_DEF_ERRHANDLER             ON     </span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a04d97b1803ccb44e39433277b6297c08">   29</a></span><span class="preprocessor">#define K_DEF_PRIOINV_FAULT          ON     </span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="kconfig_8h.html#ada78e23423897b7d1a0aa48b899f1895">   35</a></span><span class="preprocessor">#define K_DEF_MEMBLOCK_ALIGN_4  ON    </span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="kconfig_8h.html#abd046b39e6815278ffd261d844428915">   37</a></span><span class="preprocessor">#define K_DEF_BYTEPOOL          ON    </span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a258fd29b655e73073376d9948b82d617">   42</a></span><span class="preprocessor">#define K_DEF_MESGQ             ON     </span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a657c9fc22fd62924dd56256a31174a51">   43</a></span><span class="preprocessor">#define K_DEF_MAILBOX           ON     </span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#if (K_DEF_MAILBOX==ON)</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a5211f8b100664bdeb40596e1cab37ef0">   46</a></span><span class="preprocessor">#define K_DEF_MAIL_SIZE          4    </span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#if ((K_DEF_MESGQ == ON))</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a70ee1160058cfea62a2f4fc76015453c">   50</a></span><span class="preprocessor">#define K_DEF_N_MESGBUFF 10       </span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a580b1564147590cb7acf73d9b1f24608">   53</a></span><span class="preprocessor">#define K_DEF_COND ON                 </span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#if (K_DEF_COND == ON)            </span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a61067ee3b559c615c46dd74541b6321f">   56</a></span><span class="preprocessor">#define K_DEF_PIPE            ON  </span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">/*  Pipes Configuration */</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#if (K_DEF_PIPE==ON)</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a58b3a610806f86a8999c2d6d2543c747">   60</a></span><span class="preprocessor">#define K_DEF_PIPE_SIZE   (35) </span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a355cacbd35b1f135ea395ad9a19a10cb">   64</a></span><span class="preprocessor">#define K_DEF_TRACE          ON         </span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#if (K_DEF_TRACE==ON)</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="kconfig_8h.html#adefd34fee88c6c728bece069a0d2d5d9">   66</a></span><span class="preprocessor">#define K_DEF_TRACEBUFF_SIZE      64   </span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="kconfig_8h.html#a21210f5cecf76b55071f08e8058374a2">   67</a></span><span class="preprocessor">#define K_DEF_TRACE_MAX_CHAR      16    </span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="kconfig_8h.html#acd3f5e3adb71ae08ba19859be8364cb8">   68</a></span><span class="preprocessor">#define K_DEF_TRACE_NO_INFO       ON    </span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#endif </span><span class="comment">/* KCONFIG_H */</span><span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

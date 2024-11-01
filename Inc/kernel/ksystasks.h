@@ -8,8 +8,8 @@
  * 					o System Tasks and Deferred Handlers
  *
  *****************************************************************************/
-#ifndef KSYSTASKS_H_
-#define KSYSTASKS_H_
+#ifndef KSYSTASKS_H
+#define KSYSTASKS_H
 
 /******************************************************************************/
 /******************************************************************************/
@@ -27,4 +27,4 @@ void TimerHandlerTask(void);
 /* Deferred Handlers */
 void kTimerHandler(void);
 
-#endif /* INC_KSYSTASKS_H_ */
+#endif /* KSYSTASKS_H */

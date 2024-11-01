@@ -9,12 +9,10 @@
  *
  *****************************************************************************/
 
-#ifndef INC_KERR_H_
-#define INC_KERR_H_
+#ifndef KERR_H
+#define KERR_H
 
 VOID ITM_SendValue(UINT32 value);
 VOID kErrHandler(K_FAULT fault);
 
-
-
-#endif /* INC_KERR_H_ */
+#endif /* K_ERR_H*/

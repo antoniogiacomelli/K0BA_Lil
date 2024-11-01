@@ -9,9 +9,8 @@
  *
  *****************************************************************************/
 
-
-#ifndef K_MACROS_H
-#define K_MACROS_H
+#ifndef KMACROS_H
+#define KMACROS_H
 
 /*
  * brief This is the offset w.r.t the top of a stack frame
@@ -95,7 +94,6 @@
  */
 #define K_PRIO_TYPE_MAX ((1ULL << (8 * sizeof(typeof(PRIO)))) - 1)
 
-
 /*
  * brief Gets the size of the list
  * param listPtr Pointer to the list
@@ -141,15 +139,11 @@
 #define K_LIST_GET_TCB_NODE(nodePtr, containerType) \
     K_GET_CONTAINER_ADDR(nodePtr, containerType, tcbNode)
 
-
-
 /*brief Helper macro to get a message buffer from a mesg list */
 #define K_LIST_GET_MESGBUFFER_NODE(nodePtr) \
     K_GET_CONTAINER_ADDR(nodePtr, K_MESGBUFF, mesgNode)
 
-
 #define IS_NULL_PTR(ptr) ((ptr) == NULL ? 1 : 0)
-
 
 /*
  * brief Software interrupt (trap) for PendSV
@@ -164,7 +158,6 @@
 
 #define K_TRAP_SVC(N)  \
     do { asm volatile ("svc %0" :: "i" (N)); } while(0U)
-
 
 #define K_START_APPLICATION \
 	do { asm volatile ("svc #0"); } while(0U)
@@ -181,7 +174,7 @@
 /*
  * brief Macro to convert version numbers to string.
  *
-*/
+ */
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 
@@ -203,4 +196,4 @@
 #define K_TRACE(event, info) kTrace(event, info)
 #endif
 
-#endif /*K_MACROS_H*/
+#endif /*KMACROS_H*/
