@@ -4,6 +4,7 @@
  *
  ******************************************************************************
  ******************************************************************************
+ * 	Sub-module: Memory Pools
  * 	In this unit:
  * 					o Block Pool Control Block
  *					o Byte Pool Control Block
@@ -21,8 +22,8 @@
  ******************************************************************************/
 /*let me kick some old simplistic embeddded systems programming sht
  */
-K_ERR kBlockPoolInit(K_BLOCKPOOL *const self, const ADDR memPoolPtr,
-		BYTE blkSize, const BYTE numBlocks)
+K_ERR kBlockPoolInit(K_BLOCKPOOL* const self, ADDR const memPoolPtr,
+		BYTE blkSize, BYTE const numBlocks)
 {
 	K_CR_AREA;
 	K_ENTER_CR
@@ -87,7 +88,7 @@ ADDR kBlockPoolAlloc(K_BLOCKPOOL *const self)
 	return allocPtr;
 }
 
-K_ERR kBlockPoolFree(K_BLOCKPOOL *const self, const ADDR blockPtr)
+K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr)
 {
 
 	K_CR_AREA;
@@ -158,7 +159,7 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL *const self, const ADDR blockPtr)
  * [------------- poolSize-1--------------)
  *
  ******************************************************************************/
-K_ERR kBytePoolInit(K_BYTEPOOL *const self, BYTE *memPool, const BYTE poolSize)
+K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize)
 {
 	K_CR_AREA;
 	K_ENTER_CR
@@ -217,7 +218,7 @@ K_ERR kBytePoolInit(K_BYTEPOOL *const self, BYTE *memPool, const BYTE poolSize)
  *******************************************************************************
  */
 
-ADDR kBytePoolAlloc(K_BYTEPOOL *const self, const BYTE size)
+ADDR kBytePoolAlloc(K_BYTEPOOL* const self, BYTE const size)
 {
 
 	K_CR_AREA;
@@ -286,7 +287,7 @@ ADDR kBytePoolAlloc(K_BYTEPOOL *const self, const BYTE size)
  ******************************************************************************/
 
 K_ERR kBytePoolFree(K_BYTEPOOL *const self, BYTE *const chunkPtr,
-		const BYTE size)
+		BYTE const size)
 {
 	K_CR_AREA;
 	K_ENTER_CR

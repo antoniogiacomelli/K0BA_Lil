@@ -4,6 +4,7 @@
  *
  ******************************************************************************
  ******************************************************************************
+ *  Sub-module: Inter-task Synchronisation
  * 	In this unit:
  * 					o Direct Task Pend/Signal
  *					o Generic Events
@@ -17,9 +18,9 @@
 #define K_CODE
 #include "ksys.h"
 
-/******************************************************************************
- * DIRECT TASK PENDING/SIGNAL
- *****************************************************************************/
+/*******************************************************************************
+* DIRECT TASK PENDING/SIGNAL
+*******************************************************************************/
 void kPend(void)
 {
 	K_CR_AREA;
@@ -42,7 +43,7 @@ void kPend(void)
 
 }
 
-void kSignal(const PID taskID)
+void kSignal(PID const taskID)
 {
 
 	K_CR_AREA;
@@ -68,10 +69,10 @@ void kSignal(const PID taskID)
 	return;
 }
 
-/**
- *******************************************************************************
- * SLEEP/WAKE ON EVENTS
- ******************************************************************************/
+
+/******************************************************************************
+* SLEEP/WAKE ON EVENTS
+*******************************************************************************/
 static K_ERR kEventInit_(K_EVENT *const self)
 {
 
@@ -166,12 +167,11 @@ K_ERR kWake(K_EVENT *self)
 	return K_ERROR;
 }
 
-/**
- ******************************************************************************
- * SEMAPHORES
- ******************************************************************************/
+/******************************************************************************
+* SEMAPHORES
+******************************************************************************/
 
-K_ERR kSemaInit(K_SEMA *const self, INT32 value)
+K_ERR kSemaInit(K_SEMA *const self, INT32 const value)
 {
 	K_CR_AREA;
 	K_ENTER_CR
@@ -270,9 +270,9 @@ K_ERR kSemaSignal(K_SEMA *const self)
 	;
 	return K_SUCCESS;
 }
-/******************************************************************************
- * MUTEX
- *****************************************************************************/
+/*******************************************************************************
+* MUTEX
+*******************************************************************************/
 K_ERR kMutexInit(K_MUTEX *const self)
 {
 	K_CR_AREA;
@@ -447,7 +447,7 @@ VOID kCondWait(K_COND *const self)
 	;
 	kMutexLock(&self->condMutex);
 }
-
+#if(K_DEF_COND==ON)
 VOID kCondSignal(K_COND *const self)
 {
 	if (IS_NULL_PTR(self))
@@ -487,7 +487,8 @@ VOID kCondWake(K_COND *const self)
 	}
 	kMutexUnlock(&self->condMutex);
 }
-
+#endif
+/*yield is here for convenience*/
 void kYield(void)
 {
 	K_CR_AREA;

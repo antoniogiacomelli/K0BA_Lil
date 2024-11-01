@@ -4,6 +4,7 @@
  *
  ******************************************************************************
  ******************************************************************************
+ * 	Module: Nucleus
  * 	In this unit:
  * 		o Kernel initialisation routines: queues, pools, systick and scheduler
  * 										  start-up (via SVC #0)

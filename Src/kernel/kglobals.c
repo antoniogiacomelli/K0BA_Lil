@@ -4,6 +4,7 @@
  *
  ******************************************************************************
  ******************************************************************************
+ * 	Module: Nucleus
  * 	In this unit:
  * 					o System Globals (singletons)
  *
@@ -30,7 +31,7 @@ PID tidTbl[NTHREADS];
 
 volatile K_FAULT faultID = 0;
 PRIO highestPrio = 0;
-const PRIO lowestPrio = NPRIO - 1;
+PRIO const lowestPrio = NPRIO -1;
 PRIO nextTaskPrio = 0;
 volatile struct kRunTime runTime;
 
