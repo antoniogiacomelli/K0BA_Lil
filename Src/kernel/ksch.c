@@ -84,11 +84,6 @@ void kSchSwtch(void)
    TASK	QUEUE MANAGEMENT
 *******************************************************************************/
 
-#define K_CODE
-
-#include "ksys.h"
-
-#define INSTANT_PREEMPT_LOWER_PRIO
 
 K_ERR kTCBQInit(K_TCBQ *const self, STRING listName)
 {
@@ -186,6 +181,8 @@ K_TCB* kTCBQSearchPID(K_TCBQ *const self, TID uPid)
 	}
 	return NULL;
 }
+
+#define INSTANT_PREEMPT_LOWER_PRIO
 
 K_ERR kReadyQEnq(K_TCB *const tcbPtr)
 {
