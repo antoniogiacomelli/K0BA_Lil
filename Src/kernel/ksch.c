@@ -11,6 +11,7 @@
 
 #define K_CODE
 #include "kapi.h"
+#include "kglobals.h"
 
 BOOL kSchNeedReschedule(K_TCB* newPtr)
 {

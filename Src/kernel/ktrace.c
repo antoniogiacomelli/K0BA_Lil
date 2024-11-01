@@ -12,6 +12,7 @@
 
 #define K_CODE
 #include "kapi.h"
+#include "kglobals.h"
 
 #if (K_DEF_TRACE==ON)
 K_TRACE kTracer;

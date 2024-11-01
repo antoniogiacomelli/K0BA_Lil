@@ -59,20 +59,19 @@
  */
 #ifndef K_API_H
 #define K_API_H
-/*--------------------------------*/
-/*Insert you ARM GCC, ARM CMSIS   */
-/*dependencies here; and other env*/
-/*deps you may hive, e.g., BSP    */
-/*--------------------------------*/
+/*---------------------------------*/
+/*Place ARM GCC and CMSIS-CORE     */
+/*dependencies here, as well other */
+/*deps your environment might have */
+/*such as a BSP					   */
+/*-------------------------------- */
 #include "kmacros.h"
 #include "kconfig.h"
 #include "ktypes.h"
 #include "kobjs.h"
-#include "kglobals.h"
 #include "klist.h"
 #include "kerr.h"
 #include "ksch.h"
-#include "kcheck.h"
 
 /******************************************************************************/
 /******************************************************************************/
@@ -534,7 +533,8 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr);
  * \param poolSize Pool size. MAX: 255 bytes
  * \return K_SUCCESS or K_ERR_MEM_INIT
  */
-K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize);
+K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* const memPool, \
+		BYTE const poolSize);
 /**
  * \brief Allocates a chunk of bytes from a byte pool
  * \param self Pointer to the Byte Pool Control Block associated
@@ -542,7 +542,7 @@ K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize);
  * \param size Number of required bytes + 1
  * \return ADDRess of the byte chunk. NULL when failure allocating.
  */
-ADDR kBytePoolAlloc(K_BYTEPOOL* const self, BYTE const size);
+ADDR kBytePoolAlloc(K_BYTEPOOL* const self, const BYTE size);
 
 /**
  * \brief Deallocates a chunk of bytes (give it back to the pool)

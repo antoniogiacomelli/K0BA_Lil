@@ -12,7 +12,7 @@
 
 #define K_CODE
 #include "kapi.h"
-
+#include "kglobals.h"
 PID kGetTaskPID(TID const taskID)
 {
 	PID pid=0;

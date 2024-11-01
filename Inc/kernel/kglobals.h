@@ -11,12 +11,19 @@
 
 #ifndef K_GLOBALS_H
 #define K_GLOBALS_H
+#include "kapi.h"
 
 
+#define IDLE_STACKSIZE 		   32
+#define TIMHANDLER_STACKSIZE  128
+#define TIMHANDLER_TID		  255
+#define IDLETASK_TID		  255
 extern K_TCB*            runPtr;              /* Pointer to the running TCB */
 extern K_TCB             tcbs[NTHREADS];	  /* Pool of TCBs				*/
 extern volatile K_FAULT  faultID;        	  /* Fault ID					*/
 extern UINT32            idleStack[IDLE_STACKSIZE]; /* Stack for idle task 		*/
+extern UINT32 timerHandlerStack[TIMHANDLER_STACKSIZE];
+
 extern K_TCBQ 			 readyQueue[NPRIO];   /* table of ready queues	 	*/
 extern K_TCBQ 			 sleepingQueue;		  /* table of SLEEPING queues  */
 extern PID				 tidTbl[NTHREADS];    /* map pid -> tid */

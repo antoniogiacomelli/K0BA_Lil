@@ -16,6 +16,7 @@
 
 #define K_CODE
 #include "kapi.h"
+#include "kglobals.h"
 
 #if (K_DEF_MESGQ==ON)
 /*****************************************************************************
@@ -159,8 +160,11 @@ K_ERR kMailboxInit(K_MAILBOX* const self)
 K_ERR kMailboxPost(K_MAILBOX* self, const ADDR mailPtr, const SIZE mailSize)
 {
 	if (IS_NULL_PTR(self) || IS_NULL_PTR(mailPtr))
+	{
 		kErrHandler(FAULT_NULL_OBJ);
-	kSemaWait(&self->semaEmpty); /*wait it is empty */
+		return K_ERR_NULL_OBJ;
+	}
+	kSemaWait(&self->semaEmpty); /* wait it is empty */
 	kMutexLock(&self->mutex);    /* lock, and write */
 	K_CR_AREA;
 	K_ENTER_CR;
@@ -181,7 +185,8 @@ TID kMailboxPend(K_MAILBOX* const self, const ADDR recvMailPtr)
 		kErrHandler(FAULT_NULL_OBJ);
 	}
 	kSemaWait(&self->semaFull);  /* wait there is an item */
-	kSemaSignal(&self->semaAck); /* acknowledge the rcvr so it will unlock */
+	kSemaSignal(&self->semaAck); /* acknowledge the rcvr, so it unlocks
+	 	 	 	 	 	 	 	 	the mutex */
 	kMutexLock(&self->mutex);    /* lock to receive */
 	K_CR_AREA;
 	K_ENTER_CR;

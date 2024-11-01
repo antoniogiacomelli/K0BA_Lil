@@ -14,6 +14,7 @@
 #define K_CODE
 #include "kapi.h"
 #include "ksystasks.h"
+#include "kglobals.h"
 
 static PID pPid=0;	/*<* system pid for each task 	*/
 
@@ -80,31 +81,48 @@ K_ERR kCreateTask(const TASKENTRY taskFuncPtr, const char* taskName, const PID i
 		const TICK timeSlice, const PRIO priority, const BOOL runToCompl)
 
 {
-	if (id==255 || id==0)
+	if (id==0xFF || id==0)
 	{
 		return K_ERR_INVALID_TID;
 		assert(0);
 	}
-
+	/* if private PID is 0, system tasks hasn't been started yet */
 	if (pPid==0)
 	{
-
+		/*init table thap maps tid to pids. mark as 255 all fields, to
+		 * indicate they are empty */
 		for (UINT32 idx; idx<NTHREADS; idx++)
 		{
 			tidTbl[idx]=0xFF;
 		}
-		assert(kInitTcb_(IdleTask, idleStack, stackSize)
+
+		/* initialise IDLE TASK */
+		assert(kInitTcb_(IdleTask, idleStack, IDLE_STACKSIZE)
 				== K_SUCCESS);
 
 
 		tcbs[pPid].priority = NPRIO-1;
 		tcbs[pPid].realPrio = NPRIO-1;
 		tcbs[pPid].taskName = "IdleTask";
-		tcbs[pPid].uPid = 0;
+		tcbs[pPid].uPid = IDLETASK_TID;
 		tcbs[pPid].runToCompl = FALSE;
 		tcbs[pPid].timeSlice = 0;
 		assert(tidTbl[pPid]==0xFF);
 		tidTbl[pPid]=0;
+		pPid+=1;
+		/*initialise TIMER HANDLER TASK */
+		assert(kInitTcb_(TimerHandlerTask, timerHandlerStack, \
+				TIMHANDLER_STACKSIZE) == K_SUCCESS);
+
+
+		tcbs[pPid].priority = 0;
+		tcbs[pPid].realPrio = 0;
+		tcbs[pPid].taskName = "TimHandlerTask";
+		tcbs[pPid].uPid = TIMHANDLER_TID;
+		tcbs[pPid].runToCompl = TRUE;
+		tcbs[pPid].timeSlice = 0;
+		assert(tidTbl[pPid]==0xFF);
+		tidTbl[pPid]=255;
 		pPid+=1;
 
 	}

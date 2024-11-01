@@ -11,6 +11,7 @@
 #define K_CODE
 
 #include "kapi.h"
+#include "kglobals.h"
 
 
 void kErrHandler(K_FAULT fault)  /* generic error handler */

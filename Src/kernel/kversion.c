@@ -9,7 +9,8 @@
  *
  *****************************************************************************/
 
-#include "kapi.h"
+#include "kversion.h"
+#include "kglobals.h"
 
 #ifdef K_DEF_VERSION
 unsigned int kGetVersion(void)

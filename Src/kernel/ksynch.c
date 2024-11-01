@@ -17,6 +17,7 @@
 
 #define K_CODE
 #include "kapi.h"
+#include "kglobals.h"
 
 /******************************************************************************
  * DIRECT TASK PENDING/SIGNAL
@@ -54,6 +55,8 @@ void kSignal(PID const taskID)
 			tcbGotPtr->status=READY;
 		if (READY_HIGHER_PRIO(tcbGotPtr))
 		{
+			assert(!kTCBQEnq(&readyQueue[runPtr->priority], runPtr));
+			runPtr->status=READY;
 			K_PEND_CTXTSWTCH;
 		}
 	}
@@ -290,25 +293,25 @@ K_ERR kMutexLock(K_MUTEX* const self)
 		return K_SUCCESS;
 	}
 
-		if ((self->ownerPtr != runPtr) && (self->ownerPtr != NULL))
+	if ((self->ownerPtr != runPtr) && (self->ownerPtr != NULL))
+	{
+		if (self->ownerPtr->priority > runPtr->priority)
 		{
-			if (self->ownerPtr->priority > runPtr->priority)
-			{
 
-				/* mutex owner has lower priority than the tried-to-lock-task
-				 * thus, we boost owner priority, to avoid an intermediate
-				 * priority task that does not need lock to preempt
-				 * this task, causing an unbounded delay */
+			/* mutex owner has lower priority than the tried-to-lock-task
+			 * thus, we boost owner priority, to avoid an intermediate
+			 * priority task that does not need lock to preempt
+			 * this task, causing an unbounded delay */
 
-				self->ownerPtr->priority = runPtr->priority;
+			self->ownerPtr->priority = runPtr->priority;
 
-			}
-			runPtr->status = BLOCKED;
-			runPtr->pendingObj = (K_MUTEX*)self;
-			kTCBQEnq(&(self->queue), runPtr);
-			K_PEND_CTXTSWTCH;
-			K_EXIT_CR;
 		}
+		runPtr->status = BLOCKED;
+		runPtr->pendingObj = (K_MUTEX*)self;
+		kTCBQEnq(&(self->queue), runPtr);
+		K_PEND_CTXTSWTCH;
+		K_EXIT_CR;
+	}
 
 	K_EXIT_CR;
 	return K_SUCCESS;
@@ -417,6 +420,8 @@ VOID kCondSignal(K_COND* const self)
 	{
 		if (READY_HIGHER_PRIO(nextTCBPtr))
 		{
+			assert(!kTCBQEnq(&readyQueue[runPtr->priority], runPtr));
+			runPtr->status=READY;
 			K_PEND_CTXTSWTCH;
 		}
 	}

@@ -13,7 +13,6 @@
 #ifndef K_MACROS_H
 #define K_MACROS_H
 
-#include <kversion.h>
 
 
 /*
@@ -38,8 +37,6 @@
 #define R5_OFFSET   15 /* R5 Register offset */
 #define R4_OFFSET   16 /* R4 Register offset */
 
-#define IDLE_STACKSIZE 32
-#define TIMHANDLER_STACKSIZE 32
 
 #define MSGBUFF_SIZE sizeof(K_MESGBUFF)
 #define _N_SYSTASKS      	 2 /*idle task + tim handler*/

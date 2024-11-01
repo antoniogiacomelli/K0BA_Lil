@@ -12,6 +12,7 @@
 
 #define K_CODE
 #include "kapi.h"
+#include "kglobals.h"
 
 TICK kTickGet(void)
 {
@@ -79,7 +80,7 @@ BOOL kTickHandler(void)
 
 	if (dTimOneShotList || dTimReloadList)
 	{
-		kSignal(K_DEF_PID_TIMHANDLER);
+		kSignal(TIMHANDLER_TID);
 		deferRet = TRUE;
 
 	}

@@ -13,6 +13,10 @@
 
 #include "kapi.h"
 #include "kpools.h"
+#include "kglobals.h"
+#include "kcheck.h"
+#include "kversion.h"
+
 
 static void kInitRunTime_(void);
 static K_ERR kInitQueues_(void)

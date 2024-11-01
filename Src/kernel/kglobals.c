@@ -11,8 +11,8 @@
 #define K_CODE
 
 #include "kapi.h"
-
-
+#include "kglobals.h"
+#include "kversion.h"
 /*******************************************************************************
  *
  * 					 			SYSTEM GLOBALS

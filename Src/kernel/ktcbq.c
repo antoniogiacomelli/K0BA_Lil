@@ -41,6 +41,7 @@
 #define K_CODE
 
 #include "kapi.h"
+#include "kglobals.h"
 
 
 #define INSTANT_PREEMPT_LOWER_PRIO
@@ -161,6 +162,8 @@ K_ERR kReadyQEnq(K_TCB* const tcbPtr)
 #ifdef INSTANT_PREEMPT_LOWER_PRIO
 		if (READY_HIGHER_PRIO(tcbPtr))
 		{
+			assert(!kTCBQEnq(&readyQueue[runPtr->priority], runPtr));
+			runPtr->status=READY;
 			K_PEND_CTXTSWTCH;
 		}
 #endif

@@ -19,9 +19,10 @@ UINT32 kEnterCR(void)
 	crState = __get_PRIMASK();
 	if (crState == 0)
 	{
-		__disable_irq();
+		asm volatile("DSB");
+		asm volatile ("CPSID I");
 		asm volatile("ISB");
-		asm volatile("DMB");
+
 		return crState;
 	}
 	asm volatile("DMB");
@@ -30,6 +31,7 @@ UINT32 kEnterCR(void)
 
 void kExitCR(UINT32 crState)
 {
+	asm volatile ("ISB");
 	__set_PRIMASK(crState);
-	asm volatile("DMB");
+	asm volatile("DSB");
 }

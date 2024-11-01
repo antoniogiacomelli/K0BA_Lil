@@ -13,8 +13,6 @@
 /******************************************************************************/
 
 /* Tasks */
-extern UINT32 idleStack[IDLE_STACKSIZE];
-extern UINT32 timerHandlerStack[TIMHANDLER_STACKSIZE];
 
 void IdleTask(void);
 void TimerHandlerTask(void);

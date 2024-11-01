@@ -68,6 +68,7 @@
 
 #define K_CODE
 #include "kapi.h"
+#include "kglobals.h"
 
 static inline void kListNodeDel_(K_LISTNODE* nodePtr)
 {

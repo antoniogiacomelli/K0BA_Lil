@@ -23,16 +23,13 @@
 #define ON     1
 #define OFF    0
 
-#define K_DEF_PID_IDLETASK  	  	 0      /**<  ID of the idle task */
-#define K_DEF_PID_TIMHANDLER 		 1      /**< ID of the timer handler task */
-#define K_DEF_PID_INVALID			 255    /**< Invalid PID */
 #define K_DEF_N_USRTASKS    	     4	    /**<  Number of tasks */
 #define K_DEF_N_PRIO	           	 5      /**< Number of user task different priorities */
 #define K_DEF_TICK_PERIOD 	 TICK_10MS  	/**< System tick period */
 #define K_DEF_FIFO_SIZE				 32		/**< FIFO size */
 #define K_DEF_N_TIMERS				  6 	/**< Number of system timers */
 #define K_DEF_ERRHANDLER			 ON 	/**< Kernel will stop on faults */
-#define K_DEF_PRIOINV_FAULT			 OFFS 	/**< Treat priority inversion as a fault */
+#define K_DEF_PRIOINV_FAULT			 ON 	/**< Treat priority inversion as a fault */
 
 /**
  * \brief These macros are to turn features ON/OFF and some configurations

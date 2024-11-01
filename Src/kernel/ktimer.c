@@ -17,12 +17,13 @@
 #define K_CODE
 #include "kapi.h"
 #include "ksystasks.h"
+#include "kglobals.h"
 
 K_BLOCKPOOL	 timerMem;
 K_TIMER* 	 dTimReloadList=NULL; 		/**< periodic timers */
 K_TIMER*	 dTimOneShotList=NULL;		/**< reload	  timers */
 K_TIMER 	 timerPool[K_DEF_N_TIMERS];
-K_SEMA  	 timerSemaCnt;
+static K_SEMA  	 timerSemaCnt;
 
 #define TIMER_SIZE sizeof(K_TIMER)
 
