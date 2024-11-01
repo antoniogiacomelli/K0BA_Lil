@@ -13,8 +13,6 @@
 #ifndef K_MACROS_H
 #define K_MACROS_H
 
-
-
 /*
  * brief This is the offset w.r.t the top of a stack frame
  * The numbers are unsigned.
@@ -37,14 +35,20 @@
 #define R5_OFFSET   15 /* R5 Register offset */
 #define R4_OFFSET   16 /* R4 Register offset */
 
+#define IDLE_STACKSIZE 		   32
+#define TIMHANDLER_STACKSIZE  128
+#define TIMHANDLER_TID		  255
+#define IDLETASK_TID		  0
 
 #define MSGBUFF_SIZE sizeof(K_MESGBUFF)
+#define TIMER_SIZE 	 sizeof(K_TIMER)
+
 #define _N_SYSTASKS      	 2 /*idle task + tim handler*/
 #define NTHREADS			 (K_DEF_N_USRTASKS + _N_SYSTASKS)
 #define TICK_10MS        	(SystemCoreClock/1000)  /**<  Tick period of 10ms */
 #define TICK_5MS        	(SystemCoreClock/2000)  /**< Tick period of 5ms */
 #define TICK_1MS         	(SystemCoreClock/10000) /**<  Tick period of 1ms */
-#define NPRIO       (K_DEF_N_PRIO + 1)
+#define NPRIO      			(K_DEF_N_PRIO + 1)
 
 /*
  * brief Macro to get the address of the container structure

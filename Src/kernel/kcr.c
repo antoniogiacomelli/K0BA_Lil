@@ -9,8 +9,7 @@
  *
  *****************************************************************************/
 #define K_CODE
-
-#include "kapi.h"
+#include "ksys.h"
 
 
 UINT32 kEnterCR(void)

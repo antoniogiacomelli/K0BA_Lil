@@ -15,8 +15,7 @@
 
 
 #define K_CODE
-#include "kapi.h"
-#include "kglobals.h"
+#include "ksys.h"
 
 #if (K_DEF_MESGQ==ON)
 /*****************************************************************************
@@ -28,12 +27,7 @@ K_BLOCKPOOL       mesgBuffMem; 			 /* global mesg pool control block */
 K_MESGBUFF	  	 mesgBuffPool[K_DEF_N_MESGBUFF]; /* global mesg pool */
 K_SEMA			 semaMesgCntr;
 
-K_ERR kMesgBuffPoolInit(VOID)
-{
-	K_ERR retVal = kBlockPoolInit(&mesgBuffMem, mesgBuffPool, MSGBUFF_SIZE, K_DEF_N_MESGBUFF);
-	kSemaInit(&semaMesgCntr, K_DEF_N_MESGBUFF);
-	return retVal;
-}
+
 
 K_MESGBUFF* kMesgBuffGet()
 {

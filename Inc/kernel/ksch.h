@@ -43,7 +43,7 @@ VOID kErrCheckPrioInversion(VOID);
 /*
  * brief Initialises the kernel
  */
-VOID kInitKernel(VOID);
+VOID kInit(VOID);
 
 /*
  * \brief Initialises application specific objects. It runs on SVC Handler.

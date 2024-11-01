@@ -97,15 +97,9 @@ $(function(){ initResizable(false); });
 
 <p>Kernel API.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;kmacros.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="kconfig_8h_source.html">kconfig.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="kconfig_8h_source.html">kconfig.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ktypes_8h_source.html">ktypes.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="kobjs_8h_source.html">kobjs.h</a>&quot;</code><br />
-<code>#include &quot;kglobals.h&quot;</code><br />
-<code>#include &quot;klist.h&quot;</code><br />
-<code>#include &quot;kerr.h&quot;</code><br />
-<code>#include &quot;ksch.h&quot;</code><br />
-<code>#include &quot;kcheck.h&quot;</code><br />
 </div>
 <p><a href="kapi_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -193,6 +187,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a1adb48d266ef9b47cb89a24384daea5b" id="r_a1adb48d266ef9b47cb89a24384daea5b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1adb48d266ef9b47cb89a24384daea5b">kSleep</a> (<a class="el" href="ktypes_8h.html#a17de05a807688da02a45d805971b9f46">K_EVENT</a> *const self)</td></tr>
 <tr class="memdesc:a1adb48d266ef9b47cb89a24384daea5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Suspends a task waiting for a specific event.  <br /></td></tr>
 <tr class="separator:a1adb48d266ef9b47cb89a24384daea5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13f0d599f05c4d459c87a311dd3a3aa2" id="r_a13f0d599f05c4d459c87a311dd3a3aa2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13f0d599f05c4d459c87a311dd3a3aa2">kWake</a> (<a class="el" href="ktypes_8h.html#a17de05a807688da02a45d805971b9f46">K_EVENT</a> *const self)</td></tr>
+<tr class="memdesc:a13f0d599f05c4d459c87a311dd3a3aa2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wakes a task waiting for a specific event.  <br /></td></tr>
+<tr class="separator:a13f0d599f05c4d459c87a311dd3a3aa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ccddeb9b1a4e1ddfa2c0aa00847cc13" id="r_a0ccddeb9b1a4e1ddfa2c0aa00847cc13"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ccddeb9b1a4e1ddfa2c0aa00847cc13">kTimerInit</a> (<a class="el" href="ktypes_8h.html#a8b0456af8e7367c5741bf647a7356caa">STRING</a> <a class="el" href="kobjs_8h.html#a2f5439521260e42a003d2b02e581506a">timerName</a>, <a class="el" href="ktypes_8h.html#ae4006e2f2f8b28f59a1981f53159c143">TICK</a> <a class="el" href="kobjs_8h.html#a90802827a633145d5de8f3201f4d8023">ticks</a>, <a class="el" href="ktypes_8h.html#a5c5992905d3a3832f64f84f986702e1d">CALLBACK</a> <a class="el" href="kobjs_8h.html#a691fa461176432a4abb3489acfcc05c0">funPtr</a>, <a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a> <a class="el" href="kobjs_8h.html#ac8ff5f8d594a4e5ebd00a6b139581c32">argsPtr</a>, BOOL <a class="el" href="kobjs_8h.html#a6b5c52a49f22e308fca08861639c290b">reload</a>)</td></tr>
 <tr class="memdesc:a0ccddeb9b1a4e1ddfa2c0aa00847cc13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises an application timer.  <br /></td></tr>
 <tr class="separator:a0ccddeb9b1a4e1ddfa2c0aa00847cc13"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -211,12 +208,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a7ab4a3919a31c06d965bdbba0b189e4a" id="r_a7ab4a3919a31c06d965bdbba0b189e4a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ab4a3919a31c06d965bdbba0b189e4a">kBlockPoolFree</a> (<a class="el" href="ktypes_8h.html#a4a8e281f881176cb1e2ceae656cb155d">K_BLOCKPOOL</a> *const self, <a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a> const blockPtr)</td></tr>
 <tr class="memdesc:a7ab4a3919a31c06d965bdbba0b189e4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free a memory block back to the block pool.  <br /></td></tr>
 <tr class="separator:a7ab4a3919a31c06d965bdbba0b189e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acebebb77f782cf06116d3f7b83473ad2" id="r_acebebb77f782cf06116d3f7b83473ad2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acebebb77f782cf06116d3f7b83473ad2">kBytePoolInit</a> (<a class="el" href="ktypes_8h.html#abe1f2ea3c756a70c9db9eb408329a558">K_BYTEPOOL</a> *const self, BYTE *memPool, BYTE const poolSize)</td></tr>
-<tr class="memdesc:acebebb77f782cf06116d3f7b83473ad2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises a Byte pool control block.  <br /></td></tr>
-<tr class="separator:acebebb77f782cf06116d3f7b83473ad2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89f7f4f16d9f115972c7aee639aba0fd" id="r_a89f7f4f16d9f115972c7aee639aba0fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a89f7f4f16d9f115972c7aee639aba0fd">kBytePoolAlloc</a> (<a class="el" href="ktypes_8h.html#abe1f2ea3c756a70c9db9eb408329a558">K_BYTEPOOL</a> *const self, BYTE const size)</td></tr>
-<tr class="memdesc:a89f7f4f16d9f115972c7aee639aba0fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a chunk of bytes from a byte pool.  <br /></td></tr>
-<tr class="separator:a89f7f4f16d9f115972c7aee639aba0fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1cc1a064d0f5ab6212f547d2818a188" id="r_aa1cc1a064d0f5ab6212f547d2818a188"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1cc1a064d0f5ab6212f547d2818a188">kBytePoolInit</a> (<a class="el" href="ktypes_8h.html#abe1f2ea3c756a70c9db9eb408329a558">K_BYTEPOOL</a> *const self, BYTE *const memPool, BYTE const poolSize)</td></tr>
+<tr class="memdesc:aa1cc1a064d0f5ab6212f547d2818a188"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialises a Byte pool control block.  <br /></td></tr>
+<tr class="separator:aa1cc1a064d0f5ab6212f547d2818a188"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa15b79d4cf77261f3bd08a349a2f6c61" id="r_aa15b79d4cf77261f3bd08a349a2f6c61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa15b79d4cf77261f3bd08a349a2f6c61">kBytePoolAlloc</a> (<a class="el" href="ktypes_8h.html#abe1f2ea3c756a70c9db9eb408329a558">K_BYTEPOOL</a> *const self, const BYTE size)</td></tr>
+<tr class="memdesc:aa15b79d4cf77261f3bd08a349a2f6c61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates a chunk of bytes from a byte pool.  <br /></td></tr>
+<tr class="separator:aa15b79d4cf77261f3bd08a349a2f6c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6dd30bc0231318f92637b5cc617fca7" id="r_af6dd30bc0231318f92637b5cc617fca7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6dd30bc0231318f92637b5cc617fca7">kBytePoolFree</a> (<a class="el" href="ktypes_8h.html#abe1f2ea3c756a70c9db9eb408329a558">K_BYTEPOOL</a> *const self, BYTE *const chunkPtr, BYTE const size)</td></tr>
 <tr class="memdesc:af6dd30bc0231318f92637b5cc617fca7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocates a chunk of bytes (give it back to the pool)  <br /></td></tr>
 <tr class="separator:af6dd30bc0231318f92637b5cc617fca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -407,8 +404,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a89f7f4f16d9f115972c7aee639aba0fd" name="a89f7f4f16d9f115972c7aee639aba0fd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89f7f4f16d9f115972c7aee639aba0fd">&#9670;&#160;</a></span>kBytePoolAlloc()</h2>
+<a id="aa15b79d4cf77261f3bd08a349a2f6c61" name="aa15b79d4cf77261f3bd08a349a2f6c61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa15b79d4cf77261f3bd08a349a2f6c61">&#9670;&#160;</a></span>kBytePoolAlloc()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -421,7 +418,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">BYTE const</td>          <td class="paramname"><span class="paramname"><em>size</em></span>&#160;)</td>
+          <td class="paramtype">const BYTE</td>          <td class="paramname"><span class="paramname"><em>size</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -475,8 +472,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="acebebb77f782cf06116d3f7b83473ad2" name="acebebb77f782cf06116d3f7b83473ad2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acebebb77f782cf06116d3f7b83473ad2">&#9670;&#160;</a></span>kBytePoolInit()</h2>
+<a id="aa1cc1a064d0f5ab6212f547d2818a188" name="aa1cc1a064d0f5ab6212f547d2818a188"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1cc1a064d0f5ab6212f547d2818a188">&#9670;&#160;</a></span>kBytePoolInit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -489,7 +486,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">BYTE *</td>          <td class="paramname"><span class="paramname"><em>memPool</em></span>, </td>
+          <td class="paramtype">BYTE *const</td>          <td class="paramname"><span class="paramname"><em>memPool</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1486,6 +1483,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>K_SUCCESS/K_ERROR </dd></dl>
 
 </div>
 </div>
@@ -1602,6 +1600,32 @@ Functions</h2></td></tr>
     <tr><td class="paramname">funPtr</td><td>The callback when timer expires </td></tr>
     <tr><td class="paramname">argsPtr</td><td>Address to callback function arguments </td></tr>
     <tr><td class="paramname">reload</td><td>TRUE for reloading after timer-out. FALSE for an one-shot </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>K_SUCCESS/K_ERROR </dd></dl>
+
+</div>
+</div>
+<a id="a13f0d599f05c4d459c87a311dd3a3aa2" name="a13f0d599f05c4d459c87a311dd3a3aa2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13f0d599f05c4d459c87a311dd3a3aa2">&#9670;&#160;</a></span>kWake()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a> kWake </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="ktypes_8h.html#a17de05a807688da02a45d805971b9f46">K_EVENT</a> *const</td>          <td class="paramname"><span class="paramname"><em>self</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Wakes a task waiting for a specific event. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">self</td><td>Pointer to a K_EVENT object </td></tr>
   </table>
   </dd>
 </dl>

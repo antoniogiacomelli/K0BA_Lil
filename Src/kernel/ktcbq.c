@@ -11,17 +11,22 @@
  *******************************************************************************
  * 		  o Global Ready Queue:
  * 		  The Ready Queue is a table of FIFO queues each one dedicated to a
- * 		  priority level.
+ * 		  priority level. Status=READY.
  *
  * 		  o Global Sleeping Queue:
- * 		  The Sleeping Queue is a global single queue where tasks that suspended
- * 		  themselves are placed.
+ * 		  The Pending Queue is a global single queue where tasks that suspended
+ * 		  themselves (either by kPend or kSleepDelay) are placed waiting for a
+ * 		  a signal. Status=PENDING/SLEEPING.
  *
  * 		  o Each semaphore/mutex/condition variable/sleep event has its
- * 		  dedicated sleeping queue.
+ * 		  dedicated sleeping queue. Tasks are placed on this queue if the
+ * 		  when calling a kWait/kSleep on a kernel object.
+ * 		  Status=BLOCKED/SLEEPING.
  *
- * 		  o Tasks are removed by the order they entered. If they were ordered
- * 		  by priority, lower priority tasks would starve waiting for a resource.
+ * 		  o In both Pending and Sleeping Queues, tasks are removed on the order
+ * 		  they entered. If they were removed by priority,
+ * 		  lower priority tasks would starve waiting for a resource.
+ * 		  Note mutexes implement a priority inheritance protocol.
  *
  * 		  o Once a higher priority task than the running task is made ready it
  * 		  will instantly preempt the running taks.
@@ -40,8 +45,7 @@
 
 #define K_CODE
 
-#include "kapi.h"
-#include "kglobals.h"
+#include "ksys.h"
 
 
 #define INSTANT_PREEMPT_LOWER_PRIO

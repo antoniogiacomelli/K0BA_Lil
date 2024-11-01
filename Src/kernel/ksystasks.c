@@ -11,9 +11,7 @@
 
 
 #define K_CODE
-#include "kapi.h"
-#include "ksystasks.h"
-#include "kglobals.h"
+#include "ksys.h"
 
 UINT32 idleStack[IDLE_STACKSIZE];
 UINT32 timerHandlerStack[TIMHANDLER_STACKSIZE];

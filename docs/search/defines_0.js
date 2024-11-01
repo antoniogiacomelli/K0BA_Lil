@@ -12,15 +12,12 @@ var searchData=
   ['k_5fdef_5fn_5fprio_9',['K_DEF_N_PRIO',['../kconfig_8h.html#a226e304b0c026eedd96c87f7ed4273fd',1,'kconfig.h']]],
   ['k_5fdef_5fn_5ftimers_10',['K_DEF_N_TIMERS',['../kconfig_8h.html#a02696195fd211a1f01fdc5a8ad3971a6',1,'kconfig.h']]],
   ['k_5fdef_5fn_5fusrtasks_11',['K_DEF_N_USRTASKS',['../kconfig_8h.html#ac6cccabfb3e4f2dbb7d8f056b9eec807',1,'kconfig.h']]],
-  ['k_5fdef_5fpid_5fidletask_12',['K_DEF_PID_IDLETASK',['../kconfig_8h.html#a32067dda6f93a84ab6214fad67fdd378',1,'kconfig.h']]],
-  ['k_5fdef_5fpid_5finvalid_13',['K_DEF_PID_INVALID',['../kconfig_8h.html#afcdbe5aac2ae9b7953f125ea0d6478e2',1,'kconfig.h']]],
-  ['k_5fdef_5fpid_5ftimhandler_14',['K_DEF_PID_TIMHANDLER',['../kconfig_8h.html#a2d0b849a42b59bf059c1507d92a3bb5e',1,'kconfig.h']]],
-  ['k_5fdef_5fpipe_15',['K_DEF_PIPE',['../kconfig_8h.html#a61067ee3b559c615c46dd74541b6321f',1,'kconfig.h']]],
-  ['k_5fdef_5fpipe_5fsize_16',['K_DEF_PIPE_SIZE',['../kconfig_8h.html#a58b3a610806f86a8999c2d6d2543c747',1,'kconfig.h']]],
-  ['k_5fdef_5fprioinv_5ffault_17',['K_DEF_PRIOINV_FAULT',['../kconfig_8h.html#a04d97b1803ccb44e39433277b6297c08',1,'kconfig.h']]],
-  ['k_5fdef_5ftick_5fperiod_18',['K_DEF_TICK_PERIOD',['../kconfig_8h.html#a7a8de31c70b921f043f9258a6db81c83',1,'kconfig.h']]],
-  ['k_5fdef_5ftrace_19',['K_DEF_TRACE',['../kconfig_8h.html#a355cacbd35b1f135ea395ad9a19a10cb',1,'kconfig.h']]],
-  ['k_5fdef_5ftrace_5fmax_5fchar_20',['K_DEF_TRACE_MAX_CHAR',['../kconfig_8h.html#a21210f5cecf76b55071f08e8058374a2',1,'kconfig.h']]],
-  ['k_5fdef_5ftrace_5fno_5finfo_21',['K_DEF_TRACE_NO_INFO',['../kconfig_8h.html#acd3f5e3adb71ae08ba19859be8364cb8',1,'kconfig.h']]],
-  ['k_5fdef_5ftracebuff_5fsize_22',['K_DEF_TRACEBUFF_SIZE',['../kconfig_8h.html#adefd34fee88c6c728bece069a0d2d5d9',1,'kconfig.h']]]
+  ['k_5fdef_5fpipe_12',['K_DEF_PIPE',['../kconfig_8h.html#a61067ee3b559c615c46dd74541b6321f',1,'kconfig.h']]],
+  ['k_5fdef_5fpipe_5fsize_13',['K_DEF_PIPE_SIZE',['../kconfig_8h.html#a58b3a610806f86a8999c2d6d2543c747',1,'kconfig.h']]],
+  ['k_5fdef_5fprioinv_5ffault_14',['K_DEF_PRIOINV_FAULT',['../kconfig_8h.html#a04d97b1803ccb44e39433277b6297c08',1,'kconfig.h']]],
+  ['k_5fdef_5ftick_5fperiod_15',['K_DEF_TICK_PERIOD',['../kconfig_8h.html#a7a8de31c70b921f043f9258a6db81c83',1,'kconfig.h']]],
+  ['k_5fdef_5ftrace_16',['K_DEF_TRACE',['../kconfig_8h.html#a355cacbd35b1f135ea395ad9a19a10cb',1,'kconfig.h']]],
+  ['k_5fdef_5ftrace_5fmax_5fchar_17',['K_DEF_TRACE_MAX_CHAR',['../kconfig_8h.html#a21210f5cecf76b55071f08e8058374a2',1,'kconfig.h']]],
+  ['k_5fdef_5ftrace_5fno_5finfo_18',['K_DEF_TRACE_NO_INFO',['../kconfig_8h.html#acd3f5e3adb71ae08ba19859be8364cb8',1,'kconfig.h']]],
+  ['k_5fdef_5ftracebuff_5fsize_19',['K_DEF_TRACEBUFF_SIZE',['../kconfig_8h.html#adefd34fee88c6c728bece069a0d2d5d9',1,'kconfig.h']]]
 ];

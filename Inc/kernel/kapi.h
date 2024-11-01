@@ -59,19 +59,11 @@
  */
 #ifndef K_API_H
 #define K_API_H
-/*---------------------------------*/
-/*Place ARM GCC and CMSIS-CORE     */
-/*dependencies here, as well other */
-/*deps your environment might have */
-/*such as a BSP					   */
-/*-------------------------------- */
-#include "kmacros.h"
+
 #include "kconfig.h"
 #include "ktypes.h"
 #include "kobjs.h"
-#include "klist.h"
-#include "kerr.h"
-#include "ksch.h"
+
 
 /******************************************************************************/
 /******************************************************************************/
@@ -168,6 +160,7 @@ K_ERR kMutexUnlock(K_MUTEX* const self);
 /* MESSAGE QUEUE															  */
 /*																			  */
 /******************************************************************************/
+#if (K_DEF_MESGQ == ON)
 
 
 /**
@@ -196,6 +189,7 @@ PID kMesgQGet(K_MESGQ* const self, ADDR rcvdMesgPtr);
  */
 VOID kMesgQInit(K_MESGQ* const self, ADDR mesgPoolPtr, BYTE queueSize, \
 				   BYTE mesgSize);
+#endif /*K_DEF_MESGQ*/
 
 
 /******************************************************************************/
@@ -203,6 +197,7 @@ VOID kMesgQInit(K_MESGQ* const self, ADDR mesgPoolPtr, BYTE queueSize, \
 /* MAILBOX																	  */
 /*																			  */
 /******************************************************************************/
+#if (K_DEF_MAILBOX==ON)
 
 /**
  *\brief Initialise a mailbox
@@ -228,13 +223,13 @@ K_ERR kMailboxPost(K_MAILBOX* const self, const ADDR mailPtr, const SIZE mailSiz
  */
 TID kMailboxPend(K_MAILBOX* const self, const ADDR recvMailPtr);
 
-
-#if (K_DEF_COND==ON)
+#endif /*K_DEF_MAILBOX*/
 /*****************************************************************************
  *
  * CONDITION VARIABLE
  *
  ******************************************************************************/
+#if (K_DEF_COND==ON)
 
 /**
  * \brief Initialises a condition variable.
@@ -269,12 +264,12 @@ VOID kCondWake(K_COND* const self);
 #endif /* K_DEF_COND */
 
 
-#if (K_DEF_PIPE==ON)
 /******************************************************************************/
 /*																			  */
 /* PIPES																	  */
 /*																			  */
 /*******************************************************************************/
+#if (K_DEF_PIPE==ON)
 
 /**
 *\brief Initialise a pipe
@@ -302,6 +297,13 @@ INT32 kPipeWrite(K_PIPE* const self, const BYTE* srcPtr, UINT32 nBytes);
 
 
 #endif /*K_DEF_PIPES*/
+
+/*******************************************************************************
+ *
+ * FIFOS
+ *
+ ******************************************************************************/
+
 /**
  * \brief Initialise Simple thread-safe FIFO
  * \param self FIFO address
@@ -344,9 +346,17 @@ VOID kSignal(PID const taskID);
 /**
  * \brief Suspends a task waiting for a specific event
  * \param self Pointer to a K_EVENT object
+ * \return K_SUCCESS/K_ERROR
  */
 K_ERR kSleep(K_EVENT* const self);
 
+
+/**
+ * \brief Wakes a task waiting for a specific event
+ * \param self Pointer to a K_EVENT object
+ * \return K_SUCCESS/K_ERROR
+ */
+K_ERR kWake(K_EVENT* const self);
 
 
 /******************************************************************************/
@@ -558,15 +568,7 @@ K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, \
 
 
 #endif /*K_DEF_BYTEPOOL*/
-/******************************************************************************
- *
- * TRACER
- *
- ******************************************************************************/
-#if (K_DEF_TRACER == ON)
-VOID kTraceInit(VOID);
-K_ERR kTrace(K_TRACEID event, CHAR* info);
-#endif
+
 
 /*******************************************************************************
  *

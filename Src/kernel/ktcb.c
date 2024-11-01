@@ -12,9 +12,7 @@
 
 
 #define K_CODE
-#include "kapi.h"
-#include "ksystasks.h"
-#include "kglobals.h"
+#include "ksys.h"
 
 static PID pPid=0;	/*<* system pid for each task 	*/
 

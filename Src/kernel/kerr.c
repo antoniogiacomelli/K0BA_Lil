@@ -9,9 +9,7 @@
  *
  *****************************************************************************/
 #define K_CODE
-
-#include "kapi.h"
-#include "kglobals.h"
+#include "ksys.h"
 
 
 void kErrHandler(K_FAULT fault)  /* generic error handler */

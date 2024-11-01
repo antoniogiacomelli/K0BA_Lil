@@ -9,8 +9,7 @@
  *
  *****************************************************************************/
 
-#include "kversion.h"
-#include "kglobals.h"
+#include "ksys.h"
 
 #ifdef K_DEF_VERSION
 unsigned int kGetVersion(void)

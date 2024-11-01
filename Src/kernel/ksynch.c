@@ -16,8 +16,7 @@
 
 
 #define K_CODE
-#include "kapi.h"
-#include "kglobals.h"
+#include "ksys.h"
 
 /******************************************************************************
  * DIRECT TASK PENDING/SIGNAL

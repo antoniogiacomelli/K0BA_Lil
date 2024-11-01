@@ -15,28 +15,21 @@
 
 
 #define K_CODE
-#include "kapi.h"
-#include "ksystasks.h"
-#include "kglobals.h"
+
+#include "ksys.h"
 
 K_BLOCKPOOL	 timerMem;
 K_TIMER* 	 dTimReloadList=NULL; 		/**< periodic timers */
 K_TIMER*	 dTimOneShotList=NULL;		/**< reload	  timers */
 K_TIMER 	 timerPool[K_DEF_N_TIMERS];
-static K_SEMA  	 timerSemaCnt;
+K_SEMA  	 timerSemaCnt;
 
-#define TIMER_SIZE sizeof(K_TIMER)
 
 static K_ERR kTimerListAdd_(K_TIMER** dTimList, STRING timerName,\
 		TICK tickCount,  CALLBACK funPtr, ADDR argsPtr, BOOL reload);
 
 
-K_ERR kTimerPoolInit(VOID)
-{
 
-	kSemaInit(&timerSemaCnt, K_DEF_N_TIMERS);
-	return kBlockPoolInit(&timerMem, (BYTE*)timerPool, TIMER_SIZE, K_DEF_N_TIMERS);
-}
 K_TIMER* kTimerGet(VOID)
 {
 

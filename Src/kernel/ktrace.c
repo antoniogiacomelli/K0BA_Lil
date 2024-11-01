@@ -11,8 +11,7 @@
  *****************************************************************************/
 
 #define K_CODE
-#include "kapi.h"
-#include "kglobals.h"
+#include "ksys.h"
 
 #if (K_DEF_TRACE==ON)
 K_TRACE kTracer;

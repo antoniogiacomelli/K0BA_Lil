@@ -10,8 +10,7 @@
  *****************************************************************************/
 
 #define K_CODE
-#include "kapi.h"
-#include "kglobals.h"
+#include "ksys.h"
 
 BOOL kSchNeedReschedule(K_TCB* newPtr)
 {

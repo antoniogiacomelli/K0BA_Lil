@@ -4,9 +4,9 @@ var searchData=
   ['kblockpoolfree_1',['kBlockPoolFree',['../kapi_8h.html#a7ab4a3919a31c06d965bdbba0b189e4a',1,'kapi.h']]],
   ['kblockpoolinit_2',['kBlockPoolInit',['../kapi_8h.html#aba93822d4ae5fcbbbe76767c80babd29',1,'kapi.h']]],
   ['kbusydelay_3',['kBusyDelay',['../kapi_8h.html#a4025cb3de89ffae8ebd4f26323eca881',1,'kapi.h']]],
-  ['kbytepoolalloc_4',['kBytePoolAlloc',['../kapi_8h.html#a89f7f4f16d9f115972c7aee639aba0fd',1,'kapi.h']]],
+  ['kbytepoolalloc_4',['kBytePoolAlloc',['../kapi_8h.html#aa15b79d4cf77261f3bd08a349a2f6c61',1,'kapi.h']]],
   ['kbytepoolfree_5',['kBytePoolFree',['../kapi_8h.html#af6dd30bc0231318f92637b5cc617fca7',1,'kapi.h']]],
-  ['kbytepoolinit_6',['kBytePoolInit',['../kapi_8h.html#acebebb77f782cf06116d3f7b83473ad2',1,'kapi.h']]],
+  ['kbytepoolinit_6',['kBytePoolInit',['../kapi_8h.html#aa1cc1a064d0f5ab6212f547d2818a188',1,'kapi.h']]],
   ['kcondinit_7',['kCondInit',['../kapi_8h.html#ab52d9b450304c6e34a094cfe058f2327',1,'kapi.h']]],
   ['kcondsignal_8',['kCondSignal',['../kapi_8h.html#aa998c6dc2a62dc3571c4c253317959b0',1,'kapi.h']]],
   ['kcondwait_9',['kCondWait',['../kapi_8h.html#ac6bb0fa5d1873a8dbb3b9b42ceaee4bb',1,'kapi.h']]],
@@ -40,5 +40,6 @@ var searchData=
   ['kstrlen_37',['kStrLen',['../kapi_8h.html#a11efbfc68d9db0cbdab58046cc9235e1',1,'kapi.h']]],
   ['ktickget_38',['kTickGet',['../kapi_8h.html#a7dac8882d749d372913a4bde40f13990',1,'kapi.h']]],
   ['ktimerinit_39',['kTimerInit',['../kapi_8h.html#a0ccddeb9b1a4e1ddfa2c0aa00847cc13',1,'kapi.h']]],
-  ['kyield_40',['kYield',['../kapi_8h.html#ae4cf07219d0aac0010e96ae831fedc29',1,'kapi.h']]]
+  ['kwake_40',['kWake',['../kapi_8h.html#a13f0d599f05c4d459c87a311dd3a3aa2',1,'kapi.h']]],
+  ['kyield_41',['kYield',['../kapi_8h.html#ae4cf07219d0aac0010e96ae831fedc29',1,'kapi.h']]]
 ];
