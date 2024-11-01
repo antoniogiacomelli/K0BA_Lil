@@ -60,9 +60,9 @@
 #ifndef K_API_H
 #define K_API_H
 /*--------------------------------*/
-#include <stm32f4xx_hal.h>
-#include <stm32f401xe.h>
-#include <cmsis_gcc.h>
+/*Insert you ARM GCC, ARM CMSIS   */
+/*dependencies here; and other env*/
+/*deps you may hive, e.g., BSP    */
 /*--------------------------------*/
 #include "kmacros.h"
 #include "kconfig.h"
@@ -127,7 +127,7 @@ K_ERR kSemaInit(K_SEMA* const self, INT32 value);
  */
 K_ERR kSemaWait(K_SEMA* const self);
 
-/**
+/**f
  *\brief Signal a semaphore
  *\param self Semaphore address
  *\return None
@@ -214,11 +214,11 @@ K_ERR kMailboxInit(K_MAILBOX* const self);
 /**
  *\brief Post a message on a mailbox w
  *\param self Address of a mailbox structure
- *\param mesgPtr Message address
- *\param mesgSize Message size
+ *\param mailPtr Message address
+ *\param mailSize Message size
  *\retval 0 if success. -1 if fails.
  */
-K_ERR kMailboxPost(K_MAILBOX* const self, const ADDR mesgPtr, SIZE mesgSize);
+K_ERR kMailboxPost(K_MAILBOX* const self, const ADDR mailPtr, const SIZE mailSize);
 
 /**
  *\brief Retrieves a message from a mailbox

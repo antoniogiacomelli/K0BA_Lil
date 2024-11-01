@@ -131,7 +131,7 @@ PID kMesgQGet(K_MESGQ* const self, ADDR rcvdMesgPtr)
 #if (K_DEF_MAILBOX==ON)
 /******************************************************************************
  *
- * INDIRECT MAILBOX
+ * FULLY SYNCHRONOUS MAILBOX
  *
  ****************************************************************************/
 
@@ -148,32 +148,29 @@ K_ERR kMailboxInit(K_MAILBOX* const self)
 		return K_ERROR;
 	}
 
-	assert(!kMutexInit(&(self->mutex))); /* data init as free to access */
-	assert(!kSemaInit(&(self->semaEmpty), 1)); /* mailbox init as empty */
-	assert(!kSemaInit(&(self->semaFull), 0));  /* mailbox init not full */
-#if (K_DEF_MAILBOX_ACK==ON)
-	assert(!kSemaInit(&(self->semaAck), 0));
-#endif
+	kMutexInit(&(self->mutex)); /* data init as free to access */
+	kSemaInit(&(self->semaEmpty), 1); /* mailbox init as empty */
+	kSemaInit(&(self->semaFull), 0);  /* mailbox init not full */
+	kSemaInit(&(self->semaAck), 0); /* no ack yet*/
 	self->mail.mailPtr = &(self->mail.mail[0]);
 	K_EXIT_CR;
 	return K_SUCCESS;
 }
-K_ERR kMailboxPost(K_MAILBOX* self, const ADDR mesgPtr, SIZE mesgSize)
+K_ERR kMailboxPost(K_MAILBOX* self, const ADDR mailPtr, const SIZE mailSize)
 {
-	if (IS_NULL_PTR(self) || IS_NULL_PTR(mesgPtr))
+	if (IS_NULL_PTR(self) || IS_NULL_PTR(mailPtr))
 		kErrHandler(FAULT_NULL_OBJ);
-	assert(!kSemaWait(&self->semaEmpty)); /*D EMPTY*/
-	assert(!kMutexLock(&self->mutex));
+	kSemaWait(&self->semaEmpty); /*wait it is empty */
+	kMutexLock(&self->mutex);    /* lock, and write */
 	K_CR_AREA;
 	K_ENTER_CR;
-	kMemCpy(self->mail.mailPtr, mesgPtr, mesgSize);
+	kMemCpy(self->mail.mailPtr, mailPtr, mailSize);
 	self->mail.senderTid = runPtr->uPid;
-	self->mail.mailSize = mesgSize;
+	self->mail.mailSize = mailSize;
 	K_EXIT_CR;
+	kSemaSignal(&self->semaFull);  /* mark as full */
+	kSemaWait(&self->semaAck);	   /* wait for an ack to unlock */
 	kMutexUnlock(&self->mutex);
-	kSemaSignal(&self->semaFull);
-	kSemaWait(&self->semaAck);
-	/*D ACK*/
 	return K_SUCCESS;
 }
 
@@ -183,20 +180,18 @@ TID kMailboxPend(K_MAILBOX* const self, const ADDR recvMailPtr)
 	{
 		kErrHandler(FAULT_NULL_OBJ);
 	}
-	kSemaWait(&self->semaFull);
-	kSemaSignal(&self->semaAck); /*U ACK */
-	kMutexLock(&self->mutex);
+	kSemaWait(&self->semaFull);  /* wait there is an item */
+	kSemaSignal(&self->semaAck); /* acknowledge the rcvr so it will unlock */
+	kMutexLock(&self->mutex);    /* lock to receive */
 	K_CR_AREA;
 	K_ENTER_CR;
 	kMemCpy(recvMailPtr, self->mail.mailPtr, self->mail.mailSize);
 	K_EXIT_CR;
-	kMutexUnlock(&self->mutex);
-	kSemaSignal(&self->semaEmpty);
+	kSemaSignal(&self->semaEmpty); /*  mark as empty */
+	kMutexUnlock(&self->mutex);    /*  then, unlock */
 	return self->mail.senderTid;
-
 }
-#endif /*(K_DEF_MAILBOX)*/
-
+#endif
 #if (K_DEF_PIPE==ON)
 /******************************************************************************
  *

@@ -148,9 +148,9 @@ Functions</h2></td></tr>
 <tr class="memitem:acbaef72af9e65f988ce1cffcf7a9a642" id="r_acbaef72af9e65f988ce1cffcf7a9a642"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbaef72af9e65f988ce1cffcf7a9a642">kMailboxInit</a> (<a class="el" href="ktypes_8h.html#a78e51a00ac6a6c98c26e7501ac186af2">K_MAILBOX</a> *const self)</td></tr>
 <tr class="memdesc:acbaef72af9e65f988ce1cffcf7a9a642"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise a mailbox.  <br /></td></tr>
 <tr class="separator:acbaef72af9e65f988ce1cffcf7a9a642"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1bb13af852fcd6ef9686d450bbed5c5" id="r_ae1bb13af852fcd6ef9686d450bbed5c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1bb13af852fcd6ef9686d450bbed5c5">kMailboxPost</a> (<a class="el" href="ktypes_8h.html#a78e51a00ac6a6c98c26e7501ac186af2">K_MAILBOX</a> *const self, const <a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a> <a class="el" href="kobjs_8h.html#af1e1389b08ae9291bc54899ca6877a22">mesgPtr</a>, SIZE <a class="el" href="kobjs_8h.html#a44c2f18f4c12116758c37c108d56412e">mesgSize</a>)</td></tr>
-<tr class="memdesc:ae1bb13af852fcd6ef9686d450bbed5c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Post a message on a mailbox w.  <br /></td></tr>
-<tr class="separator:ae1bb13af852fcd6ef9686d450bbed5c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9227d1ea5547b1e81af6ab2e0f72d90e" id="r_a9227d1ea5547b1e81af6ab2e0f72d90e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#ae043ffcc9242a3f2a517633a12ec4263">K_ERR</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9227d1ea5547b1e81af6ab2e0f72d90e">kMailboxPost</a> (<a class="el" href="ktypes_8h.html#a78e51a00ac6a6c98c26e7501ac186af2">K_MAILBOX</a> *const self, const <a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a> <a class="el" href="kobjs_8h.html#a234afa1c15a3a8e79259f5e411bc6ad1">mailPtr</a>, const SIZE <a class="el" href="kobjs_8h.html#a64171a1d8dd5f23af9ac6f6e629c77d6">mailSize</a>)</td></tr>
+<tr class="memdesc:a9227d1ea5547b1e81af6ab2e0f72d90e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Post a message on a mailbox w.  <br /></td></tr>
+<tr class="separator:a9227d1ea5547b1e81af6ab2e0f72d90e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b2b258b1404b496acbb9a59f8f43210" id="r_a5b2b258b1404b496acbb9a59f8f43210"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ktypes_8h.html#aa91430ada220aeb4be678a150b5233df">TID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b2b258b1404b496acbb9a59f8f43210">kMailboxPend</a> (<a class="el" href="ktypes_8h.html#a78e51a00ac6a6c98c26e7501ac186af2">K_MAILBOX</a> *const self, const <a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a> recvMailPtr)</td></tr>
 <tr class="memdesc:a5b2b258b1404b496acbb9a59f8f43210"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a message from a mailbox.  <br /></td></tr>
 <tr class="separator:a5b2b258b1404b496acbb9a59f8f43210"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -277,7 +277,9 @@ Functions</h2></td></tr>
 *                           keeping track of sleeping tasks.
 *            kSignal(TID id): direct signals a task. Every task is assigned an
 *             unique ID.
-*        (3) kYield(): caller task is SLEEPING
+*        (3) kYield(): caller task yields, and get back to the READY QUEUE.
+*            kPend():  caller tasks suspend itself - status: PENDING - waiting
+*                      for a direct signal.
 *
 *</pre> </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a056960d4b115170b9d11c7d46cfb9407" name="a056960d4b115170b9d11c7d46cfb9407"></a>
@@ -957,8 +959,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae1bb13af852fcd6ef9686d450bbed5c5" name="ae1bb13af852fcd6ef9686d450bbed5c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1bb13af852fcd6ef9686d450bbed5c5">&#9670;&#160;</a></span>kMailboxPost()</h2>
+<a id="a9227d1ea5547b1e81af6ab2e0f72d90e" name="a9227d1ea5547b1e81af6ab2e0f72d90e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9227d1ea5547b1e81af6ab2e0f72d90e">&#9670;&#160;</a></span>kMailboxPost()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -971,12 +973,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a></td>          <td class="paramname"><span class="paramname"><em>mesgPtr</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="ktypes_8h.html#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a></td>          <td class="paramname"><span class="paramname"><em>mailPtr</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">SIZE</td>          <td class="paramname"><span class="paramname"><em>mesgSize</em></span>&#160;)</td>
+          <td class="paramtype">const SIZE</td>          <td class="paramname"><span class="paramname"><em>mailSize</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -985,8 +987,8 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">self</td><td>Address of a mailbox structure </td></tr>
-    <tr><td class="paramname">mesgPtr</td><td>Message address </td></tr>
-    <tr><td class="paramname">mesgSize</td><td>Message size </td></tr>
+    <tr><td class="paramname">mailPtr</td><td>Message address </td></tr>
+    <tr><td class="paramname">mailSize</td><td>Message size </td></tr>
   </table>
   </dd>
 </dl>
@@ -1401,7 +1403,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Signal a semaphore. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>f </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">self</td><td>Semaphore address </td></tr>
   </table>

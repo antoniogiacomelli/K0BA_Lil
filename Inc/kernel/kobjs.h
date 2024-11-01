@@ -217,9 +217,7 @@ struct kMail
  */
 struct kMailbox
 {
-#if (K_DEF_MAILBOX_ACK == ON)
 	struct kSema		 semaAck; /**< Semaphore to ACK sender*/
-#endif
 	struct kSema  	 	 semaEmpty; /**< Signal/Wait producer/consumer */
 	struct kMutex  	 	 mutex;     /**< Lock */
 	struct kSema  	 	 semaFull;  /**< Signal/Wait consumer/producer */

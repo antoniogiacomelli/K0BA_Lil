@@ -80,7 +80,11 @@ K_ERR kCreateTask(const TASKENTRY taskFuncPtr, const char* taskName, const PID i
 		const TICK timeSlice, const PRIO priority, const BOOL runToCompl)
 
 {
-	assert(id!=255);
+	if (id==255 || id==0)
+	{
+		return K_ERR_INVALID_TID;
+		assert(0);
+	}
 
 	if (pPid==0)
 	{

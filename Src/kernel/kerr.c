@@ -43,7 +43,7 @@ void kErrCheckPrioInversion(void)
 		{
 			if (tcbs[i].priority < prioRun)
 			{
-#if (PRIO_INV_FAULT == ON)
+#if (K_DEF_PRIOINV_FAULT == ON)
 				kErrHandler(FAULT_PRIO_INV);
 #endif
 			}

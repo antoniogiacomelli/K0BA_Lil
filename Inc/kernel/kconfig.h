@@ -32,7 +32,7 @@
 #define K_DEF_FIFO_SIZE				 32		/**< FIFO size */
 #define K_DEF_N_TIMERS				  6 	/**< Number of system timers */
 #define K_DEF_ERRHANDLER			 ON 	/**< Kernel will stop on faults */
-#define K_DEF_PRIOINV_FAULT			 ON 	/**< Treat priority inversion as a fault */
+#define K_DEF_PRIOINV_FAULT			 OFFS 	/**< Treat priority inversion as a fault */
 
 /**
  * \brief These macros are to turn features ON/OFF and some configurations
@@ -52,7 +52,6 @@
 
 #if (K_DEF_MAILBOX==ON)
 	#define K_DEF_MAIL_SIZE			 4	  /**< Max size of a mail in mailbox */
-	#define K_DEF_MAILBOX_ACK		ON    /**< Fully synchornous mailbox 	 */
 #endif
 
 #if ((K_DEF_MESGQ == ON))
