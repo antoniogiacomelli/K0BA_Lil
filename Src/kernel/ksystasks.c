@@ -9,7 +9,6 @@
  *
  *****************************************************************************/
 
-
 #define K_CODE
 #include "ksys.h"
 
@@ -19,7 +18,7 @@ UINT32 timerHandlerStack[TIMHANDLER_STACKSIZE];
 void IdleTask(void)
 {
 
-	while(1)
+	while (1)
 	{
 		__DSB();
 		__WFI();
@@ -29,11 +28,11 @@ void IdleTask(void)
 
 void TimerHandlerTask(void)
 {
-	while(1)
+	while (1)
 	{
 		kPend();
 
-		if(dTimOneShotList || dTimReloadList)
+		if (dTimOneShotList || dTimReloadList)
 		{
 
 			kTimerHandler();

@@ -12,7 +12,7 @@
 #define K_CODE
 #include "ksys.h"
 
-BOOL kSchNeedReschedule(K_TCB* newPtr)
+BOOL kSchNeedReschedule(K_TCB *newPtr)
 {
 
 	if (newPtr->priority < runPtr->priority)
@@ -40,16 +40,14 @@ void kSchSwtch(void)
 {
 
 	kSchFindTask_();
-	K_TCB* nextRunPtr = NULL;
+	K_TCB *nextRunPtr = NULL;
 	kTCBQDeq(&readyQueue[nextTaskPrio], &nextRunPtr);
 	if (nextRunPtr == NULL)
 	{
 
 		kErrHandler(FAULT_TCB_NULL);
 	}
-	nextTaskPrio=K_PRIO_TYPE_MAX; /*reset*/
+	nextTaskPrio = K_PRIO_TYPE_MAX; /*reset*/
 	runPtr = nextRunPtr;
 }
-
-
 

@@ -92,7 +92,7 @@ K_ERR kListInit(K_LIST* const self, STRING listName)
     self->listDummy.prevPtr = K_LIST_DUMMY(self);
     self->listName = listName;
     self->size = 0U;
-
+    __DMB();
     return K_SUCCESS;
 }
 
@@ -149,7 +149,7 @@ K_ERR kListRemoveHead(K_LIST* const self, K_LISTNODE** const remNodePPtr)
 
     K_LISTNODE* currHeadPtr = K_LIST_HEAD(self);
     *remNodePPtr = currHeadPtr;
-    /* Use list_del to unlink the head node */
+    /* unlink the head node */
     kListNodeDel_(currHeadPtr);
 
     /* Decrement the list size */

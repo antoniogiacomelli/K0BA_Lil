@@ -18,7 +18,6 @@ TICK kTickGet(void)
 	return runTime.globalTick;
 }
 
-
 static inline K_ERR kDecTimeSlice_(void);
 
 static K_ERR kDecTimeSlice_(void)
@@ -40,7 +39,7 @@ static K_ERR kDecTimeSlice_(void)
 			if (kTCBQEnq(&readyQueue[runPtr->priority], runPtr) == K_SUCCESS)
 			{
 				runPtr->timeLeft = runPtr->timeSlice;
-				runPtr->status=READY;
+				runPtr->status = READY;
 				return K_TASK_TSLICE_DUE;
 			}
 		}
@@ -49,9 +48,9 @@ static K_ERR kDecTimeSlice_(void)
 }
 BOOL kTickHandler(void)
 {
-	BOOL  runToCompl = FALSE;
-	BOOL  deferRet = FALSE;
-	BOOL  timeSliceDueRet = FALSE;
+	BOOL runToCompl = FALSE;
+	BOOL deferRet = FALSE;
+	BOOL timeSliceDueRet = FALSE;
 
 	runTime.globalTick += 1U;
 	if (runPtr->busyWaitTime > 0)
@@ -60,22 +59,21 @@ BOOL kTickHandler(void)
 	}
 	if (runTime.globalTick == K_TICK_TYPE_MAX)
 	{
-		runTime.globalTick=0U;
+		runTime.globalTick = 0U;
 		runTime.nWraps += 1U;
 	}
 	K_ERR retTimeSlice = kDecTimeSlice_();
 
-	if ((runPtr->status == RUNNING) && (runPtr->runToCompl==TRUE))
+	if ((runPtr->status == RUNNING) && (runPtr->runToCompl == TRUE))
 	{
-		if(!kTCBQEnq(&readyQueue[runPtr->priority], runPtr))
-					runPtr->status=READY;
+		if (!kTCBQEnq(&readyQueue[runPtr->priority], runPtr))
+			runPtr->status = READY;
 		return TRUE;
 	}
 	if (retTimeSlice == K_TASK_TSLICE_DUE)
 	{
 		timeSliceDueRet = TRUE;
 	}
-
 
 	if (dTimOneShotList || dTimReloadList)
 	{

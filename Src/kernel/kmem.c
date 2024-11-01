@@ -21,16 +21,18 @@
  ******************************************************************************/
 /*let me kick some old simplistic embeddded systems programming sht
  */
-K_ERR kBlockPoolInit(K_BLOCKPOOL* const self, ADDR const memPoolPtr, \
+K_ERR kBlockPoolInit(K_BLOCKPOOL *const self, const ADDR memPoolPtr,
 		BYTE blkSize, const BYTE numBlocks)
 {
 	K_CR_AREA;
-	K_ENTER_CR;
+	K_ENTER_CR
+	;
 
 	if (IS_NULL_PTR(self))
 	{
 		kErrHandler(FAULT_NULL_OBJ);
-		K_EXIT_CR;
+		K_EXIT_CR
+		;
 		return K_ERR_MEM_INIT;
 	}
 #if (K_DEF_MEMBLOCK_ALIGN_4==ON)
@@ -39,62 +41,69 @@ K_ERR kBlockPoolInit(K_BLOCKPOOL* const self, ADDR const memPoolPtr, \
 #endif
 	/* initialise freelist of blocks */
 
-	BYTE* blockPtr = (BYTE*)memPoolPtr;    /* first byte address in the pool  */
-	ADDR* nextAddrPtr = (ADDR*)memPoolPtr; /* next block address */
+	BYTE *blockPtr = (BYTE*) memPoolPtr; /* first byte address in the pool  */
+	ADDR *nextAddrPtr = (ADDR*) memPoolPtr; /* next block address */
 
 	for (BYTE i = 0; i < numBlocks - 1; i++)
 	{
 		/* init pool by advancing each block addr by blkSize bytes */
-		blockPtr +=  blkSize;
+		blockPtr += blkSize;
 		/* save blockPtr addr as the next */
-		*nextAddrPtr = (ADDR)blockPtr;
+		*nextAddrPtr = (ADDR) blockPtr;
 		/* update  */
-		nextAddrPtr = (ADDR*)(blockPtr);
+		nextAddrPtr = (ADDR*) (blockPtr);
 
 	}
 	*nextAddrPtr = NULL;
 
 	/* Initialize the control block */
-	self->blkSize     = blkSize;
-	self->nMaxBlocks  = numBlocks;
+	self->blkSize = blkSize;
+	self->nMaxBlocks = numBlocks;
 	self->nFreeBlocks = numBlocks;
 	self->freeListPtr = memPoolPtr;
 	kMutexInit(&self->poolMutex);
-	K_EXIT_CR;
+	K_EXIT_CR
+	;
 	return K_SUCCESS;
 }
 
-ADDR kBlockPoolAlloc(K_BLOCKPOOL* const self)
+ADDR kBlockPoolAlloc(K_BLOCKPOOL *const self)
 {
 	K_CR_AREA;
-	K_ENTER_CR;
-	if (self->nFreeBlocks==0)
+	K_ENTER_CR
+	;
+	if (self->nFreeBlocks == 0)
 	{
-		K_EXIT_CR;
+		K_EXIT_CR
+		;
 		return NULL;
 	}
 	ADDR allocPtr = self->freeListPtr;
-	self->freeListPtr = *(ADDR*)allocPtr;
+	self->freeListPtr = *(ADDR*) allocPtr;
 	if (allocPtr != NULL)
 		self->nFreeBlocks -= 1;
-	K_EXIT_CR;
+	K_EXIT_CR
+	;
 	return allocPtr;
 }
 
-K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr)
+K_ERR kBlockPoolFree(K_BLOCKPOOL *const self, const ADDR blockPtr)
 {
 
 	K_CR_AREA;
-	K_ENTER_CR;
+	K_ENTER_CR
+	;
 	if (IS_NULL_PTR(self) || IS_NULL_PTR(blockPtr))
 	{
-		K_EXIT_CR;
+		K_EXIT_CR
+		;
 		return K_ERR_MEM_FREE;
 	}
-	*(ADDR*)blockPtr = self->freeListPtr;
+	*(ADDR*) blockPtr = self->freeListPtr;
 	self->freeListPtr = blockPtr;
 	self->nFreeBlocks += 1;
-	K_EXIT_CR;
+	K_EXIT_CR
+	;
 	return K_SUCCESS;
 }
 
@@ -149,27 +158,30 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr)
  * [------------- poolSize-1--------------)
  *
  ******************************************************************************/
-K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize)
+K_ERR kBytePoolInit(K_BYTEPOOL *const self, BYTE *memPool, const BYTE poolSize)
 {
 	K_CR_AREA;
-	K_ENTER_CR;
+	K_ENTER_CR
+	;
 	if (IS_NULL_PTR(self) || IS_NULL_PTR(memPool))
 	{
 		kErrHandler(FAULT_NULL_OBJ);
-		K_EXIT_CR;
+		K_EXIT_CR
+		;
 		return K_ERR_MEM_INIT;
 	}
-	if (poolSize==0)
+	if (poolSize == 0)
 	{
-		K_EXIT_CR;
+		K_EXIT_CR
+		;
 		return K_ERR_MEM_INIT;
 	}
 	self->memPoolPtr = memPool;
 	self->poolSize = poolSize;
 	self->nFreeBytes = poolSize;
-	self->freeList= (0 << 8) | 0; /* this number is also called '0'.
-									wrote like this to be clear about
-									how the indexing works */
+	self->freeList = (0 << 8) | 0; /* this number is also called '0'.
+	 wrote like this to be clear about
+	 how the indexing works */
 
 	/* link each byte to the next */
 	for (BYTE i = 0; i < poolSize - 1; i++)
@@ -178,7 +190,8 @@ K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize)
 	}
 	/* a sentinel. or a soft-skilled dummy */
 	memPool[poolSize - 1] = 0xFF;
-	K_EXIT_CR;
+	K_EXIT_CR
+	;
 	return K_SUCCESS;
 }
 
@@ -204,20 +217,23 @@ K_ERR kBytePoolInit(K_BYTEPOOL* const self, BYTE* memPool, BYTE const poolSize)
  *******************************************************************************
  */
 
-ADDR kBytePoolAlloc(K_BYTEPOOL* const self, const BYTE size)
+ADDR kBytePoolAlloc(K_BYTEPOOL *const self, const BYTE size)
 {
 
 	K_CR_AREA;
-	K_ENTER_CR;
+	K_ENTER_CR
+	;
 	if (IS_NULL_PTR(self))
 	{
 		kErrHandler(FAULT_NULL_OBJ);
-		K_EXIT_CR;
+		K_EXIT_CR
+		;
 		return NULL;
 	}
 	if (self->nFreeBytes < size)
 	{
-		K_EXIT_CR;
+		K_EXIT_CR
+		;
 		return NULL;
 	}
 	/* start from the first free block */
@@ -229,18 +245,20 @@ ADDR kBytePoolAlloc(K_BYTEPOOL* const self, const BYTE size)
 	{
 		if (currIdx == 0xFF || self->memPoolPtr[currIdx] != currIdx + 1)
 		{
-			K_EXIT_CR;
-			return NULL;  /* too fragmented or not contiguous */
+			K_EXIT_CR
+			;
+			return NULL; /* too fragmented or not contiguous */
 		}
 		currIdx = self->memPoolPtr[currIdx];
 	}
 	/* get the address of the starting block */
-	ADDR retAddr = (ADDR)(self->memPoolPtr + startIdx);
+	ADDR retAddr = (ADDR) (self->memPoolPtr + startIdx);
 	/* now freelist points to the next block after the allocated chunk */
 	BYTE nextFreeIdx = self->memPoolPtr[currIdx];
 	self->freeList = (nextFreeIdx << 8) | self->memPoolPtr[nextFreeIdx];
 	self->nFreeBytes -= size;
-	K_EXIT_CR;
+	K_EXIT_CR
+	;
 	/* yo got that chunk for yo trunk */
 	return retAddr;
 }
@@ -267,15 +285,17 @@ ADDR kBytePoolAlloc(K_BYTEPOOL* const self, const BYTE size)
  *      freeList
  ******************************************************************************/
 
-K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, \
-		BYTE const size)
+K_ERR kBytePoolFree(K_BYTEPOOL *const self, BYTE *const chunkPtr,
+		const BYTE size)
 {
 	K_CR_AREA;
-	K_ENTER_CR;
+	K_ENTER_CR
+	;
 	if (IS_NULL_PTR(self) || IS_NULL_PTR(chunkPtr))
 	{
 		kErrHandler(FAULT_NULL_OBJ);
-		K_EXIT_CR;
+		K_EXIT_CR
+		;
 		return K_ERR_MEM_INIT;
 	}
 
@@ -283,7 +303,8 @@ K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, \
 	BYTE nextIdx = chunkIdx + size;
 	if (chunkIdx >= self->poolSize)
 	{
-		K_EXIT_CR;
+		K_EXIT_CR
+		;
 		return K_ERR_MEM_INVALID_ADDR;
 	}
 	/*try to merge  */
@@ -294,7 +315,7 @@ K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, \
 	else
 	{
 		self->memPoolPtr[chunkIdx] = self->freeList >> 8;
-		self->freeList = (UINT16)(chunkIdx << 8) | (self->freeList & 0x00FF);
+		self->freeList = (UINT16) (chunkIdx << 8) | (self->freeList & 0x00FF);
 	}
 	self->nFreeBytes += size;
 
@@ -302,6 +323,7 @@ K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr, \
 	{
 		self->nFreeBytes = self->poolSize;
 	}
-	K_EXIT_CR;
+	K_EXIT_CR
+	;
 	return K_SUCCESS;
 }

@@ -11,7 +11,6 @@
 #define K_CODE
 #include "ksys.h"
 
-
 UINT32 kEnterCR(void)
 {
 	UINT32 crState;
