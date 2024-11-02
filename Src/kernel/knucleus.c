@@ -110,7 +110,7 @@ void kInit(void)
 * ERROR HANDLING
 *******************************************************************************/
 
-
+#define ERR_HANDLER 1
 void kErrHandler(K_FAULT fault) /* generic error handler */
 {
 #if (ERR_HANDLER==ON)
