@@ -19,11 +19,7 @@ This is a light-weight version with no memory isolation. Currently it supports A
 ## FEATURES
 - **Clean API**
    - Standardised easy-to-grasp API convention
- 
-- **Minimal overhead**
-   - This "Lite" version is tuned for minimal overhead, focused on reducing indirection levels and
-     function calls. Rather than "a microkernel approach with opaque objects" the kernel is a *modular monolith*.
-   
+    
 - **Priority Preemptive Scheduler with Rate-Monothonic Scheduling**
   
 - **Inter-Task Synchronisation:**
