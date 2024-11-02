@@ -4,12 +4,13 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module: Nucleus
- * 	Sub-module: Version
- * 	It is a good practice to keep a firmware version retrieval on a dedicated
- * 	code unit.
- * 	In this unit:
- * 		o Returns Kernel Version
+ * 	Module     : Nucleus
+ * 	Sub-module : Version
+ * 	It is a good practice to keep a firmware version on a dedicated
+ * 	translation unit.
+ * 
+ *	In this unit:
+ * 		o Kernel Version record and retrieval
  *
  *****************************************************************************/
 

@@ -18,23 +18,25 @@
  *			 		o Task Control Block Management
  *
  *******************************************************************************
- * 		  o Global Ready Queue:
- * 		  The Ready Queue is a table of FIFO queues each one dedicated to a
- * 		  priority level. Status=READY.
  *
- * 		  o Global Sleeping Queue:
+ * 	 ABOUT TASK QUEUES:
+ *
+ * 		  o Global Ready Queue. Task status = READY.
+ * 		  The Ready Queue is a table of FIFO queues each one dedicated to a
+ * 		  priority level.
+ *
+ * 		  o Global Sleeping Queue. Task status = PENDING/SLEEPING.
  * 		  The Pending Queue is a global single queue where tasks that suspended
  * 		  themselves (either by kPend or kSleepDelay) are placed waiting for a
- * 		  a signal. Status=PENDING/SLEEPING.
+ * 		  a signal.
+ * 		  The order they are removed depends on the task which wake them up.
  *
  * 		  o Each semaphore/mutex/condition variable/sleep event has its
- * 		  dedicated sleeping queue. Tasks are placed on this queue if the
- * 		  when calling a kWait/kSleep on a kernel object.
- * 		  Status=BLOCKED/SLEEPING.
- *
- * 		  o In both Pending and Sleeping Queues, tasks are removed on the order
- * 		  they entered. If they were removed by priority,
- * 		  lower priority tasks would starve waiting for a resource.
+ * 		  dedicated sleeping queue. Task status=BLOCKED/SLEEPING.
+ * 		  Tasks are placed on these queues when calling a kWait/kSleep on
+ * 		  an object. They are removed on a FIFO  order. If they were to be
+ * 		  removed by  priority, lower-priority tasks would have an unbounded
+ * 		  waiting time.
  * 		  Note mutexes implement a priority inheritance protocol.
  *
  * 		  o Once a higher priority task than the running task is made ready it

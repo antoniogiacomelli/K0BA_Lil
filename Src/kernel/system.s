@@ -5,10 +5,11 @@
  ******************************************************************************
  ******************************************************************************
  *  Module       : Nucleus
- *  Sub-module(s): Low-Level Scheduler
- *  Porovides to : High-level scheduler.
- *  In this unit:
- *          ARMv7M assembly routines for scheduling
+ *  Sub-module   : Low-level Scheduler. 
+ *  Provides to  : High-level Scheduler.
+ *
+ *  o In this unit:
+ *                Low-level kernel routines.
  *
  *****************************************************************************/
 
