@@ -67,11 +67,10 @@ BOOL kTickHandler(void)
 	}
 	K_ERR retTimeSlice = kDecTimeSlice_();
 
+	/* a blocking task is running. it takes precedence all over others */
 	if ((runPtr->status == RUNNING) && (runPtr->runToCompl == TRUE))
 	{
-		if (!kTCBQEnq(&readyQueue[runPtr->priority], runPtr))
-			runPtr->status = READY;
-		return TRUE;
+		return FALSE;
 	}
 	if (retTimeSlice == K_TASK_TSLICE_DUE)
 	{

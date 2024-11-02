@@ -86,13 +86,23 @@ PendSV_Handler:
 .thumb_func
 SysTick_Handler:
     CPSID I
+    CMP LR, #0xFFFFFFF1
+    BEQ RESUMEHANDLER
+    BNE TICKHANDLER
+    RESUMEHANDLER:
+    CPSIE I
+    BX LR
     TICKHANDLER:
+    LDR R0, =runPtr           /* Load address of runPtr into R0 */
+    LDR R1, [R0]              /* Load value of runPtr (pointer to task context) into R1 */
     PUSH {LR}              /* Save LR */
     BL kTickHandler        /* Call kTickHandler, result in R0 */
     POP {LR}               /* Restore LR */
     CMP R0, #1             /* Compare result to 1 */
     BEQ SETPENDSV          /* If equal, set PendSV */
     EXIT:                  /* Fallthrough to exit if not equal */
+    MOV LR, #0xFFFFFFFD     /* If here, a blocking task was interrupted
+                               return to PSP*/
     CPSIE I                /* Enable interrupts */
     ISB                    /* Instruction Synchronization Barrier */
     BX LR                  /* Return */
