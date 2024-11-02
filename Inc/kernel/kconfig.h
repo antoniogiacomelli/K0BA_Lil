@@ -26,7 +26,6 @@
 #define K_DEF_FIFO_SIZE				 32		/**< FIFO size */
 #define K_DEF_N_TIMERS				  6 	/**< Number of system timers */
 #define K_DEF_ERRHANDLER			 ON 	/**< Kernel will stop on faults */
-#define K_DEF_PRIOINV_FAULT			 ON 	/**< Treat priority inversion as a fault */
 
 /**
  * \brief These macros are to turn features ON/OFF and some configurations
