@@ -126,8 +126,7 @@ void kErrHandler(K_FAULT fault) /* generic error handler */
 void kErrCheckPrioInversion(void)
 {
 	K_CR_AREA;
-	K_ENTER_CR
-	;
+	K_ENTER_CR;
 	K_TCB *runPtr_ = runPtr;
 	assert(runPtr_->status == RUNNING);
 	PRIO prioRun = runPtr_->priority;
@@ -137,21 +136,17 @@ void kErrCheckPrioInversion(void)
 		;
 		return;
 	}
-	for (UINT32 i = 0; i < NTHREADS; i++)
+	for (UINT32 i = 0; i < NPRIO; i++)
 	{
-		if (tcbs[i].status == READY)
+		if (readyQueue[i].size > 0)
 		{
-			if (tcbs[i].priority < prioRun)
+			if (i < prioRun)
 			{
-#if (K_DEF_PRIOINV_FAULT == ON)
 				kErrHandler(FAULT_PRIO_INV);
-#endif
 			}
 		}
 	}
-	K_EXIT_CR
-	;
-
+	K_EXIT_CR;
 	return;
 }
 
