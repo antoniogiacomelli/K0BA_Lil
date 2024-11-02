@@ -110,18 +110,17 @@ void kInit(void)
 * ERROR HANDLING
 *******************************************************************************/
 
-#define ERR_HANDLER 1
 void kErrHandler(K_FAULT fault) /* generic error handler */
 {
-#if (ERR_HANDLER==ON)
+#if (K_DEF_ERRHANDLER==ON)
 	faultID=fault;
 	__disable_irq();
 	while (1);
-#else
-	return;
-#endif /*err handler*/
+#endif
+/*err handler*/
 
 }
+
 
 void kErrCheckPrioInversion(void)
 {
