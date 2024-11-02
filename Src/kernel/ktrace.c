@@ -4,6 +4,10 @@
  *
  ******************************************************************************
  ******************************************************************************
+ * 	Module      : Nucleus
+ * 	Sub-module  : Tracer
+ * 	Provides to : Every other module can use this service.
+ *
  * 	In this unit:
  *
  * 		o Tracer/Logger

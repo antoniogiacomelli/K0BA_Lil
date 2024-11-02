@@ -4,7 +4,9 @@
  *
  *******************************************************************************
  *******************************************************************************
- * 	Module: Nucleus
+ * 	Module        : Nucleus
+ * 	Sub-Module    : Tick Management
+ * 	Provides to   : Scheduler, Application Timers
  * 	In this unit:
  *
  * 		o System Tick Management

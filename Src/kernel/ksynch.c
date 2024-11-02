@@ -4,7 +4,11 @@
  *
  ******************************************************************************
  ******************************************************************************
- *  Sub-module: Inter-task Synchronisation
+ *  Module         : Nucleus
+ *  Sub-module     : Inter-task Synchronisation
+ *  Depends on     : Scheduler
+ *  Provides to    : All services.
+ *
  * 	In this unit:
  * 					o Direct Task Pend/Signal
  *					o Generic Events

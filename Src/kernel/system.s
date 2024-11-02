@@ -1,3 +1,18 @@
+/******************************************************************************
+ *
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 1.1.0]]
+ *
+ ******************************************************************************
+ ******************************************************************************
+ *  Module       : Nucleus
+ *  Sub-module(s): Low-Level Scheduler
+ *  Porovides to : High-level scheduler.
+ *  In this unit:
+ *          ARMv7M assembly routines for scheduling
+ *
+ *****************************************************************************/
+
+
 /*@file system.s */
 .syntax unified // needed for Thumb2
 .text

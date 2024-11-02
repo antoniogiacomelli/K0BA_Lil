@@ -4,8 +4,12 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Sub-module: System Tasks
- * 	In this unit:
+ * 	Module       : Nucleus
+ * 	Sub-module   : System Tasks
+ * 	Depends on   : Scheduler
+ * 	Provides to  : Application Timers
+ *
+ * 	In this unit :
  * 					o  System Tasks and Deferred ISR handler tasks
  *
  *****************************************************************************/

@@ -4,6 +4,9 @@
  *
  ******************************************************************************
  ******************************************************************************
+ *  Module    : Nucleus
+ * 	Sub-module: Application Timers
+ *
  * 	In this unit:
  * 			o Timer Pool Management
  *			o Timer Delta List

@@ -4,7 +4,14 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Sub-module: Scheduler
+ * 	Module      :  Nucleus
+ * 	Sub-module  :  High-Level Scheduler
+ * 	Provides to :  All services
+ *  Depends  on :  Low-Level Scheduler
+ *
+ *  The high-level scheduler is regarded as a sub-module for maintanability
+ *  concerns. It's the core service for everything else.
+ *
  * 	In this unit:
  * 					o Scheduler routines
  * 		            o Task Queues Management
@@ -387,4 +394,26 @@ VOID kExitCR(UINT32 crState)
 	asm volatile ("ISB");
 	__set_PRIMASK(crState);
 	asm volatile("DSB");
+}
+
+/******************************************************************************
+ HELPERS
+*******************************************************************************/
+PID kGetTaskPID(TID const taskID)
+{
+	PID pid=0;
+	for (pid=0;pid<NTHREADS;pid++)
+	{
+		if (tidTbl[pid]==taskID)
+			break;
+	}
+	if (pid == NTHREADS)
+		assert(0);
+	return pid;
+}
+
+PRIO kGetTaskPrio(TID const taskID)
+{
+	PID pid=kGetTaskPID(taskID);
+	return tcbs[pid].priority;
 }

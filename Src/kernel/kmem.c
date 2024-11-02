@@ -4,7 +4,10 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Sub-module: Memory Pools
+ * 	Module	    : Nucleus
+ * 	Sub-module  : Memory Pools
+ * 	Provides to : Inter-task Communication, Application Timers
+ *
  * 	In this unit:
  * 					o Block Pool Control Block
  *					o Byte Pool Control Block

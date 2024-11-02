@@ -4,7 +4,10 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module: Nucleus
+ * 	Module      : Nucleus
+ * 	Sub-Module  : N/A
+ * 	Provides to : Scheduler, Inter-task synchronisation, Inter-Task Communica_
+ * 				  tion, Application Timers
  * 	In this unit:
  *					o ADT for Circular Doubly Linked List
  *

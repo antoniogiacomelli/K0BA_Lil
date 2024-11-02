@@ -4,8 +4,10 @@
  *
  ******************************************************************************
  ******************************************************************************
- *
- *  Sub-module: Inter-task Synchronisation
+ *  Module      : Nucleus
+ *  Sub-module  : Inter-task Communication
+ *  Depends on  : Inter-task Synchronisation
+ *  Provides to : Application and System Tasks
  *
  * 	In this unit:
  * 					o System Message Buffers pool Management
