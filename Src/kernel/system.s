@@ -94,8 +94,6 @@ SysTick_Handler:
     CPSIE I
     BX LR
     TICKHANDLER:
-    LDR R0, =runPtr           /* Load address of runPtr into R0 */
-    LDR R1, [R0]              /* Load value of runPtr (pointer to task context) into R1 */
     PUSH {LR}              /* Save LR */
     BL kTickHandler        /* Call kTickHandler, result in R0 */
     POP {LR}               /* Restore LR */
