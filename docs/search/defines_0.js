@@ -14,10 +14,9 @@ var searchData=
   ['k_5fdef_5fn_5fusrtasks_11',['K_DEF_N_USRTASKS',['../kconfig_8h.html#ac6cccabfb3e4f2dbb7d8f056b9eec807',1,'kconfig.h']]],
   ['k_5fdef_5fpipe_12',['K_DEF_PIPE',['../kconfig_8h.html#a61067ee3b559c615c46dd74541b6321f',1,'kconfig.h']]],
   ['k_5fdef_5fpipe_5fsize_13',['K_DEF_PIPE_SIZE',['../kconfig_8h.html#a58b3a610806f86a8999c2d6d2543c747',1,'kconfig.h']]],
-  ['k_5fdef_5fprioinv_5ffault_14',['K_DEF_PRIOINV_FAULT',['../kconfig_8h.html#a04d97b1803ccb44e39433277b6297c08',1,'kconfig.h']]],
-  ['k_5fdef_5ftick_5fperiod_15',['K_DEF_TICK_PERIOD',['../kconfig_8h.html#a7a8de31c70b921f043f9258a6db81c83',1,'kconfig.h']]],
-  ['k_5fdef_5ftrace_16',['K_DEF_TRACE',['../kconfig_8h.html#a355cacbd35b1f135ea395ad9a19a10cb',1,'kconfig.h']]],
-  ['k_5fdef_5ftrace_5fmax_5fchar_17',['K_DEF_TRACE_MAX_CHAR',['../kconfig_8h.html#a21210f5cecf76b55071f08e8058374a2',1,'kconfig.h']]],
-  ['k_5fdef_5ftrace_5fno_5finfo_18',['K_DEF_TRACE_NO_INFO',['../kconfig_8h.html#acd3f5e3adb71ae08ba19859be8364cb8',1,'kconfig.h']]],
-  ['k_5fdef_5ftracebuff_5fsize_19',['K_DEF_TRACEBUFF_SIZE',['../kconfig_8h.html#adefd34fee88c6c728bece069a0d2d5d9',1,'kconfig.h']]]
+  ['k_5fdef_5ftick_5fperiod_14',['K_DEF_TICK_PERIOD',['../kconfig_8h.html#a7a8de31c70b921f043f9258a6db81c83',1,'kconfig.h']]],
+  ['k_5fdef_5ftrace_15',['K_DEF_TRACE',['../kconfig_8h.html#a355cacbd35b1f135ea395ad9a19a10cb',1,'kconfig.h']]],
+  ['k_5fdef_5ftrace_5fmax_5fchar_16',['K_DEF_TRACE_MAX_CHAR',['../kconfig_8h.html#a21210f5cecf76b55071f08e8058374a2',1,'kconfig.h']]],
+  ['k_5fdef_5ftrace_5fno_5finfo_17',['K_DEF_TRACE_NO_INFO',['../kconfig_8h.html#acd3f5e3adb71ae08ba19859be8364cb8',1,'kconfig.h']]],
+  ['k_5fdef_5ftracebuff_5fsize_18',['K_DEF_TRACEBUFF_SIZE',['../kconfig_8h.html#adefd34fee88c6c728bece069a0d2d5d9',1,'kconfig.h']]]
 ];

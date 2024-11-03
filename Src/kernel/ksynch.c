@@ -72,6 +72,21 @@ void kSignal(PID const taskID)
 	;
 	return;
 }
+VOID kSignalFromISR(PID const taskID)
+{
+
+	PID pid = kGetTaskPID(taskID);
+	if (tcbs[pid].status == PENDING)
+	{
+		K_TCB *tcbGotPtr = &tcbs[pid];
+		kTCBQRem(&sleepingQueue, &tcbGotPtr);
+		if (!kTCBQEnq(&readyQueue[tcbGotPtr->priority], tcbGotPtr))
+			tcbGotPtr->status = READY;
+		assert(!kTCBQEnq(&readyQueue[runPtr->priority], runPtr));
+		runPtr->status = READY;
+	}
+
+}
 
 
 /******************************************************************************
@@ -492,3 +507,4 @@ VOID kCondWake(K_COND *const self)
 	kMutexUnlock(&self->condMutex);
 }
 #endif
+
