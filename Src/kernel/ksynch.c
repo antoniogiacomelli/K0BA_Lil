@@ -492,18 +492,3 @@ VOID kCondWake(K_COND *const self)
 	kMutexUnlock(&self->condMutex);
 }
 #endif
-/*yield is here for convenience*/
-void kYield(void)
-{
-	K_CR_AREA;
-	K_ENTER_CR
-	;
-	if (runPtr->status == RUNNING)
-	{ /* if yielded, not blocked, make it ready*/
-		assert(!kReadyQEnq(runPtr));
-	}
-	K_EXIT_CR
-	;
-	K_PEND_CTXTSWTCH
-	;
-}
