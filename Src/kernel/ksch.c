@@ -14,6 +14,7 @@
  *
  * 	In this unit:
  * 					o Scheduler routines
+ * 					o Tick Management
  * 		            o Task Queues Management
  *			 		o Task Control Block Management
  *
@@ -48,23 +49,92 @@
 #define K_CODE
 #include "ksys.h"
 
-BOOL kSchNeedReschedule(K_TCB *newPtr)
+/*******************************************************************************
+ *  TICK MANAGEMENT
+ *******************************************************************************/
+
+TICK kTickGet(void)
+{
+	return runTime.globalTick;
+}
+
+static inline K_ERR kDecTimeSlice_(void);
+
+static K_ERR kDecTimeSlice_(void)
 {
 
-	if (newPtr->priority < runPtr->priority)
+	if ((runPtr->status ==RUNNING) &&(runPtr->runToCompl ==FALSE))
 	{
-		return TRUE;
+		if (runPtr->busyWaitTime >0)
+		{
+			runPtr->busyWaitTime -= 1U;
+		}
+
+		if (runPtr->timeLeft >0)
+		{
+			runPtr->timeLeft -= 1U;
+		}
+		if (runPtr->timeLeft ==0)
+		{
+			if (kTCBQEnq(&readyQueue[runPtr->priority], runPtr) ==K_SUCCESS)
+			{
+				runPtr->timeLeft = runPtr->timeSlice;
+				runPtr->status = READY;
+				return K_TASK_TSLICE_DUE;
+			}
+		}
 	}
-	return FALSE;
+	return K_SUCCESS;
 }
+BOOL kTickHandler(void)
+{
+	BOOL runToCompl = FALSE;
+	BOOL deferRet = FALSE;
+	BOOL timeSliceDueRet = FALSE;
+
+	runTime.globalTick += 1U;
+	if (runPtr->busyWaitTime >0)
+	{
+		runPtr->busyWaitTime -= 1U;
+	}
+	if (runTime.globalTick ==K_TICK_TYPE_MAX)
+	{
+		runTime.globalTick = 0U;
+		runTime.nWraps += 1U;
+	}
+	K_ERR retTimeSlice = kDecTimeSlice_();
+
+	/* a blocking task is running. it takes precedence all over others */
+	if ((runPtr->status ==RUNNING) &&(runPtr->runToCompl ==TRUE))
+	{
+		return FALSE;
+	}
+	if (retTimeSlice ==K_TASK_TSLICE_DUE)
+	{
+		timeSliceDueRet = TRUE;
+	}
+
+	if (dTimOneShotList ||dTimReloadList)
+	{
+		kSignal(TIMHANDLER_TID);
+		deferRet = TRUE;
+
+	}
+	BOOL ret = (timeSliceDueRet |runToCompl |deferRet);
+	return (ret);
+}
+
+/*******************************************************************************
+ TASK SWITCHING LOGIC
+ *******************************************************************************/
 
 static inline void kSchFindTask_(void)
 {
 	PRIO prio = K_PRIO_TYPE_MAX;
 	/*TODO: improve this bubble sort*/
-	for (prio = highestPrio; prio < NPRIO; prio++)
+	for (prio = highestPrio; prio <NPRIO; prio++)
 	{
-		if (readyQueue[prio].size > 0)
+		if (readyQueue[prio].size >0)
 		{
 			nextTaskPrio = prio;
 			break;
@@ -76,9 +146,9 @@ void kSchSwtch(void)
 {
 
 	kSchFindTask_();
-	K_TCB *nextRunPtr = NULL;
+	K_TCB* nextRunPtr = NULL;
 	kTCBQDeq(&readyQueue[nextTaskPrio], &nextRunPtr);
-	if (nextRunPtr == NULL)
+	if (nextRunPtr ==NULL)
 	{
 
 		kErrHandler(FAULT_TCB_NULL);
@@ -86,15 +156,30 @@ void kSchSwtch(void)
 	nextTaskPrio = K_PRIO_TYPE_MAX; /*reset*/
 	runPtr = nextRunPtr;
 }
-
-
+/*yield is here for convenience*/
+void kYield(void)
+{
+	K_CR_AREA;
+	K_ENTER_CR
+	;
+	if (runPtr->status == RUNNING)
+	{ /* if yielded, not blocked, make it ready*/
+		kReadyQEnq(runPtr);
+		K_EXIT_CR;
+		return;
+	}
+	else
+	{
+		K_PEND_CTXTSWTCH;
+		K_EXIT_CR;
+	}
+}
 
 /*******************************************************************************
-   TASK	QUEUE MANAGEMENT
+ TASK QUEUE MANAGEMENT
 *******************************************************************************/
 
-
-K_ERR kTCBQInit(K_TCBQ *const self, STRING listName)
+K_ERR kTCBQInit(K_TCBQ* const self, STRING listName)
 {
 	if (IS_NULL_PTR(self))
 	{
@@ -104,31 +189,31 @@ K_ERR kTCBQInit(K_TCBQ *const self, STRING listName)
 	return kListInit(self, listName);
 }
 
-K_ERR kTCBQEnq(K_TCBQ *const self, K_TCB *const tcbPtr)
+K_ERR kTCBQEnq(K_TCBQ* const self, K_TCB* const tcbPtr)
 {
-	if (self == NULL || tcbPtr == NULL)
+	if (self ==NULL ||tcbPtr ==NULL)
 	{
 		return K_ERR_NULL_OBJ;
 	}
 	return kListAddTail(self, &(tcbPtr->tcbNode));
 }
 
-K_ERR kTCBQDeq(K_TCBQ *const self, K_TCB **const tcbPPtr)
+K_ERR kTCBQDeq(K_TCBQ* const self, K_TCB** const tcbPPtr)
 {
-	if (self == NULL)
+	if (self ==NULL)
 	{
 		assert(0);
 	}
-	K_LISTNODE *dequeuedNodePtr = NULL;
+	K_LISTNODE* dequeuedNodePtr = NULL;
 	K_ERR retVal = kListRemoveHead(self, &dequeuedNodePtr);
 
-	if (retVal != K_SUCCESS)
+	if (retVal !=K_SUCCESS)
 	{
 		kErrHandler(FAULT_LIST);
 	}
 	*tcbPPtr = K_LIST_GET_TCB_NODE(dequeuedNodePtr, K_TCB);
 
-	if (*tcbPPtr == NULL)
+	if (*tcbPPtr ==NULL)
 	{
 		kErrHandler(FAULT_TCB_NULL);
 		return K_ERR_NULL_OBJ;
@@ -137,21 +222,21 @@ K_ERR kTCBQDeq(K_TCBQ *const self, K_TCB **const tcbPPtr)
 	return K_SUCCESS;
 }
 
-K_ERR kTCBQRem(K_TCBQ *const self, K_TCB **const tcbPPtr)
+K_ERR kTCBQRem(K_TCBQ* const self, K_TCB** const tcbPPtr)
 {
-	if (self == NULL || tcbPPtr == NULL)
+	if (self ==NULL ||tcbPPtr ==NULL)
 	{
 		return K_ERROR;
 	}
-	K_LISTNODE *dequeuedNodePtr = &((*tcbPPtr)->tcbNode);
+	K_LISTNODE* dequeuedNodePtr = &((*tcbPPtr)->tcbNode);
 	K_ERR retVal = kListRemove(self, dequeuedNodePtr);
-	if (retVal != K_SUCCESS)
+	if (retVal !=K_SUCCESS)
 	{
 		kErrHandler(FAULT_LIST);
 		return retVal;
 	}
 	*tcbPPtr = K_LIST_GET_TCB_NODE(dequeuedNodePtr, K_TCB);
-	if (*tcbPPtr == NULL)
+	if (*tcbPPtr ==NULL)
 	{
 		kErrHandler(FAULT_TCB_NULL);
 		return K_ERR_NULL_OBJ;
@@ -159,29 +244,29 @@ K_ERR kTCBQRem(K_TCBQ *const self, K_TCB **const tcbPPtr)
 	return K_SUCCESS;
 }
 
-K_TCB* kTCBQPeek(K_TCBQ *const self)
+K_TCB* kTCBQPeek(K_TCBQ* const self)
 {
-	if (self == NULL || self->listDummy.nextPtr == &(self->listDummy))
+	if (self ==NULL ||self->listDummy.nextPtr ==&(self->listDummy))
 	{
 		return NULL;
 	}
-	K_LISTNODE *nodePtr = self->listDummy.nextPtr;
+	K_LISTNODE* nodePtr = self->listDummy.nextPtr;
 	return K_GET_CONTAINER_ADDR(nodePtr, K_TCB, tcbNode);
 }
 
-K_TCB* kTCBQSearchPID(K_TCBQ *const self, TID uPid)
+K_TCB* kTCBQSearchPID(K_TCBQ* const self, TID uPid)
 {
-	if (self == NULL || self->listDummy.nextPtr == &(self->listDummy))
+	if (self ==NULL ||self->listDummy.nextPtr ==&(self->listDummy))
 	{
 		return NULL;
 	}
 	else
 	{
-		K_LISTNODE *currNodePtr = K_LIST_HEAD(self);
-		while (currNodePtr != &(self->listDummy))
+		K_LISTNODE* currNodePtr = K_LIST_HEAD(self);
+		while (currNodePtr !=&(self->listDummy))
 		{
-			K_TCB *currTcbPtr = K_LIST_GET_TCB_NODE(currNodePtr, K_TCB);
-			if (currTcbPtr->uPid == uPid)
+			K_TCB* currTcbPtr = K_LIST_GET_TCB_NODE(currNodePtr, K_TCB);
+			if (currTcbPtr->uPid ==uPid)
 			{
 				return currTcbPtr;
 			}
@@ -193,7 +278,7 @@ K_TCB* kTCBQSearchPID(K_TCBQ *const self, TID uPid)
 
 #define INSTANT_PREEMPT_LOWER_PRIO
 
-K_ERR kReadyQEnq(K_TCB *const tcbPtr)
+K_ERR kReadyQEnq(K_TCB* const tcbPtr)
 {
 	K_CR_AREA;
 	K_ENTER_CR
@@ -205,9 +290,9 @@ K_ERR kReadyQEnq(K_TCB *const tcbPtr)
 		;
 		return K_ERR_NULL_OBJ;
 	}
-	if (tcbPtr->realPrio != tcbPtr->priority)
+	if (tcbPtr->realPrio !=tcbPtr->priority)
 		assert(0);
-	if (kTCBQEnq(&readyQueue[tcbPtr->priority], tcbPtr) == K_SUCCESS)
+	if (kTCBQEnq(&readyQueue[tcbPtr->priority], tcbPtr) ==K_SUCCESS)
 	{
 		tcbPtr->status = READY;
 		tcbPtr->pendingObj = NULL;
@@ -229,9 +314,9 @@ K_ERR kReadyQEnq(K_TCB *const tcbPtr)
 	return K_ERROR;
 }
 
-K_ERR kReadyQDeq(K_TCB **const tcbPPtr, PRIO priority)
+K_ERR kReadyQDeq(K_TCB** const tcbPPtr, PRIO priority)
 {
-	if (kTCBQDeq(&readyQueue[priority], tcbPPtr) == K_SUCCESS)
+	if (kTCBQDeq(&readyQueue[priority], tcbPPtr) ==K_SUCCESS)
 	{
 		return K_SUCCESS;
 	}
@@ -255,26 +340,26 @@ static K_ERR kInitTcb_(TASKENTRY const taskFuncPtr, UINT32* const stackAddrPtr,
 static K_ERR kInitStack_(UINT32* const stackAddrPtr, UINT32 const stackSize,
 		TASKENTRY const taskFuncPtr)
 {
-	if (stackAddrPtr == NULL || stackSize == 0 || taskFuncPtr == NULL)
+	if (stackAddrPtr ==NULL ||stackSize ==0 ||taskFuncPtr ==NULL)
 	{
 		return K_ERROR;
 	}
-	stackAddrPtr[stackSize - PSR_OFFSET] = 0x01000000; //**PSR**
-	stackAddrPtr[stackSize - PC_OFFSET] = (UINT32) taskFuncPtr; //r15 **PC**
-	stackAddrPtr[stackSize - LR_OFFSET] = 0x14141414; //r14	**LR**
-	stackAddrPtr[stackSize - R12_OFFSET] = 0x12121212; //r12
-	stackAddrPtr[stackSize - R3_OFFSET] = 0x03030303; //r3
-	stackAddrPtr[stackSize - R2_OFFSET] = 0x02020202; //r2
-	stackAddrPtr[stackSize - R1_OFFSET] = 0x01010101; //r1
-	stackAddrPtr[stackSize - R0_OFFSET] = 0x00000000; //r0
-	stackAddrPtr[stackSize - R11_OFFSET] = 0x11111111; //r11
-	stackAddrPtr[stackSize - R10_OFFSET] = 0x10101010; //r10
-	stackAddrPtr[stackSize - R9_OFFSET] = 0x09090909; //r9
-	stackAddrPtr[stackSize - R8_OFFSET] = 0x08080808; //r8
-	stackAddrPtr[stackSize - R7_OFFSET] = 0x07070707; //r7
-	stackAddrPtr[stackSize - R6_OFFSET] = 0x06060606; //r6
-	stackAddrPtr[stackSize - R5_OFFSET] = 0x05050505; //r5
-	stackAddrPtr[stackSize - R4_OFFSET] = 0x04040404; //r4
+	stackAddrPtr[stackSize -PSR_OFFSET] = 0x01000000;  //**PSR**
+	stackAddrPtr[stackSize -PC_OFFSET] = (UINT32) taskFuncPtr;  //r15 **PC**
+	stackAddrPtr[stackSize -LR_OFFSET] = 0x14141414;  //r14	**LR**
+	stackAddrPtr[stackSize -R12_OFFSET] = 0x12121212;  //r12
+	stackAddrPtr[stackSize -R3_OFFSET] = 0x03030303;  //r3
+	stackAddrPtr[stackSize -R2_OFFSET] = 0x02020202;  //r2
+	stackAddrPtr[stackSize -R1_OFFSET] = 0x01010101;  //r1
+	stackAddrPtr[stackSize -R0_OFFSET] = 0x00000000;  //r0
+	stackAddrPtr[stackSize -R11_OFFSET] = 0x11111111;  //r11
+	stackAddrPtr[stackSize -R10_OFFSET] = 0x10101010;  //r10
+	stackAddrPtr[stackSize -R9_OFFSET] = 0x09090909;  //r9
+	stackAddrPtr[stackSize -R8_OFFSET] = 0x08080808;  //r8
+	stackAddrPtr[stackSize -R7_OFFSET] = 0x07070707;  //r7
+	stackAddrPtr[stackSize -R6_OFFSET] = 0x06060606;  //r6
+	stackAddrPtr[stackSize -R5_OFFSET] = 0x05050505;  //r5
+	stackAddrPtr[stackSize -R4_OFFSET] = 0x04040404;  //r4
 	/*for (UINT32 j=17; j<=stackSize-1; j++)
 	 {
 	 if (stackSize-j == 0)
@@ -289,10 +374,10 @@ static K_ERR kInitStack_(UINT32* const stackAddrPtr, UINT32 const stackSize,
 K_ERR kInitTcb_(TASKENTRY const taskFuncPtr, UINT32* const stackAddrPtr,
 		UINT32 const stackSize)
 {
-	if (kInitStack_(stackAddrPtr, stackSize, taskFuncPtr) == K_SUCCESS)
+	if (kInitStack_(stackAddrPtr, stackSize, taskFuncPtr) ==K_SUCCESS)
 	{
 		tcbs[pPid].stackAddrPtr = stackAddrPtr;
-		tcbs[pPid].sp = &stackAddrPtr[stackSize - R4_OFFSET];
+		tcbs[pPid].sp = &stackAddrPtr[stackSize -R4_OFFSET];
 		tcbs[pPid].stackSize = stackSize;
 		tcbs[pPid].status = READY;
 		tcbs[pPid].pid = pPid;
@@ -307,17 +392,17 @@ K_ERR kCreateTask(TASKENTRY const taskFuncPtr, char const* taskName,
 		TICK const timeSlice, PRIO const priority, BOOL const runToCompl)
 
 {
-	if (id == 0xFF || id == 0)
+	if (id ==0xFF ||id ==0)
 	{
 		return K_ERR_INVALID_TID;
 		assert(0);
 	}
 	/* if private PID is 0, system tasks hasn't been started yet */
-	if (pPid == 0)
+	if (pPid ==0)
 	{
-		/*init table thap maps tid to pids. mark as 255 all fields, to
+		/*init table that maps tid to pids. mark as 255 all fields, to
 		 * indicate they are empty */
-		for (UINT32 idx; idx < NTHREADS; idx++)
+		for (UINT32 idx; idx <NTHREADS; idx++)
 		{
 			tidTbl[idx] = 0xFF;
 		}
@@ -325,18 +410,18 @@ K_ERR kCreateTask(TASKENTRY const taskFuncPtr, char const* taskName,
 		/* initialise IDLE TASK */
 		assert(kInitTcb_(IdleTask, idleStack, IDLE_STACKSIZE) == K_SUCCESS);
 
-		tcbs[pPid].priority = NPRIO - 1;
-		tcbs[pPid].realPrio = NPRIO - 1;
+		tcbs[pPid].priority = NPRIO -1;
+		tcbs[pPid].realPrio = NPRIO -1;
 		tcbs[pPid].taskName = "IdleTask";
 		tcbs[pPid].uPid = IDLETASK_TID;
 		tcbs[pPid].runToCompl = FALSE;
 		tcbs[pPid].timeSlice = 0;
-		assert(tidTbl[pPid] == 0xFF);
+		assert(tidTbl[pPid] ==0xFF);
 		tidTbl[pPid] = 0;
 		pPid += 1;
 		/*initialise TIMER HANDLER TASK */
-		assert(
-				kInitTcb_(TimerHandlerTask, timerHandlerStack, TIMHANDLER_STACKSIZE) == K_SUCCESS);
+		assert(kInitTcb_(TimerHandlerTask, timerHandlerStack, \
+		TIMHANDLER_STACKSIZE) == K_SUCCESS);
 
 		tcbs[pPid].priority = 0;
 		tcbs[pPid].realPrio = 0;
@@ -344,14 +429,14 @@ K_ERR kCreateTask(TASKENTRY const taskFuncPtr, char const* taskName,
 		tcbs[pPid].uPid = TIMHANDLER_TID;
 		tcbs[pPid].runToCompl = TRUE;
 		tcbs[pPid].timeSlice = 0;
-		assert(tidTbl[pPid] == 0xFF);
+		assert(tidTbl[pPid] ==0xFF);
 		tidTbl[pPid] = 255;
 		pPid += 1;
 
 	}
-	if (kInitTcb_(taskFuncPtr, stackAddrPtr, stackSize) == K_SUCCESS)
+	if (kInitTcb_(taskFuncPtr, stackAddrPtr, stackSize) ==K_SUCCESS)
 	{
-		if (priority > NPRIO - 1)
+		if (priority >NPRIO -1)
 		{
 			assert(0);
 		}
@@ -363,7 +448,7 @@ K_ERR kCreateTask(TASKENTRY const taskFuncPtr, char const* taskName,
 		tcbs[pPid].timeLeft = timeSlice;
 		tcbs[pPid].uPid = id;
 		tcbs[pPid].runToCompl = runToCompl;
-		assert(tidTbl[pPid] == 0xFF);
+		assert(tidTbl[pPid] ==0xFF);
 		tidTbl[pPid] = id;
 		pPid += 1;
 		return K_SUCCESS;
@@ -372,14 +457,14 @@ K_ERR kCreateTask(TASKENTRY const taskFuncPtr, char const* taskName,
 	return K_ERROR;
 }
 /*******************************************************************************
-* Critical Regions
+* CRITICAL REGIONS
 *******************************************************************************/
 
 UINT32 kEnterCR(VOID)
 {
 	UINT32 crState;
 	crState = __get_PRIMASK();
-	if (crState == 0)
+	if (crState ==0)
 	{
 		asm volatile("DSB");
 		asm volatile ("CPSID I");
@@ -400,22 +485,22 @@ VOID kExitCR(UINT32 crState)
 
 /******************************************************************************
  HELPERS
-*******************************************************************************/
+******************************************************************************/
 PID kGetTaskPID(TID const taskID)
 {
-	PID pid=0;
-	for (pid=0;pid<NTHREADS;pid++)
+	PID pid = 0;
+	for (pid = 0; pid <NTHREADS; pid++)
 	{
-		if (tidTbl[pid]==taskID)
+		if (tidTbl[pid] ==taskID)
 			break;
 	}
-	if (pid == NTHREADS)
+	if (pid ==NTHREADS)
 		assert(0);
 	return pid;
 }
 
 PRIO kGetTaskPrio(TID const taskID)
 {
-	PID pid=kGetTaskPID(taskID);
+	PID pid = kGetTaskPID(taskID);
 	return tcbs[pid].priority;
 }
