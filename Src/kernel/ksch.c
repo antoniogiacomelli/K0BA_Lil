@@ -153,7 +153,6 @@ void kSchSwtch(void)
 
 		kErrHandler(FAULT_TCB_NULL);
 	}
-	nextTaskPrio = K_PRIO_TYPE_MAX; /*reset*/
 	runPtr = nextRunPtr;
 }
 /*yield is here for convenience*/
