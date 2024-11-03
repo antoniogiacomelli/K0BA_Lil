@@ -23,8 +23,7 @@
  * BLOCK POOL CONTROL BLOCK
  *
  ******************************************************************************/
-/*let me kick some old simplistic embeddded systems programming sht
- */
+
 K_ERR kBlockPoolInit(K_BLOCKPOOL* const self, ADDR const memPoolPtr,
 		BYTE blkSize, BYTE const numBlocks)
 {
