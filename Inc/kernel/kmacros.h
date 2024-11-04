@@ -34,9 +34,10 @@
 #define R5_OFFSET   15 /* R5 Register offset */
 #define R4_OFFSET   16 /* R4 Register offset */
 
-#define IDLE_STACKSIZE 		   32
+#define IDLE_STACKSIZE 		   64
 #define TIMHANDLER_STACKSIZE  128
 #define TIMHANDLER_TID		  255
+#define TIMHANDLER_PRIO		  0
 #define IDLETASK_TID		  0
 
 #define MSGBUFF_SIZE sizeof(K_MESGBUFF)
@@ -82,7 +83,7 @@
 /* brief Trigger Context Switch */
 #define K_PEND_CTXTSWTCH K_TRAP_PENDSV;
 
-#define READY_HIGHER_PRIO(ptr) ((ptr->priority < runPtr->priority) ? 1 : 0)
+#define READY_HIGHER_PRIO(ptr) ((ptr->priority < nextTaskPrio) ? 1 : 0)
 
 /*
  * brief Max value for tick type
