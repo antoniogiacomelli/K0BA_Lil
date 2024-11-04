@@ -391,7 +391,12 @@ K_ERR kCreateTask(TASKENTRY const taskFuncPtr, char const* taskName,
 		TICK const timeSlice, PRIO const priority, BOOL const runToCompl)
 
 {
-	if (id ==0xFF ||id ==0)
+	if (id == TIMHANDLER_TID)
+	{
+		return K_ERR_INVALID_TID;
+		assert(0);
+	}
+	if (id == 0x00)
 	{
 		return K_ERR_INVALID_TID;
 		assert(0);
