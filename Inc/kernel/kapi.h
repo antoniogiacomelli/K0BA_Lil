@@ -43,7 +43,7 @@
  *
  * A typical kernel service often receives a pointer to a kernel
  * object (1) (typically 'K_TYPE* const self'). If it does not,
- * it either acts onsingleton object (2) and/or on the (3) caller itself.
+ * it either acts on (2) singleton object and/or (3) on the caller itself:
  *
  *  E.g., (1) kSemaWait(SEMA const* self): decreases a counter semaphore.
  *        (2) kSleepDelay(): there is a single list of timers dedicated for
@@ -81,7 +81,7 @@
  * \param runToCompl Cooperative only function, to use in deferred handlers,
  * 				  	   servers - once dispatched it is never preempted unless
  * 				  	   it blocks or yields.
- * \return K_SUCCESS on success, K_ERROR on failure
+ * \return K_SUCCESS\K_ERROR\K_INVALID_TID
  */
 K_ERR kCreateTask(TASKENTRY const taskFuncPtr, STRING taskName, TID const id,
 		UINT32* const stackAddrPtr, UINT32 const stackSize,
@@ -104,7 +104,7 @@ VOID kYield(VOID);
  *\brief Initialise a semaphore
  *\param self Semaphore address
  *\param value Initial value
- *\return None
+ *\return K_SUCCESS/K_ERROR
  */
 
 K_ERR kSemaInit(K_SEMA* const self, INT32 const value);
@@ -119,7 +119,7 @@ K_ERR kSemaWait(K_SEMA* const self);
 /**
  *\brief Signal a semaphore
  *\param self Semaphore address
- *\return None
+ *\return K_SUCCESS/K_ERROR
  */
 K_ERR kSemaSignal(K_SEMA* const self);
 
@@ -130,7 +130,7 @@ K_ERR kSemaSignal(K_SEMA* const self);
 /**
  *\brief Init a mutex
  *\param self mutex address
- *\return K_SUCCESS / K_ERROR
+ *\return K_SUCCESS / K_ERROR 
  */
 
 K_ERR kMutexInit(K_MUTEX* const self);
@@ -138,14 +138,14 @@ K_ERR kMutexInit(K_MUTEX* const self);
 /**
  *\brief Lock a mutex
  *\param self mutex address
- *\return K_SUCCESS or a specific error
+ *\return K_SUCCESS / K_ERROR / K_MUTEX_NOT_LOCKED
  */
 K_ERR kMutexLock(K_MUTEX* const self);
 
 /**
  *\brief Unlock a mutex
  *\param self mutex address
- *\return K_SUCCESS or a specific error
+ *\return K_SUCCESS / K_MUTEX_NOT_OWNER / K_ERROR
  */
 K_ERR kMutexUnlock(K_MUTEX* const self);
 
@@ -154,32 +154,35 @@ K_ERR kMutexUnlock(K_MUTEX* const self);
 *******************************************************************************/
 #if (K_DEF_MESGQ == ON)
 
+K_ERROR kMesgQInit(K_MESGQ* const self, ADDR mesgPoolPtr, BYTE queueSize,
+		BYTE mesgSize);
 /**
  *\brief Send to a message queue
  *\param self Message queue address
  *\param mesgPtr Message address
  *\param mesgSize Message size
- *\return SUCCESS/FAIL
+ *\return K_SUCCESS, K_ERR_NULL_OBJ, K_ERR_INVALID_Q_SIZE, K_ERR_INVALID_QMESG_SIZE
  */
 
-K_ERR kMesgQPut(K_MESGQ* const self, ADDR const mesgPtr, BYTE const  mesgSize);
-/**
- * \brief Receive from a message queue
- * \param self Message Queue address
- * \param rcvdMesgPtr Pointer to address which will store the message
- * \return Sender PID
- */
-PID kMesgQGet(K_MESGQ* const self, ADDR const rcvdMesgPtr);
 /**
  *\brief Initialises a Message Queue
  *\param self Messsage Queue address
  *\param mesgPoolPtr Address of the message pool
  *\param queueSize Number of items in the queue
  *\param mesgSize Size of each item in bytes. sizeof() is recommended.
- *\return none
+ *\return Sender TID
  */
-VOID kMesgQInit(K_MESGQ* const self, ADDR mesgPoolPtr, BYTE queueSize,
-		BYTE mesgSize);
+
+
+K_ERR kMesgQPut(K_MESGQ* const self, ADDR const mesgPtr, BYTE const  mesgSize);
+/**
+ * \brief Receive from a message queue
+ * \param self Message Queue address
+ * \param rcvdMesgPtr Pointer to address which will store the message
+ * \return K_ERROR/K_SUCCESS
+ */
+TID kMesgQGet(K_MESGQ* const self, ADDR const rcvdMesgPtr);
+
 #endif /*K_DEF_MESGQ*/
 
 /*******************************************************************************

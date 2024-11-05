@@ -65,21 +65,33 @@ K_ERR kMesgBuffPut(K_MESGBUFF* const self)
  * INDIRECT BLOCKING MESSAGE QUEUE
  *******************************************************************************/
 
-VOID kMesgQInit(K_MESGQ* const self, ADDR const mesgPoolPtr,
+K_ERR kMesgQInit(K_MESGQ* const self, ADDR const mesgPoolPtr,
 		BYTE const queueSize, BYTE const mesgSize)
 {
 	K_CR_AREA;
-	K_ENTER_CR
-	;
-	assert(kSemaInit(&(self->semaItem), 0) ==K_SUCCESS);
-	assert(kMutexInit(&(self->mutex)) ==K_SUCCESS);
-	assert(kListInit(&self->mesgList, "MesgList") ==K_SUCCESS);
-	assert(kSemaInit(&self->semaRoom, queueSize) ==K_SUCCESS);
-	assert(
-			kBlockPoolInit(&(self->mesgMemCtrlBlk), (ADDR )mesgPoolPtr,
-					(BYTE )mesgSize, queueSize) ==K_SUCCESS);
-	K_EXIT_CR
-	;
+	K_ENTER_CR;
+
+	if (IS_NULL_PTR(self) || IS_NULL_PTR(mesgPoolPtr))
+	{
+		return K_ERR_NULL_OBJ;
+	}
+	if (queueSize == 0)
+	{
+		return K_ERR_INVALID_Q_SIZE;
+	}
+	if (mesgSize == 0)
+	{
+		return K_ERR_INVALID_QMESG_SIZE;
+	}
+
+	kSemaInit(&(self->semaItem), 0);
+	kMutexInit(&(self->mutex));
+	kListInit(&self->mesgList, "MesgList");
+	kSemaInit(&self->semaRoom, queueSize);
+	kBlockPoolInit(&(self->mesgMemCtrlBlk), (ADDR )mesgPoolPtr, (BYTE )mesgSize, \
+	queueSize);
+	K_EXIT_CR;
+	return K_SUCCESS;
 }
 
 K_ERR kMesgQPut(K_MESGQ* const self, ADDR const mesgPtr, BYTE const mesgSize)

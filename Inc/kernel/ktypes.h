@@ -87,8 +87,10 @@ typedef enum kErr
 	K_ERR_MEM_FREE				  = -9, /**< Error when freeing an allocated memory */
 	K_ERR_MEM_ALLOC				  = -10, /**< Error allocating memory */
 	K_ERR_MEM_INVALID_ADDR		  = -11, /**< Address does not belong to MEM */
-	K_ERR_INVALID_TID			  = -12  /**< Invalid user-assigned task IDs are 0 and 255*/
-
+	K_ERR_INVALID_TID			  = -12, /**< Invalid user-assigned task IDs are 0 or 255*/
+	K_ERR_INVALID_Q_SIZE		  = -13, /**< Maximum message queue size is 255 items */
+	K_ERR_INVALID_QMESG_SIZE	  = -14, /**< Maximum message for a message queue is 255 bytes */
+	K_ERR_INVALID_BYTEPOOL_SIZE	  = -15 /**< Maximum byte pool size is 255 bytes (254 effective) */
 } K_ERR;
 
 /**
