@@ -139,8 +139,8 @@ typedef _Bool&#160;</td><td class="memItemRight" valign="bottom"><b>BOOL</b></td
 <tr class="memitem:a271989a0e5c0f5477b9200f7c8e139d7" id="r_a271989a0e5c0f5477b9200f7c8e139d7"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="#a7927e087749615dae3114cc27b91c86d">VOID</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a271989a0e5c0f5477b9200f7c8e139d7">ADDR</a></td></tr>
 <tr class="memdesc:a271989a0e5c0f5477b9200f7c8e139d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primitve aliases.  <br /></td></tr>
 <tr class="separator:a271989a0e5c0f5477b9200f7c8e139d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b0456af8e7367c5741bf647a7356caa" id="r_a8b0456af8e7367c5741bf647a7356caa"><td class="memItemLeft" align="right" valign="top">typedef const CHAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b0456af8e7367c5741bf647a7356caa">STRING</a></td></tr>
-<tr class="separator:a8b0456af8e7367c5741bf647a7356caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cdbf42d20c4cf10cde200ab3dfa18b9" id="r_a0cdbf42d20c4cf10cde200ab3dfa18b9"><td class="memItemLeft" align="right" valign="top">typedef CHAR const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0cdbf42d20c4cf10cde200ab3dfa18b9">STRING</a></td></tr>
+<tr class="separator:a0cdbf42d20c4cf10cde200ab3dfa18b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e12550767a1e9f0191fe57808809295" id="r_a6e12550767a1e9f0191fe57808809295"><td class="memItemLeft" align="right" valign="top">typedef BYTE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e12550767a1e9f0191fe57808809295">PID</a></td></tr>
 <tr class="separator:a6e12550767a1e9f0191fe57808809295"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa91430ada220aeb4be678a150b5233df" id="r_aa91430ada220aeb4be678a150b5233df"><td class="memItemLeft" align="right" valign="top">typedef BYTE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa91430ada220aeb4be678a150b5233df">TID</a></td></tr>
@@ -228,27 +228,12 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a6f2fa6b13e49281bc95f0cfd80b52e2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return values.  <a href="#a6f2fa6b13e49281bc95f0cfd80b52e2c">More...</a><br /></td></tr>
 <tr class="separator:a6f2fa6b13e49281bc95f0cfd80b52e2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdeb3bb1b3731cc2cc2b39249f065a9c" id="r_afdeb3bb1b3731cc2cc2b39249f065a9c"><td class="memItemLeft" align="right" valign="top"><a id="afdeb3bb1b3731cc2cc2b39249f065a9c" name="afdeb3bb1b3731cc2cc2b39249f065a9c"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afdeb3bb1b3731cc2cc2b39249f065a9c">kFault</a> { <br />
-&#160;&#160;<b>FAULT_TASK</b> = 1
-, <b>FAULT_NOT_IDLE</b> = 2
-, <b>FAULT_READY_QUEUE</b> = 3
-, <b>FAULT_DTIMER_POOL_EMPTY</b> = 4
-, <br />
-&#160;&#160;<b>FAULT_TCB_NULL</b> = 5
-, <b>FAULT_LIST</b> = 6
-, <b>FAULT_NULL_OBJ</b> = 7
-, <b>FAULT_MEM_POOL_INIT</b> = 8
-, <br />
-&#160;&#160;<b>FAULT_INVALID_ARG</b> = 9
-, <b>FAULT_TASK_STATUS</b> = 10
-, <b>FAULT_POOL_PUT</b> = 11
-, <b>FAULT_EVENT_NOT_INIT</b> = 12
-, <br />
-&#160;&#160;<b>FAULT_PRIO_INV</b> = 13
-, <b>FAULT_INVALID_KERNEL_VERSION</b> = 14
-<br />
+<tr class="memitem:afdeb3bb1b3731cc2cc2b39249f065a9c" id="r_afdeb3bb1b3731cc2cc2b39249f065a9c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afdeb3bb1b3731cc2cc2b39249f065a9c">kFault</a> { <a class="el" href="#afdeb3bb1b3731cc2cc2b39249f065a9caae3245bca39a1cbf253b3ad8d3dd835a">FAULT_READY_QUEUE</a> = 1
+, <a class="el" href="#afdeb3bb1b3731cc2cc2b39249f065a9cac31929e01175ad2bdd01823dce29379d">FAULT_NULL_OBJ</a> = 2
+, <a class="el" href="#afdeb3bb1b3731cc2cc2b39249f065a9cadde517af2173a7f1e6a853fdaa5ec189">FAULT_LIST</a> = 3
+, <a class="el" href="#afdeb3bb1b3731cc2cc2b39249f065a9cae617a84c9ec8300d32f906850e185197">FAULT_KERNEL_VERSION</a> = 4
  }</td></tr>
-<tr class="memdesc:afdeb3bb1b3731cc2cc2b39249f065a9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fault codes. <br /></td></tr>
+<tr class="memdesc:afdeb3bb1b3731cc2cc2b39249f065a9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fault codes.  <a href="#afdeb3bb1b3731cc2cc2b39249f065a9c">More...</a><br /></td></tr>
 <tr class="separator:afdeb3bb1b3731cc2cc2b39249f065a9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73cd4b5143c8b37fdd158ddb99522383" id="r_a73cd4b5143c8b37fdd158ddb99522383"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73cd4b5143c8b37fdd158ddb99522383">kTaskStatus</a> { <br />
 &#160;&#160;<a class="el" href="#a73cd4b5143c8b37fdd158ddb99522383aef2863a469df3ea6871d640e3669a2f2">INVALID</a> = 0
@@ -619,14 +604,14 @@ Enumerations</h2></td></tr>
 
 </div>
 </div>
-<a id="a8b0456af8e7367c5741bf647a7356caa" name="a8b0456af8e7367c5741bf647a7356caa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b0456af8e7367c5741bf647a7356caa">&#9670;&#160;</a></span>STRING</h2>
+<a id="a0cdbf42d20c4cf10cde200ab3dfa18b9" name="a0cdbf42d20c4cf10cde200ab3dfa18b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0cdbf42d20c4cf10cde200ab3dfa18b9">&#9670;&#160;</a></span>STRING</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef const CHAR* <a class="el" href="#a8b0456af8e7367c5741bf647a7356caa">STRING</a></td>
+          <td class="memname">typedef CHAR const* <a class="el" href="#a0cdbf42d20c4cf10cde200ab3dfa18b9">STRING</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -724,6 +709,32 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="a6f2fa6b13e49281bc95f0cfd80b52e2ca0eb8aa8c4b851fea814fbb593659acd8" name="a6f2fa6b13e49281bc95f0cfd80b52e2ca0eb8aa8c4b851fea814fbb593659acd8"></a>K_ERR_MEM_INVALID_ADDR&#160;</td><td class="fielddoc"><p>Address does not belong to MEM </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a6f2fa6b13e49281bc95f0cfd80b52e2cacb690af498dc995efc17c1638dfbdaed" name="a6f2fa6b13e49281bc95f0cfd80b52e2cacb690af498dc995efc17c1638dfbdaed"></a>K_ERR_INVALID_TID&#160;</td><td class="fielddoc"><p>Invalid user-assigned task IDs are 0 and 255 </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="afdeb3bb1b3731cc2cc2b39249f065a9c" name="afdeb3bb1b3731cc2cc2b39249f065a9c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afdeb3bb1b3731cc2cc2b39249f065a9c">&#9670;&#160;</a></span>kFault</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="#afdeb3bb1b3731cc2cc2b39249f065a9c">kFault</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fault codes. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="afdeb3bb1b3731cc2cc2b39249f065a9caae3245bca39a1cbf253b3ad8d3dd835a" name="afdeb3bb1b3731cc2cc2b39249f065a9caae3245bca39a1cbf253b3ad8d3dd835a"></a>FAULT_READY_QUEUE&#160;</td><td class="fielddoc"><p>Fault managin Ready Queue </p>
+</td></tr>
+<tr><td class="fieldname"><a id="afdeb3bb1b3731cc2cc2b39249f065a9cac31929e01175ad2bdd01823dce29379d" name="afdeb3bb1b3731cc2cc2b39249f065a9cac31929e01175ad2bdd01823dce29379d"></a>FAULT_NULL_OBJ&#160;</td><td class="fielddoc"><p>Tried to handle a NULL object </p>
+</td></tr>
+<tr><td class="fieldname"><a id="afdeb3bb1b3731cc2cc2b39249f065a9cadde517af2173a7f1e6a853fdaa5ec189" name="afdeb3bb1b3731cc2cc2b39249f065a9cadde517af2173a7f1e6a853fdaa5ec189"></a>FAULT_LIST&#160;</td><td class="fielddoc"><p>Fault when operating on a list </p>
+</td></tr>
+<tr><td class="fieldname"><a id="afdeb3bb1b3731cc2cc2b39249f065a9cae617a84c9ec8300d32f906850e185197" name="afdeb3bb1b3731cc2cc2b39249f065a9cae617a84c9ec8300d32f906850e185197"></a>FAULT_KERNEL_VERSION&#160;</td><td class="fielddoc"><p>Invalid kernel version </p>
 </td></tr>
 </table>
 

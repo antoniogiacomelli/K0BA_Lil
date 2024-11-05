@@ -47,7 +47,7 @@
 #define TICK_10MS        	(SystemCoreClock/1000)  /**<  Tick period of 10ms */
 #define TICK_5MS        	(SystemCoreClock/2000)  /**< Tick period of 5ms */
 #define TICK_1MS         	(SystemCoreClock/10000) /**<  Tick period of 1ms */
-#define NPRIO      			(K_DEF_N_PRIO + 1)
+#define NPRIO      			(K_DEF_MIN_PRIO + 1)
 
 /*
  * brief Macro to get the address of the container structure
@@ -190,5 +190,10 @@
 #else
 #define K_TRACE(event, info) kTrace(event, info)
 #endif
-
+/*
+ * brief Macro for unused variables
+ */
+#if !defined(UNUSED)
+#define UNUSED(x) (void)x
+#endif
 #endif /*KMACROS_H*/

@@ -60,7 +60,7 @@ typedef _Bool       	BOOL;
 /* Yes, Windows-Like. Deal with it. */
 
 typedef VOID*             ADDR;     /**< Generic address type */
-typedef const CHAR *STRING; /**< Read-only String alias   */
+typedef CHAR const* STRING; /**< Read-only String alias   */
 typedef BYTE              PID;      /**< System defined Task ID type */
 typedef BYTE		      TID;	    /**< User defined Task ID */
 typedef BYTE	          PRIO;     /**< Task priority type */
@@ -96,20 +96,10 @@ typedef enum kErr
  */
 typedef enum kFault
 {
-    FAULT_TASK              = 1,
-    FAULT_NOT_IDLE          = 2,
-    FAULT_READY_QUEUE       = 3,
-    FAULT_DTIMER_POOL_EMPTY = 4,
-    FAULT_TCB_NULL          = 5,
-    FAULT_LIST              = 6,
-	FAULT_NULL_OBJ			= 7,
-	FAULT_MEM_POOL_INIT		= 8,
-	FAULT_INVALID_ARG		= 9,
-	FAULT_TASK_STATUS		= 10,
-	FAULT_POOL_PUT			= 11,
-	FAULT_EVENT_NOT_INIT	= 12,
-	FAULT_PRIO_INV			= 13,
-	FAULT_INVALID_KERNEL_VERSION = 14
+    FAULT_READY_QUEUE       = 1, /**< Fault managin Ready Queue*/
+    FAULT_NULL_OBJ          = 2, /**< Tried to handle a NULL object */
+    FAULT_LIST              = 3, /**< Fault when operating on a list */
+	FAULT_KERNEL_VERSION    = 4  /**< Invalid kernel version */
 } K_FAULT;
 
 /**

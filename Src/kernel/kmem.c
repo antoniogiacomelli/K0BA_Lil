@@ -110,6 +110,7 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr)
 	return K_SUCCESS;
 }
 
+#if (K_DEF_BYTEPOOL == ON)
 /*******************************************************************************
  *
  * BYTE POOL CONTROL BLOCK
@@ -330,3 +331,4 @@ K_ERR kBytePoolFree(K_BYTEPOOL *const self, BYTE *const chunkPtr,
 	;
 	return K_SUCCESS;
 }
+#endif

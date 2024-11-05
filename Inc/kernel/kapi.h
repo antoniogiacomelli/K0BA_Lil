@@ -14,9 +14,9 @@
  * \verbatim
  *  ________________________________________
  * |                                        |--
- * | [TASK1][TASK2]  ....         [TASKN]   | application.c/application.h
+ * | [TASK1][TASK2]  ....         [TASKN]   | application.c
  * |----------------------------------------|--
- * |                 API                    | this file
+ * |                 API                    |
  * |----------------------------------------|--
  * |                                        |
  * |             K0BA KERNEL                | k*.h k*.c
@@ -425,6 +425,8 @@ ADDR kBlockPoolAlloc(K_BLOCKPOOL* const self);
  */
 K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr);
 
+#if (K_DEF_BYTEPOOL==ON)
+
 /*******************************************************************************
  *
  * BYTE MEMORY POOL
@@ -524,8 +526,6 @@ K_ERR kBlockPoolFree(K_BLOCKPOOL* const self, ADDR const blockPtr);
  *  \endverbatim
  *******************************************************************************/
 
-#if (K_DEF_BYTEPOOL==ON)
-
 /**
  * \brief Initialises a Byte pool control block.
  * \param self Pointer to the byte pool control block
@@ -558,7 +558,9 @@ K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr,
 
 #endif /*K_DEF_BYTEPOOL*/
 
-
+/*******************************************************************************
+* MISC
+******************************************************************************/
 /**
  *\brief Gets a task system ID
  *\param taskID user-defined ID
@@ -577,9 +579,6 @@ PRIO kGetTaskPrio(TID const taskID);
  * \return string length - 1 (does not count '\0')
  */
 
-/*******************************************************************************
-* UTILS
-******************************************************************************/
 SIZE kStrLen(STRING string);
 /**
  * \brief Deep copy data from one address to other
@@ -588,26 +587,14 @@ SIZE kStrLen(STRING string);
  * \param size    Number of bytes to be copied
  * \return        Destination address
  */
-
-/*******************************************************************************
-* KERNEL VERSION
-******************************************************************************/
-
 ADDR kMemCpy(ADDR destPtr, ADDR const srcPtr, SIZE const size);
+
 /**
  * \brief    Get Kernel Version
  * \return   Kernel version as an unsigned integer.
  */
 unsigned int kGetVersion(void);
 
-
-
-/*
- * brief Macro for unused variables
- */
-#if !defined(UNUSED)
-#define UNUSED(x) (void)x
-#endif
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/

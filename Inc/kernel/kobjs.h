@@ -8,8 +8,26 @@
  *\brief    Kernel objects
  *\version  1.1.0
  *\author   Antonio Giacomelli
- */
 
+ * \verbatim
+ *
+ * 	In this header:
+ *
+ * 		o Definition of all kernel objects:
+ *
+ * 		 OBJECT TYPE 				| (SUB-)MODULE
+ * 		 ---------------------------------------------
+ * 		 Lists 		  				| klist.c
+ * 		 Task Control Block 		| knucleus.c
+ *		 Run-time record			| ktick.c
+ *		 Inter-task synchronisation	| ksynch.c
+ *		 Inter-task communication	| kmesg.c
+ *		 Memory Pool Control Block	| kmem.c
+ *		 Timers						| ktimer.c
+ *		 Tracer						| ktracer.c
+ *
+ * \endverbatim
+ *****************************************************************************/
 #ifndef KOBJS_H
 #define KOBJS_H
 

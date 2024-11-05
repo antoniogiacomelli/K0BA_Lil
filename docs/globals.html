@@ -80,6 +80,10 @@ $(function(){ initResizable(false); });
 
 
 <h3><a id="index_f" name="index_f"></a>- f -</h3><ul>
+<li>FAULT_KERNEL_VERSION&#160;:&#160;<a class="el" href="ktypes_8h.html#afdeb3bb1b3731cc2cc2b39249f065a9cae617a84c9ec8300d32f906850e185197">ktypes.h</a></li>
+<li>FAULT_LIST&#160;:&#160;<a class="el" href="ktypes_8h.html#afdeb3bb1b3731cc2cc2b39249f065a9cadde517af2173a7f1e6a853fdaa5ec189">ktypes.h</a></li>
+<li>FAULT_NULL_OBJ&#160;:&#160;<a class="el" href="ktypes_8h.html#afdeb3bb1b3731cc2cc2b39249f065a9cac31929e01175ad2bdd01823dce29379d">ktypes.h</a></li>
+<li>FAULT_READY_QUEUE&#160;:&#160;<a class="el" href="ktypes_8h.html#afdeb3bb1b3731cc2cc2b39249f065a9caae3245bca39a1cbf253b3ad8d3dd835a">ktypes.h</a></li>
 <li>funPtr&#160;:&#160;<a class="el" href="kobjs_8h.html#a691fa461176432a4abb3489acfcc05c0">kobjs.h</a></li>
 </ul>
 
@@ -106,13 +110,12 @@ $(function(){ initResizable(false); });
 <li>K_DEF_MAILBOX&#160;:&#160;<a class="el" href="kconfig_8h.html#a657c9fc22fd62924dd56256a31174a51">kconfig.h</a></li>
 <li>K_DEF_MEMBLOCK_ALIGN_4&#160;:&#160;<a class="el" href="kconfig_8h.html#ada78e23423897b7d1a0aa48b899f1895">kconfig.h</a></li>
 <li>K_DEF_MESGQ&#160;:&#160;<a class="el" href="kconfig_8h.html#a258fd29b655e73073376d9948b82d617">kconfig.h</a></li>
+<li>K_DEF_MIN_PRIO&#160;:&#160;<a class="el" href="kconfig_8h.html#afe7c89c56e7926665ff3ee00d8639e14">kconfig.h</a></li>
 <li>K_DEF_N_MESGBUFF&#160;:&#160;<a class="el" href="kconfig_8h.html#a70ee1160058cfea62a2f4fc76015453c">kconfig.h</a></li>
-<li>K_DEF_N_PRIO&#160;:&#160;<a class="el" href="kconfig_8h.html#a226e304b0c026eedd96c87f7ed4273fd">kconfig.h</a></li>
 <li>K_DEF_N_TIMERS&#160;:&#160;<a class="el" href="kconfig_8h.html#a02696195fd211a1f01fdc5a8ad3971a6">kconfig.h</a></li>
 <li>K_DEF_N_USRTASKS&#160;:&#160;<a class="el" href="kconfig_8h.html#ac6cccabfb3e4f2dbb7d8f056b9eec807">kconfig.h</a></li>
 <li>K_DEF_PIPE&#160;:&#160;<a class="el" href="kconfig_8h.html#a61067ee3b559c615c46dd74541b6321f">kconfig.h</a></li>
 <li>K_DEF_PIPE_SIZE&#160;:&#160;<a class="el" href="kconfig_8h.html#a58b3a610806f86a8999c2d6d2543c747">kconfig.h</a></li>
-<li>K_DEF_PRIOINV_FAULT&#160;:&#160;<a class="el" href="kconfig_8h.html#a04d97b1803ccb44e39433277b6297c08">kconfig.h</a></li>
 <li>K_DEF_SLEEPWAKE&#160;:&#160;<a class="el" href="kconfig_8h.html#a791f76601c48d0fe510b642f7a430a0f">kconfig.h</a></li>
 <li>K_DEF_TICK_PERIOD&#160;:&#160;<a class="el" href="kconfig_8h.html#a7a8de31c70b921f043f9258a6db81c83">kconfig.h</a></li>
 <li>K_DEF_TRACE&#160;:&#160;<a class="el" href="kconfig_8h.html#a355cacbd35b1f135ea395ad9a19a10cb">kconfig.h</a></li>
@@ -155,9 +158,6 @@ $(function(){ initResizable(false); });
 <li>kBlockPoolFree()&#160;:&#160;<a class="el" href="kapi_8h.html#a7ab4a3919a31c06d965bdbba0b189e4a">kapi.h</a></li>
 <li>kBlockPoolInit()&#160;:&#160;<a class="el" href="kapi_8h.html#ab99ef44e55c7388b12c1a2125f4b84de">kapi.h</a></li>
 <li>kBusyDelay()&#160;:&#160;<a class="el" href="kapi_8h.html#a4025cb3de89ffae8ebd4f26323eca881">kapi.h</a></li>
-<li>kBytePoolAlloc()&#160;:&#160;<a class="el" href="kapi_8h.html#a89f7f4f16d9f115972c7aee639aba0fd">kapi.h</a></li>
-<li>kBytePoolFree()&#160;:&#160;<a class="el" href="kapi_8h.html#af6dd30bc0231318f92637b5cc617fca7">kapi.h</a></li>
-<li>kBytePoolInit()&#160;:&#160;<a class="el" href="kapi_8h.html#aa1cc1a064d0f5ab6212f547d2818a188">kapi.h</a></li>
 <li>kCondInit()&#160;:&#160;<a class="el" href="kapi_8h.html#ab52d9b450304c6e34a094cfe058f2327">kapi.h</a></li>
 <li>kCondSignal()&#160;:&#160;<a class="el" href="kapi_8h.html#aa998c6dc2a62dc3571c4c253317959b0">kapi.h</a></li>
 <li>kCondWait()&#160;:&#160;<a class="el" href="kapi_8h.html#ac6bb0fa5d1873a8dbb3b9b42ceaee4bb">kapi.h</a></li>
@@ -249,7 +249,7 @@ $(function(){ initResizable(false); });
 <li>stackAddrPtr&#160;:&#160;<a class="el" href="kobjs_8h.html#a3812e78a0b03c66892f2e309b501d6fb">kobjs.h</a></li>
 <li>stackSize&#160;:&#160;<a class="el" href="kobjs_8h.html#a82cabdcaee43fc729a1da5551d429f73">kobjs.h</a></li>
 <li>status&#160;:&#160;<a class="el" href="kobjs_8h.html#a59b307226fb602d57e606f96c82749fd">kobjs.h</a></li>
-<li>STRING&#160;:&#160;<a class="el" href="ktypes_8h.html#a8b0456af8e7367c5741bf647a7356caa">ktypes.h</a></li>
+<li>STRING&#160;:&#160;<a class="el" href="ktypes_8h.html#a0cdbf42d20c4cf10cde200ab3dfa18b9">ktypes.h</a></li>
 </ul>
 
 
