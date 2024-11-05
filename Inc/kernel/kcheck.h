@@ -11,6 +11,9 @@
 
 #ifndef KCHECK_H
 #define KCHECK_H
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
 
 #ifndef __GNUC__
 #   error "You need GCC as your compiler!"

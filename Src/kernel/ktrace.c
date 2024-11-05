@@ -4,9 +4,9 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module      : Tracer
- * 	Provides to : Every other module can use this service.
- *  Public API  : Yes
+ * 	Module           : Tracer
+ * 	Provides to      : Every other module can use this service.
+ *  Application API  : Yes
  *
  * 	In this unit:
  *
@@ -15,6 +15,10 @@
  *****************************************************************************/
 
 #define K_CODE
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
+#include "kapi.h"
 #include "kglobals.h"
 
 #if (K_DEF_TRACE==ON)

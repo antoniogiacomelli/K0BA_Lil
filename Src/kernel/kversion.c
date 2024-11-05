@@ -4,10 +4,9 @@
  *
  ******************************************************************************
  ******************************************************************************
- *  Module       : Version
- *  Depends on   : System Singletons
- *  Provides to  : All
- *  Public API   : Yes
+ *  Module            : Version
+ *  Provides to       : All
+ *  Application API   : Yes
  *
  * 	It is a good practice to keep a firmware version on a dedicated
  * 	translation unit.

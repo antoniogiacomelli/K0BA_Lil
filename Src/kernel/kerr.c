@@ -4,15 +4,17 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module      : Error Handler
- * 	Depends on  : System Globals
- * 	Provides to : System
- *  Public API : No
+ * 	Module          : Error Handler
+ * 	Depends on      : System Globals
+ * 	Provides to     : System
+ *  Application API : No
  * 	In this unit:
  * 			   Error Handling
  *
  ******************************************************************************/
-
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
 #include "kglobals.h"
 
 /******************************************************************************

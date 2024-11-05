@@ -11,19 +11,17 @@
 
 #ifndef KSYS_H
 #define KSYS_H
-/****************************/
-/* INCLUDE YOUR ARM GCC,    */
-/* CMSIS-CORE AND OTHER     */
-/* ENVIRONMENT DEPENDENCIES */
-/* HERE                     */
-/****************************/
+#include <stm32f4xx_hal.h>
+#include <stm32f401xe.h>
+#include <cmsis_gcc.h>
 #include "kmacros.h"
-#include "kapi.h"
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
 #include "kerr.h"
 #include "klist.h"
 #include "ksch.h"
 #include "ksystasks.h"
-#include "kversion.h"
 
 extern K_TCB *runPtr; /* Pointer to the running TCB */
 extern K_TCB tcbs[NTHREADS]; /* Pool of TCBs */
@@ -43,8 +41,5 @@ extern PID tidTbl[NTHREADS]; /* map pid -> tid */
 extern K_TIMER *dTimReloadList; /* periodic timers */
 extern K_TIMER *dTimOneShotList; /* reload timers */
 extern volatile struct kRunTime runTime; /* record of run time */
-extern PRIO highestPrio; /* highest initial prio */
-extern PRIO const lowestPrio; /* lowest prio allowed */
-extern PRIO nextTaskPrio;
 
 #endif /* KSYS_H */

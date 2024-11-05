@@ -19,6 +19,10 @@
  *****************************************************************************/
 
 #define K_CODE
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
+#include "kapi.h"
 #include "kglobals.h"
 
 #if (K_DEF_MESGQ==ON)
@@ -30,16 +34,26 @@
 K_BLOCKPOOL mesgBuffMem; /* global mesg pool control block */
 K_MESGBUFF mesgBuffPool[K_DEF_N_MESGBUFF]; /* global mesg pool */
 K_SEMA semaMesgCntr;
+static BOOL mesgPoolInit=FALSE;
+static inline VOID kMesgBuffPoolInit_(VOID)
+{
+	if (!mesgPoolInit)
+	{
+		kBlockPoolInit(&mesgBuffMem, mesgBuffPool, MSGBUFF_SIZE, K_DEF_N_MESGBUFF);
+		kSemaInit(&semaMesgCntr, K_DEF_N_MESGBUFF);
+		mesgPoolInit=TRUE;
+	}
+}
 
 K_MESGBUFF* kMesgBuffGet()
 {
+
 	K_CR_AREA;
-	K_ENTER_CR
-	;
+	K_ENTER_CR;
+	kMesgBuffPoolInit_();
 	kSemaWait(&semaMesgCntr);
 	K_MESGBUFF* mesgPtr = kBlockPoolAlloc(&mesgBuffMem);
-	K_EXIT_CR
-	;
+	K_EXIT_CR;
 	return mesgPtr;
 }
 

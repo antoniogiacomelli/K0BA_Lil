@@ -4,7 +4,7 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Modul    e   : System Tasks
+ * 	Module       : System Tasks
  * 	Depends on   : Scheduler
  * 	Provides to  : Application Timers
  *  Public API	 : N/A
@@ -14,7 +14,11 @@
  *****************************************************************************/
 
 #define K_CODE
-#include <kglobals.h>
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
+#include "kapi.h"
+#include "kglobals.h"
 
 UINT32 idleStack[IDLE_STACKSIZE];
 UINT32 timerHandlerStack[TIMHANDLER_STACKSIZE];

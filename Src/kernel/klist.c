@@ -4,9 +4,11 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module      : N/A
- * 	Provides to : Scheduler, Inter-task synchronisation, Inter-Task Communica_
- * 				  tion, Application Timers
+ * 	Module          : N/A
+ * 	Provides to     : Scheduler, Inter-task synchronisation, Inter-Task
+ * 	                  Communication, Application Timers
+ * 	Depends on      : N/A
+ * 	Application API : No.
  * 	In this unit:
  *					o ADT for Circular Doubly Linked List
  *

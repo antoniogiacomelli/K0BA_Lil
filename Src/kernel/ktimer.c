@@ -4,9 +4,9 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module     : Application Timers
- * 	Depends on : Scheduler, Inter-task Synchronisation
- *  Public API : Yes
+ * 	Module           : Application Timers
+ * 	Depends on       : Scheduler, Inter-task Synchronisation
+ *  Application API  : Yes
  * 	In this unit:
  * 			o Timer Pool Management
  *			o Timer Delta List
@@ -19,6 +19,10 @@
 
 #define K_CODE
 
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
+#include "kapi.h"
 #include "kglobals.h"
 
 K_BLOCKPOOL	 timerMem;
@@ -26,13 +30,19 @@ K_TIMER* 	 dTimReloadList=NULL; 		/**< periodic timers */
 K_TIMER*	 dTimOneShotList=NULL;		/**< reload	  timers */
 K_TIMER 	 timerPool[K_DEF_N_TIMERS];
 K_SEMA  	 timerSemaCnt;
-
+static BOOL  timerPoolInit=FALSE;
 
 static K_ERR kTimerListAdd_(K_TIMER** dTimList, STRING timerName,\
 		TICK tickCount,  CALLBACK funPtr, ADDR argsPtr, BOOL reload);
-
-
-
+static inline void kTimerPoolInit_(VOID)
+{
+	if (!timerPoolInit)
+	{
+		kSemaInit(&timerSemaCnt, K_DEF_N_TIMERS);
+		kBlockPoolInit(&timerMem, (BYTE*)timerPool, TIMER_SIZE, K_DEF_N_TIMERS);
+		timerPoolInit=TRUE;
+	}
+}
 K_TIMER* kTimerGet(VOID)
 {
 
@@ -79,7 +89,7 @@ K_ERR kTimerInit(STRING timerName, TICK ticks, CALLBACK funPtr, ADDR argsPtr,
 static K_ERR kTimerListAdd_(K_TIMER** selfPtr, STRING timerName, TICK ticks,
 				   	   	    CALLBACK funPtr, ADDR argsPtr, BOOL reload)
 {
-
+	kTimerPoolInit_();
 	K_TIMER* newTimerPtr = kTimerGet();
 	if (newTimerPtr == NULL)
 	{

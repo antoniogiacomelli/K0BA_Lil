@@ -4,11 +4,10 @@
  *
  ******************************************************************************
  ******************************************************************************
- *  Module         : Nucleus
- *  Sub-module     : Inter-task Synchronisation
- *  Depends on     : Scheduler
- *  Provides to    : All services.
- *  Public API     : Yes
+ *  Module              : Inter-task Synchronisation
+ *  Depends on          : Scheduler
+ *  Provides to         : All services.
+ *  Application API     : Yes
  *
  * 	In this unit:
  * 					o Direct Task Pend/Signal
@@ -21,6 +20,10 @@
  *****************************************************************************/
 
 #define K_CODE
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
+#include "kapi.h"
 #include "kglobals.h"
 
 /******************************************************************************

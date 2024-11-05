@@ -4,10 +4,9 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module      : Utils
- *  Depends on  : System
- *  Provides to : All
- *  Public API  : Yes
+ * 	Module           : Utils
+ *  Provides to      : All
+ *  Application API  : Yes
  *
  * 	In this unit:
  * 		o Misc generic utils
@@ -16,6 +15,10 @@
 
 
 #define K_CODE
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
+#include "kapi.h"
 #include "kglobals.h"
 
 SIZE kStrLen(STRING s)

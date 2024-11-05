@@ -4,9 +4,9 @@
  *
  ******************************************************************************
  ******************************************************************************
- *  Module       : Low-level Scheduler/Start-Up.
- *  Provides to  : High-level Scheduler / Main application.
- *  Public API   : No
+ *  Module            : Low-level Scheduler/Start-Up.
+ *  Provides to       : High-level Scheduler / Main application.
+ *  Application API   : No
  *
  *  o In this unit:
  *                Low-level kernel routines.

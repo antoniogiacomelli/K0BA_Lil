@@ -4,14 +4,10 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module      :  Nucleus
- * 	Sub-module  :  High-Level Scheduler
- * 	Provides to :  All services
- *  Depends  on :  Low-Level Scheduler
- *  Public API  :  No
- *
- *  The high-level scheduler is regarded as a sub-module for maintanability
- *  concerns. It's the core service for everything else.
+ * 	Module           :  High-Level Scheduler / Kernel Initialisation
+ * 	Provides to      :  All services
+ *  Depends  on      :  Low-Level Scheduler / Kernel Initialisation
+ *  Application API  :  No
  *
  * 	In this unit:
  * 					o Scheduler routines
@@ -48,7 +44,82 @@
  ******************************************************************************/
 
 #define K_CODE
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
+#include "kapi.h"
 #include "kglobals.h"
+
+/******************************************************************************/
+
+
+K_TCBQ readyQueue[NPRIO];
+K_TCBQ sleepingQueue;
+K_TCB *runPtr;
+K_TCB tcbs[NTHREADS];
+PID tidTbl[NTHREADS];
+volatile K_FAULT faultID = 0;
+static PRIO highestPrio = 0;
+static PRIO const lowestPrio = NPRIO -1;
+static PRIO nextTaskPrio = 0;
+volatile struct kRunTime runTime;
+
+/******************************************************************************
+* KERNEL INITIALISATION
+*******************************************************************************/
+
+static void kInitRunTime_(void)
+{
+	runTime.globalTick = 0;
+	runTime.nWraps = 0;
+}
+static K_ERR kInitQueues_(void)
+{
+	K_ERR retVal=0;
+	for (PRIO prio=0; prio<NPRIO; prio++)
+	{
+		retVal |= kTCBQInit(&readyQueue[prio], "ReadyQ");
+
+	}
+		retVal |= kTCBQInit(&sleepingQueue, "SleepQ");
+
+	assert(retVal == 0);
+	return retVal;
+}
+
+volatile UINT32 version;
+void kInit(void)
+{
+
+	version = kGetVersion();
+	if (version != K_VALID_VERSION)
+		kErrHandler(FAULT_KERNEL_VERSION);
+	kInitQueues_();
+	kInitRunTime_();
+	highestPrio=tcbs[0].priority;
+	for (int i = 0; i<NTHREADS; i++)
+	{
+		if (tcbs[i].priority < highestPrio)
+		{
+			highestPrio = tcbs[i].priority;
+		}
+	}
+	if ((lowestPrio-highestPrio) > NPRIO)
+	{
+		assert(0);
+	}
+	else
+	{
+		for(int i = 0; i<NTHREADS; i++)
+		{
+			kTCBQEnq(&readyQueue[tcbs[i].priority], &tcbs[i]);
+		}
+	}
+
+	kReadyQDeq(&runPtr, highestPrio);
+	__enable_irq();
+	K_START_APPLICATION;
+}
 
 /*******************************************************************************
  *  TICK MANAGEMENT
@@ -125,9 +196,8 @@ BOOL kTickHandler(void)
 
 static inline void kSchFindTask_(void)
 {
-	PRIO prio = K_PRIO_TYPE_MAX;
 	/*TODO: improve this bubble sort*/
-	for (prio = highestPrio; prio <NPRIO; prio++)
+	for (PRIO prio = highestPrio; prio <NPRIO; prio++)
 	{
 		if (readyQueue[prio].size >0)
 		{

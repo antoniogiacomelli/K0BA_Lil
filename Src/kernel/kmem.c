@@ -4,10 +4,10 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module      : Memory Pools
- * 	Provides to : Inter-task Communication, Application Timers
- * 	Depends on  : Inter-task Syncrhonisation
- *  Public API  : Yes
+ * 	Module           : Memory Pools
+ * 	Provides to      : Inter-task Communication, Application Timers
+ * 	Depends on       : Inter-task Syncrhonisation
+ *  Application API  : Yes
  * 	In this unit:
  * 					o Block Pool Control Block
  *					o Byte Pool Control Block
@@ -15,6 +15,10 @@
  *****************************************************************************/
 
 #define K_CODE
+#include "kconfig.h"
+#include "ktypes.h"
+#include "kobjs.h"
+#include "kapi.h"
 #include "kglobals.h"
 
 /*******************************************************************************
@@ -303,6 +307,10 @@ K_ERR kBytePoolFree(K_BYTEPOOL *const self, BYTE *const chunkPtr,
 		return K_ERR_MEM_INIT;
 	}
 
+	if (size == 0)
+	{
+		return K_ERR_INVALID_BYTEPOOL_SIZE;
+	}
 	BYTE chunkIdx = chunkPtr - self->memPoolPtr;
 	BYTE nextIdx = chunkIdx + size;
 	if (chunkIdx >= self->poolSize)

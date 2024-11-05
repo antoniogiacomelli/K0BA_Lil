@@ -8,32 +8,12 @@
  *\brief    Kernel objects
  *\version  1.1.0
  *\author   Antonio Giacomelli
-
- * \verbatim
  *
- * 	In this header:
  *
- * 		o Definition of all kernel objects:
- *
- * 		 OBJECT TYPE 				| (SUB-)MODULE
- * 		 ---------------------------------------------
- * 		 Lists 		  				| klist.c
- * 		 Task Control Block 		| knucleus.c
- *		 Run-time record			| ktick.c
- *		 Inter-task synchronisation	| ksynch.c
- *		 Inter-task communication	| kmesg.c
- *		 Memory Pool Control Block	| kmem.c
- *		 Timers						| ktimer.c
- *		 Tracer						| ktracer.c
- *
- * \endverbatim
  *****************************************************************************/
 #ifndef KOBJS_H
 #define KOBJS_H
 
-/*****************************************************************************/
-/*****************************************************************************/
-/*****************************************************************************/
 
 /**
  *\brief Node structure for general circular doubly linked list
@@ -130,6 +110,8 @@ struct kCond
 	struct kList queue; /**< Waiting queue */
 };
 #endif /*K_DEF_COND*/
+
+#if (K_DEF_SLEEPWAKE==ON)
 /**
  *\brief Generic Event
  */
@@ -139,7 +121,7 @@ struct kEvent
 	BOOL init; /**< Init flag */
 	UINT32 eventID; /**< event ID */
 };
-
+#endif
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
@@ -155,6 +137,8 @@ struct kMemBlock
 	BYTE nFreeBlocks; /**< Current number of free blocks available */
 	K_MUTEX poolMutex; /**< Pool lock */
 };
+
+#if (K_DEF_BYTEPOOL==ON)
 /**
  * \brief Byte pool Memory Control Block (BYTE POOL)
  */
@@ -165,7 +149,7 @@ struct kMemByte
 	BYTE poolSize; /* Total size of the pool */
 	BYTE nFreeBytes; /* Number of free bytes available */
 };
-
+#endif
 /*****************************************************************************/
 /*****************************************************************************/
 /*****************************************************************************/
