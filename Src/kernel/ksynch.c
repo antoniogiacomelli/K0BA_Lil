@@ -25,7 +25,6 @@
 #include "kobjs.h"
 #include "kapi.h"
 #include "kglobals.h"
-
 /******************************************************************************
 * TASK YIELD (here for convenience)
 *******************************************************************************/
@@ -414,50 +413,170 @@ K_ERR kCondInit(K_COND *const self)
 	assert(!kTCBQInit(&self->queue, "cvQ"));
 	return K_SUCCESS;
 }
+static K_ERR kMutexUnlockCV_(K_MUTEX *const self)
+{
+	K_CR_AREA;
+	K_ENTER_CR;
+	K_TCB *tcbPtr;
+	if (IS_NULL_PTR(self))
+	{
+		kErrHandler(FAULT_NULL_OBJ);
+		K_EXIT_CR;
+		return K_ERR_NULL_OBJ;
+	}
+	if (self->init == FALSE)
+	{
+		assert(0);
+	}
+	if ((self->lock == FALSE))
+	{
+		K_EXIT_CR;
+		return K_ERR_MUTEX_NOT_LOCKED;
+	}
+	if (self->ownerPtr != runPtr)
+	{
+		K_EXIT_CR;
+		return K_ERR_MUTEX_NOT_OWNER;
+	}
+	/* runPtr is the owner and mutex was locked */
+	if (self->queue.size == 0)  //no waiters
+	{
+		self->lock = FALSE;
+		self->ownerPtr->priority = self->ownerPtr->realPrio;
+		self->ownerPtr->pendingObj = NULL;
+		tcbPtr = self->ownerPtr;
+		self->ownerPtr = NULL;
+	}
+	else
+	{
+		/*there are waiters, unblock a waiter set new mutex owner.
+		 * mutex is still locked */
+		kTCBQDeq(&(self->queue), &tcbPtr);
+		if (IS_NULL_PTR(tcbPtr))
+			kErrHandler(FAULT_NULL_OBJ);
+		if (runPtr->priority < runPtr->realPrio)
+		{
+			runPtr->priority = runPtr->realPrio;
+		}
 
+	}
+	K_EXIT_CR;
+	return K_SUCCESS;
+}
+static K_ERR kMutexLockCV_(K_MUTEX *const self)
+{
+	K_CR_AREA;
+	K_ENTER_CR;
+	K_TCB *tcbPtr;
+	if (IS_NULL_PTR(self))
+	{
+		kErrHandler(FAULT_NULL_OBJ);
+		K_EXIT_CR;
+		return K_ERR_NULL_OBJ;
+	}
+	if (self->init == FALSE)
+	{
+		assert(0);
+	}
+	if ((self->lock == FALSE))
+	{
+		K_EXIT_CR;
+		return K_ERR_MUTEX_NOT_LOCKED;
+	}
+	if (self->ownerPtr != runPtr)
+	{
+		K_EXIT_CR;
+		return K_ERR_MUTEX_NOT_OWNER;
+	}
+	/* runPtr is the owner and mutex was locked */
+	if (self->queue.size == 0)  //no waiters
+	{
+		self->lock = FALSE;
+		self->ownerPtr->priority = self->ownerPtr->realPrio;
+		self->ownerPtr->pendingObj = NULL;
+		tcbPtr = self->ownerPtr;
+		self->ownerPtr = NULL;
+	}
+	else
+	{
+		/*there are waiters, unblock a waiter set new mutex owner.
+		 * mutex is still locked */
+		kTCBQDeq(&(self->queue), &tcbPtr);
+		if (IS_NULL_PTR(tcbPtr))
+			kErrHandler(FAULT_NULL_OBJ);
+		if (runPtr->priority < runPtr->realPrio)
+		{
+			runPtr->priority = runPtr->realPrio;
+		}
+
+	}
+	K_EXIT_CR;
+	return K_SUCCESS;
+}
 VOID kCondWait(K_COND *const self)
 {
 	if (IS_NULL_PTR(self))
 	{
 		kErrHandler(FAULT_NULL_OBJ);
 	}
+
 	K_CR_AREA;
 	K_ENTER_CR;
-	kMutexUnlock(&self->condMutex);
-	runPtr->status = SLEEPING;
+
+	/*when a thread waits on a condition variable
+	 * the mutex is unlocked so another thread can
+	 * operate on the structure.*/
+	/*It unlocks the mutex and blocks*/
+	kMutexUnlockCV_(&self->condMutex);
+
+	/* when a thread wakes, it wakes here
+	 * and lock the mutex*/
+	runPtr->status = SLEEPING_CV;
 	kTCBQEnq(&self->queue, runPtr);
-	K_PEND_CTXTSWTCH;
 	K_EXIT_CR;
-	kMutexLock(&self->condMutex);
+	K_PEND_CTXTSWTCH;
+	kMutexLockCV_(&self->condMutex);
+
+
 }
 
 VOID kCondSignal(K_COND *const self)
 {
 	if (IS_NULL_PTR(self))
 		kErrHandler(FAULT_NULL_OBJ);
-	K_TCB *nextTCBPtr = NULL;
-	kMutexLock(&self->condMutex);
 	K_CR_AREA;
 	K_ENTER_CR;
+	/*when a thread signal a CV it unblocks a condition
+	 * variable */
+	K_TCB *nextTCBPtr = NULL;
 	kTCBQDeq(&self->queue, &nextTCBPtr);
 	if (IS_NULL_PTR(nextTCBPtr))
 		kErrHandler(FAULT_NULL_OBJ);
-	kReadyQEnq(nextTCBPtr);
-	kMutexUnlock(&self->condMutex);
+	kTCBQEnq(&readyQueue[nextTCBPtr->priority], nextTCBPtr);
+	nextTCBPtr->status=READY;
 	K_EXIT_CR;
+	K_PEND_CTXTSWTCH;
 }
 
 VOID kCondWake(K_COND *const self)
 {
+	K_CR_AREA;
+	K_ENTER_CR;
 	if (IS_NULL_PTR(self))
+	{
+		K_EXIT_CR;
 		kErrHandler(FAULT_NULL_OBJ);
-	kMutexLock(&self->condMutex);
+	}
 	SIZE nThreads = self->queue.size;
 	for (SIZE i = 0; i < nThreads; i++)
 	{
-		kCondSignal(self);
+		K_TCB* tcbPtr=NULL;
+		kTCBQDeq(&self->queue, &tcbPtr);
+		kTCBQEnq(&readyQueue[tcbPtr->priority], tcbPtr);
+		tcbPtr->status=READY;
 	}
-	kMutexUnlock(&self->condMutex);
+	kYield();
+	K_EXIT_CR;
 }
 #endif
 
