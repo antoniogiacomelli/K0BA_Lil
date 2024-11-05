@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['event_0',['event',['../structk_trace_data.html#a7b9253ea5acdfb6187f4115d4e639cf9',1,'kTraceData']]],
-  ['eventid_1',['eventID',['../structk_event.html#a362fb2290b1af924292b3f77be922839',1,'kEvent']]]
+  ['n_5fmsgbuff_0',['N_MSGBUFF',['../kconfig_8h.html#a821104b4705c10c75e0fb34c3baae166',1,'kconfig.h']]],
+  ['n_5fusrtasks_1',['N_USRTASKS',['../kconfig_8h.html#a2dd285ed65b4eb1bee16f3f186335f21',1,'kconfig.h']]]
 ];

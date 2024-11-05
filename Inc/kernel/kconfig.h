@@ -12,50 +12,58 @@
  *
  * \details  Kernel configuration definitions.
  *
- * **Inter-task Synchronisation**
+ * 
+ * ##Inter-task Synchronisation:##
  *
- * - Semaphores and Mutexes are alaways ON.
- * - Condition Variables and Sleep/Wake-Up on Events can be turned OFF, as they
- *   might be redundant depending on the use.
+ * - Direct Signals are always ON
+ * - Semaphores and Mutexes are always ON.
+ * - Condition Variables (`K_DEF_COND`) and 
+ * - Sleep/Wake-Up on Events (`K_DEF_SLEEPWAKE`) can be turned ON/FF, 
+ *   since they might be redundant mechanisms depending on the usage.
  *
- * **Inter-task Communication:**
+ * ##Inter-task Communication:##
  *
- * - Mailboxes and FIFOs are always on.
- * - Message Queues can be turned ON/OFF.
- * - Extended PIPEs can be turned ON/FF.
- * - Note Extended PIPEs depend on Condition Vars.
+ * - Mailboxes and FIFOs are always on. (`K_DEF_MAILBOX`)
+ * - Message Queues can be turned ON/OFF. (`K_DEF_MESGQ`)
+ * - Extended PIPEs can be turned ON/FF. (`K_DEF_PIPE`)
+ * 
+ *  Note Extended PIPEs depend on Condition Vars. (`K_DEF_COND`)
  *
- * **Memory Management**
+ * ##Memory Management##
  *
- * - Block Pools are always on as they are used by other services.
- * - Byte Pools can be turned ON/OFF.
+ * - Block Pools are always on as they are used by other services. 
+ *   It is recommended to set its value aligned to 4-bytes. 
+ *   (`K_DEF_MEM_BLOCKALIGN_4`)
+ * 
+ * - Byte Pools can be turned ON/OFF. Use with caution.
+ *   (`K_DEF_MEM_BYTE_POOL`)
  *
+ * ##Important Parameters##
  *
- * **Important Parameters**
- *
- * - Number of User Tasks:  (K_DEF_N_USRTASKS)
- *                      Number of tasks your application will have.
- *                      Any custom deferred handlers shall be included.
+ * - **Number of User Tasks:**  (`K_DEF_N_USRTASKS`)
+ *                             Number of tasks your application will have.
+ *                             Any custom deferred handlers shall be included.
  *                     
- * - Maximum priority:  (K_DEF_N_MINPRIO)
- *                     Priorities range are from 0 to K_DEF_N_MINPRIO.
- *                     Note, the lower the number the highest the effective
- *                     priority. (0 is highest effective priority)
- *                     Besides, the IDLE TASK is a system task with a priority
- *                     number one unit above the maximum user-defined number,
- *                     so it will always be lowest-priority task.
+ * - **Maximum priority:**      (`K_DEF_N_MINPRIO`)
+ *                             Priorities range are from `0` to ``K_DEF_N_MINPRIO`.
+ *                             Note, the lower the number the highest the effective
+ *                             priority. (0 is highest effective priority)
+ *                             Besides, the IDLE TASK is a system task with a priority
+ *                             number one unit above the maximum user-defined number,
+ *                             so it will always be lowest-priority task.
  *
- * - Number of timers: (K_DEF_N_TIMERS)
- *                     Consider using the number of tasks that will rely on timers
- *                     +1. This a safe configuration. Remember kSleepDelay() uses
- *                     timers.
- * 
+ * - **Number of timers:**     (`K_DEF_N_TIMERS`)
+ *                            Consider using the number of tasks that will rely on timers
+ *                            +1. This a safe configuration. Remember kSleepDelay() uses
+ *                            timers.
+ *
  *  
- * - Tick Period: Pre-defined values are TICK_1MS, TICK_5MS and TICK_10MS.
- *                Users can define it, as they wish, by configuring SysTick.
- *                Recommended value is 5ms.
+ * - **Tick Period:**        (`K_DEF_TICK_PERIOD`)
+ *                           Pre-defined values are `TICK_1MS`, `TICK_5MS` and `TICK_10MS`.
+ *                           Users can define it, as they wish, by configuring SysTick.
+ *                           Recommended value is 5ms.
  * 
- ******************************************************************************/
+ ***************************************************************************************/
 
 #ifndef KCONFIG_H
 #define KCONFIG_H
@@ -65,7 +73,7 @@
 
 #define K_DEF_N_USRTASKS    	     4 /**<  Number of tasks */
 #define K_DEF_MIN_PRIO	           	 5 /**< Number of user task different priorities */
-#define K_DEF_TICK_PERIOD 	 		 TICK_5MS  	/**< System tick period */
+#define K_DEF_TICK_PERIOD 	 		 TICK_5MS	/**< System tick period */
 #define K_DEF_FIFO_SIZE				 32		/**< FIFO size */
 #define K_DEF_N_TIMERS				  6 	/**< Number of system timers */
 #define K_DEF_ERRHANDLER			 ON 	/**< Kernel will stop on faults */
@@ -75,7 +83,6 @@
  */
 
 #define K_DEF_MEMBLOCK_ALIGN_4 	ON	  /**< Make memory blocks aligned to 4 */
-
 #define K_DEF_BYTEPOOL			OFF    /**< K_BYTEPOOL ON/OFF */
 
 /**

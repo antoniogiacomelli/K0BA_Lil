@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['head_0',['head',['../structk_pipe.html#a95d5ac7ee08c2a7afb918a25e6ddaf6b',1,'kPipe::head'],['../structk_fifo.html#ab7f410f029b200df07888bf77ea0b5de',1,'kFifo::head'],['../structk_circ_buff.html#a2442c0fe97724c9f09248146d136309e',1,'kCircBuff::head'],['../structk_trace.html#a76411107b3460f7c8ee1d897b0f39087',1,'kTrace::head'],['../kobjs_8h.html#afd10c01080f053ba30bdce4b7abf4b8d',1,'head:&#160;kobjs.h']]]
+  ['tick_5f10ms_0',['TICK_10MS',['../kconfig_8h.html#a1e70a4e88f54126f863f08c41f2e312c',1,'kconfig.h']]],
+  ['tick_5f1ms_1',['TICK_1MS',['../kconfig_8h.html#ad819070748c7f96aaebe03d72df770a1',1,'kconfig.h']]],
+  ['tick_5f5ms_2',['TICK_5MS',['../kconfig_8h.html#a244b324cb35392ea1d69222cebfb9e9c',1,'kconfig.h']]]
 ];

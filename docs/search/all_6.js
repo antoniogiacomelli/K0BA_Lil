@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['globaltick_0',['globalTick',['../structk_run_time.html#aed53ac52f605c7b68a699022ca026097',1,'kRunTime']]]
+  ['stacksize_0',['STACKSIZE',['../kconfig_8h.html#a21d9543c516fffee84a7963224271f95',1,'kconfig.h']]]
 ];
