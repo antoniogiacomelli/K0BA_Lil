@@ -4,9 +4,9 @@
  *
  ******************************************************************************
  ******************************************************************************
- *  Module       : Nucleus
- *  Sub-module   : Low-level Scheduler. 
- *  Provides to  : High-level Scheduler.
+ *  Module       : Low-level Scheduler/Start-Up.
+ *  Provides to  : High-level Scheduler / Main application.
+ *  Public API   : No
  *
  *  o In this unit:
  *                Low-level kernel routines.
@@ -72,7 +72,6 @@ PendSV_Handler:
     BL SAVEUCONTEXT     /* Save user context */
     BL kSchSwtch       /* Call scheduler */
     BL RESTOREUCONTEXT  /* Resume scheduled task */
-    BL kErrCheckPrioInversion /* Check for priority inversion */
     LDR R0, =SCB_ICSR
     LDR R1, =ISCR_CLRPSV
     STR R1, [R0]            /* Clear pendsv */
@@ -113,6 +112,7 @@ SysTick_Handler:
     CPSIE I
     ISB
     BX LR
+
 
 .global SVC_Handler
 .type SVC_Handler, %function

@@ -37,7 +37,6 @@
 #define IDLE_STACKSIZE 		   64
 #define TIMHANDLER_STACKSIZE  128
 #define TIMHANDLER_TID		  255
-#define TIMHANDLER_PRIO		  0
 #define IDLETASK_TID		  0
 
 #define MSGBUFF_SIZE sizeof(K_MESGBUFF)
@@ -73,12 +72,7 @@
 /* brief Macro to exit critical region */
 #define K_EXIT_CR   \
     do { kExitCR(crState); } while(0U)
-/*
- * brief Macro for unused variables
- */
-#if !defined(UNUSED)
-#define UNUSED(x) (void)x
-#endif
+
 
 /* brief Trigger Context Switch */
 #define K_PEND_CTXTSWTCH K_TRAP_PENDSV;

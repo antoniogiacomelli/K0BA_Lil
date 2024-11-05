@@ -4,9 +4,9 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module      : Nucleus
- * 	Sub-module  : Tracer
+ * 	Module      : Tracer
  * 	Provides to : Every other module can use this service.
+ *  Public API  : Yes
  *
  * 	In this unit:
  *
@@ -15,7 +15,7 @@
  *****************************************************************************/
 
 #define K_CODE
-#include "ksys.h"
+#include "kglobals.h"
 
 #if (K_DEF_TRACE==ON)
 K_TRACE kTracer;

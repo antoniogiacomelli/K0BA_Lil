@@ -8,26 +8,8 @@
  *\brief    Kernel objects
  *\version  1.1.0
  *\author   Antonio Giacomelli
+ */
 
- * \verbatim
- *
- * 	In this header:
- *
- * 		o Definition of all kernel objects:
- *
- * 		 OBJECT TYPE 				| IMPLEMENTED IN
- * 		 ---------------------------------------------
- * 		 Lists 		  				| klist.c
- * 		 Task Control Block 		| ktcb.c
- *		 Run-time record			| ktick.c
- *		 Inter-task synchronisation	| ksynch.c
- *		 Inter-task communication	| kmesg.c
- *		 Memory Pool Control Block	| kmem.c
- *		 Timers						| ktimer.c
- *		 Tracer						| ktracer.c
- *
- * \endverbatim
- *****************************************************************************/
 #ifndef KOBJS_H
 #define KOBJS_H
 
@@ -104,6 +86,7 @@ struct kRunTime
 struct kSema
 {
 	INT32 value; /**< Semaphore value */
+	struct kTcb* ownerPtr; /**< For priority inheritance */
 	struct kList queue; /**< Semaphore waiting queue */
 };
 

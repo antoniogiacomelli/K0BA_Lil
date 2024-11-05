@@ -4,8 +4,7 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module      : Nucleus
- * 	Sub-Module  : N/A
+ * 	Module      : N/A
  * 	Provides to : Scheduler, Inter-task synchronisation, Inter-Task Communica_
  * 				  tion, Application Timers
  * 	In this unit:
@@ -72,8 +71,7 @@
 
 #define K_CODE
 
-#include "ksys.h"
-#include "kapi.h"
+#include "kglobals.h"
 
 static inline void kListNodeDel_(K_LISTNODE* nodePtr)
 {

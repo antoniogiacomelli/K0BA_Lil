@@ -5,15 +5,18 @@
  ******************************************************************************
  ******************************************************************************
  * 	In this header:
- * 		o System Globals (singletons) and main dependencies
+ * 					o System Globals (singletons) and main dependencies
  *
  *****************************************************************************/
 
 #ifndef KSYS_H
 #define KSYS_H
-/*******************************/
-/*ENVIRONMENT DEPENDENCIES HERE*/
-/*******************************/
+/****************************/
+/* INCLUDE YOUR ARM GCC,    */
+/* CMSIS-CORE AND OTHER     */
+/* ENVIRONMENT DEPENDENCIES */
+/* HERE                     */
+/****************************/
 #include "kmacros.h"
 #include "kapi.h"
 #include "kerr.h"
@@ -41,11 +44,7 @@ extern K_TIMER *dTimReloadList; /* periodic timers */
 extern K_TIMER *dTimOneShotList; /* reload timers */
 extern volatile struct kRunTime runTime; /* record of run time */
 extern PRIO highestPrio; /* highest initial prio */
-extern const PRIO lowestPrio; /* lowest prio allowed */
-extern PRIO nextTaskPrio; /* scheduled task priority  */
-#ifndef K_DEF_VERSION
-#define K_DEF_VERSION
-extern struct kversion KVERSION; /* Kernel version */
-#endif
+extern PRIO const lowestPrio; /* lowest prio allowed */
+extern PRIO nextTaskPrio;
 
 #endif /* KSYS_H */

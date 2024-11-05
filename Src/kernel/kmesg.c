@@ -4,10 +4,10 @@
  *
  ******************************************************************************
  ******************************************************************************
- *  Module      : Nucleus
- *  Sub-module  : Inter-task Communication
+ *  Module      : Inter-task Communication
  *  Depends on  : Inter-task Synchronisation
  *  Provides to : Application and System Tasks
+ *  Public API  : Yes
  *
  * 	In this unit:
  * 					o System Message Buffers pool Management
@@ -19,7 +19,7 @@
  *****************************************************************************/
 
 #define K_CODE
-#include "ksys.h"
+#include "kglobals.h"
 
 #if (K_DEF_MESGQ==ON)
 /*****************************************************************************

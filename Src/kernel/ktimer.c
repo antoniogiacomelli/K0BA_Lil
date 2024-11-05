@@ -4,9 +4,9 @@
  *
  ******************************************************************************
  ******************************************************************************
- *  Module    : Nucleus
- * 	Sub-module: Application Timers
- *
+ * 	Module     : Application Timers
+ * 	Depends on : Scheduler, Inter-task Synchronisation
+ *  Public API : Yes
  * 	In this unit:
  * 			o Timer Pool Management
  *			o Timer Delta List
@@ -19,7 +19,7 @@
 
 #define K_CODE
 
-#include "ksys.h"
+#include "kglobals.h"
 
 K_BLOCKPOOL	 timerMem;
 K_TIMER* 	 dTimReloadList=NULL; 		/**< periodic timers */
@@ -52,7 +52,6 @@ K_ERR kTimerPut(K_TIMER* const self)
 		kMutexUnlock(&(timerMem.poolMutex));
 		return K_SUCCESS;
 	}
-	kErrHandler(FAULT_POOL_PUT);
 	return K_ERROR;
 }
 
@@ -173,10 +172,8 @@ void kTimerHandler(void)
 }
 
 /*******************************************************************************
- *
- * SLEEP TIMER AND BUSY-WAIT-DELAY
- *
- ******************************************************************************/
+* SLEEP TIMER AND BUSY-WAIT-DELAY
+*******************************************************************************/
 static void SleepTimerCbk_(ADDR args)
 {
 	UNUSED(args);
@@ -220,4 +217,8 @@ VOID kBusyDelay(TICK delay)
 	if (runPtr->busyWaitTime == 0)
 		runPtr->busyWaitTime = delay;
 
+}
+TICK kTickGet(void)
+{
+	return runTime.globalTick;
 }

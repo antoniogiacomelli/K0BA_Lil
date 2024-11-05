@@ -22,10 +22,11 @@
 
 #define K_DEF_N_USRTASKS    	     4 /**<  Number of tasks */
 #define K_DEF_N_PRIO	           	 5 /**< Number of user task different priorities */
-#define K_DEF_TICK_PERIOD 	 TICK_10MS  	/**< System tick period */
+#define K_DEF_TICK_PERIOD 	 		 TICK_1MS  	/**< System tick period */
 #define K_DEF_FIFO_SIZE				 32		/**< FIFO size */
 #define K_DEF_N_TIMERS				  6 	/**< Number of system timers */
 #define K_DEF_ERRHANDLER			 ON 	/**< Kernel will stop on faults */
+#define K_DEF_PRIOINV_FAULT			 ON 	/**< Treat priority inversion as a fault */
 
 /**
  * \brief These macros are to turn features ON/OFF and some configurations
@@ -49,7 +50,8 @@
 #define K_DEF_N_MESGBUFF 10		  /**< Global message buffers number */
 #endif
 
-#define K_DEF_COND ON				  /**< Condition Variables ON/OFF */
+#define K_DEF_SLEEPWAKE		  ON   /**<Sleep/Wake-up on Events     */
+#define K_DEF_COND 			  ON   /**< Condition Variables ON/OFF */
 
 #if (K_DEF_COND == ON)			  /**< you need condition variables for pipes */
 #define K_DEF_PIPE		   	  ON  /**< Pipes ON/OFF */

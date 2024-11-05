@@ -4,10 +4,10 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module	    : Nucleus
- * 	Sub-module  : Memory Pools
+ * 	Module      : Memory Pools
  * 	Provides to : Inter-task Communication, Application Timers
- *
+ * 	Depends on  : Inter-task Syncrhonisation
+ *  Public API  : Yes
  * 	In this unit:
  * 					o Block Pool Control Block
  *					o Byte Pool Control Block
@@ -15,15 +15,15 @@
  *****************************************************************************/
 
 #define K_CODE
-#include "ksys.h"
-#include "kapi.h"
+#include "kglobals.h"
 
 /*******************************************************************************
  *
  * BLOCK POOL CONTROL BLOCK
  *
  ******************************************************************************/
-
+/*let me kick some old simplistic embeddded systems programming sht
+ */
 K_ERR kBlockPoolInit(K_BLOCKPOOL* const self, ADDR const memPoolPtr,
 		BYTE blkSize, BYTE const numBlocks)
 {

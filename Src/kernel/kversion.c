@@ -4,11 +4,14 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module     : Nucleus
- * 	Sub-module : Version
+ *  Module       : Version
+ *  Depends on   : System Singletons
+ *  Provides to  : All
+ *  Public API   : Yes
+ *
  * 	It is a good practice to keep a firmware version on a dedicated
  * 	translation unit.
- * 
+ *
  *	In this unit:
  * 		o Kernel Version record and retrieval
  *

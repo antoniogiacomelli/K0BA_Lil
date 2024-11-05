@@ -4,39 +4,16 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module      : Nucleus
- * 	Sub-Module  : N/A
- * 	Provides to : All services
+ * 	Module      : System Initialisation
+ *  Depends on  : All
+ *  Provides to : All
+ *  Public API  : No
  *
  * 	In this unit:
- * 		o Kernel singleton objects: queues, tables, run-time record, scheduler
- * 		                            flags, etc.
- * 		o Kernel initialisation routines: queues, pools, systick and scheduler
- * 										  start-up (via SVC #0)
- * 		o Error Handling
+ * 		o Misc generic utils
  *
- *
- *****************************************************************************/
-#define K_CODE
-#include "ksys.h"
-/*******************************************************************************
-* 					 			SYSTEM SINGLETONS
-*******************************************************************************/
-
-#ifndef K_SINGLETONS
-#define K_SINGLETONS
-K_TCBQ readyQueue[NPRIO];
-K_TCBQ sleepingQueue;
-K_TCB *runPtr;
-K_TCB tcbs[NTHREADS];
-PID tidTbl[NTHREADS];
-volatile K_FAULT faultID = 0;
-PRIO highestPrio = 0;
-PRIO const lowestPrio = NPRIO -1;
-PRIO nextTaskPrio = 0;
-volatile struct kRunTime runTime;
-#endif //K_SINGLETONS
-
+ ******************************************************************************/
+#include "kglobals.h"
 /******************************************************************************
 * KERNEL INITIALISATION
 *******************************************************************************/
@@ -76,7 +53,7 @@ void kInit(void)
 
 	version = kGetVersion();
 	if (version != K_VALID_VERSION)
-		kErrHandler(FAULT_INVALID_KERNEL_VERSION);
+		kErrHandler(FAULT_KERNEL_VERSION);
 	kInitQueues_();
 	kInitRunTime_();
 	kMesgBuffPoolInit_();
@@ -104,48 +81,5 @@ void kInit(void)
 	kReadyQDeq(&runPtr, highestPrio);
 	__enable_irq();
 	K_START_APPLICATION;
-}
-
-/******************************************************************************
-* ERROR HANDLING
-*******************************************************************************/
-
-void kErrHandler(K_FAULT fault) /* generic error handler */
-{
-#if (K_DEF_ERRHANDLER==ON)
-	faultID=fault;
-	__disable_irq();
-	while (1);
-#endif
-/*err handler*/
-
-}
-
-
-void kErrCheckPrioInversion(void)
-{
-	K_CR_AREA;
-	K_ENTER_CR;
-	K_TCB *runPtr_ = runPtr;
-	assert(runPtr_->status == RUNNING);
-	PRIO prioRun = runPtr_->priority;
-	if (prioRun == 0)
-	{
-		K_EXIT_CR
-		;
-		return;
-	}
-	for (UINT32 i = 0; i < NPRIO; i++)
-	{
-		if (readyQueue[i].size > 0)
-		{
-			if (i < prioRun)
-			{
-				kErrHandler(FAULT_PRIO_INV);
-			}
-		}
-	}
-	K_EXIT_CR;
-	return;
 }
 

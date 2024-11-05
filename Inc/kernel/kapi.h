@@ -31,9 +31,10 @@
  * This is the kernel API to be included within any application
  * development. It provides methods to access the kernel services.
  *
+ * By default, it is placed in "application.h"
+ *
  * Every kernel primitive is on UPPERCASE. If preceded by a K_ it is a
- * kernel data structure (e.g. K_SEMA is a semaphore) or an enumarated
- * typedef.
+ * kernel data structure (e.g. K_SEMA is a semaphore) or an enumerated type.
  *
  * If not, it is an alias for standard C data or data pointer (e.g., BYTE,
  * INT32, ADDR, STRING: respectively, unsigned char, int, void* and const char*)
@@ -41,7 +42,7 @@
  * (e.g., PRIO for priority, TID for task ID.)
  *
  * A typical kernel service often receives a pointer to a kernel
- * object (typically 'K_TYPE* const self'. (1) If it does not,
+ * object (1) (typically 'K_TYPE* const self'). If it does not,
  * it either acts onsingleton object (2) and/or on the (3) caller itself.
  *
  *  E.g., (1) kSemaWait(SEMA const* self): decreases a counter semaphore.
@@ -94,11 +95,10 @@ K_ERR kCreateTask(TASKENTRY const taskFuncPtr, STRING taskName, TID const id,
  * \brief Yields the current task to allow a context switch
  */
 VOID kYield(VOID);
-/****************************************************************************/
-/*																			*/
-/* SEMAPHORE																*/
-/*																			*/
-/****************************************************************************/
+
+/*******************************************************************************
+ SEMAPHORES
+*******************************************************************************/
 
 /**
  *\brief Initialise a semaphore
@@ -106,6 +106,7 @@ VOID kYield(VOID);
  *\param value Initial value
  *\return None
  */
+
 K_ERR kSemaInit(K_SEMA* const self, INT32 const value);
 
 /**
@@ -115,18 +116,16 @@ K_ERR kSemaInit(K_SEMA* const self, INT32 const value);
  */
 K_ERR kSemaWait(K_SEMA* const self);
 
-/**f
+/**
  *\brief Signal a semaphore
  *\param self Semaphore address
  *\return None
  */
 K_ERR kSemaSignal(K_SEMA* const self);
 
-/*****************************************************************************
- *
- * MUTEX
- *
- ****************************************************************************/
+/*******************************************************************************
+* MUTEX
+*******************************************************************************/
 
 /**
  *\brief Init a mutex
@@ -150,11 +149,9 @@ K_ERR kMutexLock(K_MUTEX* const self);
  */
 K_ERR kMutexUnlock(K_MUTEX* const self);
 
-/******************************************************************************/
-/*																			  */
-/* MESSAGE QUEUE															  */
-/*																			  */
-/******************************************************************************/
+/*******************************************************************************
+* MESSAGE QUEUE
+*******************************************************************************/
 #if (K_DEF_MESGQ == ON)
 
 /**
@@ -185,11 +182,9 @@ VOID kMesgQInit(K_MESGQ* const self, ADDR mesgPoolPtr, BYTE queueSize,
 		BYTE mesgSize);
 #endif /*K_DEF_MESGQ*/
 
-/******************************************************************************/
-/*																			  */
-/* MAILBOX																	  */
-/*																			  */
-/******************************************************************************/
+/*******************************************************************************
+* MAILBOX
+*******************************************************************************/
 #if (K_DEF_MAILBOX==ON)
 
 /**
@@ -218,11 +213,9 @@ K_ERR kMailboxPost(K_MAILBOX* const self, ADDR const mailPtr,
 TID kMailboxPend(K_MAILBOX* const self, ADDR const recvMailPtr);
 
 #endif /*K_DEF_MAILBOX*/
-/*****************************************************************************
- *
- * CONDITION VARIABLE
- *
- ******************************************************************************/
+/*******************************************************************************
+* CONDITION VARIABLE
+*******************************************************************************/
 #if (K_DEF_COND==ON)
 
 /**
@@ -257,11 +250,9 @@ VOID kCondWake(K_COND* const self);
 
 #endif /* K_DEF_COND */
 
-/******************************************************************************/
-/*																			  */
-/* PIPES																	  */
-/*																			  */
-/*******************************************************************************/
+/*******************************************************************************
+* PIPES
+*******************************************************************************/
 #if (K_DEF_PIPE==ON)
 
 /**
@@ -291,10 +282,8 @@ INT32 kPipeWrite(K_PIPE* const self, BYTE* srcPtr, UINT32 nBytes);
 #endif /*K_DEF_PIPES*/
 
 /*******************************************************************************
- *
- * FIFOS
- *
- ******************************************************************************/
+* FIFOS
+******************************************************************************/
 
 /**
  * \brief Initialise Simple thread-safe FIFO
@@ -316,11 +305,6 @@ K_ERR kFifoPut(K_FIFO* const self, BYTE const data);
  */
 BYTE kFifoGet(K_FIFO* const self);
 
-/******************************************************************************
- *
- * DIRECT TASK SIGNAL/PEND
- *
- ******************************************************************************/
 
 /**
  * \brief Put the current task into a wait state
@@ -328,6 +312,16 @@ BYTE kFifoGet(K_FIFO* const self);
  * \see kSignal
  */
 VOID kPend(VOID);
+/**
+ * \brief To signal a task from an ISR
+ * \param taskID
+ */
+VOID kSignalFromISR(PID const taskID);
+/**
+* \brief Sleep on an event
+* \param self Pointer to a K_EVENT object
+* \return K_SUCCESS/K_ERROR
+*/
 
 /**
  * \brief Direct Signal a task
@@ -335,24 +329,23 @@ VOID kPend(VOID);
  */
 VOID kSignal(PID const taskID);
 
- /**
-  * \brief To signal a task from an ISR
-  * \param taskID
-  */
-VOID kSignalFromISR(PID const taskID);
+/******************************************************************************
+* SLEEP/WAKE-UP ON EVENTS
+******************************************************************************/
+
 /**
-* \brief Sleep on an event
-* \param self Pointer to a K_EVENT object
-* \return K_SUCCESS/K_ERROR
-*/
+ * \brief Suspends a task waiting for a specific event
+ * \param self Pointer to a K_EVENT object
+ */
 K_ERR kSleep(K_EVENT* const self);
 
 /**
- * \brief Wakes a task sleeping for a specific event
+ * \brief Wakes a task waiting for a specific event
  * \param self Pointer to a K_EVENT object
  * \return K_SUCCESS/K_ERROR
  */
 K_ERR kWake(K_EVENT* const self);
+
 
 /******************************************************************************/
 /******************************************************************************/
@@ -388,6 +381,12 @@ VOID kBusyDelay(TICK const delay);
  * \param ticks Number of ticks to sleep
  */
 VOID kSleepDelay(TICK const ticks);
+/**
+ * \brief Gets the current number of  ticks
+ * \return Global system tick value
+ */
+TICK kTickGet(VOID);
+
 
 /******************************************************************************/
 /******************************************************************************/
@@ -559,11 +558,7 @@ K_ERR kBytePoolFree(K_BYTEPOOL* const self, BYTE* const chunkPtr,
 
 #endif /*K_DEF_BYTEPOOL*/
 
-/*******************************************************************************
- *
- * UTILS
- *
- ******************************************************************************/
+
 /**
  *\brief Gets a task system ID
  *\param taskID user-defined ID
@@ -575,17 +570,16 @@ TID kGetTaskPID(TID const taskID);
  * \param taskID user-defined Task ID
  */
 PRIO kGetTaskPrio(TID const taskID);
-/**
- * \brief Gets the current number of  ticks
- * \return Global system tick value
- */
-TICK kTickGet(VOID);
 
 /**
  * \brief Returns the size of a string
  * \param string A pointer to char
  * \return string length - 1 (does not count '\0')
  */
+
+/*******************************************************************************
+* UTILS
+******************************************************************************/
 SIZE kStrLen(STRING string);
 /**
  * \brief Deep copy data from one address to other
@@ -594,8 +588,26 @@ SIZE kStrLen(STRING string);
  * \param size    Number of bytes to be copied
  * \return        Destination address
  */
-ADDR kMemCpy(ADDR destPtr, ADDR const srcPtr, SIZE const size);
 
+/*******************************************************************************
+* KERNEL VERSION
+******************************************************************************/
+
+ADDR kMemCpy(ADDR destPtr, ADDR const srcPtr, SIZE const size);
+/**
+ * \brief    Get Kernel Version
+ * \return   Kernel version as an unsigned integer.
+ */
+unsigned int kGetVersion(void);
+
+
+
+/*
+ * brief Macro for unused variables
+ */
+#if !defined(UNUSED)
+#define UNUSED(x) (void)x
+#endif
 /******************************************************************************/
 /******************************************************************************/
 /******************************************************************************/

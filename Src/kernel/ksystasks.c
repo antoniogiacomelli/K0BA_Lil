@@ -4,18 +4,17 @@
  *
  ******************************************************************************
  ******************************************************************************
- * 	Module       : Nucleus
- * 	Sub-module   : System Tasks
+ * 	Modul    e   : System Tasks
  * 	Depends on   : Scheduler
  * 	Provides to  : Application Timers
- *
+ *  Public API	 : N/A
  * 	In this unit :
  * 					o  System Tasks and Deferred ISR handler tasks
  *
  *****************************************************************************/
 
 #define K_CODE
-#include "ksys.h"
+#include <kglobals.h>
 
 UINT32 idleStack[IDLE_STACKSIZE];
 UINT32 timerHandlerStack[TIMHANDLER_STACKSIZE];
