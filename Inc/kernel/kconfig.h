@@ -83,7 +83,7 @@
  */
 
 #define K_DEF_MEMBLOCK_ALIGN_4 	ON	  /**< Make memory blocks aligned to 4 */
-#define K_DEF_BYTEPOOL			OFF    /**< K_BYTEPOOL ON/OFF */
+#define K_DEF_BYTEPOOL			ON    /**< K_BYTEPOOL ON/OFF */
 
 /**
  *\brief Message Passing configuration

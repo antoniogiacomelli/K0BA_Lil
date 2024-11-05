@@ -1,10 +1,14 @@
 var indexSectionsWithContent =
 {
-  0: "_fkmnpst",
+  0: "abcdefghiklmnopqrstuv",
   1: "k",
   2: "k",
-  3: "fk",
-  4: "_kmnpst"
+  3: "k",
+  4: "abcdefghilmnopqrstuv",
+  5: "ackpstv",
+  6: "k",
+  7: "bikprs",
+  8: "k"
 };
 
 var indexSectionNames =
@@ -13,7 +17,11 @@ var indexSectionNames =
   1: "classes",
   2: "files",
   3: "functions",
-  4: "defines"
+  4: "variables",
+  5: "typedefs",
+  6: "enums",
+  7: "enumvalues",
+  8: "defines"
 };
 
 var indexSectionLabels =
@@ -22,6 +30,10 @@ var indexSectionLabels =
   1: "Data Structures",
   2: "Files",
   3: "Functions",
-  4: "Macros"
+  4: "Variables",
+  5: "Typedefs",
+  6: "Enumerations",
+  7: "Enumerator",
+  8: "Macros"
 };
 

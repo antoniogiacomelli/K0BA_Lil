@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['pid_5fidletask_0',['PID_IDLETASK',['../kconfig_8h.html#a668217b99c245f63fa193a279be499d0',1,'kconfig.h']]],
-  ['pid_5finvalid_1',['PID_INVALID',['../kconfig_8h.html#a51fcc1ce2e7a0c1f057fc1e2d54b5e2d',1,'kconfig.h']]],
-  ['pid_5ftimhandler_2',['PID_TIMHANDLER',['../kconfig_8h.html#a01271ebdaa8acb0495debc097747450b',1,'kconfig.h']]]
+  ['n_5fmsgbuff_0',['N_MSGBUFF',['../kconfig_8h.html#a821104b4705c10c75e0fb34c3baae166',1,'kconfig.h']]],
+  ['n_5ftimers_1',['N_TIMERS',['../kconfig_8h.html#a5d4e4a6f927115e8b06316cfdc29beba',1,'kconfig.h']]],
+  ['n_5fusrtasks_2',['N_USRTASKS',['../kconfig_8h.html#a2dd285ed65b4eb1bee16f3f186335f21',1,'kconfig.h']]]
 ];

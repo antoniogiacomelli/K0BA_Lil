@@ -335,7 +335,7 @@ VOID kSignal(PID const taskID);
 /******************************************************************************
 * SLEEP/WAKE-UP ON EVENTS
 ******************************************************************************/
-
+#if (K_DEF_SLEEPWAKE==ON)
 /**
  * \brief Suspends a task waiting for a specific event
  * \param self Pointer to a K_EVENT object
@@ -348,7 +348,7 @@ K_ERR kSleep(K_EVENT* const self);
  * \return K_SUCCESS/K_ERROR
  */
 K_ERR kWake(K_EVENT* const self);
-
+#endif /*K_DEF_SLEEPWAKE*/
 
 /******************************************************************************/
 /******************************************************************************/
