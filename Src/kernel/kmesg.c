@@ -4,10 +4,10 @@
  *
  ******************************************************************************
  ******************************************************************************
- *  Module      : Inter-task Communication
- *  Depends on  : Inter-task Synchronisation
- *  Provides to : Application and System Tasks
- *  Public API  : Yes
+ *  Module           : Inter-task Communication
+ *  Depends on       : Inter-task Synchronisation
+ *  Provides to      : Application and System Tasks
+ *  Application API  : Yes
  *
  * 	In this unit:
  * 					o System Message Buffers pool Management
