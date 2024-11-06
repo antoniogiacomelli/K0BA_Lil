@@ -531,7 +531,7 @@ VOID kCondWait(K_COND *const self)
 
 	/* when a thread wakes, it wakes here
 	 * and lock the mutex*/
-	runPtr->status = SLEEPING_CV;
+	runPtr->status = SLEEPING;
 	kTCBQEnq(&self->queue, runPtr);
 	K_EXIT_CR;
 	K_PEND_CTXTSWTCH;
