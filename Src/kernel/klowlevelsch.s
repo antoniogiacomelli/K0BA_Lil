@@ -97,7 +97,7 @@ SysTick_Handler:
     BX LR
     RESUME:
     CMP LR, #0xFFFFFFF1
-    BEQ IS
+    BEQ ISR
     ISR:
     CPSIE I
     BX LR
