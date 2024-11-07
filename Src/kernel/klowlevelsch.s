@@ -32,6 +32,7 @@
 .type SAVEUCONTEXT, %function
 .thumb_func
 SAVEUCONTEXT:
+
     MRS R12, PSP              /* Get the current process stack pointer (PSP) */
     STMDB R12!, {R4-R11}      /* Save R4-R11 on the process stack */
     MSR PSP, R12              /* Update PSP with the new stack pointer */
@@ -39,7 +40,7 @@ SAVEUCONTEXT:
     LDR R1, [R0]              /* Load value of runPtr (pointer to task context) into R1 */
     STR R12, [R1]             /* Store updated stack pointer (PSP) into runPtr->sp */
     DSB
-    BX LR                     /* Return from function */
+    BX LR
 
 .global RESTOREUCONTEXT
 .type RESTOREUCONTEXT, %function
@@ -57,63 +58,51 @@ RESTOREUCONTEXT:
     LDR R2, [R1]              /* Load saved stack pointer (runPtr->sp) */
     LDMIA R2!, {R4-R11}       /* Restore registers R4-R11 */
     MSR PSP, R2               /* Update PSP with the new stack pointer */
-    DSB
-    BX LR                     /* Return from function */
-
-
-.global PendSV_Handler
-.type PendSV_Handler, %function
-.thumb_func
-PendSV_Handler:
-                /* R0-R3, R12, LR and xPSR from the interrupted task are pushed
-                on stack  */
-    SWITCHTASK:
-    CPSID I             /* Critical section */
-    BL SAVEUCONTEXT     /* Save user context */
-    BL kSchSwtch       /* Call scheduler */
-    BL RESTOREUCONTEXT  /* Resume scheduled task */
-    LDR R0, =SCB_ICSR
-    LDR R1, =ISCR_CLRPSV
-    STR R1, [R0]            /* Clear pendsv */
     MOV LR, #0xFFFFFFFD     /* Return to thread mode using PSP */
     DSB
     CPSIE I                 /* CR end */
     ISB                     /* Flush pipeline */
     BX LR                   /* Dispatch scheduled task */
 
+.global PendSV_Handler
+.type PendSV_Handler, %function
+.thumb_func
+PendSV_Handler:
+
+    CPSID I              /* on stack  */
+
+    SWITCHTASK:
+    BL SAVEUCONTEXT     /* Save user context */
+    BL kSchSwtch       /* Call scheduler */
+    B RESTOREUCONTEXT  /* Resume scheduled task */
+
 .global SysTick_Handler
 .type SysTick_Handler, %function
 .thumb_func
 SysTick_Handler:
     CPSID I
-    CMP LR, #0xFFFFFFF1
-    BEQ RESUMEHANDLER
-    BNE TICKHANDLER
-    RESUMEHANDLER:
-    CPSIE I
-    BX LR
+    PUSH {LR}
     TICKHANDLER:
-    PUSH {LR}              /* Save LR */
     BL kTickHandler        /* Call kTickHandler, result in R0 */
     POP {LR}               /* Restore LR */
     CMP R0, #1             /* Compare result to 1 */
     BEQ SETPENDSV          /* If equal, set PendSV */
-    EXIT:                  /* Fallthrough to exit if not equal */
-    MOV LR, #0xFFFFFFFD     /* If here, a blocking task was interrupted
-                               return to PSP*/
-    CPSIE I                /* Enable interrupts */
-    ISB                    /* Instruction Synchronization Barrier */
-    BX LR                  /* Return */
+    BNE RESUME
     SETPENDSV:
     LDR R0, =SCB_ICSR      /* Load SCB_ICSR address */
     LDR R1, =ISCR_SETPSV   /* Load ISCR_SETPSV value */
     STR R1, [R0]           /* Set PendSV */
     DSB
     CPSIE I
-    ISB
     BX LR
-
-
+    RESUME:
+    CMP LR, #0xFFFFFFF1
+    CPSIE I
+    BX LR
+    RESUMETASK:
+    MOV LR, #0xFFFFFFFD
+    CPSIE I
+    BX LR
 .global SVC_Handler
 .type SVC_Handler, %function
 .thumb_func
