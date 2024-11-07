@@ -97,9 +97,11 @@ SysTick_Handler:
     BX LR
     RESUME:
     CMP LR, #0xFFFFFFF1
+    BEQ IS
+    ISR:
     CPSIE I
     BX LR
-    RESUMETASK:
+    RESUMETASK: 
     MOV LR, #0xFFFFFFFD
     CPSIE I
     BX LR
