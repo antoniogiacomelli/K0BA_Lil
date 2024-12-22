@@ -491,6 +491,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#multi_client_server_with_mailboxes">18.2. Multi-Client Server with mailboxes</a></li>
 <li><a href="#monitor_like_synchronisation_barrier">18.3. Monitor-like: Synchronisation Barrier</a></li>
 <li><a href="#queuing_pattern">18.4. Queuing Pattern</a></li>
+<li><a href="#queueing_pattern_with_notification">18.5. Queueing pattern with notification</a></li>
 </ul>
 </li>
 </ul>
@@ -2296,6 +2297,135 @@ VOID SensorLogging(VOID)
 <div class="imageblock data-line-1259">
 <div class="content">
 <img src="images/queuing.png" alt="queuing">
+</div>
+</div>
+</div>
+<div class="sect2 data-line-1261">
+<h3 id="queueing_pattern_with_notification">18.5. Queueing pattern with notification</h3>
+<div class="paragraph data-line-1263">
+<p>Usage: real-time monitoring</p>
+</div>
+<div class="paragraph data-line-1265">
+<p>On the previous example we increased latency to augment throughput. Suppose a reading task has a worst update rate of 10ms. We can use it to notify a task with a highest rate through a mailbox. The notified task enqueues the message and send it through a queue to the logger task. We use the time-out of the mailbox send notification to guarantee the notifier does not block full for more than our worst rate assumption.
+The overhead of printfs is ignored because they disable interrupts.</p>
+</div>
+<div class="listingblock data-line-1268">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+INT stack1[STACKSIZE];
+INT stack2[STACKSIZE];
+INT stack3[STACKSIZE];
+
+/* sensor types */
+typedef enum
+{
+	TEMPERATURE = 0, HUMIDITY, CO2, FLOW
+} SensorType_t;
+
+/* message sent through the queue */
+typedef struct sensorMsg
+{
+	SensorType_t sensorType;
+	INT32 sensorValue;
+} Mesg_t;
+
+#define N_MESSAGE 5 /* lower-latency yields a smaller queue */
+#define MESSAGE_SIZE sizeof(Mesg_t)
+
+K_MESGQ mesgQueue;
+K_MBOX mbox;
+
+BYTE queueBuffer[N_MESSAGE * MESSAGE_SIZE];
+
+VOID kApplicationInit(VOID)
+{
+	kMesgQInit(&amp;mesgQueue, (ADDR) queueBuffer, MESSAGE_SIZE, N_MESSAGE);
+	kMboxInit(&amp;mbox, NULL, EMPTY);
+}
+
+VOID ReadNotifyTask(VOID) /* lowest priority task: longest period */
+{
+	SensorType_t sensorType = 0;
+	Mesg_t msg;
+	while (1)
+	{
+
+		sensorType = rand() % 4;
+		switch (sensorType)
+		{
+		case (TEMPERATURE):
+
+			msg.sensorValue = rand() % 50;
+			msg.sensorType = TEMPERATURE;
+			break;
+		case (HUMIDITY):
+			msg.sensorValue = rand() % 100;
+			msg.sensorType = HUMIDITY;
+			break;
+		case (CO2):
+			msg.sensorValue = rand() % 1000;
+			msg.sensorType = CO2;
+			break;
+		case (FLOW):
+			msg.sensorValue = rand() % 10;
+			msg.sensorType = FLOW;
+			break;
+		default:
+			break;
+		}
+
+		K_ERR err = kMboxSend(&amp;mbox, &amp;msg, 2); /* 2-ticks time-out */
+		assert(err == 0); /* &lt;- if time-out, error */
+		kSleepUntil(2);
+	}
+}
+
+VOID NotifiedTask(VOID) /* 1-tick rate */
+{
+	Mesg_t *mailPtr = NULL;
+	K_ERR err;
+	while (1)
+	{
+		err = kMboxRecv(&amp;mbox, (ADDR*) &amp;mailPtr, NULL, K_WAIT_FOREVER);
+		assert(err == 0);
+		if (mailPtr != NULL)
+		{
+			err = kMesgQSend(&amp;mesgQueue, mailPtr, K_WAIT_FOREVER);
+			assert(err == 0);
+			/* after sending it will most often block on the empty mailbox */
+		}
+	}
+}
+
+void LoggingTask(void) /1-tick rate */
+{
+	Mesg_t recvMesg;
+	K_ERR err;
+	while (1)
+	{
+		err = kMesgQRecv(&amp;mesgQueue, &amp;recvMesg, K_WAIT_FOREVER);
+		assert(err == 0);
+
+		if (recvMesg.sensorType == TEMPERATURE)
+			kprintf("[%lu] Temperature Sensor update: %lu C\n\r", kGetTick(
+					recvMesg.sensorValue);
+		if (recvMesg.sensorType == HUMIDITY)
+			kprintf("Humidity Sensor update: %lu%% \n\r", recvMesg.sensorValue);
+		if (recvMesg.sensorType == CO2)
+			kprintf("CO2 Sensor update: %lu ppm\n\r", recvMesg.sensorValue);
+		if (recvMesg.sensorType == FLOW)
+			kprintf("FLOW Sensor update: %lu liters/min\n\r",
+					recvMesg.sensorValue);
+	}
+}</code></pre>
+</div>
+</div>
+<div class="imageblock data-line-1380">
+<div class="content">
+<img src="images/notifyqueue.png" alt="notifyqueue">
 </div>
 </div>
 </div>
