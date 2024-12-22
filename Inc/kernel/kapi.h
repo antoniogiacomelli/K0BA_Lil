@@ -23,10 +23,7 @@
  * |             K0BA KERNEL                | k*.h k*.c
  * |________________________________________|--
  * |                                        |
- * |        BOARD SUPPORT PACKAGE           |
- * |________________________________________|
- * |                                        |
- * |                CMIS HAL                |
+ * |              CMSIS-Core                |
  * |________________________________________|--
  *
  * This is the kernel API to be included within any application
@@ -53,11 +50,7 @@
 /******************************************************************************/
 
 /**
- * \brief Create a new task. Before using you need to statically allocate an
- *        array of (unsigned) integers visible to the function call scope.
- *        Normally you will declare the array in the application file and
- *        declare it as an extern for the main function scope, or vice-versa.
- *
+ * \brief Create a new task. 
  * \param taskFuncPtr  Pointer to the task entry function.
  *
  * \param taskName     Task name. Keep it as much as 8 Bytes.
