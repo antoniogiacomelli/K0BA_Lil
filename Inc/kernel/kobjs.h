@@ -205,8 +205,7 @@ struct kMailbox
     BOOL init;
     K_MBOX_STATUS mboxState;
     K_TCB* owner;
-    struct kList rWaitingQueue;
-    struct kList wWaitingQueue;
+    struct kList waitingQueue;
     TID    senderTID;
     ADDR   mailPtr;
     BOOL timedOut;
