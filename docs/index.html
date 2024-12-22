@@ -1839,7 +1839,7 @@ VOID NotifyTask(VOID)
 				break;
 			}
 			K_ERR err = kMboxSend(&amp;mbox, (ADDR) &amp;sendFlag, K_WAIT_FOREVER);
-			assert(err==0);
+			kSleepUntil(2); /* every 10ms */
 		}
 }
 
@@ -1990,7 +1990,7 @@ VOID Client1(VOID)
 			kprintf("1F\n\r");
 		}
 	}
-	kSleep(10); /* periodic request */
+	kSleepUntil(10); /* every 50ms */
 }
 
 VOID Client2(VOID)
@@ -2026,7 +2026,7 @@ VOID Client2(VOID)
 		}
 
 	}
-	kSleep(10); /* periodic request */
+	kSleep(10); /* 50ms */
 }</code></pre>
 </div>
 </div>
@@ -2193,6 +2193,7 @@ VOID SensorRead(VOID)
 			break;
 		}
 		kMesgQSend(&amp;mesgQueue, &amp;msg, K_WAIT_FOREVER);
+        kSleepUntil(2); /* every 10ms */
 	}
 }
 
@@ -2223,7 +2224,7 @@ VOID SensorLogging(VOID)
 /* why enqueue and not log when reading? to not loose track, events are buffered and log happens on another task */</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1231">
+<div class="imageblock data-line-1232">
 <div class="content">
 <img src="images/queuing.png" alt="queuing">
 </div>
