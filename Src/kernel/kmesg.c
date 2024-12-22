@@ -960,7 +960,6 @@ UINT32 kPipeRead(K_PIPE *const kobj, BYTE *destPtr, UINT32 nBytes)
 
 UINT32 kPipeWrite(K_PIPE *const kobj, BYTE *srcPtr, UINT32 nBytes)
 {
-
 	if (IS_NULL_PTR(kobj))
 		KFAULT(FAULT_NULL_OBJ);
 	if (kIsISR())
