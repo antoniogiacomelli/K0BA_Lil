@@ -2234,10 +2234,10 @@ VOID SensorLogging(VOID)
 <div class="sect2 data-line-1234">
 <h3 id="queiuing_pattern_with_notification">18.5. Queiuing Pattern with notification</h3>
 <div class="paragraph data-line-1236">
-<p>Usage: synchronous notification + message-passing</p>
+<p>Usage: real-time monitoring</p>
 </div>
 <div class="paragraph data-line-1238">
-<p>Another approach is to have a separate periodic reading that notifies through a mailbox a second task that enqueues the message. After enqueuing the message the notified task will block on the empty mailbox, and the enqueued message will be received by the logging task. The <code>PeriodicReading</code> has highest priority. This approach can yield a queue with reduced size.</p>
+<p>Another approach is to have a separate periodic reading that notifies through a mailbox a second task that enqueues the message. After enqueuing the message the notified task will block on the empty mailbox, and the enqueued message will be received by the logging task. The <code>PeriodicReading</code> has highest priority. This is a simulation to validate sizing, assuming that the notification rate has 10ms as worst-case.</p>
 </div>
 <div class="listingblock data-line-1240">
 <div class="content">
@@ -2257,8 +2257,7 @@ VOID kApplicationInit(VOID)
 VOID PeriodicReading(VOID) /* highest priority task */
 {
 	SensorType_t sensorType = 0;
-	Mesg_t msg;
-
+	Mesg_t mesg;
 	while (1)
 	{
 
@@ -2330,7 +2329,7 @@ void LoggingTask(void)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1329">
+<div class="imageblock data-line-1328">
 <div class="content">
 <img src="images/notifyqueue.png" alt="notifyqueue">
 </div>
