@@ -58,8 +58,7 @@ K_ERR kMboxInit(K_MBOX *const kobj,	BOOL initFull, ADDR initMailPtr)
 	}
 
 	K_ERR listerr;
-	listerr = kListInit(&kobj->rWaitingQueue, "rmailq");
-	listerr = kListInit(&kobj->wWaitingQueue, "wmailq");
+	listerr = kListInit(&kobj->waitingQueue, "mailq");
 
 	assert(listerr == 0);
 	kobj->timeoutNode.nextPtr = NULL;
@@ -95,9 +94,9 @@ K_ERR kMboxSend(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout)
 	{
 		/* not-empty blocks a writer */
 #if(K_DEF_MBOX_ENQ==K_DEF_ENQ_FIFO)
-		kTCBQEnq(&kobj->wWaitingQueue, runPtr);
+		kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
-		kTCBQEnqByPrio(&kobj->wWaitingQueue, runPtr);
+		kTCBQEnqByPrio(&kobj->waitingQueue, runPtr);
 #endif
 		runPtr->status = SENDING;
 		if (timeout > 0)
@@ -130,10 +129,10 @@ K_ERR kMboxSend(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout)
 	kobj->mailPtr = sendPtr;
 	kobj->mboxState = MBOX_FULL;
 	/*  full: unblock a reader, if any */
-	if (kobj->rWaitingQueue.size > 0)
+	if (kobj->waitingQueue.size > 0)
 	{
 		K_TCB *freeReadPtr;
-		kTCBQDeq(&kobj->rWaitingQueue, &freeReadPtr);
+		kTCBQDeq(&kobj->waitingQueue, &freeReadPtr);
 		assert(freeReadPtr != NULL);
 		kTCBQEnq(&readyQueue[freeReadPtr->priority], freeReadPtr);
 		freeReadPtr->status = READY;
@@ -168,9 +167,9 @@ K_ERR kMboxRecv(K_MBOX *const kobj, ADDR* recvPPtr, TID *senderIDPtr,
 	{
 
 #if(K_DEF_MBOX_ENQ==K_DEF_ENQ_FIFO)
-		kTCBQEnq(&kobj->rWaitingQueue, runPtr);
+		kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
-		kTCBQEnqByPrio(&kobj->rWaitingQueue, runPtr);
+		kTCBQEnqByPrio(&kobj->waitingQueue, runPtr);
 #endif
 		runPtr->status = RECEIVING;
 		runPtr->pendingMbox = kobj;
@@ -203,10 +202,10 @@ K_ERR kMboxRecv(K_MBOX *const kobj, ADDR* recvPPtr, TID *senderIDPtr,
 	*recvPPtr = kobj->mailPtr;
 	kobj->mboxState = MBOX_EMPTY;
 	/* empty: unblock a writer, if any */
-	if (kobj->wWaitingQueue.size > 0)
+	if (kobj->waitingQueue.size > 0)
 	{
 		K_TCB *freeWriterPtr;
-		kTCBQDeq(&kobj->wWaitingQueue, &freeWriterPtr);
+		kTCBQDeq(&kobj->waitingQueue, &freeWriterPtr);
 		assert(freeWriterPtr != NULL);
 		kTCBQEnq(&readyQueue[freeWriterPtr->priority], freeWriterPtr);
 		freeWriterPtr->status = READY;
