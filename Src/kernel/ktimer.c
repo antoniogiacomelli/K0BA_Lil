@@ -303,26 +303,17 @@ VOID kRemoveTaskFromMbox(ADDR kobj)
 {
 	K_MBOX *mboxPtr = (K_MBOX*) kobj;
 
-	if (mboxPtr->wWaitingQueue.size > 0)
+	if (mboxPtr->waitingQueue.size > 0)
 	{
 		K_TCB *taskPtr;
-		kTCBQDeq(&mboxPtr->wWaitingQueue, &taskPtr);
+		kTCBQDeq(&mboxPtr->waitingQueue, &taskPtr);
 
 		taskPtr->status = READY;
 		taskPtr->timeOut = TRUE;
 
 		kTCBQEnq(&readyQueue[taskPtr->priority], taskPtr);
 	}
-	else if (mboxPtr->rWaitingQueue.size > 0)
-	{
-		K_TCB *taskPtr;
-		kTCBQDeq(&mboxPtr->rWaitingQueue, &taskPtr);
 
-		taskPtr->status = READY;
-		taskPtr->timeOut = TRUE;
-
-		kTCBQEnq(&readyQueue[taskPtr->priority], taskPtr);
-	}
 }
 
 void kRemoveTaskFromSema(void *kobj)
