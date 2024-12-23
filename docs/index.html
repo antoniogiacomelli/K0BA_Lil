@@ -2495,7 +2495,7 @@ void LoggingTask(void) /1-tick rate */
 <p>Usage: multi-condition synchronisation, notification</p>
 </div>
 <div class="paragraph data-line-1413">
-<p>Here is one of the many ways to implement multi-condition synchronisation, so-called event groups - with set/get/ALL/ANY:</p>
+<p>Here is one of the many ways to implement multi-condition synchronisation, so-called event groups - with set/wait(get)/clear. This approach use sleep/wake associated to an integer.</p>
 </div>
 <div class="listingblock data-line-1415">
 <div class="content">
@@ -2535,9 +2535,8 @@ VOID setEventFlags(uint32_t flagMask)
 
 VOID waitForEventFlags(UINT32 flagMask, BOOL all) /* ALL or ANY */
 {
-	while (1)
-	{
 		/*go to sleep */
+		SLEEP:
 		kEventSleep(&amp;eventGroup, K_WAIT_FOREVER);
 
 		/* wake */
@@ -2552,7 +2551,7 @@ VOID waitForEventFlags(UINT32 flagMask, BOOL all) /* ALL or ANY */
 			return; /* good to go */
 		}
 		kMutexUnlock(&amp;flagMutex); /* nope, get back sleeping */
-	}
+	    goto SLEEP;
 }
 
 VOID clearEventFlags(UINT32 flagMask)
@@ -2608,7 +2607,7 @@ VOID Task4(VOID) /* just want flag 3*/
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1524">
+<div class="imageblock data-line-1523">
 <div class="content">
 <img src="images/eventflags.png" alt="eventflags">
 </div>
