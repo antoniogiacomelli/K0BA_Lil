@@ -474,6 +474,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#apparent_overlap">12.1. Apparent overlap</a></li>
 <li><a href="#installed_callbacks_for_signals">12.2. Installed callbacks for signals</a></li>
 <li><a href="#time_out_on_blocking_primitives">12.3. Time-out on blocking primitives</a></li>
+<li><a href="#event_flags">12.4. Event Flags</a></li>
 </ul>
 </li>
 <li><a href="#mailbox">13. Mailbox</a>
@@ -492,6 +493,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#monitor_like_synchronisation_barrier">18.3. Monitor-like: Synchronisation Barrier</a></li>
 <li><a href="#queuing_pattern">18.4. Queuing Pattern</a></li>
 <li><a href="#queueing_pattern_with_notification">18.5. Queueing pattern with notification</a></li>
+<li><a href="#event_flagsevent_groups">18.6. Event Flags/Event Groups</a></li>
 </ul>
 </li>
 </ul>
@@ -1483,14 +1485,20 @@ The overhead is excessive—both in time and space—a need to reserve a space o
 <p>Blocking primitives within K0BA have a <code>timeout</code> parameter, given in ticks. Only <code>kPend()</code> does not given its logical simplistic nature, and application.
 If the task cannot perform  access to a resource within a time given in system ticks, it will switch back to READY, eventually be dispatched, and force a return <code>K_ERR_TIMEOUT</code>.</p>
 </div>
-<div class="admonitionblock note data-line-641">
+</div>
+<div class="sect2 data-line-639">
+<h3 id="event_flags">12.4. Event Flags</h3>
+<div class="paragraph data-line-640">
+<p>As on <code>VER0.3.0</code> the decision was not to provide event flags as another abstraction. The reason is that the usage for event flags is so versatile and application dependent that any generalisation leads to a trade-off it doesn&#8217;t seem to pay off. Despite, bear in mind that event flags are in essence broadcast wakes on tasks that are expecting for a combination of bits. We understand all the machinery to implement such patterns is provided.</p>
+</div>
+<div class="admonitionblock note data-line-644">
 <table>
 <tr>
 <td class="icon">
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="paragraph data-line-642">
+<div class="paragraph data-line-645">
 <p>As on <code>VER0.3.0</code> a <code>K_WAIT_FOREVER</code> for time-out is defined as <code>0U</code>, in the sense you can&#8217;t make non-blocking calls within blocking calls. Non-blocking (or asynchronous) calls  have different method names.</p>
 </div>
 </td>
@@ -1500,10 +1508,10 @@ If the task cannot perform  access to a resource within a time given in system t
 </div>
 </div>
 </div>
-<div class="sect1 data-line-647">
+<div class="sect1 data-line-650">
 <h2 id="mailbox">13. Mailbox</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch data-line-651">
+<table class="tableblock frame-all grid-all stretch data-line-654">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1530,64 +1538,64 @@ If the task cannot perform  access to a resource within a time given in system t
 </tr>
 </tbody>
 </table>
-<div class="paragraph data-line-660">
+<div class="paragraph data-line-663">
 <p>While in GPOS jargon mailboxes are queues of messages - as a distinction from pipes (that are stream buffers) - in embedded system software, often mailboxes are said to have a capacity of a a single messsage, and more recently you will not find it as a distinct mechanism - you use a 1-message queue.</p>
 </div>
-<div class="paragraph data-line-662">
+<div class="paragraph data-line-665">
 <p>In K0BA a mailbox is a <em>message-as-signal</em> mechanism. Strictly it is not a message passing - it is a shared memory protocol. The mail passed is the <em>address</em> of an object that contains a message - there is no copy. This object is application-dependent, so sender and receiver must agree on the concrete type and mantain the message scope.</p>
 </div>
-<div class="paragraph data-line-664">
+<div class="paragraph data-line-667">
 <p>Mailboxes behave like binary semaphores - they can initialise full/empty, have their own waiting queue and handle priority propagation. So, any use case that could be handled by a binary semaphore along with an information can be handled by a mailbox.</p>
 </div>
-<div class="paragraph data-line-666">
+<div class="paragraph data-line-669">
 <p>Still, you might prefer to keep them off and use semaphores or sleep-wake to build your own mechanism.</p>
 </div>
-<div class="paragraph data-line-668">
+<div class="paragraph data-line-671">
 <p>A mailbox interface contract can be defined as follows:</p>
 </div>
-<div class="olist arabic data-line-670">
+<div class="olist arabic data-line-673">
 <ol class="arabic">
-<li class="data-line-670">
+<li class="data-line-673">
 <p>A mailbox starts either EMPTY or FULL.</p>
 </li>
-<li class="data-line-671">
+<li class="data-line-674">
 <p>If starting FULL, it is initialised with an address.</p>
 </li>
-<li class="data-line-672">
+<li class="data-line-675">
 <p>A mailbox will always have an assigned 'owner' after the first <code>send()</code> or <code>recv()</code> primitive. The owner is the task who succeded gaining access to the box.</p>
 </li>
-<li class="data-line-673">
+<li class="data-line-676">
 <p>When a producer <code>send()</code> to a FULL mailbox, it is enqueued on the mailbox waiting queue, and its task will now be on state <code>SENDING</code>.</p>
 </li>
-<li class="data-line-674">
+<li class="data-line-677">
 <p>Likewise, a consumer blocks when issuing a <code>recv()</code> on an empty mailbox. Task status switches to <code>RECEIVING</code> and it is enqueued on the mailbox waiting queue.</p>
 </li>
-<li class="data-line-675">
+<li class="data-line-678">
 <p>A mailbox implements a priority propagation protocol, boosting the owner priority on the occasion a higher priority task blocks waiting.</p>
 </li>
-<li class="data-line-676">
+<li class="data-line-679">
 <p>The waiting queue for a mailbox, has a discipline that can either be  priority or FIFO. Default is by priority, to be coherent with the scheduler.</p>
 </li>
 </ol>
 </div>
-<div class="paragraph data-line-678">
+<div class="paragraph data-line-681">
 <p>You need to be aware of how the priority of tasks and mailbox queue discipline impact the message exchange, and therefore the program flow. Say you have a bad idea: two producers and a consumer with priorities High, Medium and Low, respectively. Producers <code>send()</code> and consumer <code>recv()</code> - no other blocking conditions. If the queue discipline for the mailbox is ordered by priority, the medium priority producer will block once and <strong>deadlock</strong> - since when the consumer empties the box, who is released is the higher priority - always. If it is a FIFO, it will receive the two messages serially - if you configure as FIFO, mind <em>you are choosing to delay a higher priority task.</em></p>
 </div>
-<div class="sect2 data-line-682">
+<div class="sect2 data-line-685">
 <h3 id="aynchronous_mailboxes_methods">13.1. Aynchronous mailboxes methods</h3>
-<div class="paragraph data-line-684">
+<div class="paragraph data-line-687">
 <p>An alternative usage for the same mailboxes are the primitives <code>asend()</code> and <code>arecv()</code>. Instead of blocking they will return an error.</p>
 </div>
-<div class="paragraph data-line-686">
+<div class="paragraph data-line-689">
 <p>There two other asynchronous methods: <code>asendovw()</code> - to deposit a message on a mailbox even if it is FULL,
 and <code>arecvkeep()</code> - to retrieve a message from a mailbox but the box will not switch to EMPTY - so other receivers can grab the same message.</p>
 </div>
-<div class="paragraph data-line-689">
+<div class="paragraph data-line-692">
 <p>These are suitable for ISRs; to store an integer with flags - you can use <code>asendovw()</code> to flip bits within a current message and a <code>arecvkeep()</code> to read without destroying the flags.</p>
 </div>
-<div class="ulist data-line-691">
+<div class="ulist data-line-694">
 <ul>
-<li class="data-line-691">
+<li class="data-line-694">
 <p>Mailbox service can be enabled/disabled in <code>kconfig.h</code>.</p>
 </li>
 </ul>
@@ -1595,10 +1603,10 @@ and <code>arecvkeep()</code> - to retrieve a message from a mailbox but the box 
 </div>
 </div>
 </div>
-<div class="sect1 data-line-693">
+<div class="sect1 data-line-696">
 <h2 id="message_queue">14. Message Queue</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch data-line-696">
+<table class="tableblock frame-all grid-all stretch data-line-699">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1634,37 +1642,37 @@ and <code>arecvkeep()</code> - to retrieve a message from a mailbox but the box 
 </tr>
 </tbody>
 </table>
-<div class="paragraph data-line-708">
+<div class="paragraph data-line-711">
 <p>As mentioned, Mailboxes and Message Queues are quite distinct not because of the message size. A queue is indeed a message passing mechanism, taking full data ownership - it is a  <em>data-centric</em> mechanism.</p>
 </div>
-<div class="paragraph data-line-710">
+<div class="paragraph data-line-713">
 <p>For a message queue, user will provide a buffer with enough capacity (number of messages <em>x</em> message size), that will be handled as a circular <em>buffer</em>. Message queues always start empty and they <strong><em>pass by copy</em>.</strong></p>
 </div>
-<div class="paragraph data-line-712">
+<div class="paragraph data-line-715">
 <p>The primitives for the message queue are <code>send()</code>, <code>recv()</code>, <code>asend()</code>, <code>arecv()</code>,<code>jam()</code> and <code>peek()</code>. Message Queues also propagate priority when blocking, and the blocking queue discipline is configured either as by priority or FIFO. This is not to be confused with the message buffering, the first message placed is the first extracted - except for the <code>jam()</code> that places a messages on the queue front. But <em>who</em> sends/receives a message is a matter of task precedence when accessing a queue.</p>
 </div>
-<div class="paragraph data-line-714">
+<div class="paragraph data-line-717">
 <p>Note, a queue will behave asynchronously until a <code>recv()</code> is issued to an empty queue and when a <code>send()</code> is issued on a full queue. A task that blocks on a full queue will be released as soon as a reader extracts a message and vice-versa.</p>
 </div>
-<div class="paragraph data-line-716">
+<div class="paragraph data-line-719">
 <p>This behaviour might be desirable or not. The result, anyway, is that tasks with different periods end up synchronising to the lowest rate  -  (<em>usually</em>, undesirable for real-time). After a queue blocks full, when it eventually unblocks you might had lost data - after all, a producer when blocked won&#8217;t be able to update its data. Is it the problem? Yes and no. The problem with a blocking queue is that by buffering you are reading from the past.</p>
 </div>
-<div class="paragraph data-line-718">
+<div class="paragraph data-line-721">
 <p>Between a message that does not arrive, and one that  arrives with information that is not useful, there is no practical difference. But if a message arrives with information that will deceive your control loop to perform a wrong action - this is the worse.  That can be avoided if your send-receive pair follows an unidirectional  order, and handle predictable timing events (loosely, periodic events). Finally, the queue size must be adequate (look at Little&#8217;s theorem).  So, except for logging/monitoring or serialize access, queues <em>might</em> cause trouble when a system takes action with the information it is reading.</p>
 </div>
-<div class="ulist data-line-720">
+<div class="ulist data-line-723">
 <ul>
-<li class="data-line-720">
+<li class="data-line-723">
 <p>Message Queue service can be enabled/disabled in <code>kconfig.h</code>.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-722">
+<div class="sect1 data-line-725">
 <h2 id="pump_drop_message_queue">15. "Pump-Drop" Message Queue</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch data-line-725">
+<table class="tableblock frame-all grid-all stretch data-line-728">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1682,7 +1690,7 @@ and <code>arecvkeep()</code> - to retrieve a message from a mailbox but the box 
 </tr>
 </tbody>
 </table>
-<table class="tableblock frame-all grid-all stretch data-line-733">
+<table class="tableblock frame-all grid-all stretch data-line-736">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1703,91 +1711,91 @@ and <code>arecvkeep()</code> - to retrieve a message from a mailbox but the box 
 </tr>
 </tbody>
 </table>
-<div class="paragraph data-line-741">
+<div class="paragraph data-line-744">
 <p>Pump-Drop Queues are meant to overcome the drawbacks exposed above for message queues, based on the concept of Cyclical Asynchronous Buffers (CAB) (essentialy as found in the HARTIK kernel). These queues are a one-to-many mechanism that have an implicit memory allocator.</p>
 </div>
-<div class="paragraph data-line-743">
+<div class="paragraph data-line-746">
 <p>Primitives for Pump-Drop buffers are:</p>
 </div>
-<div class="ulist data-line-745">
+<div class="ulist data-line-748">
 <ul>
-<li class="data-line-745">
+<li class="data-line-748">
 <p>For writer: <code>reserve()</code> , <code>write()</code>, <code>pump()</code> .</p>
 </li>
-<li class="data-line-746">
+<li class="data-line-749">
 <p>For readers: <code>fetch()</code>, <code>read()</code>, <code>drop()</code>.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph data-line-749">
+<div class="paragraph data-line-752">
 <p>The semantics is as follows - remember it is one writer to many readers:</p>
 </div>
-<div class="olist arabic data-line-751">
+<div class="olist arabic data-line-754">
 <ol class="arabic">
-<li class="data-line-751">
+<li class="data-line-754">
 <p>When the producer needs to write a new message to the queue, first it <em>reserves</em> a buffer.</p>
 </li>
-<li class="data-line-752">
+<li class="data-line-755">
 <p>After reserving a buffer it <em>writes</em> the message to be sent, and <em>pump</em> the buffer into the queue.</p>
 </li>
-<li class="data-line-753">
+<li class="data-line-756">
 <p>The last message pumped in a queue is not overwritten until its number of readers is to 0.</p>
 </li>
-<li class="data-line-754">
+<li class="data-line-757">
 <p>When the writer <em>pumps</em>, the kernel will verify if a former pumped buffer has now 0 readers. If so, it is deallocated.</p>
 </li>
-<li class="data-line-755">
+<li class="data-line-758">
 <p>The <em>pumped</em> buffer is marked as the <em>most recent buffer</em>. In case another pump happens before any readings, a <em>most recent buffer</em> is not mistaken for a buffer that has been consumed.</p>
 </li>
-<li class="data-line-756">
+<li class="data-line-759">
 <p>A reader first 'fetches' a message buffer address - what will increase the user count within a buffer.</p>
 </li>
-<li class="data-line-757">
+<li class="data-line-760">
 <p>After consuming the message, a reader 'drop the buffer'.</p>
 </li>
 </ol>
 </div>
-<div class="paragraph data-line-760">
+<div class="paragraph data-line-763">
 <p>The ideal queue size is simply the number of readers + 1.</p>
 </div>
-<div class="paragraph data-line-762">
+<div class="paragraph data-line-765">
 <p>By the exposure, you can conclude that a reader might miss messages when the writer&#8217;s rate is higher. A reader within a (servo-loop) controller can afford a 'miss' rate— what leads to failure is reading messages that do not represent the plant state.</p>
 </div>
-<div class="ulist data-line-764">
+<div class="ulist data-line-767">
 <ul>
-<li class="data-line-764">
+<li class="data-line-767">
 <p>Pump-drop queues can be enabled/disabled in <code>kconfig.h</code>.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-766">
+<div class="sect1 data-line-769">
 <h2 id="remarks_on_message_passing">16. Remarks on Message Passing</h2>
 <div class="sectionbody">
-<div class="ulist data-line-768">
+<div class="ulist data-line-771">
 <ul>
-<li class="data-line-768">
+<li class="data-line-771">
 <p>Strictly, the mailbox as presented is not a message passing mechanism, it is a shared memory protocol, notification-based.</p>
 </li>
-<li class="data-line-769">
+<li class="data-line-772">
 <p>Queues involve buffer management, making them better suited for data-centric use cases like telemetry, logging, or serialisation. They can accommodate many-to-many patterns.
 The intermediate asynchronous behaviour and the deep copy gives some freedom to sender-receiver - but if overused they cause bugs that are difficult finding. Avoid many-to-many communications.</p>
 </li>
-<li class="data-line-772">
+<li class="data-line-775">
 <p>Pump-drop queues are suitable for one-to-many patterns, when the consumer is concerned on with the most recent data, not the historical of messages - like control-loops.</p>
 </li>
-<li class="data-line-774">
+<li class="data-line-777">
 <p>For ISR employing any kind of message-passing the system programmer must use the asynchronous primitives, therefore checking for the return value.</p>
 </li>
-<li class="data-line-776">
+<li class="data-line-779">
 <p>Named channels - i.e., channels that are exclusive for a task - can be mimetised easily on the application.</p>
 </li>
 </ul>
 </div>
-<div class="exampleblock data-line-778">
+<div class="exampleblock data-line-781">
 <div class="content">
-<div class="paragraph data-line-779">
+<div class="paragraph data-line-782">
 <p>In UNIX a <em>broken pipe</em> is a pipe with writers but no
 readers. A pipe with readers but no writers is <em>not 'broken'</em>. It reinforces the idea that there is not such a thing as valid never-received data.</p>
 </div>
@@ -1795,10 +1803,10 @@ readers. A pipe with readers but no writers is <em>not 'broken'</em>. It reinfor
 </div>
 </div>
 </div>
-<div class="sect1 data-line-784">
+<div class="sect1 data-line-787">
 <h2 id="pipes">17. Pipes</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch data-line-788">
+<table class="tableblock frame-all grid-all stretch data-line-791">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1828,7 +1836,7 @@ readers. A pipe with readers but no writers is <em>not 'broken'</em>. It reinfor
 </tr>
 </tbody>
 </table>
-<div class="paragraph data-line-798">
+<div class="paragraph data-line-801">
 <p>Pipes transmit streams of bytes - unlike queues or mailboxes
 that transmit 'objects' with a format. They are fast because data does
 not move, what moves is the read/write pointer within the pipe buffer.
@@ -1836,42 +1844,42 @@ A writer stops its operation when the N specified bytes have been
 written, or there is no more room. In the last case it goes to sleep until
 a reader wakes it up after 'extracting' from the pipe.</p>
 </div>
-<div class="paragraph data-line-805">
+<div class="paragraph data-line-808">
 <p>A reader reads until N specified bytes were read or when there is no more data. In the last case it will sleep, to be waken by a writer.</p>
 </div>
-<div class="paragraph data-line-807">
+<div class="paragraph data-line-810">
 <p>Both one-to-many and many-to-one channels are possible - those who wake need to themselves ensure precedence.</p>
 </div>
-<div class="paragraph data-line-809">
+<div class="paragraph data-line-812">
 <p>A handy use is combining two for <em>double buffering</em>.</p>
 </div>
-<div class="paragraph data-line-811">
+<div class="paragraph data-line-814">
 <p>As on <code>V0.3.0</code>, they depend on <em>sleep-wake</em> mechanism.</p>
 </div>
-<div class="paragraph data-line-813">
+<div class="paragraph data-line-816">
 <p>You cannot usem them within ISRs, in no occasion.</p>
 </div>
-<div class="ulist data-line-815">
+<div class="ulist data-line-818">
 <ul>
-<li class="data-line-815">
+<li class="data-line-818">
 <p>Pipes can be enabled/disabled in <code>kconfig.h</code></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-817">
+<div class="sect1 data-line-820">
 <h2 id="usage_patterns">18. Usage Patterns</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-819">
+<div class="paragraph data-line-822">
 <p>In this section some simple usage patterns are being attached. The board used to run these snippets is a Nucleo-F103RB (ARM Cortex-M3 based).</p>
 </div>
-<div class="sect2 data-line-822">
+<div class="sect2 data-line-825">
 <h3 id="notify_with_a_mailbox">18.1. Notify with a mailbox</h3>
-<div class="paragraph data-line-823">
+<div class="paragraph data-line-826">
 <p>Usage: synchronise on a combination of events</p>
 </div>
-<div class="listingblock data-line-824">
+<div class="listingblock data-line-827">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">/*@FILE main.c */
 #include "kenv.h"
@@ -2014,18 +2022,18 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-966">
+<div class="imageblock data-line-969">
 <div class="content">
 <img src="images/mboxflags.png" alt="mboxflags">
 </div>
 </div>
 </div>
-<div class="sect2 data-line-967">
+<div class="sect2 data-line-970">
 <h3 id="multi_client_server_with_mailboxes">18.2. Multi-Client Server with mailboxes</h3>
-<div class="paragraph data-line-969">
+<div class="paragraph data-line-972">
 <p>Usage: Many-to-one command-response</p>
 </div>
-<div class="listingblock data-line-971">
+<div class="listingblock data-line-974">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
 
@@ -2152,18 +2160,18 @@ VOID Client2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1100">
+<div class="imageblock data-line-1103">
 <div class="content">
 <img src="images/multiclient.png" alt="multiclient">
 </div>
 </div>
 </div>
-<div class="sect2 data-line-1103">
+<div class="sect2 data-line-1106">
 <h3 id="monitor_like_synchronisation_barrier">18.3. Monitor-like: Synchronisation Barrier</h3>
-<div class="paragraph data-line-1105">
+<div class="paragraph data-line-1108">
 <p>Usage: resource access/tasks coordination</p>
 </div>
-<div class="listingblock data-line-1107">
+<div class="listingblock data-line-1110">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
 
@@ -2240,18 +2248,18 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1183">
+<div class="imageblock data-line-1186">
 <div class="content">
 <img src="images/syncbarr.png" alt="syncbarr">
 </div>
 </div>
 </div>
-<div class="sect2 data-line-1185">
+<div class="sect2 data-line-1188">
 <h3 id="queuing_pattern">18.4. Queuing Pattern</h3>
-<div class="paragraph data-line-1187">
+<div class="paragraph data-line-1190">
 <p>Usage: Asynch (like) comm, serialising access, logging, monitoring</p>
 </div>
-<div class="listingblock data-line-1189">
+<div class="listingblock data-line-1192">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
 #include &lt;stdlib.h&gt;
@@ -2346,22 +2354,22 @@ VOID SensorLogging(VOID)
 /* why enqueue and not log when reading? to not loose track, events are buffered and log happens on another task */</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1283">
+<div class="imageblock data-line-1286">
 <div class="content">
 <img src="images/queuing.png" alt="queuing">
 </div>
 </div>
 </div>
-<div class="sect2 data-line-1285">
+<div class="sect2 data-line-1288">
 <h3 id="queueing_pattern_with_notification">18.5. Queueing pattern with notification</h3>
-<div class="paragraph data-line-1287">
+<div class="paragraph data-line-1290">
 <p>Usage: real-time monitoring</p>
 </div>
-<div class="paragraph data-line-1289">
+<div class="paragraph data-line-1292">
 <p>On the previous example we increased latency to augment throughput. Suppose a reading task has a worst update rate of 10ms. We can use it to notify a task with a highest rate through a mailbox. The notified task enqueues the message and send it through a queue to the logger task. We use the time-out of the mailbox send notification to guarantee the notifier does not block full for more than our worst rate assumption.
 The overhead of printfs is ignored because they disable interrupts.</p>
 </div>
-<div class="listingblock data-line-1292">
+<div class="listingblock data-line-1295">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
 #include &lt;stdlib.h&gt;
@@ -2475,9 +2483,134 @@ void LoggingTask(void) /1-tick rate */
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1404">
+<div class="imageblock data-line-1407">
 <div class="content">
 <img src="images/notifyqueue.png" alt="notifyqueue">
+</div>
+</div>
+</div>
+<div class="sect2 data-line-1409">
+<h3 id="event_flagsevent_groups">18.6. Event Flags/Event Groups</h3>
+<div class="paragraph data-line-1411">
+<p>Usage: multi-condition synchronisation, notification</p>
+</div>
+<div class="paragraph data-line-1413">
+<p>Here is one of the many ways to implement multi-condition synchronisation, so-called event groups - with set/get/ALL/ANY:</p>
+</div>
+<div class="listingblock data-line-1415">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+INT stack1[STACKSIZE];
+INT stack2[STACKSIZE];
+INT stack3[STACKSIZE];
+INT stack4[STACKSIZE];
+
+#define MAX_FLAGS 32
+#define FLAG_1 (1U &lt;&lt; 0)
+#define FLAG_2 (1U &lt;&lt; 1)
+#define FLAG_3 (1U &lt;&lt; 2)
+
+K_EVENT eventGroup; /* event group  */
+K_MUTEX flagMutex; /* lock for protecting the flag variable */
+volatile UINT32 eventFlags = 0U; /*  event state representation */
+
+VOID kApplicationInit(VOID)
+{
+	kEventInit(&amp;eventGroup);
+	kMutexInit(&amp;flagMutex);
+}
+
+/* set flags */
+VOID setEventFlags(uint32_t flagMask)
+{
+	kMutexLock(&amp;flagMutex, K_WAIT_FOREVER);
+	eventFlags |= flagMask;
+	kMutexUnlock(&amp;flagMutex);
+
+	kEventWake(&amp;eventGroup);
+}
+
+VOID waitForEventFlags(UINT32 flagMask, BOOL all) /* ALL or ANY */
+{
+	while (1)
+	{
+		/*go to sleep */
+		kEventSleep(&amp;eventGroup, K_WAIT_FOREVER);
+
+		/* wake */
+		kMutexLock(&amp;flagMutex, K_WAIT_FOREVER);
+		UINT32 currentFlags = eventFlags;
+
+		/* check */
+		if ((all &amp;&amp; ((currentFlags &amp; flagMask) == flagMask)) || /* all flags */
+		(!all &amp;&amp; (currentFlags &amp; flagMask))) /* any flags */
+		{
+			kMutexUnlock(&amp;flagMutex);
+			return; /* good to go */
+		}
+		kMutexUnlock(&amp;flagMutex); /* nope, get back sleeping */
+	}
+}
+
+VOID clearEventFlags(UINT32 flagMask)
+{
+	kMutexLock(&amp;flagMutex, K_WAIT_FOREVER);
+	eventFlags &amp;= ~flagMask;
+	kMutexUnlock(&amp;flagMutex);
+}
+
+VOID Task1(VOID) /* the setter, highest priority task  */
+{
+	while (1)
+	{
+		kSleep(1);
+		setEventFlags(FLAG_1);
+		setEventFlags(FLAG_2);
+		kSleep(20);
+		setEventFlags(FLAG_3);
+	}
+}
+
+VOID Task2(VOID) /* waits for all flags */
+{
+
+	while (1)
+	{
+		waitForEventFlags(FLAG_1 | FLAG_2 | FLAG_3, TRUE); /* all flags */
+		kprintf("T2: got all flags \n\r");
+		clearEventFlags(FLAG_1 | FLAG_2 | FLAG_3); /*clear*/
+	}
+}
+
+VOID Task3(VOID) /* waits for any flags */
+{
+	while (1)
+	{
+		waitForEventFlags(FLAG_1 | FLAG_2, FALSE);
+		kprintf("T3: At least one flag is set!\n\r");
+		clearEventFlags(FLAG_1 | FLAG_2);
+	}
+}
+
+
+VOID Task4(VOID) /* just want flag 3*/
+{
+	while (1)
+	{
+		waitForEventFlags(FLAG_3, TRUE);
+		kprintf("T4: FLAG_3 is up!\n\r");
+		clearEventFlags(FLAG_3);
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="imageblock data-line-1524">
+<div class="content">
+<img src="images/eventflags.png" alt="eventflags">
 </div>
 </div>
 </div>
