@@ -474,7 +474,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#apparent_overlap">12.1. Apparent overlap</a></li>
 <li><a href="#installed_callbacks_for_signals">12.2. Installed callbacks for signals</a></li>
 <li><a href="#time_out_on_blocking_primitives">12.3. Time-out on blocking primitives</a></li>
-<li><a href="#event_flags">12.4. Event Flags</a></li>
+<li><a href="#event_groups">12.4. Event Groups</a></li>
 </ul>
 </li>
 <li><a href="#mailbox">13. Mailbox</a>
@@ -1487,9 +1487,9 @@ If the task cannot perform  access to a resource within a time given in system t
 </div>
 </div>
 <div class="sect2 data-line-639">
-<h3 id="event_flags">12.4. Event Flags</h3>
+<h3 id="event_groups">12.4. Event Groups</h3>
 <div class="paragraph data-line-640">
-<p>As on <code>VER0.3.0</code> the decision was not to provide event flags as another abstraction. The reason is that the usage for event flags is so versatile and application dependent that any generalisation leads to a trade-off it doesn&#8217;t seem to pay off. Despite, bear in mind that event flags are in essence broadcast wakes on tasks that are expecting for a combination of bits. We understand all the machinery to implement such patterns is provided.</p>
+<p>As on <code>VER0.3.0</code> the decision was not to provide event groups as another abstraction. The reason is that the usage is so versatile and application-dependent that any generalisation leads to a service that will not do better than the system programmer aware of its needs. That is a guideline used to provide a service or not. As we recognise it is a standard service, we are still looking for the enough approach. At the end of this document some usage patterns demonstrate multi-condition notification/synchornisation.</p>
 </div>
 <div class="admonitionblock note data-line-644">
 <table>
@@ -1888,17 +1888,12 @@ a reader wakes it up after 'extracting' from the pipe.</p>
 
 int main(void)
 {
-	HAL_Init();
-	MX_GPIO_Init();
-	SystemClock_Config();
-	USART2_Init();
-	SystemClock_Config();
-	SysTick_Config(K_DEF_TICK_PERIOD);
-	K_TICK_DIS
-	NVIC_SetPriorityGrouping(0);
-	NVIC_SetPriority(SVCall_IRQn, 0x07);
-	NVIC_SetPriority(SysTick_IRQn, 0x08);
-	NVIC_SetPriority(PendSV_IRQn, 0x0A);
+    /* environment initialisation: system clock, interrupts, gpio ....*/
+
+	/* task creation: */
+
+	/*parms: entry function, string label, user assigned ID, stack address, priority, bool run-to-completion */
+
 	assert(
 			kCreateTask(Task1 , "Task1" , 1, stack1 , STACKSIZE, 1,
 			FALSE)==K_SUCCESS)
@@ -1909,7 +1904,12 @@ int main(void)
 	assert(
 	            kCreateTask(Task3 , "Task3" , 3, stack3 , STACKSIZE, 3,
 	            FALSE)==K_SUCCESS);
+
+	/* initialise kernel */
+
 	kInit();
+
+	/* if you end up here you probably invaded heap */
 	while (1)
 	;
 }
