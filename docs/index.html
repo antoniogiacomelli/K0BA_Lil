@@ -1832,35 +1832,32 @@ a reader wakes it up after 'extracting' from the pipe.</p>
 <p>Both one-to-many and many-to-one channels are possible - those who wake need to themselves ensure precedence.</p>
 </div>
 <div class="paragraph data-line-811">
-<p>A handy use is combining two for <em>double buffering</em>.</p>
-</div>
-<div class="paragraph data-line-813">
 <p>As on <code>V0.3.0</code>, they depend on <em>sleep-wake</em> mechanism.</p>
 </div>
-<div class="paragraph data-line-815">
-<p>You cannot usem them within ISRs, in no occasion.</p>
+<div class="paragraph data-line-813">
+<p>You cannot usem them within ISRs, in no occasion - if in need, a simple ring buffer is a replacement.</p>
 </div>
-<div class="ulist data-line-817">
+<div class="ulist data-line-815">
 <ul>
-<li class="data-line-817">
+<li class="data-line-815">
 <p>Pipes can be enabled/disabled in <code>kconfig.h</code></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-819">
+<div class="sect1 data-line-817">
 <h2 id="usage_patterns">16. Usage Patterns</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-821">
+<div class="paragraph data-line-819">
 <p>In this section some simple usage patterns are being attached. The board used to run these snippets is a Nucleo-F103RB (ARM Cortex-M3 based).</p>
 </div>
-<div class="sect2 data-line-824">
+<div class="sect2 data-line-822">
 <h3 id="notify_with_a_mailbox">16.1. Notify with a mailbox</h3>
-<div class="paragraph data-line-825">
+<div class="paragraph data-line-823">
 <p>Usage: coordinate a notified task action on a combination of events</p>
 </div>
-<div class="listingblock data-line-826">
+<div class="listingblock data-line-824">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">/*@FILE main.c */
 #include "kenv.h"
@@ -2010,18 +2007,18 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-975">
+<div class="imageblock data-line-973">
 <div class="content">
 <img src="images/mboxflags.png" alt="mboxflags">
 </div>
 </div>
 </div>
-<div class="sect2 data-line-976">
+<div class="sect2 data-line-974">
 <h3 id="multi_client_server_with_mailboxes">16.2. Multi-Client Server with mailboxes</h3>
-<div class="paragraph data-line-978">
+<div class="paragraph data-line-976">
 <p>Usage: Many-to-one command-response</p>
 </div>
-<div class="listingblock data-line-980">
+<div class="listingblock data-line-978">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
 
@@ -2148,18 +2145,18 @@ VOID Client2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1109">
+<div class="imageblock data-line-1107">
 <div class="content">
 <img src="images/multiclient.png" alt="multiclient">
 </div>
 </div>
 </div>
-<div class="sect2 data-line-1112">
+<div class="sect2 data-line-1110">
 <h3 id="monitor_like_synchronisation_barrier">16.3. Monitor-like: Synchronisation Barrier</h3>
-<div class="paragraph data-line-1114">
+<div class="paragraph data-line-1112">
 <p>Usage: resource access/tasks coordination</p>
 </div>
-<div class="listingblock data-line-1116">
+<div class="listingblock data-line-1114">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
 
@@ -2236,18 +2233,18 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1192">
+<div class="imageblock data-line-1190">
 <div class="content">
 <img src="images/syncbarr.png" alt="syncbarr">
 </div>
 </div>
 </div>
-<div class="sect2 data-line-1194">
+<div class="sect2 data-line-1192">
 <h3 id="queueing_pattern">16.4. Queueing Pattern</h3>
-<div class="paragraph data-line-1196">
+<div class="paragraph data-line-1194">
 <p>Usage: Asynch (like) comm, serialising access, logging, monitoring</p>
 </div>
-<div class="listingblock data-line-1198">
+<div class="listingblock data-line-1196">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
 #include &lt;stdlib.h&gt;
@@ -2342,21 +2339,21 @@ VOID SensorLogging(VOID)
 /* why enqueue and not log when reading? to not loose track, events are buffered and log happens on another task */</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1294">
+<div class="imageblock data-line-1292">
 <div class="content">
 <img src="images/queuing.png" alt="queuing">
 </div>
 </div>
 </div>
-<div class="sect2 data-line-1297">
+<div class="sect2 data-line-1295">
 <h3 id="event_flagsevent_groups">16.5. Event Flags/Event Groups</h3>
-<div class="paragraph data-line-1299">
+<div class="paragraph data-line-1297">
 <p>Usage: multi-condition broadcast, notification, observer pattern</p>
 </div>
-<div class="paragraph data-line-1301">
+<div class="paragraph data-line-1299">
 <p>Here is one of the many ways to implement multi-condition synchronisation, so-called event groups - with set/wait (or get)/clear. This approach use sleep/wake associated to an integer.</p>
 </div>
-<div class="listingblock data-line-1303">
+<div class="listingblock data-line-1301">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
 #include &lt;stdlib.h&gt;
@@ -2470,13 +2467,13 @@ VOID Task4(VOID) /* just want flag 3*/
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1415">
+<div class="imageblock data-line-1413">
 <div class="content">
 <img src="images/eventflags.png" alt="eventflags">
 </div>
 </div>
 <hr>
-<div class="paragraph data-line-1419">
+<div class="paragraph data-line-1417">
 <p><a href="mailto:tony@kernel0.org">tony@kernel0.org</a></p>
 </div>
 </div>
