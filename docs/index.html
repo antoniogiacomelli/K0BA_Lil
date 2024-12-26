@@ -1120,12 +1120,8 @@ VOID Task4(VOID)
 <div class="sect2 data-line-462">
 <h3 id="task_delays">4.1. Task Delays</h3>
 <div class="paragraph data-line-464">
-<p><code>sleep(t)</code>, in which a task will be suspended on a SLEEPING state, for <code>t</code> ticks.
-</div>
-<div class="paragraph data-line-466">
-<p>Importantly for periodic tasks is the <code>sleepuntil(p)</code> in which <code>p</code> is an absolute suspension period of time in ticks. The kernel adjusts any time drift/jitters that might happen in-between calls.
+<p>The primitive <code>sleep(t)</code> suspends a task on a SLEEPING state, for <code>t</code> ticks. Importantly for periodic tasks is the <code>sleepuntil(p)</code> in which <code>p</code> is an absolute suspension period of time in ticks. The kernel adjusts any time drift/jitters that might happen in-between calls.
 <em>(If time-slice scheduler is enabled, this primitive is not available.)</em></p>
-</div>
 </div>
 <div class="sect2 data-line-469">
 <h3 id="application_timers">4.2. Application Timers</h3>
