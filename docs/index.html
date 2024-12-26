@@ -1120,7 +1120,7 @@ VOID Task4(VOID)
 <div class="sect2 data-line-462">
 <h3 id="task_delays">4.1. Task Delays</h3>
 <div class="paragraph data-line-464">
-<p>Delay primitives are provided - the <code>sleep(t)</code>, in which a task will be suspended on a SLEEPING state, for <code>t</code> ticks; the <code>busy(t)</code>, in which a task keeps spinning - that is, doing nothing  - for <code>t</code> ticks.</p>
+<p><code>sleep(t)</code>, in which a task will be suspended on a SLEEPING state, for <code>t</code> ticks.
 </div>
 <div class="paragraph data-line-466">
 <p>Importantly for periodic tasks is the <code>sleepuntil(p)</code> in which <code>p</code> is an absolute suspension period of time in ticks. The kernel adjusts any time drift/jitters that might happen in-between calls.
