@@ -1617,7 +1617,7 @@ If the task cannot perform  access to a resource within a time given in system t
 <p>For a message queue, user will provide a buffer with enough capacity (number of messages <em>x</em> message size), that will be handled as a circular <em>buffer</em>. Message queues always start empty and they <strong><em>pass by copy</em>.</strong></p>
 </div>
 <div class="paragraph data-line-709">
-<p>The primitives for the message queue are <code>send()</code>, <code>recv()</code>, <code>asend()</code>, <code>arecv()</code>,<code>jam()</code> and <code>peek()</code>. Opposed to mailboxes which asynchronous methods are an extension, queues can be configured as either synchronous, asynchronous or both.</p>
+<p>The primitives for the message queue are <code>send()</code>, <code>recv()</code>, <code>asend()</code>, <code>arecv()</code>,<code>jam()</code> and <code>peek()</code>. Opposed to mailboxes which asynchronous methods are an extension, queues can be configured as either synchronous, asynchronous or both. In fact, if you got semaphores enabled you might consider using only asynchronous queues and use a semaphore to achieve synchronous behaviour - initialise with the queue size, down before sending, up after receiving.</p>
 </div>
 <div class="paragraph data-line-711">
 <p>Message Queues also propagate priority when blocking, and the blocking queue discipline is configured either as by priority or FIFO. This is not to be confused with the message buffering, the first message placed is the first extracted - except for the <code>jam()</code> that places a messages on the queue front. But <em>who</em> sends/receives a message is a matter of task precedence when accessing a queue.</p>
@@ -1629,7 +1629,7 @@ If the task cannot perform  access to a resource within a time given in system t
 <p>This behaviour might be desirable or not. The result, anyway, is that tasks with different periods end up synchronising to the lowest rate  -  (<em>usually</em>, undesirable for real-time). After a queue blocks full, when it eventually unblocks you might had lost data - after all, a producer when blocked won&#8217;t be able to update its data. Is it the problem? Yes and no. The problem with a blocking queue is that by buffering you are reading from the past.</p>
 </div>
 <div class="paragraph data-line-717">
-<p>Between a message that does not arrive, and one that  arrives with information that is not useful, there is no practical difference. But if a message arrives with information that will deceive your control loop to perform a wrong action - this is the worse.  That can be avoided if your send-receive pair follows an unidirectional  order, and handle predictable timing events (loosely, periodic events). Finally, the queue size must be adequate (look at Little&#8217;s theorem).  So, except for logging/monitoring or serialize access, queues <em>might</em> cause trouble when a system takes action with the information it is reading.</p>
+<p>Between a message that does not arrive, and one that  arrives with information that is not useful, there is no practical difference. But if a message arrives with information that will deceive your control loop to perform a wrong action - this is the worse.  </p>
 </div>
 <div class="ulist data-line-719">
 <ul>
