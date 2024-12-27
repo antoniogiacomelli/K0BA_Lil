@@ -1838,7 +1838,7 @@ a reader wakes it up after 'extracting' from the pipe.</p>
 </div>
 <div class="listingblock data-line-816">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">/*@FILE main.c */
+<pre class="highlightjs highlight"><code class="language-none hljs" data-lang="c">/*@FILE main.c */
 #include "kenv.h"
 #include "ksch.h"
 #include "application.h"
@@ -1931,7 +1931,7 @@ VOID NotifyTask(VOID)
 }
 
 /* this task stores events by OR'ing. when it matches the expected event record it expects to take an action, the storage is reset.
-alternatively it could take an action whenever a single flag was active
+alternatively it could take an action whenever a single flag was active */
 
 VOID NotifiedTask(VOID)
 {
@@ -1999,7 +1999,7 @@ VOID Task3(VOID)
 </div>
 <div class="listingblock data-line-970">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
+<pre class="highlightjs highlight"><code class="language-none hljs" data-lang="c">#include "application.h"
 
 
 #define MAX_PAYLOAD 36
@@ -2137,7 +2137,7 @@ VOID Client2(VOID)
 </div>
 <div class="listingblock data-line-1106">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">#include "application.h"
+<pre class="highlightjs highlight"><code class="language-none hljs data-lang="c"">#include "application.h"
 
 K_EVENT syncEvent; /* state event				    */
 UINT32 syncCounter; /* state representation        */
