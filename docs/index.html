@@ -1511,7 +1511,7 @@ If the task cannot perform  access to a resource within a time given in system t
 <p>In K0BA a mailbox is a <em>message-as-signal</em> mechanism. Strictly it is not a message passing - it is a shared memory protocol. The mail passed is the <em>address</em> of an object that contains a message - there is no copy. This object is application-dependent, so sender and receiver must agree on the concrete type and mantain the message scope.</p>
 </div>
 <div class="paragraph data-line-660">
-<p>Mailboxes behave like binary semaphores - they can initialise full/empty, have their own waiting queue and handle priority propagation. So, any use case that could be handled by a binary semaphore along with an information can be handled by a mailbox.</p>
+<p>Mailboxes can initialise full/empty, have their own waiting queue and handle priority propagation - by passing a token you can implement <em>turnstile</em> synchronisation mechanisms.</p>
 </div>
 <div class="paragraph data-line-662">
 <p>Still, you might prefer to keep them off and use semaphores or sleep-wake to build your own mechanism.</p>
