@@ -1617,7 +1617,7 @@ If the task cannot perform  access to a resource within a time given in system t
 <p>For a message queue, user will provide a buffer with enough capacity (number of messages <em>x</em> message size), that will be handled as a circular <em>buffer</em>. Message queues always start empty and they <strong><em>pass by copy</em>.</strong></p>
 </div>
 <div class="paragraph data-line-709">
-<p>The primitives for the message queue are <code>send()</code>, <code>recv()</code>, <code>asend()</code>, <code>arecv()</code>,<code>jam()</code> and <code>peek()</code>. Opposed to mailboxes which asynchronous methods are an extension, queues can be configured as either synchronous, asynchronous or both. In fact, if you got semaphores enabled you might consider using only asynchronous queues and use a semaphore to achieve synchronous behaviour - initialise with the queue size, down before sending, up after receiving.</p>
+<p>The primitives for the message queue are <code>send()</code>, <code>recv()</code>, <code>asend()</code>, <code>arecv()</code>,<code>jam()</code> and <code>peek()</code>. Opposed to mailboxes which asynchronous methods are an extension, queues can be configured as either synchronous, asynchronous or both.</p>
 </div>
 <div class="paragraph data-line-711">
 <p>Message Queues also propagate priority when blocking, and the blocking queue discipline is configured either as by priority or FIFO. This is not to be confused with the message buffering, the first message placed is the first extracted - except for the <code>jam()</code> that places a messages on the queue front. But <em>who</em> sends/receives a message is a matter of task precedence when accessing a queue.</p>
