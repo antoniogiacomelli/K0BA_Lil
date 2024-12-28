@@ -1707,7 +1707,7 @@ If the task cannot perform  access to a resource within a time given in system t
 <p>After reserving a buffer it <em>writes</em> the message to be sent, and <em>pump</em> the buffer into the queue.</p>
 </li>
 <li class="data-line-752">
-<p>The last message pumped in a queue is not overwritten until its number of readers has <em>dropped</<em> to 0.</p>
+<p>The last message pumped in a queue is not overwritten until its number of readers has <em>dropped</em> to 0.</p>
 </li>
 <li class="data-line-753">
 <p>When the writer <em>pumps</em>, the kernel will verify if a former pumped buffer has now 0 readers. If so, it is deallocated.</p>
