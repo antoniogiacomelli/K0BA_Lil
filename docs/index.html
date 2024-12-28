@@ -1511,7 +1511,7 @@ If the task cannot perform  access to a resource within a time given in system t
 <p>In K0BA a mailbox is a <em>message-as-signal</em> mechanism. Strictly it is not a message passing - it is a shared memory protocol. The mail passed is the <em>address</em> of an object that contains a message - there is no copy. This object is application-dependent, so sender and receiver must agree on the concrete type and mantain the message scope.</p>
 </div>
 <div class="paragraph data-line-660">
-<p>Mailboxes can initialise full/empty, have their own waiting queue and handle priority propagation - when passing a token/message between tasks, they synchronise on a <em>turnstile</em>.</p>
+<p>Mailboxes can initialise full/empty, have their own waiting queue and handle priority propagation - when passing a token/message between tasks, they synchronise on a <em>turnstile</em> - what is a handy use for them.</p>
 </div>
 <div class="paragraph data-line-664">
 <p>A mailbox interface contract can be defined as follows:</p>
@@ -1547,7 +1547,7 @@ If the task cannot perform  access to a resource within a time given in system t
 <div class="sect4 data-line-677">
 <h5 id="send_receive">Send-receive</h5>
 <div class="paragraph data-line-679">
-<p>The optional <code>sendrecv()</code> primitive sends a message and waits for a reply.</p>
+<p>The optional <code>sendrecv()</code> primitive sends a message and waits for a reply - its straight for any synchronous client-server communication - a client sends a request and wait for answer.</p>
 </div>
 </div>
 <div class="sect4 data-line-681">
@@ -1707,19 +1707,19 @@ If the task cannot perform  access to a resource within a time given in system t
 <p>After reserving a buffer it <em>writes</em> the message to be sent, and <em>pump</em> the buffer into the queue.</p>
 </li>
 <li class="data-line-752">
-<p>The last message pumped in a queue is not overwritten until its number of readers is to 0.</p>
+<p>The last message pumped in a queue is not overwritten until its number of readers has <em>dropped</<em> to 0.</p>
 </li>
 <li class="data-line-753">
 <p>When the writer <em>pumps</em>, the kernel will verify if a former pumped buffer has now 0 readers. If so, it is deallocated.</p>
 </li>
 <li class="data-line-754">
-<p>The <em>pumped</em> buffer is marked as the <em>most recent buffer</em>. In case another pump happens before any readings, a <em>most recent buffer</em> is not mistaken for a buffer that has been consumed.</p>
+<p>The <em>pumped</em> buffer is marked as the <em>current buffer</em>. When pumping a new buffer, the kernel checks if the current buffer has 0 readers. If so, it is deallocated. Deallocate here means it is back to the pool so it can be reserved and rewritten.</p>
 </li>
 <li class="data-line-755">
 <p>A reader first 'fetches' a message buffer address - what will increase the user count within a buffer.</p>
 </li>
 <li class="data-line-756">
-<p>After consuming the message, a reader 'drop the buffer'.</p>
+<p>After consuming the message, a reader 'drops the buffer': the kernel checks if it was the last reader and it is not the current buffer - if these two conditions are met, the buffer is deallocated..</p>
 </li>
 </ol>
 </div>
