@@ -1688,10 +1688,10 @@ If the task cannot perform  access to a resource within a time given in system t
 <div class="ulist data-line-744">
 <ul>
 <li class="data-line-744">
-<p>For writer: <code>reserve()</code> , <code>write()</code>, <code>pump()</code> .</p>
+<p>For writer: <code>reserve()</code> , <code>pump()</code> .</p>
 </li>
 <li class="data-line-745">
-<p>For readers: <code>fetch()</code>, <code>read()</code>, <code>drop()</code>.</p>
+<p>For readers: <code>fetch()</code>,  <code>drop()</code>.</p>
 </li>
 </ul>
 </div>
@@ -1704,27 +1704,23 @@ If the task cannot perform  access to a resource within a time given in system t
 <p>When the producer needs to write a new message to the queue, first it <em>reserves</em> a buffer.</p>
 </li>
 <li class="data-line-751">
-<p>After reserving a buffer it <em>writes</em> the message to be sent, and <em>pump</em> the buffer into the queue.</p>
-</li>
-<li class="data-line-752">
-<p>The last message pumped in a queue is not overwritten until its number of readers has <em>dropped</em> to 0.</p>
-</li>
+<p>After reserving a buffer he fills it with the message to be sent (application dependent), and <em>pump</em> the buffer.</p>
 <li class="data-line-753">
-<p>When the writer <em>pumps</em>, the kernel will verify if a former pumped buffer has now 0 readers. If so, it is deallocated.</p>
+<p>When the writer <em>pumps</em>, the kernel will verify if a former pumped buffer has now 0 readers. If so, it is deallocated. This check ensures the buffer will not be written while being read.</p>
 </li>
 <li class="data-line-754">
-<p>The <em>pumped</em> buffer is marked as the <em>current buffer</em>. When pumping a new buffer, the kernel checks if the current buffer has 0 readers. If so, it is deallocated. Deallocate here means it is back to the pool so it can be reserved and rewritten.</p>
+<p>After <em>pumped</em> buffer is marked as the <em>current buffer</em>. When pumping a new buffer, the kernel checks if the current buffer has 0 readers. If so, it is deallocated.</p>
 </li>
 <li class="data-line-755">
 <p>A reader first 'fetches' a message buffer address - what will increase the user count within a buffer.</p>
 </li>
 <li class="data-line-756">
-<p>After consuming the message, a reader 'drops the buffer': the kernel checks if it was the last reader and it is not the current buffer - if these two conditions are met, the buffer is deallocated..</p>
+<p>After 'having' the message, a reader 'drops the buffer': the kernel checks if it was the last reader and it is not the current buffer - if these two conditions are met, the buffer is deallocated..</p>
 </li>
 </ol>
 </div>
 <div class="paragraph data-line-759">
-<p>The ideal queue size is simply the number of readers + 1.</p>
+<p>So the cyclical behaviour is different that whenever a pump happens, the current buffer will be gone as soon as the last reader drops it. The information is always updated, but the reader that had fetched the buffer and wasn't able to drop before a new cycle of data will not have the message corrupted. The ideal queue size is simply the number of tasks + 1.</p>
 </div>
 <div class="paragraph data-line-761">
 <p>By the exposure, you can conclude that a reader might miss messages when the writer&#8217;s rate is higher. A reader within a (servo-loop) controller can afford a 'miss' rate— what leads to failure is reading messages that do not represent the plant state.</p>
