@@ -1705,9 +1705,6 @@ If the task cannot perform  access to a resource within a time given in system t
 </li>
 <li class="data-line-751">
 <p>Writer now appends a message to be sent (application-dependent) and <em>pump</em> the buffer.</p>
-<li class="data-line-753">
-<p>With a new buffer pumped, the last one will eventually drop to 0 readers and be deallocated. If it already has 0, it is deallocated.</p>
-</li>
 <li class="data-line-754">
 <p>After <em>pumped</em>, the PD buffer is marked as the <em>current buffer</em>. With a new PDB on the queue, the former will eventually drop to 0 readers and will be deallocated. </p>
 </li>
