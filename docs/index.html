@@ -1402,7 +1402,7 @@ The lack of a control block associated with a direct signal makes it rudimentary
 <p>As a single event might be of interest to several devices a semaphore is not suitable - a semaphore signal does not broadcast - it wakes one task for each signal - if any.</p>
 </div>
 <div class="paragraph data-line-606">
-<p>As on <code>VER0.3.0</code> the current design decision is not providing <code>signal()/wait()</code> for events, that is, the ability to enqueue/dequeue single task sleeping for an event. Condition variables and monitor-like synchronisation schemes can be constructed with events associated to mutex semaphores.</p>
+<p>As on <code>VER0.3.1</code> the current design decision is not providing <code>signal()/wait()</code> for events, that is, the ability to enqueue/dequeue single task sleeping for an event. Condition variables and monitor-like synchronisation schemes can be constructed with events associated to mutex semaphores.</p>
 </div>
 <div class="ulist data-line-608">
 <ul>
@@ -1455,7 +1455,7 @@ If the task cannot perform  access to a resource within a time given in system t
 <div class="sect2 data-line-632">
 <h3 id="event_groups">10.4. Event Groups</h3>
 <div class="paragraph data-line-633">
-<p>As on <code>VER0.3.0</code> the decision was not to provide event groups as another abstraction. The reason is that the usage is so versatile and application-dependent that any generalisation leads to a service that will not do better than the system programmer aware of its needs. That is a guideline used to provide a service or not. As we recognise it is a standard service, we are still looking for the enough approach. At the end of this document some usage patterns demonstrate multi-condition notification/synchornisation.</p>
+<p>As on <code>VER0.3.1</code> the decision was not to provide event groups as another abstraction. The reason is that the usage is so versatile and application-dependent that any generalisation leads to a service that will not do better than the system programmer aware of its needs. That is a guideline used to provide a service or not. As we recognise it is a standard service, we are still looking for the enough approach. At the end of this document some usage patterns demonstrate multi-condition notification/synchornisation.</p>
 </div>
 <div class="admonitionblock note data-line-637">
 <table>
@@ -1465,7 +1465,7 @@ If the task cannot perform  access to a resource within a time given in system t
 </td>
 <td class="content">
 <div class="paragraph data-line-638">
-<p>As on <code>VER0.3.0</code> a <code>K_WAIT_FOREVER</code> for time-out is defined as <code>0U</code>, in the sense you can&#8217;t make non-blocking calls within blocking calls. Non-blocking (or asynchronous) calls  have different method names.</p>
+<p>As on <code>VER0.3.1</code> a <code>K_WAIT_FOREVER</code> for time-out is defined as <code>0U</code>, in the sense you can&#8217;t make non-blocking calls within blocking calls. Non-blocking (or asynchronous) calls  have different method names.</p>
 </div>
 </td>
 </tr>
@@ -1801,7 +1801,7 @@ a reader wakes it up after 'extracting' from the pipe.</p>
 <p>Both one-to-many and many-to-one channels are possible - those who wake need to themselves ensure precedence.</p>
 </div>
 <div class="paragraph data-line-803">
-<p>As on <code>V0.3.0</code>, they depend on <em>sleep-wake</em> mechanism.</p>
+<p>As on <code>V0.3.1</code>, they depend on <em>sleep-wake</em> mechanism.</p>
 </div>
 <div class="paragraph data-line-805">
 <p>You cannot usem them within ISRs, in no occasion - if in need, a simple ring buffer is a replacement.</p>
