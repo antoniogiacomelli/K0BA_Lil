@@ -1363,7 +1363,7 @@ The lack of a control block associated with a direct signal makes it rudimentary
 </div>
 </div>
 <div class="sect1 data-line-587">
-<h2 id="events_sleepwake">9. Events (Sleep/Wake)</h2>
+<h2 id="events_sleepwake">9. Sleep/Wake (Events)</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch data-line-590">
 <colgroup>
@@ -1396,10 +1396,10 @@ The lack of a control block associated with a direct signal makes it rudimentary
 <p>Say a modern car has its speed increased by the driver. Different groups of mechanisms need to be notified to take some action. The radio so that it might boost the volume. The windshield wiper control will increase its speed. The cruiser will switch off - as it might indicate a need for the driver to regain control, and I&#8217;d bet the cruiser switches off before the radio volume is boosted.</p>
 </div>
 <div class="paragraph data-line-602">
-<p>So, tasks <code>sleep()</code> forn an event. They rely on another task/ISR to trigger a <code>wake(event)</code> that will <code>READY</code>  <em>all tasks</em> sleeping on that event at once. What happens later, is up to the scheduler and the application design.</p>
+<p>So, tasks <code>sleep(event)</code> forn an event. They rely on another task/ISR to trigger a <code>wake(event)</code> that will <code>READY</code>  <em>all tasks</em> sleeping on that event at once. What happens later, is up to the scheduler and the application design.</p>
 </div>
 <div class="paragraph data-line-604">
-<p>As a single event might be of interest to several devices a semaphore is not suitable - a semaphore signal does not broadcast - it wakes one task for each signal - if any.</p>
+<p>As a single event might be of interest to several devices a semaphore is not suitable - a semaphore signal does not broadcast - it wakes one task for each signal - if any. A common approach when using events is to follow the </code>sleep(event)<code> by a mutex semaphore, so all tasks waking up on that point will mutual-exclusively access a region.</code></p>
 </div>
 <div class="paragraph data-line-606">
 <p>As on <code>VER0.3.1</code> the current design decision is not providing <code>signal()/wait()</code> for events, that is, the ability to enqueue/dequeue single task sleeping for an event. Condition variables and monitor-like synchronisation schemes can be constructed with events associated to mutex semaphores.</p>
