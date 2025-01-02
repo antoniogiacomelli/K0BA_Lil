@@ -900,14 +900,15 @@ K_PDBUF* kPDQReserve(K_PDQ *const kobj)
 	K_CR_AREA
 	K_ENTER_CR
 	K_PDBUF *allocPtr = NULL;
-	/*there are users attached*/
-	if ((kobj->currBufPtr->nUsers > 0) && kobj->currBufPtr)
+	/*there are no users on the curr buf */
+	if ((kobj->currBufPtr->nUsers == 0) && kobj->currBufPtr)
 	{
-		allocPtr = BLKALLOC(&kobj->pdbufMemCB);
+        allocPtr = kobj->currBufPtr;
+		
 	}
 	else
 	{
-		allocPtr = kobj->currBufPtr;
+		allocPtr = BLKALLOC(&kobj->pdbufMemCB);
 	}
 	if (!allocPtr)
 	{
