@@ -13,3 +13,4 @@ FIXES:
 
 - Semaphores were reassigning owner when signalling. 
 
+- SVC error was indicating the same code regardless a context-switch or a app start-up.
