@@ -4,6 +4,7 @@ VERSION 0.3.1 02/01/2025  (DD/MM/YYYY)
 API CHANGES: 
 
 - Added sendrecv(mbox, sendp, recvp) API for mailboxes.
+
 - kSuspend(tid) API.
 
 FIXES:  
