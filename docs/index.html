@@ -374,6 +374,12 @@ div.unbreakable{page-break-inside:avoid}
 .yellow-background{background:#fafa00}
 span.icon>.fa{cursor:default}
 a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
 .conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
 .conum[data-value] *{color:#fff!important}
 .conum[data-value]+b{display:none}
@@ -495,7 +501,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph data-line-1">
-<p><a href="http://github.com/antoniogiacomelli/K0BA_Lite">Repository</a> <strong>|</strong> <a href="https://github.com/antoniogiacomelli/K0BA_Lite/blob/master/Inc/kapi.h">API V0.3.1</a></p>
+<p><a href="http://github.com/antoniogiacomelli/K0BA_Lite">Repository</a> <strong>|</strong> <a href="https://github.com/antoniogiacomelli/K0BA_Lite/blob/master/Inc/kernel/kapi.h">API</a></p>
 </div>
 <div class="admonitionblock note data-line-4">
 <table>
@@ -504,6 +510,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
+<div class="paragraph data-line-5">
+<p>This is a high-level design description. API details can be found in <a href="https://github.com/antoniogiacomelli/K0BA_Lite/blob/master/Inc/kernel/kapi.h">kapi.h</a></p>
+</div>
 </td>
 </tr>
 </table>
@@ -1393,7 +1402,7 @@ The lack of a control block associated with a direct signal makes it rudimentary
 <p>As a single event might be of interest to several devices a semaphore is not suitable - a semaphore signal does not broadcast - it wakes one task for each signal - if any.</p>
 </div>
 <div class="paragraph data-line-606">
-<p>As on <code>VER0.3.0</code> the current design decision is not providing <code>signal()/wait()</code> for events, that is, the ability to enqueue/dequeue single task sleeping for an event. Condition variables and monitor-like synchronisation schemes can be constructed with events associated to mutex semaphores.</p>
+<p>As on <code>VER0.3.1</code> the current design decision is not providing <code>signal()/wait()</code> for events, that is, the ability to enqueue/dequeue single task sleeping for an event. Condition variables and monitor-like synchronisation schemes can be constructed with events associated to mutex semaphores.</p>
 </div>
 <div class="ulist data-line-608">
 <ul>
@@ -1446,7 +1455,7 @@ If the task cannot perform  access to a resource within a time given in system t
 <div class="sect2 data-line-632">
 <h3 id="event_groups">10.4. Event Groups</h3>
 <div class="paragraph data-line-633">
-<p>As on <code>VER0.3.0</code> the decision was not to provide event groups as another abstraction. The reason is that the usage is so versatile and application-dependent that any generalisation leads to a service that will not do better than the system programmer aware of its needs. That is a guideline used to provide a service or not. As we recognise it is a standard service, we are still looking for the enough approach. At the end of this document some usage patterns demonstrate multi-condition notification/synchornisation.</p>
+<p>As on <code>VER0.3.1</code> the decision was not to provide event groups as another abstraction. The reason is that the usage is so versatile and application-dependent that any generalisation leads to a service that will not do better than the system programmer aware of its needs. That is a guideline used to provide a service or not. As we recognise it is a standard service, we are still looking for the enough approach. At the end of this document some usage patterns demonstrate multi-condition notification/synchornisation.</p>
 </div>
 <div class="admonitionblock note data-line-637">
 <table>
@@ -1456,7 +1465,7 @@ If the task cannot perform  access to a resource within a time given in system t
 </td>
 <td class="content">
 <div class="paragraph data-line-638">
-<p>As on <code>VER0.3.0</code> a <code>K_WAIT_FOREVER</code> for time-out is defined as <code>0U</code>, in the sense you can&#8217;t make non-blocking calls within blocking calls. Non-blocking (or asynchronous) calls  have different method names.</p>
+<p>As on <code>VER0.3.1</code> a <code>K_WAIT_FOREVER</code> for time-out is defined as <code>0U</code>, in the sense you can&#8217;t make non-blocking calls within blocking calls. Non-blocking (or asynchronous) calls  have different method names.</p>
 </div>
 </td>
 </tr>
@@ -1696,11 +1705,8 @@ If the task cannot perform  access to a resource within a time given in system t
 </li>
 <li class="data-line-751">
 <p>Writer now appends a message to be sent (application-dependent) and <em>pump</em> the buffer.</p>
-<li class="data-line-753">
-<p>With a new buffer pumped, the last one will eventually drop to 0 readers and be deallocated. If it already has 0, it is deallocated.</p>
-</li>
 <li class="data-line-754">
-<p>After <em>pumped</em>, the PD buffer is marked as the <em>current buffer</em>. With a new PDB on the queue, </p>
+<p>After <em>pumped</em>, the PD buffer is marked as the <em>current buffer</em>. With a new PDB on the queue, the former will eventually drop to 0 readers and will be deallocated. </p>
 </li>
 <li class="data-line-755">
 <p>A reader first 'fetches' a message PD-buffer address - what will increase the user count within a it.</p>
@@ -1795,7 +1801,7 @@ a reader wakes it up after 'extracting' from the pipe.</p>
 <p>Both one-to-many and many-to-one channels are possible - those who wake need to themselves ensure precedence.</p>
 </div>
 <div class="paragraph data-line-803">
-<p>As on <code>V0.3.0</code>, they depend on <em>sleep-wake</em> mechanism.</p>
+<p>As on <code>V0.3.1</code>, they depend on <em>sleep-wake</em> mechanism.</p>
 </div>
 <div class="paragraph data-line-805">
 <p>You cannot usem them within ISRs, in no occasion - if in need, a simple ring buffer is a replacement.</p>
