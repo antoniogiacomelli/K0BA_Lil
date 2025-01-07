@@ -11,7 +11,6 @@
  *
  *  In this unit:
  *  				 Message Passing
- *  				 Pipe
  *
  *****************************************************************************/
 
@@ -70,6 +69,8 @@ K_ERR kMboxInit(K_MBOX *const kobj, BOOL initFull, ADDR initMailPtr)
 K_ERR kMboxSend(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout)
 {
 	K_CR_AREA
+	K_ENTER_CR
+
 	if (kIsISR())
 	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
@@ -82,7 +83,6 @@ K_ERR kMboxSend(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout)
 	{
 		KFAULT(FAULT_OBJ_NOT_INIT);
 	}
-	K_ENTER_CR
 	/* a reader is yet to read */
 	if (kobj->mailPtr != NULL)
 	{
@@ -141,6 +141,7 @@ K_ERR kMboxSend(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout)
 K_ERR kMboxRecv(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 {
 	K_CR_AREA
+	K_ENTER_CR
 
 	if (kIsISR())
 	{
@@ -155,7 +156,6 @@ K_ERR kMboxRecv(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 		KFAULT(FAULT_OBJ_NOT_INIT);
 	}
 
-	K_ENTER_CR
 
 	if (kobj->mailPtr == NULL)
 	{
@@ -478,14 +478,13 @@ K_ERR kMesgQInit(K_MESGQ *const kobj, ADDR const buffer, SIZE const mesgSize,
 		return (K_ERROR);
 	}
 
-	kobj->init = 1;
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
 	kobj->timeoutNode.kobj = kobj;
 	kobj->timeoutNode.objectType = MESGQUEUE;
 
 #endif
-
+	kobj->init = 1;
 	K_EXIT_CR
 
 	return (K_SUCCESS);
@@ -763,7 +762,7 @@ K_ERR kMesgQJam(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout)
 
 #if (K_DEF_ASYNCH_MESGQ==ON)
 
-K_ERR kMesgQArecv(K_MESGQ *const kobj, ADDR recvPtr, SIZE *mesgCntPtr)
+K_ERR kMesgQArecv(K_MESGQ *const kobj, ADDR recvPtr)
 {
 	K_CR_AREA
 
@@ -973,131 +972,3 @@ K_ERR kPDQDrop(K_PDQ *kobj, K_PDBUF *bufPtr)
 }
 
 #endif
-
-/*******************************************************************************
- * PIPES
- *******************************************************************************/
-#if (K_DEF_PIPE==ON)
-
-K_ERR kPipeInit(K_PIPE *const kobj)
-{
-	if (IS_NULL_PTR(kobj))
-		KFAULT(FAULT_NULL_OBJ);
-	if (kIsISR())
-	{
-		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
-	}
-	K_CR_AREA
-	K_ENTER_CR
-	K_ERR err = -1;
-	kobj->head = 0;
-	kobj->tail = 0;
-	kobj->data = 0;
-	kobj->room = K_DEF_PIPE_SIZE;
-	if (err < 0)
-		return (err);
-	err = EVNTINIT(&(kobj->evData));
-	if (err < 0)
-		return (err);
-	err = EVNTINIT(&(kobj->evRoom));
-	if (err < 0)
-		return (err);
-	kobj->init = TRUE;
-	K_EXIT_CR
-	return (K_SUCCESS);
-}
-
-UINT32 kPipeRead(K_PIPE *const kobj, BYTE *destPtr, UINT32 nBytes)
-{
-
-	if (IS_NULL_PTR(kobj) || IS_NULL_PTR(destPtr))
-	{
-		KFAULT(FAULT_NULL_OBJ);
-	}
-	if (kobj->init == FALSE)
-	{
-		KFAULT(FAULT_OBJ_NOT_INIT);
-	}
-	if (kIsISR())
-	{
-		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
-	}
-	K_CR_AREA
-
-	K_ENTER_CR
-	UINT32 readBytes = 0;
-	if (nBytes == 0)
-		return (0);
-	if (kobj->tail == kobj->head)
-	{
-		SLPEVNT(&(kobj->evData), 0); /* wait for data from writers */
-		K_EXIT_CR
-		K_ENTER_CR
-	}
-	while (kobj->data)
-	{
-
-		*destPtr = kobj->buffer[kobj->tail]; /* read from the tail  */
-		destPtr++;
-		kobj->tail += 1;
-		kobj->tail %= K_DEF_PIPE_SIZE; /* wrap around */
-		kobj->data -= 1; /* decrease data       */
-		readBytes += 1; /* increase read bytes */
-		kobj->room += 1;
-	}
-	if (readBytes)
-	{
-		WKEVNT(&(kobj->evRoom));
-		K_EXIT_CR
-		DMB
-		return (readBytes); /* return number of read bytes    */
-	}
-	else
-	{
-		K_EXIT_CR
-		return (0);
-	}
-}
-
-UINT32 kPipeWrite(K_PIPE *const kobj, BYTE *srcPtr, UINT32 nBytes)
-{
-
-	if (IS_NULL_PTR(kobj))
-		KFAULT(FAULT_NULL_OBJ);
-	if (kIsISR())
-		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
-
-	K_CR_AREA
-	K_ENTER_CR
-
-	UINT32 writeBytes = 0;
-	if (nBytes == 0)
-		return (0);
-	if (nBytes <= 0)
-		return (0);
-	if (kobj->head != kobj->tail)
-	{
-		SLPEVNT(&(kobj->evRoom), 0);
-		K_EXIT_CR
-		K_ENTER_CR
-	}
-	while (kobj->room)
-	{
-		kobj->buffer[kobj->head] = *srcPtr;
-		kobj->head += 1;
-		kobj->head %= K_DEF_PIPE_SIZE;
-		kobj->data++;
-		kobj->room -= 1;
-		srcPtr++;
-		writeBytes++;
-		if (writeBytes >= nBytes)
-		{
-			break;
-		}
-	}
-	WKEVNT(&(kobj->evData));
-	K_EXIT_CR
-	DMB
-	return (writeBytes);
-}
-#endif /*K_DEF_PIPES*/

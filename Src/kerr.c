@@ -44,6 +44,10 @@
 #	error "Invalid minimal effective priority. (Max numerical value: 31)"
 #endif
 
+#if (K_DEF_N_TIMERS < K_DEF_N_USRTASKS+1)
+#	error "Invalid number of application timers. Minimal is the number of user tasks + 1"
+#endif
+
 
 /******************************************************************************
  * ERROR HANDLING

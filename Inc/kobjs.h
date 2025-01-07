@@ -96,7 +96,6 @@ struct kTcb
 #if (K_DEF_MUTEX==ON)
 	K_MUTEX* pendingMutx;
 #endif
-
 #if (K_DEF_SLEEPWAKE==ON)
 	K_EVENT* pendingEv;
 #endif
@@ -104,9 +103,7 @@ struct kTcb
 #if (K_DEF_MBOX==ON)
 	K_MBOX* pendingMbox;
 #endif
-
 	K_TIMER* pendingTmr;
-
 
 /* Monitoring */
 
@@ -142,7 +139,9 @@ struct kSema
 {
 	INT32 value;
 	struct kList waitingQueue;
-    struct kTcb* ownerPtr;
+#if (K_DEF_SEMA_PRIOINV == ON)
+	struct kTcb* ownerPtr;
+#endif
 	BOOL init;
 	K_TIMEOUT_NODE timeoutNode;
 };
@@ -171,23 +170,6 @@ struct kEvent
 	K_TIMEOUT_NODE timeoutNode;
 
 };
-
-#if (K_DEF_PIPE == ON) /* still within kdefsleepwake*/
-
-struct kPipe
-{
-    UINT32 tail;
-    UINT32 head;
-    UINT32 data;
-    UINT32 room;
-    struct kEvent evRoom;
-    struct kEvent evData;
-    BYTE buffer[K_DEF_PIPE_SIZE];
-    BOOL init;
-	K_TIMEOUT_NODE timeoutNode;
-
-};
-#endif /* K_DEF_PIPES */
 
 #endif /* K_DEF_SLEEPWAKE */
 
@@ -280,7 +262,6 @@ struct kTimer
 	K_TIMER* nextPtr;
 	BOOL init;
 } __attribute__((aligned));
-
 
 
 /*[EOF]*/

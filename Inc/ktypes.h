@@ -198,12 +198,6 @@ typedef struct kMailbox K_MBOX;
 
 typedef struct kEvent K_EVENT;
 
-#if (K_DEF_PIPE==ON)
-
-typedef struct kPipe K_PIPE;
-
-#endif
-
 #endif
 
 #if (K_DEF_PDQ== ON)

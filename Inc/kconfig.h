@@ -14,7 +14,7 @@
  *   (0 is highest effective priority)
  *
  * - **Number of timers:**     (`K_DEF_N_TIMERS`)
- *   Consider Number of Tasks + 1
+ *   Minimal: Number of Tasks + 1
  *
  * - **Tick Period:**        (`K_DEF_TICK_PERIOD`)
  *   Pre-defined values are `TICK_1MS`, `TICK_5MS` and `TICK_10MS`.
@@ -43,7 +43,7 @@
 
 /**/
 /*** [ Number of user-defined tasks ] *****************************************/
-#define K_DEF_N_USRTASKS    	     (3)
+#define K_DEF_N_USRTASKS    	     (2)
 
 /**/
 /*** [The lowest effective priority, that is the highest user-defined value]  */
@@ -59,18 +59,21 @@
 
 /**/
 /*** [ Semaphores ] ***********************************************************/
-#define K_DEF_SEMA                    (OFF)
+#define K_DEF_SEMA                    (ON)
 
 #if (K_DEF_SEMA==ON)
 
-/* Queue discipline	 			 */
+/* Queue discipline	 		 */
 #define K_DEF_SEMA_ENQ       (K_DEF_ENQ_PRIO)
+
+/* Handle priority inversion */
+#define K_DEF_SEMA_PRIOINV		(OFF)
 
 #endif
 
 /**/
 /*** [ Mutexes ] **************************************************************/
-#define K_DEF_MUTEX                   (OFF)
+#define K_DEF_MUTEX                   (ON)
 #if (K_DEF_MUTEX==ON)
 
 /* Queue Discipline:				 */
@@ -80,28 +83,16 @@
 
 /**/
 /*** [Sleep/Wake Events] ******************************************************/
-#define K_DEF_SLEEPWAKE               (OFF)
+#define K_DEF_SLEEPWAKE                (ON)
 
-/**/
-/*** [ Pipes ] ****************************************************************/
-
-#if (K_DEF_SLEEPWAKE==ON)
-
-#define K_DEF_PIPE                    (OFF)
-
-#define K_DEF_PIPE_SIZE               (32)
-
-#endif
-
-/**/
 /*** [ Message Queue ] ********************************************************/
 
-#define K_DEF_MESGQ 			      	(OFF)
+#define K_DEF_MESGQ 			      	(ON)
 
 #if (K_DEF_MESGQ == ON)
 
 /* Synch methods				*/
-#define K_DEF_SYNCH_MESGQ				(OFF)
+#define K_DEF_SYNCH_MESGQ				(ON)
 
 #if (K_DEF_SYNCH_MESGQ==ON)
 
@@ -111,14 +102,14 @@
 #endif
 
 /* Asynch methods				*/
-#define K_DEF_ASYNCH_MESGQ			  	(OFF)
+#define K_DEF_ASYNCH_MESGQ			  	(ON)
 
 #endif /*mesgq*/
 
 /**/
 /*** [ Mailbox ] **************************************************************/
 
-#define K_DEF_MBOX	                  (OFF)
+#define K_DEF_MBOX	                  (ON)
 
 #if(K_DEF_MBOX==ON)
 
@@ -126,16 +117,17 @@
 #define K_DEF_MBOX_ENQ       		  (K_DEF_ENQ_FIFO)
 
 /* Send-Receive Method */
-#define K_DEF_MBOX_SENDRECV			  (OFF)
+#define K_DEF_MBOX_SENDRECV			  (ON)
+
 /* Enable asynchronous methods */
-#define K_DEF_AMBOX                   (OFF)
+#define K_DEF_AMBOX                   (ON)
 
 #endif
 
 /**/
 /*** [ Pump-Drop Queues ] *****************************************************/
 
-#define K_DEF_PDQ                     (OFF)
+#define K_DEF_PDQ                     (ON)
 
 /**/
 #endif /* KCONFIG_H */

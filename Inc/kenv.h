@@ -6,16 +6,13 @@
 extern "C" {
 #endif
 
-/*
- * example:
-#include <stm32f3xx_hal.h>
+#include <stm32f4xx_hal.h>
 #include <cmsis_gcc.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <assert.h>
-*/
 
 /*#define K_DEF_PRINTF*/
 

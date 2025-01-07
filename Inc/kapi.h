@@ -432,38 +432,6 @@ K_ERR kPDQDrop(K_PDQ* const kobj, K_PDBUF* bufPtr);
 
 #endif
 
-/*******************************************************************************
- * PIPES
- *******************************************************************************/
-
-#if (K_DEF_PIPE==ON)
-
-/**
- *\brief Initialise a pipe
- *\param kobj Pointer to the pipe
- */
-K_ERR kPipeInit(K_PIPE* const kobj);
-
-/**
- *\brief Read a stream of bytes from a pipe
- *\param kobj Pointer to a pipe
- *\param destPtr Address to store the read data
- *\param nBytes Number of bytes to be read
- *\retval Number of read bytes if success.
- */
-UINT32 kPipeRead(K_PIPE* const kobj, BYTE* srcPtr, UINT32 nBytes);
-
-/**
- *\brief Write a stream of bytes to a pipe
- *\param kobj Pointer to a pipe
- *\param srcPtr Address to get data
- *\param nBytes Number of bytes to be write
- *\retval Number of written bytes if success.
- */
-UINT32 kPipeWrite(K_PIPE* const kobj, BYTE* srcPtr, UINT32 nBytes);
-
-#endif /*K_DEF_PIPES*/
-
 /******************************************************************************
  * DIRECT TASK SIGNAL
  ******************************************************************************/

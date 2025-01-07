@@ -252,7 +252,11 @@ K_ERR kSemaInit(K_SEMA *const kobj, INT32 const value)
 		return (K_ERROR);
 	}
 	kobj->init = TRUE;
+#if (K_DEF_SEMA_PRIOINV==ON)
+
 	kobj->ownerPtr = NULL;
+
+#endif
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
 	kobj->timeoutNode.kobj = kobj;
@@ -294,6 +298,7 @@ K_ERR kSemaWait(K_SEMA *const kobj, TICK const timeout)
 		DMB
 
 		kTimeOut(&kobj->timeoutNode, timeout);
+#if (K_DEF_SEMA_PRIOINV==ON)
 		if (kobj->ownerPtr)
 		{
 			if (runPtr->priority < kobj->ownerPtr->priority)
@@ -301,6 +306,7 @@ K_ERR kSemaWait(K_SEMA *const kobj, TICK const timeout)
 				kobj->ownerPtr->priority = runPtr->priority;
 			}
 		}
+#endif
 		K_PEND_CTXTSWTCH
 		K_EXIT_CR
 		K_ENTER_CR
@@ -312,7 +318,22 @@ K_ERR kSemaWait(K_SEMA *const kobj, TICK const timeout)
 			return (K_ERR_TIMEOUT);
 		}
 	}
-	kobj->ownerPtr = runPtr;
+#if (K_DEF_SEMA_PRIOINV==ON)
+
+	if (kobj->ownerPtr == NULL)
+	{
+		kobj->ownerPtr = runPtr;
+	}
+	/* guarantee the owner is the highest priority task within a guarded region */
+	else
+	{
+		if (kobj->ownerPtr->priority > runPtr->priority)
+		{
+			kobj->ownerPtr = runPtr;
+		}
+	}
+#endif
+
 	K_EXIT_CR
 	return (K_SUCCESS);
 }
@@ -343,7 +364,11 @@ VOID kSemaSignal(K_SEMA *const kobj)
 		/* a task will resume on the waiting queue, gaining access*/
 		err = kReadyCtxtSwtch(nextTCBPtr);
 	}
+#if (K_DEF_SEMA_PRIOINV==ON)
+
 	runPtr->priority = runPtr->realPrio;
+#endif
+
 	K_EXIT_CR
 	return;
 }

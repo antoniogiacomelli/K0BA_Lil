@@ -273,11 +273,13 @@ VOID kSleepUntil(TICK const period)
 			}
 		}
 	}
+	/* Update the last wake time */
+	runPtr->lastWakeTime = nextWakeTime;
+
 	K_EXIT_CR
 	;
 
-	/* Update the last wake time */
-	runPtr->lastWakeTime = nextWakeTime;
+
 }
 
 /******************************************************************************/

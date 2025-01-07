@@ -67,17 +67,6 @@ typedef struct kList QUEUE;
 typedef struct kListNode NODE;
 typedef struct kTcb TCB;
 
-
-/*                                                                    ____
- *                                                  .~~~~.,      ..~~/__|_\
- *                                ,....,,.   ....´`.´      ´´..-'    \__|_/
- *                              ,'        `.´
- *                            o//
- *                           /
- *                          ))
- *******************************************************************************/
-
-
 #define SLPEVNT                      kEventSleep
 #define WKEVNT                       kEventWake
 #define EVNTINIT                     kEventInit
@@ -103,6 +92,7 @@ typedef struct kTcb TCB;
 #define _K_STUP asm volatile("svc #0xAA");
 
 /*  helpers */
+
 #define CPY(d,s,z, r)                                 \
  do                                                   \
  {                                                    \
@@ -116,23 +106,12 @@ typedef struct kTcb TCB;
       }                                               \
   } while(0U)
 
-/* for the mesg queue, pointers are incremented altogether */
-#define CPYQ(d, s, z, r)                                \
-do {                                                    \
-    BYTE* __d = (BYTE*)(d);                             \
-    BYTE const* __s = (BYTE const*)(s);                 \
-    *(BYTE*)(__d)++ = *(BYTE const*)(__s)++;            \
-    (r)++;												\
-    SIZE __z = z;										\
-    if ((__z) > 1U) 										\
-	{                                     				\
-        while (--(__z)) 									\
-		{			                                    \
-            *(BYTE*)(__d)++ = *(BYTE const*)(__s)++;    \
-            (r)++;                                      \
-        }                                               \
-    }                                                   \
-} while (0U)
+
+/*todo: improve copy by advancing dst and src and reusing
+ * as indexes for mesgq
+ */
+#define CPYQ(d,s,z,r) CPY(d,s,z,r)
+
 
 __STATIC_FORCEINLINE unsigned kIsISR()
 {
@@ -149,7 +128,7 @@ __STATIC_FORCEINLINE unsigned kIsISR()
 #define K_ENTER_CR crState_ = kEnterCR();
 #define K_EXIT_CR  kExitCR(crState_);
 #define K_PEND_CTXTSWTCH K_TRAP_PENDSV
-
+#define K_SWTCH			 _K_SWTCH
 #define READY_HIGHER_PRIO(ptr) ((ptr->priority < nextTaskPrio) ? 1 : 0)
 #define K_TICK_TYPE_MAX ((1ULL << (8 * sizeof(typeof(TICK)))) - 1)
 #define K_PRIO_TYPE_MAX ((1ULL << (8 * sizeof(typeof(PRIO)))) - 1)
@@ -172,24 +151,6 @@ __STATIC_FORCEINLINE unsigned kIsISR()
 #define IS_VALID_TID(id) ((id == (IDLETASK_ID)) || (id == (TIMHANDLER_ID))) ? (0) : (1)
 
 #define DEADCODE (0)
-
-
-
-/*
- *
- *                                                                    ____
- *                                                  .~~~~.,      ..~~/__|_\
- *                                ,....,,.   ....´`.´      ´´..-'    \__|_/
- *                              ,'        `.´
- *                ,.~~~~~~~..'´
- *           ~.o./
- *        ~´`-´
- *        ~-'
- *
- *      `.´
- *      '
- *     .
- ******************************************************************************/
 
 #ifdef __cplusplus
 }
