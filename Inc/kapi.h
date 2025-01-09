@@ -176,17 +176,16 @@ K_ERR kMutexQuery(K_MUTEX* const kobj);
  *******************************************************************************/
 
 #if (K_DEF_MBOX == ON)
-#define EMPTY (0)
-#define FULL  (1)
+
 /**
  * \brief               Initialises an indirect blocking mailbox.
  *
  * \param kobj          Mailbox address.
- * \param initFull		Initialise full.
  * \param initMail		If initialising full, address of initial mail.
+ * \					Otherwise NULL.
  * \return              K_SUCCESS or specific error.
  */
-K_ERR kMboxInit(K_MBOX *const kobj, BOOL initFull, ADDR initMail);
+K_ERR kMboxInit(K_MBOX *const kobj, ADDR initMail);
 /**
  * \brief               Send to a mailbox. Task blocks when full.
  * \param kobj          Mailbox address.
