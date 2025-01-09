@@ -29,7 +29,7 @@
  ******************************************************************************/
 #if (K_DEF_MBOX==ON)
 
-K_ERR kMboxInit(K_MBOX *const kobj, BOOL initFull, ADDR initMailPtr)
+K_ERR kMboxInit(K_MBOX *const kobj, ADDR initMailPtr)
 {
 	K_CR_AREA
 
@@ -39,21 +39,7 @@ K_ERR kMboxInit(K_MBOX *const kobj, BOOL initFull, ADDR initMailPtr)
 		return (K_ERROR);
 	}
 	K_ENTER_CR
-
-	if (initFull)
-	{
-		if (initMailPtr == NULL)
-		{
-			K_EXIT_CR
-			return (K_ERR_OBJ_NULL);
-		}
-		kobj->mailPtr = initMailPtr;
-	}
-	else
-	{
-		kobj->mailPtr = NULL;
-	}
-
+	kobj->mailPtr = initMailPtr;
 	K_ERR listerr;
 	listerr = kListInit(&kobj->waitingQueue, "mailq");
 	assert(listerr == 0);
@@ -155,8 +141,6 @@ K_ERR kMboxRecv(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 	{
 		KFAULT(FAULT_OBJ_NOT_INIT);
 	}
-
-
 	if (kobj->mailPtr == NULL)
 	{
 
@@ -177,12 +161,14 @@ K_ERR kMboxRecv(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 			kTCBQEnqByPrio(&kobj->waitingQueue, runPtr);
 #endif
 			runPtr->status = RECEIVING;
+			runPtr->pendingMbox=kobj;
 			K_PEND_CTXTSWTCH
 			K_EXIT_CR
 			K_ENTER_CR
 			if (runPtr->timeOut)
 			{ /* timed-out */
 				runPtr->timeOut = FALSE;
+				runPtr->pendingMbox=0;
 				K_EXIT_CR
 				return (K_ERR_TIMEOUT);
 			}
