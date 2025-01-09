@@ -1820,7 +1820,7 @@ K_MBOX mbox;
 /*** Init kernel objects here */
 VOID kApplicationInit(VOID)
 {
-	kMboxInit(&amp;mbox, EMPTY, NULL);
+	kMboxInit(&amp;mbox, NULL);
 }
 
 /* this task notifies which sensors had been updated */
@@ -2066,9 +2066,9 @@ typedef struct
 
 void kApplicationInit(VOID)
 {
-	kMboxInit(&amp;serverMbox, EMPTY, NULL);
-	kMboxInit(&amp;clientMbox1, EMPTY, NULL);
-	kMboxInit(&amp;clientMbox2, EMPTY, NULL);
+	kMboxInit(&amp;serverMbox, NULL);
+	kMboxInit(&amp;clientMbox1,NULL);
+	kMboxInit(&amp;clientMbox2,NULL);
 }
 
 /* Hello-server */
@@ -2209,7 +2209,7 @@ K_MBOX mbox;
 VOID kApplicationInit(VOID)
 {
 
-	kMboxInit(&amp;mbox, EMPTY, NULL);
+	kMboxInit(&amp;mbox, NULL);
 }
 
 VOID Task1(VOID)
