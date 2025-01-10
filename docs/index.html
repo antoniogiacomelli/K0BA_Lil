@@ -2475,12 +2475,11 @@ VOID SensorLogging(VOID)
 <h2 id="queueing_pattern_2_active_object">8. Queueing Pattern #2 (Active Object)</h2>
 <div class="sectionbody">
 <div class="paragraph data-line-1527">
-<p>In this pattern tasks are split in <em>AcquisitionTask</em> (medium priority, periodic), <em>ActuatorTask</em> (low priority, periodic) and <em>AlarmsTask</em> (higher priority, blocking receiver, run-to-completion).</p>
+<p>In this pattern tasks are split in <em>AcquisitionTask</em> (medium priority, 6ms rate), <em>ActuatorTask</em> (low priority, 3ms rate) and <em>AlarmsTask</em> (higher priority, blocking receiver, run-to-completion).</p>
 </div>
 <div class="paragraph data-line-1529">
 <p>The acquisition task will pump messages to a pump-drop queue.
-These messages are active objects, in the sense they carry a callback and arguments to be executed by the receiver.
-When values of a sensor are deemed critical the higher priority task will be signalled, will fetch a message and <em>run-to-completion</em> accordingly.</p>
+These messages are typically for logging, except when an alarm value is read, the acquisition task will put on a mailbox an _active object_, in it carries a callback and arguments to be executed by the receiver.</p>
 </div>
 <hr>
 <div class="paragraph data-line-1535">
