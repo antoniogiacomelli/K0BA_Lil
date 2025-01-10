@@ -2475,7 +2475,7 @@ VOID SensorLogging(VOID)
 <h2 id="queueing_pattern_2_active_object">8. Queueing Pattern #2 (Active Object)</h2>
 <div class="sectionbody">
 <div class="paragraph data-line-1527">
-<p>In this pattern tasks are split in <em>AcquisitionTask</em> (medium priority, 6ms rate), <em>ActuatorTask</em> (low priority, 3ms rate) and <em>AlarmsTask</em> (higher priority, blocking receiver, run-to-completion).</p>
+<p>In this pattern tasks are split in <em>AcquisitionTask</em> (5ms rate), <em>ActuatorTask</em> (5ms phase delay, 5ms rate) and <em>AlarmsTask</em> (higher priority, blocking receiver, run-to-completion).</p>
 </div>
 <div class="paragraph data-line-1529">
 <p>The acquisition task will pump messages to a pump-drop queue.
