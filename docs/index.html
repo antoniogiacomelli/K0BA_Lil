@@ -490,8 +490,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#usage_patterns"><strong>Usage Patterns</strong></a>
 <ul class="sectlevel1">
-<li><a href="#condition_variable">1. Condition Variable</a></li>
-<li><a href="#monitor_2_synch_barrier">2. Monitor #2 (Synch barrier)</a></li>
+<li><a href="#monitor_1_barrier">1. Monitor #1 (Barrier)</a></li>
+<li><a href="#monitor_2_turnstile">2. Monitor #2 (Turnstile)</a></li>
 <li><a href="#multi_condition_notification_1">3. Multi-condition Notification #1</a></li>
 <li><a href="#multi_condition_notification_2">4. Multi-condition Notification #2</a></li>
 <li><a href="#extended_rendez_vous_1">5. Extended rendez-vous #1</a></li>
@@ -1698,20 +1698,17 @@ A counter semaphore is an event recorder - and as it needs to count every <code>
 <p>In this section some simple usage patterns are being attached. The board used to run these snippets is a Nucleo-F103RB (ARM Cortex-M3 based).</p>
 </div>
 <div class="sect1 data-line-794">
-<h2 id="condition_variable">1.  Monitor #1 (Barrier)</h2>
+<h2 id="monitor_1_barrier">1. Monitor #1 (Barrier)</h2>
 <div class="sectionbody">
 <div class="paragraph data-line-795">
 <p>Usage: synchronisation</p>
 </div>
-<div class="listingblock data-line-797">
+<div class="paragraph data-line-797">
+<p>Usage: resource access/tasks coordination</p>
+</div>
+<div class="listingblock data-line-799">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">## Monitor #1 (Synch barrier)
-
-Usage: resource access/tasks coordination
-
-```C
-
-#include "application.h"
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#include "application.h"
 
 K_EVENT syncEvent; /* state event				    */
 UINT32 syncCounter; /* state representation        */
@@ -1788,20 +1785,20 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-882">
+<div class="imageblock data-line-878">
 <div class="content">
 <img src="images/images/syncbarr.png" alt="syncbarr">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-884">
-<h2 id="monitor_2_synch_barrier">2. Monitor #2  (Turnstile)</h2>
+<div class="sect1 data-line-880">
+<h2 id="monitor_2_turnstile">2. Monitor #2 (Turnstile)</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-886">
+<div class="paragraph data-line-882">
 <p>In this variation we use mailboxes for turnstile. Also the task that wakes up all others will use the resource within the monitor (be active).</p>
 </div>
-<div class="listingblock data-line-888">
+<div class="listingblock data-line-884">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">K_EVENT syncEvent; /* state event				    */
 UINT32 syncCounter; /* state representation        */
@@ -1874,20 +1871,20 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-962">
+<div class="imageblock data-line-958">
 <div class="content">
 <img src="images/images/mboxturnstiles.png" alt="mboxturnstiles">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-965">
+<div class="sect1 data-line-961">
 <h2 id="multi_condition_notification_1">3. Multi-condition Notification #1</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-966">
+<div class="paragraph data-line-962">
 <p>Usage: coordinate a notified task action on a combination of events</p>
 </div>
-<div class="listingblock data-line-968">
+<div class="listingblock data-line-964">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">/* @file application.c */
 
@@ -1995,24 +1992,24 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1074">
+<div class="imageblock data-line-1070">
 <div class="content">
 <img src="images/images/mboxflags.png" alt="mboxflags">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1077">
+<div class="sect1 data-line-1073">
 <h2 id="multi_condition_notification_2">4. Multi-condition Notification #2</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1078">
+<div class="paragraph data-line-1074">
 <p>Usage: multi-condition broadcast, notification, observer pattern</p>
 </div>
-<div class="paragraph data-line-1080">
+<div class="paragraph data-line-1076">
 <p>Event groups and event flags - with <code>set(flags)</code>,  <code>wait(flags, ALL/ANY)</code> and <code>clear(flags)</code>.
 This approach use sleep/wake associated to an integer - and handles pretty much everything that could be shipped as another kernel service.</p>
 </div>
-<div class="listingblock data-line-1084">
+<div class="listingblock data-line-1080">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#include "application.h"
 #include &lt;stdlib.h&gt;
@@ -2126,20 +2123,20 @@ VOID Task4(VOID) /* just want flag 3*/
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1199">
+<div class="imageblock data-line-1195">
 <div class="content">
 <img src="images/images/eventflags.png" alt="eventflags">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1203">
+<div class="sect1 data-line-1199">
 <h2 id="extended_rendez_vous_1">5. Extended rendez-vous #1</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1205">
+<div class="paragraph data-line-1201">
 <p>Usage: Many-to-one command-response</p>
 </div>
-<div class="listingblock data-line-1207">
+<div class="listingblock data-line-1203">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#include "application.h"
 
@@ -2266,20 +2263,20 @@ VOID Client2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1334">
+<div class="imageblock data-line-1330">
 <div class="content">
 <img src="images/images/multiclient.png" alt="multiclient">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1336">
+<div class="sect1 data-line-1332">
 <h2 id="extended_rendez_vous_2">6. Extended rendez-vous #2</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1338">
+<div class="paragraph data-line-1334">
 <p>Usage: client-server communication</p>
 </div>
-<div class="listingblock data-line-1340">
+<div class="listingblock data-line-1336">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">/* our server performs arithmetic operations. very useful... */
 
@@ -2365,20 +2362,20 @@ VOID Task2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1427">
+<div class="imageblock data-line-1423">
 <div class="content">
 <img src="images/images/sendrecv.png" alt="sendrecv">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1429">
+<div class="sect1 data-line-1425">
 <h2 id="queueing_pattern_1">7. Queueing Pattern #1</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1431">
+<div class="paragraph data-line-1427">
 <p>Usage: Asynch (like) comm, serialising access, logging, monitoring</p>
 </div>
-<div class="listingblock data-line-1434">
+<div class="listingblock data-line-1430">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#include "application.h"
 #include &lt;stdlib.h&gt;
@@ -2473,26 +2470,26 @@ VOID SensorLogging(VOID)
 /* why enqueue and not log when reading? to not loose track, events are buffered and log happens on another task */</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1529">
+<div class="imageblock data-line-1525">
 <div class="content">
 <img src="images/images/queuing.png" alt="queuing">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1532">
+<div class="sect1 data-line-1528">
 <h2 id="queueing_pattern_2_active_object">8. Queueing Pattern #2 (Active Object)</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1534">
+<div class="paragraph data-line-1530">
 <p>In this pattern tasks are split in <em>AcquisitionTask</em> (medium priority, periodic), <em>ActuatorTask</em> (low priority, periodic) and <em>AlarmsTask</em> (higher priority, blocking receiver, run-to-completion).</p>
 </div>
-<div class="paragraph data-line-1536">
+<div class="paragraph data-line-1532">
 <p>The acquisition task will pump messages to a pump-drop queue.
 These messages are active objects, in the sense they carry a callback and arguments to be executed by the receiver.
 When values of a sensor are deemed critical the higher priority task will be signalled, will fetch a message and <em>run-to-completion</em> accordingly.</p>
 </div>
 <hr>
-<div class="paragraph data-line-1542">
+<div class="paragraph data-line-1538">
 <p><a href="mailto:tony@kernel0.org">tony@kernel0.org</a></p>
 </div>
 </div>
