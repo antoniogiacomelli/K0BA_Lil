@@ -1698,7 +1698,7 @@ A counter semaphore is an event recorder - and as it needs to count every <code>
 <p>In this section some simple usage patterns are being attached. The board used to run these snippets is a Nucleo-F103RB (ARM Cortex-M3 based).</p>
 </div>
 <div class="sect1 data-line-794">
-<h2 id="condition_variable">1. Condition Variable</h2>
+<h2 id="condition_variable">1.  Monitor #1 (Barrier)</h2>
 <div class="sectionbody">
 <div class="paragraph data-line-795">
 <p>Usage: synchronisation</p>
@@ -1796,7 +1796,7 @@ VOID Task3(VOID)
 </div>
 </div>
 <div class="sect1 data-line-884">
-<h2 id="monitor_2_synch_barrier">2. Monitor #2 (Synch barrier)</h2>
+<h2 id="monitor_2_synch_barrier">2. Monitor #2  (Turnstile)</h2>
 <div class="sectionbody">
 <div class="paragraph data-line-886">
 <p>In this variation we use mailboxes for turnstile. Also the task that wakes up all others will use the resource within the monitor (be active).</p>
