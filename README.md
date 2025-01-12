@@ -1,1 +1,2 @@
-<img width="450" alt="kernel" src="https://github.com/antoniogiacomelli/K0BA_Lite/blob/master/sosso30.png">
+![image](https://github.com/user-attachments/assets/642039a0-dfb8-4527-acb5-8fb6f0cfcfac)
+
