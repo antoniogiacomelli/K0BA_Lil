@@ -1,4 +1,4 @@
-# K0BA Lite 
+# K0BA Lil' 
 
 **K0BA** (_Kernel 0 For emBedded Applications_) is a deterministic Real-Time Kernel aiming constrained MCU-based solutions. 
 
