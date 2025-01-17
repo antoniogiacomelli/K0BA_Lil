@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-K_ERR kMemInit(K_MEM* const, ADDR const, BYTE, BYTE const);
+K_ERR kMemInit(K_MEM* const, ADDR const, BYTE const, BYTE);
 ADDR kMemAlloc(K_MEM* const);
 K_ERR kMemFree(K_MEM* const, ADDR const);
 

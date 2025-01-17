@@ -53,6 +53,9 @@ struct kList
 	BOOL init;
 };
 
+
+struct kDmesg;
+
 struct kTcb
 {
 /* Don't change */
@@ -75,12 +78,12 @@ struct kTcb
 	TICK timeLeft;
 #endif
 
-/* Timer */
-
     TICK busyWaitTime;
+
 #if (K_DEF_SCH_TSLICE==OFF)
 	TICK   lastWakeTime;
 #endif
+
 
 /* Flags */
     BOOL   runToCompl;
@@ -113,7 +116,6 @@ struct kTcb
 	PID    preemptedBy;
 
 	struct kListNode tcbNode;
-
 } __attribute__((aligned));
 
 
@@ -171,6 +173,14 @@ struct kEvent
 
 };
 
+struct kCondVar
+{
+	struct kMutex* mutex;
+	struct kList   waitingQueue;
+
+	K_TIMEOUT_NODE timeoutNode;
+};
+
 #endif /* K_DEF_SLEEPWAKE */
 
 #define MEMBLKLAST (1)
@@ -197,6 +207,8 @@ struct kMailbox
 {
     BOOL   init;
     ADDR   mailPtr;
+    SIZE   nMesg; /* number of mails */
+    SIZE   currNdx; /* current mail */
     K_TCB* owner;
     struct kList waitingQueue;
     K_TIMEOUT_NODE timeoutNode;
@@ -211,22 +223,15 @@ struct kMailbox
 struct kMesgQ
 {
     BOOL init;
-
-
     SIZE mesgSize;
     SIZE maxMesg;
     SIZE mesgCnt;
-
     BYTE* buffer;
-    SIZE readIndex;
-    SIZE writeIndex;
-
-#if (K_DEF_SYNCH_MESGQ==ON)
+    SIZE  readIndex;
+    SIZE  writeIndex;
     K_TCB* owner;
     struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;
-#endif
-
 } __attribute__((aligned(4)));
 
 #endif /*K_DEF_MSG_QUEUE*/
@@ -242,7 +247,7 @@ struct kPumpDropBuf
 };
 struct kPumpDropQueue
 {
-    struct kMemBlock        pdbufMemCB;    /* associated allocator */
+    struct kMemBlock*       memCtrlPtr;    /* associated allocator */
     struct kPumpDropBuf*    currBufPtr;    /* current buffer   */
     UINT32 failReserve;
     BOOL                    init;

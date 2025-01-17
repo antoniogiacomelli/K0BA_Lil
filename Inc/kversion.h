@@ -38,5 +38,5 @@ struct kversion
 };
 
 unsigned int kGetVersion(void);
-
+unsigned int kIsValidVersion(void);
 #endif /* KVERSION_H */

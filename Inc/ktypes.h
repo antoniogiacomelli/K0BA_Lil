@@ -53,7 +53,7 @@ typedef _Bool BOOL;
 /*** User-defined Task ID range: 0-255.                         */
 /*** Priority range: 0-31 - tasks can have the same priority    */
 typedef void *ADDR; /* Generic address type  */
-typedef char const *STRING; /* Read-only String alias  */
+typedef const char *STRING; /* Read-only String alias  */
 
 typedef unsigned char PID; /* System defined Task ID type */
 typedef unsigned char TID; /* User defined Task ID */
@@ -87,7 +87,8 @@ typedef enum kErr
 	K_ERR_MBOX_NO_WAITERS = 0xA,
 	K_ERR_MESGQ_FULL = 0xB,
 	K_ERR_MESGQ_EMPTY = 0xC,
-
+	K_ERR_MUTEX_LOCKED = 0xD,
+	K_ERR_SEMA_TAKEN   = 0xE,
 	/* FAULTY RETURN VALUES: negative */
 	K_ERROR = (int) 0xFFFFFFFF, /* (0xFFFFFFFF) Generic error placeholder */
 
@@ -124,7 +125,8 @@ typedef enum kErr
 
 	K_ERR_MBOX_INIT_MAIL = (int) 0xFFFF0013,
 	K_ERR_MUTEX_REC_LOCK = (int) 0xFFFF0014,
-	K_ERR_CANT_SUSPEND_PRIO = (int) 0xFFFF0015
+	K_ERR_CANT_SUSPEND_PRIO = (int) 0xFFFF0015,
+	K_ERR_DMESG_NO_BUFFER = (int)0xFFFFF0016
 
 } K_ERR;
 
@@ -211,6 +213,10 @@ typedef struct kPumpDropQueue K_PDQ;
 
 typedef struct kMutex K_MUTEX;
 
+#endif
+
+#if (K_DEF_DMESG==ON)
+typedef struct dmesg K_DMESG;
 #endif
 
 #endif/*ktypes*/

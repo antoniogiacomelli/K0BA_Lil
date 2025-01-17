@@ -37,10 +37,8 @@ extern "C" {
 #define R5_OFFSET   15 /* R5 Register offset */
 #define R4_OFFSET   16 /* R4 Register offset */
 
-#define IDLE_STACKSIZE         64
-#define TIMHANDLER_STACKSIZE  128
-#define TIMHANDLER_ID        255
-#define IDLETASK_ID           0
+#define TIMHANDLER_ID        		255
+#define IDLETASK_ID           		0
 
 #define MSGBUFF_SIZE sizeof(K_MESG)
 #define TIMER_SIZE   sizeof(K_TIMER)
@@ -48,10 +46,10 @@ extern "C" {
 #define N_SYSTASKS          2 /*idle task + tim handler*/
 
 /*** Config values */
-#define NTHREADS             (K_DEF_N_USRTASKS + N_SYSTASKS)
+#define NTHREADS            (K_DEF_N_USRTASKS + N_SYSTASKS)
 #define NPRIO               (K_DEF_MIN_PRIO + 1)
-#define K_DEF_ENQ_PRIO  (0)
-#define K_DEF_ENQ_FIFO  (1)
+#define K_DEF_ENQ_PRIO  	(0)
+#define K_DEF_ENQ_FIFO  	(1)
 #define TICK_10MS           (SystemCoreClock/1000)  /*  Tick period of 10ms */
 #define TICK_5MS            (SystemCoreClock/2000)  /* Tick period of 5ms */
 #define TICK_1MS            (SystemCoreClock/10000) /*  Tick period of 1ms */

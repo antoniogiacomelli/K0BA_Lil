@@ -1,3 +1,5 @@
+
+
 /*******************************************************************************
  *
  * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
@@ -24,6 +26,7 @@
  * - **Queue Discipline**: blocking mechanisms that can change the queue dis
  *   cipline are either by priority  (`K_DEF_ENQ_PRIO`) or FIFO (`K_DEF_ENQ_FIFO`).
  *   Default/fallback value is by priority.
+ *
  **********************************************************************************/
 
 #ifndef KCONFIG_H
@@ -35,15 +38,24 @@
 
 /* include headers for HAL and compiler in kenv.h */
 /* and set this macro to 1                        */
-#define CUSTOM_ENV (0)
+#define CUSTOM_ENV (1)
+
+
+/**/
+/*** [ System Tasks ] *********************************************************/
+
+#define IDLE_STACKSIZE      	    64
+
+#define TIMHANDLER_STACKSIZE  		128
+
 
 /**/
 /*** [ Time Quantum ] *********************************************************/
-#define K_DEF_TICK_PERIOD            (TICK_5MS)
+#define K_DEF_TICK_PERIOD            (TICK_1MS)
 
 /**/
 /*** [ Number of user-defined tasks ] *****************************************/
-#define K_DEF_N_USRTASKS    	     (2)
+#define K_DEF_N_USRTASKS    	     (3)
 
 /**/
 /*** [The lowest effective priority, that is the highest user-defined value]  */
@@ -59,21 +71,21 @@
 
 /**/
 /*** [ Semaphores ] ***********************************************************/
-#define K_DEF_SEMA                    (ON)
+#define K_DEF_SEMA                    (OFF)
 
 #if (K_DEF_SEMA==ON)
 
 /* Queue discipline	 		 */
-#define K_DEF_SEMA_ENQ       (K_DEF_ENQ_PRIO)
+#define K_DEF_SEMA_ENQ  		     (K_DEF_ENQ_PRIO)
 
 /* Handle priority inversion */
-#define K_DEF_SEMA_PRIOINV		(OFF)
+#define K_DEF_SEMA_PRIOINV		  	 (OFF)
 
 #endif
 
 /**/
 /*** [ Mutexes ] **************************************************************/
-#define K_DEF_MUTEX                   (ON)
+#define K_DEF_MUTEX                   (OFF)
 #if (K_DEF_MUTEX==ON)
 
 /* Queue Discipline:				 */
@@ -83,33 +95,21 @@
 
 /**/
 /*** [Sleep/Wake Events] ******************************************************/
-#define K_DEF_SLEEPWAKE                (ON)
+#define K_DEF_SLEEPWAKE                (OFF)
 
 /*** [ Message Queue ] ********************************************************/
 
-#define K_DEF_MESGQ 			      	(ON)
+#define K_DEF_MESGQ 			      	(OFF)
 
 #if (K_DEF_MESGQ == ON)
-
-/* Synch methods				*/
-#define K_DEF_SYNCH_MESGQ				(ON)
-
-#if (K_DEF_SYNCH_MESGQ==ON)
-
 /* Queue Discipline				 */
 #define K_DEF_MESGQ_ENQ				    (K_DEF_ENQ_FIFO)
-
-#endif
-
-/* Asynch methods				*/
-#define K_DEF_ASYNCH_MESGQ			  	(ON)
-
 #endif /*mesgq*/
 
 /**/
 /*** [ Mailbox ] **************************************************************/
 
-#define K_DEF_MBOX	                  (ON)
+#define K_DEF_MBOX	                  (OFF)
 
 #if(K_DEF_MBOX==ON)
 
@@ -117,17 +117,15 @@
 #define K_DEF_MBOX_ENQ       		  (K_DEF_ENQ_FIFO)
 
 /* Send-Receive Method */
-#define K_DEF_MBOX_SENDRECV			  (ON)
-
-/* Enable asynchronous methods */
-#define K_DEF_AMBOX                   (ON)
+#define K_DEF_MBOX_SENDRECV			  (OFF)
 
 #endif
 
 /**/
 /*** [ Pump-Drop Queues ] *****************************************************/
 
-#define K_DEF_PDQ                     (ON)
+#define K_DEF_PDQ                     (OFF)
+
 
 /**/
 #endif /* KCONFIG_H */
