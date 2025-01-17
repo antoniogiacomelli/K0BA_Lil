@@ -177,7 +177,6 @@ K_ERR kTCBQEnqByPrio(K_TCBQ *const kobj, K_TCB *const tcbPtr)
 	{
 		kErrHandler(FAULT_NULL_OBJ);
 	}
-
 	if (kobj->size == 0)
 	{
 		/* enq on tail */
@@ -197,7 +196,6 @@ K_ERR kTCBQEnqByPrio(K_TCBQ *const kobj, K_TCB *const tcbPtr)
 			break;
 		}
 		currTcbPtr = K_LIST_GET_TCB_NODE(currNodePtr, K_TCB);
-
 	}
 	err = kListInsertAfter(kobj, currNodePtr, &(tcbPtr->tcbNode));
 	assert(err == 0);
@@ -216,7 +214,6 @@ K_ERR kReadyCtxtSwtch(K_TCB *const tcbPtr)
 		K_EXIT_CR
 		return (K_ERR_OBJ_NULL);
 	}
-
 	if (kTCBQEnq(&readyQueue[tcbPtr->priority], tcbPtr) == K_SUCCESS)
 	{
 		tcbPtr->status = READY;
@@ -365,11 +362,11 @@ K_ERR kCreateTask(TASKENTRY const taskFuncPtr, STRING taskName, TID const id,
 		tcbs[pPid].priority = priority;
 		tcbs[pPid].realPrio = priority;
 		tcbs[pPid].taskName = taskName;
-		tcbs[pPid].lastWakeTime=0;
+		tcbs[pPid].lastWakeTime = 0;
 #if(K_DEF_SCH_TSLICE==ON)
 
         tcbs[pPid].timeSlice = timeSlice;
-        tcbs[pPid].timeLeft = timeSlice;
+        tcbs[pPid].timeLeft  = timeSlice;
 #endif
 		tcbs[pPid].uPid = id;
 		tcbs[pPid].runToCompl = runToCompl;

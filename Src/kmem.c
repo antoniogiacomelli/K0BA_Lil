@@ -8,8 +8,8 @@
  * 	Provides to      : Inter-task Communication, Application Timers
  * 	Depends on       : Inter-task Synchronisation
  *  Public API       : Yes
- * 	In this unit:
- * 					o Memory Block Allocator
+ * 	In this unit	 :
+ * 					    o Memory Block Allocator
  *
  *****************************************************************************/
 
@@ -23,7 +23,7 @@
 #include "kmem.h"
 
 K_ERR kMemInit(K_MEM* const kobj, ADDR const memPoolPtr,
-        BYTE blkSize, BYTE const numBlocks)
+          BYTE blkSize, BYTE const numBlocks)
 {
     K_CR_AREA
 

@@ -24,7 +24,11 @@ struct kversion const KVERSION = {0, 3, 1};
 unsigned int kGetVersion(void)
 {
     unsigned int version = (KVERSION.major << 16 | KVERSION.minor << 8
-            | KVERSION.patch << 0);
+    											 | KVERSION.patch << 0);
     return (version);
 }
 
+unsigned int kIsValidVersion(void)
+{
+	return (kGetVersion() == ));
+}
