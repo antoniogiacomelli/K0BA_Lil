@@ -72,10 +72,7 @@
  * \param runToCompl   If this flag is 'TRUE',  the task once dispatched
  *                     although can be interrupted by tick and other hardware
  *                     interrupt lines, won't be preempted by user tasks.
- *                     runToCompl tasks are normally the top half of interrupt
- *                     handlers that are not urgent enough to bypass the scheduler,
- *                     and can be deferred, still taking precedence above every other
- *                     user task.
+ *                     runToCompl tasks are normally deferred handlers for ISRs.
  *
  * \return K_SUCCESS on success, K_ERROR on failure
  */
@@ -193,7 +190,7 @@ K_ERR kMboxInit(K_MBOX *const kobj, ADDR initMail);
  * \param timeout		Suspension time-out
  * \return              K_SUCCESS or specific error.
  */
-K_ERR kMboxSend(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
+K_ERR kMboxPost(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
 /**
  * \brief               Receive from a mailbox. Block if empty.
  *
@@ -202,7 +199,7 @@ K_ERR kMboxSend(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
  * \param timeout		Suspension time-out
  * \return				K_SUCCESS or specific error.
  */
-K_ERR kMboxRecv(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
+K_ERR kMboxPend(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
 
 #if (K_DEF_MBOX_SENDRECV==ON)
 
@@ -214,47 +211,8 @@ K_ERR kMboxRecv(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
   * \param timeout		Suspension time-out
  * \return				K_SUCCESS or specific error.
  */
-K_ERR kMboxSendRecv(K_MBOX *const kobj, ADDR const sendPtr, ADDR* const recvPPtr,
+K_ERR kMboxPostPend(K_MBOX *const kobj, ADDR const sendPtr, ADDR* const recvPPtr,
 		TICK timeout);
-
-
-#endif
-
-#if (K_DEF_AMBOX==ON)
-/* asynchronous methods */
-
-/**
- *\brief			Non-blocking send to a mailbox
- *\param kobj		Mailbox object address
- *\param sendPtr	Address of the message to send
- *\return			K_SUCCESS/K_MBOX_FULL or other specific error
- */
-K_ERR kMboxAsend(K_MBOX *const kobj, ADDR const sendPtr);
-/**
- *\brief			Send to a mailbox even if it is full
- *\param kobj		Mailbox object address
- *\param sendPtr	Address of the message to send
- *\return			K_SUCCESS/K_MBOX_FULL or other specific error
- */
-K_ERR kMboxAsendOvw(K_MBOX *const kobj, ADDR const sendPtr);
-
-/**
- *\brief			Non-block receive from a mailbox
- *\param kobj		Mailbox object address
- *\param recvPPtr	Address to store the received message
- *\return			K_SUCCESS or specific error
- */
-K_ERR kMboxArecv(K_MBOX *const kobj, ADDR* recvPPtr);
-
-/**
- *\brief			Reads a message from a mailbox, but does not change
- *\					its state to empty
- *\param kobj		Mailbox object address
- *\param recvPPtr	Address to store the received message
- *\return			K_SUCCESS/K_MBOX_EMPTY or specific error
- */
-K_ERR kMboxArecvKeep(K_MBOX *const kobj, ADDR* recvPPtr);
-#endif
 
 /**
  * \brief   Check if a mailbox is full.
@@ -264,7 +222,7 @@ BOOL kMboxIsFull(K_MBOX *const kobj);
 
 
 #endif
-
+#endif /*K_DEF_MBOX*/
 /******************************************************************************/
 /* MESSAGE QUEUE                                                              */
 /******************************************************************************/
@@ -288,7 +246,7 @@ K_ERR kMesgQInit(K_MESGQ *const kobj, ADDR buffer, SIZE messageSize,
  *\return			K_SUCCESS or a specific error.
  */
 
-K_ERR kMesgQGetMesgCont(K_MESGQ *const kobj, UINT32 *const mesgCntPtr);
+K_ERR kMesgQGetMesgCount(K_MESGQ *const kobj, UINT32 *const mesgCntPtr);
 
 /**
  *\brief 			Sends a message to the queue front.
@@ -325,35 +283,6 @@ K_ERR kMesgQSend(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout);
 */
 K_ERR kMesgQPeek(K_MESGQ *const kobj, ADDR recvPtr);
 
-#if (K_DEF_ASYNCH_MESGQ==ON)
-
-
-/**
-*\brief				Asynchronous send to a queue
-*\param	kobj		Message Queue object address
-*\param	sendPtr		Message pointer address
-*\return			K_SUCCESS/K_ERR_MESGQ_FULL or specific error.
-*/
-K_ERR kMesgQAsend(K_MESGQ *const kobj, ADDR const sendPtr);
-
-/**
-*\brief				Asynchronous receive from a queue
-*\param	kobj		Message Queue object address
-*\param	recvPtr		Receiving pointer address
-*\return			K_SUCCESS/K_ERR_MESGQ_EMPTY or specific error.
-*/
-K_ERR kMesgQArecv(K_MESGQ *const kobj, ADDR recvPtr);
-
-/**
- * \brief			Reset queue indexes and message counter.
- * \param kobj		Queue address
- * \return			K_SUCCESS or K_ERR_OBJ_NULL
- */
-K_ERR kMesgQReset(K_MESGQ* kobj);
-
-#endif
-
-
 #endif /*K_DEF_MESGQ*/
 
 /*******************************************************************************
@@ -365,12 +294,13 @@ K_ERR kMesgQReset(K_MESGQ* kobj);
 /**
  * \brief          Pump-drop queue initialisation.
  *
- * \param kobj     PD queue address.
- * \param bufPool  Pool of PD Buffers, statically allocated.
- * \param nBufs    Number of buffers for this queue.
+ * \param kobj    	    PD queue address.
+ * \param memCtrlPtr	Pointer to the memory allocator control block
+ * \param bufPool  		Pool of PD Buffers, statically allocated.
+ * \param nBufs    		Number of buffers for this queue.
  * \return         see ktypes.h
  */
-K_ERR kPDQInit(K_PDQ* const kobj, K_PDBUF* bufPool, BYTE nBufs);
+K_ERR kPDQInit(K_PDQ* const kobj, K_MEM* const memCtrlPtr, K_PDBUF* const bufPool, BYTE const nBufs);
 
 /**
  * \brief          Reserves a pump-drop buffer before writing on it.
@@ -415,7 +345,7 @@ K_PDBUF* kPDQFetch(K_PDQ* const kobj);
  * \param destPtr  Address that will store the message.
  * \return         see ktypes.h
  */
-K_ERR kPDBufRead(K_PDBUF* bufPtr, ADDR destPtr);
+K_ERR kPDBufRead(K_PDBUF* const bufPtr, ADDR destPtr);
 
 /**
  * \brief         Called by reader to indicate it has consumed the
@@ -426,7 +356,7 @@ K_ERR kPDBufRead(K_PDBUF* bufPtr, ADDR destPtr);
  * \param kobj    Queue address;
  * \return        see ktypes.h
  */
-K_ERR kPDQDrop(K_PDQ* const kobj, K_PDBUF* bufPtr);
+K_ERR kPDQDrop(K_PDQ* const kobj, K_PDBUF* const bufPtr);
 
 
 #endif
@@ -504,7 +434,8 @@ UINT32 kEventQuery(K_EVENT* const kobj);
 /* Timer Reload / Oneshot optionss */
 #define RELOAD      		1
 #define ONESHOT    		    0
-#define K_WAIT_FOREVER      0
+#define K_WAIT_FOREVER      (0xFFFFFFFF)
+#define K_NO_WAIT			(0)
 
 K_ERR kTimerInit(STRING timerName, TICK const ticks, CALLOUT const funPtr,
         ADDR const argsPtr, BOOL const reload);
