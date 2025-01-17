@@ -58,7 +58,7 @@ K_ERR kMboxPost(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout)
 	K_CR_AREA
 	K_ENTER_CR
 
-	if ((kIsISR() && timeout != 0))
+	if (kIsISR())
 	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
@@ -135,7 +135,7 @@ K_ERR kMboxPend(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 	K_CR_AREA
 	K_ENTER_CR
 
-	if ((kIsISR() && timeout != 0))
+	if (kIsISR())
 	{
 		return (K_ERR_MBOX_ISR);
 	}
@@ -212,6 +212,12 @@ K_ERR kMboxPend(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 	return (K_SUCCESS);
 }
 
+BOOL kMboxIsFull(K_MBOX *const kobj)
+{
+
+	return ((kobj->mailPtr == NULL) ? FALSE : TRUE);
+}
+
 #if (K_DEF_MBOX_SENDRECV==ON)
 /* sender does: sendrecv(&mbox, &send, &recv, t);  */
 /* receiver does:
@@ -224,7 +230,7 @@ K_ERR kMboxPostPend(K_MBOX *const kobj, ADDR const sendPtr,
 		ADDR *const recvPPtr, TICK timeout)
 {
 	K_CR_AREA
-	if ((kIsISR() && timeout != 0))
+	if (kIsISR())
 	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
@@ -316,14 +322,7 @@ K_ERR kMboxPostPend(K_MBOX *const kobj, ADDR const sendPtr,
 }
 #endif
 
-
-BOOL kMboxIsFull(K_MBOX *const kobj)
-{
-
-	return ((kobj->mailPtr == NULL) ? FALSE : TRUE);
-}
-
-#endif /* K_DEF_MAILBOX */
+#endif
 
 /*******************************************************************************
  * MESSAGE QUEUE
@@ -405,7 +404,7 @@ K_ERR kMesgQSend(K_MESGQ *const kobj, ADDR const sendPtr, TICK const timeout)
 	{
 		return (K_ERROR);
 	}
-	if ((kIsISR() && timeout != 0))
+	if (kIsISR())
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 
 	K_ENTER_CR
@@ -487,7 +486,7 @@ K_ERR kMesgQRecv(K_MESGQ *const kobj, ADDR recvPtr, TICK const timeout)
 	{
 		return (K_ERROR);
 	}
-	if ((kIsISR() && timeout != 0))
+	if (kIsISR())
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 
 	K_ENTER_CR
@@ -564,7 +563,7 @@ K_ERR kMesgQJam(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout)
 	{
 		return (K_ERROR);
 	}
-	if ((kIsISR() && timeout != 0))
+	if (kIsISR())
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 
 	K_ENTER_CR
@@ -640,19 +639,6 @@ K_ERR kMesgQJam(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout)
 	return (K_SUCCESS);
 }
 
-K_ERR kMesgQReset(K_MESGQ *kobj)
-{
-	K_CR_AREA
-	if (kobj)
-	{
-		K_ENTER_CR
-		kobj->mesgCnt = 0;
-		kobj->readIndex = 0;
-		kobj->writeIndex = 0;
-		K_EXIT_CR
-	}
-	return (K_ERR_OBJ_NULL);
-}
 
 K_ERR kMesgQGetMesgCount(K_MESGQ *const kobj, UINT32 *const mesgCntPtr)
 {
@@ -667,8 +653,7 @@ K_ERR kMesgQGetMesgCount(K_MESGQ *const kobj, UINT32 *const mesgCntPtr)
 	return (K_ERR_OBJ_NULL);
 }
 
-#endif
-
+#endif /*K_DEF_MESGQ*/
 
 #if (K_DEF_PDQ == ON)
 
@@ -788,4 +773,3 @@ K_ERR kPDQDrop(K_PDQ *const kobj, K_PDBUF *const bufPtr)
 }
 
 #endif
-

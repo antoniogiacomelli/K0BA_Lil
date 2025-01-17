@@ -144,7 +144,8 @@ K_ERR kEventInit(K_EVENT *const kobj)
 	K_ENTER_CR
 	kobj->eventID = (UINT32) kobj;
 	assert(!kTCBQInit(&(kobj->waitingQueue), "eventQ"));
-	kobj->init = TRUE;
+	kobj->init = TRUE
+	;
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
 	kobj->timeoutNode.kobj = kobj;
@@ -173,12 +174,12 @@ VOID kEventSleep(K_EVENT *kobj, TICK timeout)
 
 	if (kobj->init == TRUE)
 	{
+		if (timeout > 0)
+			kTimeOut(&kobj->timeoutNode, timeout);
 
 		kTCBQEnq(&kobj->waitingQueue, runPtr);
 		runPtr->status = SLEEPING;
 		runPtr->pendingEv = kobj;
-		if ((timeout > 0) && (timeout < 0xFFFFFFF))
-			kTimeOut(&kobj->timeoutNode, timeout);
 		K_PEND_CTXTSWTCH
 		K_EXIT_CR
 		return;
@@ -312,11 +313,6 @@ K_ERR kSemaWait(K_SEMA *const kobj, TICK const timeout)
 
 	if (kobj->value < 0)
 	{
-		if (timeout == 0)
-		{
-			K_EXIT_CR
-			return (K_ERR_SEMA_TAKEN);
-		}
 #if(K_DEF_SEMA_ENQ==K_DEF_ENQ_FIFO)
 		kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
@@ -490,8 +486,8 @@ K_ERR kMutexLock(K_MUTEX *const kobj, TICK timeout)
 		kTCBQEnqByPrio(&kobj->waitingQueue, runPtr);
 #endif
 		if ((timeout == 0))
-			if ((timeout > 0) && (timeout < 0xFFFFFFFF))
-				kTimeOut(&kobj->timeoutNode, timeout);
+		if ((timeout > 0) && (timeout < 0xFFFFFFFF))
+			kTimeOut(&kobj->timeoutNode, timeout);
 		runPtr->status = BLOCKED;
 		runPtr->pendingMutx = (K_MUTEX*) kobj;
 		K_PEND_CTXTSWTCH
@@ -561,17 +557,17 @@ VOID kMutexUnlock(K_MUTEX *const kobj)
 		{
 			runPtr->priority = runPtr->realPrio;
 		}
-		if (!kReadyCtxtSwtch(tcbPtr))
-		{
-			kobj->ownerPtr = tcbPtr;
-			tcbPtr->pendingMutx = NULL;
-			K_EXIT_CR
-			return;
-		}
-		else
-		{
-			kErrHandler(FAULT_READY_QUEUE);
-		}
+			if (!kReadyCtxtSwtch(tcbPtr))
+			{
+				kobj->ownerPtr = tcbPtr;
+				tcbPtr->pendingMutx = NULL;
+				K_EXIT_CR
+				return;
+			}
+			else
+			{
+				kErrHandler(FAULT_READY_QUEUE);
+			}
 	}
 	K_EXIT_CR
 	return;

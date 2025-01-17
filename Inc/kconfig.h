@@ -38,7 +38,7 @@
 
 /* include headers for HAL and compiler in kenv.h */
 /* and set this macro to 1                        */
-#define CUSTOM_ENV (1)
+#define CUSTOM_ENV (0)
 
 
 /**/

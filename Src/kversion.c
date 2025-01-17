@@ -30,5 +30,5 @@ unsigned int kGetVersion(void)
 
 unsigned int kIsValidVersion(void)
 {
-	return (kGetVersion() == ));
+	return (kGetVersion() == K_VALID_VERSION);
 }
