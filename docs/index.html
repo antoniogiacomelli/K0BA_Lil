@@ -1055,7 +1055,7 @@ VOID Task5(VOID)
 <div class="ulist data-line-447">
 <ul>
 <li class="data-line-447">
-<p>The scheduler behaviour is to choose the highest priority READY task to run. Always</p>
+<p>The scheduler behaviour is to choose the highest priority READY task to run. Always.</p>
 </li>
 <li class="data-line-449">
 <p><strong><em>IMPORTANT</em></strong>: Don&#8217;t overlook the READY state of a task. If no time slice is enabled, the only way a task will switch from <em>RUNNING</em> to <em>READY</em> is by yielding. Otherwise it can only go from <em>RUNNING</em> to <em>WAITING</em> (equivalent to) and then to <em>READY</em>.</p>
@@ -1654,7 +1654,7 @@ Use <code>K_WAIT_FOREVER</code> for no timeout, and <code>K_NO_WAIT</code> to no
 <p>Between a message that does not arrive, and one that arrives too late, there is no practical difference. But if a message arrives with information that will deceive your control loop to perform a wrong action - this is the worse.</p>
 </div>
 <div class="paragraph data-line-772">
-<p>Pump-Drop Buffers are meant to overcome the drawbacks exposed above for message queues, based on the concept of Cyclical Asynchronous Buffers (CAB) (essentialy as found in the HARTIK kernel). This is a fully asynchronous, one-to-many mechanism, that has an implicit memory allocator for the PD-Buffers.</p>
+<p>Pump-Drop buffering resembles double buffering: buffers switch back and forth as write-only and read-only. It is an asynchronous method meant to be used when message queues do not fit: when the reader needs the most recent data and is up to afford loosing some data (producer is faster), or reading the same (producer is slower). It is a _one-to-many_ channel associated to an allocator. It is essentialy the mechanism proposed on the HARTIK kernel.</p>
 </div>
 <div class="paragraph data-line-774">
 <p>Primitives for Pump-Drop buffers (PDB) are:</p>
