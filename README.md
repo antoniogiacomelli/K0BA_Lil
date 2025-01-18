@@ -4,7 +4,7 @@
 
 See the docbook:
 
-https://antoniogiacomelli.github.io/K0BA_Lite/
+https://antoniogiacomelli.github.io/K0BA_Lil/
 
 
 > [!NOTE]
