@@ -36,7 +36,7 @@
 
 /* include headers for HAL and compiler in kenv.h */
 /* and set this macro to 1                        */
-#define CUSTOM_ENV (1)
+#define CUSTOM_ENV (0)
 
 
 /**/
@@ -68,7 +68,7 @@
 
 /**/
 /*** [ Semaphores ] ***********************************************************/
-#define K_DEF_SEMA                    (ON)
+#define K_DEF_SEMA                    (OFF)
 
 #if (K_DEF_SEMA==ON)
 
@@ -96,7 +96,7 @@
 
 /**/
 /*** [ Message Queue ] ********************************************************/
-#define K_DEF_MESGQ 			      	(ON)
+#define K_DEF_MESGQ 			      	(OFF)
 
 #if (K_DEF_MESGQ == ON)
 /* Queue Discipline				 */
@@ -107,7 +107,7 @@
 /**/
 /*** [ Mailbox ] **************************************************************/
 
-#define K_DEF_MBOX	                  (ON)
+#define K_DEF_MBOX	                  (OFF)
 
 #if(K_DEF_MBOX==ON)
 
@@ -115,7 +115,7 @@
 #define K_DEF_MBOX_ENQ       		  (K_DEF_ENQ_FIFO)
 
 /* Send-Receive Method */
-#define K_DEF_MBOX_SENDRECV			  (ON)
+#define K_DEF_MBOX_SENDRECV			  (OFF)
 
 #endif
 
