@@ -20,7 +20,7 @@
 
 6. This software may not be used in applications or systems that are designed, intended, or deployed to violate internationally recognized human or animal rights.
 
-7. This software is free for educational purposes. However, institutions or individuals must obtain a free educational license by contacting the author, Antonio Giacomelli.
+7. This software is free for educational purposes. See (3).
 
 8. Failure to comply with the terms of this license will result in the termination of the rights granted under this license.
 
