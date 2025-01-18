@@ -1276,7 +1276,7 @@ VOID Task3(VOID)
 <p>K0 handles synchronisation by events using  <em>direct signals</em>, <em>semaphores</em> and <em>event sleep/wake</em>.</p>
 </div>
 <div class="paragraph data-line-590">
-<p><em>When feasible</em>, blocking message passing makes up an easy to follow design pattern. The idea of <em>message-as-a-signal</em> is used for <em>mailboxes</em>. As mailboxes do not use copy semantics, formally they are a shared memory protocol.</p>
+<p><em>When feasible</em>, solely relying on message passing makes up an easy to follow design. The idea of <em>message-as-a-signal</em> is used for <em>mailboxes</em>. As mailboxes do not use copy semantics, formally they are a shared memory protocol.</p>
 </div>
 <div class="paragraph data-line-592">
 <p>True message passing is provided by <em>message queues</em>, which rely on copy semantics. Blocking and unblocking behaviour is avaialable for sending and receiving.</p>
