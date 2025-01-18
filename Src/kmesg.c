@@ -74,14 +74,13 @@ K_ERR kMboxPost(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout)
 	if (kobj->mailPtr != NULL)
 	{
 		if (timeout == 0)
+		{
+			K_EXIT_CR
 			return (K_ERR_MBOX_FULL);
+		}
 		if ((timeout > 0) && (timeout < 0xFFFFFFFF))
 		{
 			kTimeOut(&kobj->timeoutNode, timeout);
-		}
-		if ((kobj->owner != NULL) && (runPtr->priority < kobj->owner->priority))
-		{
-			kobj->owner->priority = runPtr->priority;
 		}
 		if ((kobj->owner != NULL) && (runPtr->priority < kobj->owner->priority))
 		{
@@ -149,16 +148,14 @@ K_ERR kMboxPend(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 	}
 	if (kobj->mailPtr == NULL)
 	{
-
 		if (timeout == 0)
+		{
+			K_EXIT_CR
 			return (K_ERR_MBOX_EMPTY);
+		}
 		if ((timeout > 0) && (timeout < 0xFFFFFFFF))
 		{
 			kTimeOut(&kobj->timeoutNode, timeout);
-		}
-		if ((kobj->owner != NULL) && (runPtr->priority < kobj->owner->priority))
-		{
-			kobj->owner->priority = runPtr->priority;
 		}
 		if ((kobj->owner != NULL) && (runPtr->priority < kobj->owner->priority))
 		{
@@ -246,9 +243,11 @@ K_ERR kMboxPostPend(K_MBOX *const kobj, ADDR const sendPtr,
 	/* a reader is yet to read */
 	if (kobj->mailPtr != NULL)
 	{
-
 		if (timeout == 0)
+		{
+			K_EXIT_CR
 			return (K_ERR_MBOX_FULL);
+		}
 		if ((timeout > 0) && (timeout < 0xFFFFFFFF))
 		{
 			kTimeOut(&kobj->timeoutNode, timeout);
@@ -571,8 +570,10 @@ K_ERR kMesgQJam(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout)
 	if (kobj->mesgCnt >= kobj->maxMesg) /*full*/
 	{
 		if (timeout == 0)
+		{
+			K_EXIT_CR
 			return (K_ERR_MESGQ_FULL);
-
+		}
 		if ((kobj->owner != NULL) && (runPtr->priority < kobj->owner->priority))
 		{
 			kobj->owner->priority = runPtr->priority;

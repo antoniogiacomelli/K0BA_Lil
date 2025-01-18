@@ -54,7 +54,6 @@ extern "C" {
 #define TICK_5MS            (SystemCoreClock/2000)  /* Tick period of 5ms */
 #define TICK_1MS            (SystemCoreClock/10000) /*  Tick period of 1ms */
 
-
 /* Mapped API */
 
 typedef struct kSema SEMA;
@@ -68,7 +67,6 @@ typedef struct kTcb TCB;
 #define SLPEVNT                      kEventSleep
 #define WKEVNT                       kEventWake
 #define EVNTINIT                     kEventInit
-
 
 /* Mem Block Pool */
 #define BLKPOOLINIT                  kMemInit
@@ -104,19 +102,16 @@ typedef struct kTcb TCB;
       }                                               \
   } while(0U)
 
-
 /*todo: improve copy by advancing dst and src and reusing
  * as indexes for mesgq
  */
 #define CPYQ(d,s,z,r) CPY(d,s,z,r)
-
-
 __STATIC_FORCEINLINE unsigned kIsISR()
 {
-    unsigned ipsr_value;
-    asm("MRS %0, IPSR" : "=r"(ipsr_value));
-    DMB
-    return (ipsr_value);
+	unsigned ipsr_value;
+	asm("MRS %0, IPSR" : "=r"(ipsr_value));
+	DMB
+	return (ipsr_value);
 }
 
 #define K_GET_CONTAINER_ADDR(memberPtr, containerType, memberName) \
@@ -147,7 +142,10 @@ __STATIC_FORCEINLINE unsigned kIsISR()
 #define TOSTRING(x) STRINGIFY(x)
 #define IS_INIT(obj) (obj)->init) ? (1) : (0)
 #define IS_VALID_TID(id) ((id == (IDLETASK_ID)) || (id == (TIMHANDLER_ID))) ? (0) : (1)
-
+#define RELOAD      		1
+#define ONESHOT    		    0
+#define K_WAIT_FOREVER      (0xFFFFFFFF)
+#define K_NO_WAIT			(0)
 #define DEADCODE (0)
 
 #ifdef __cplusplus

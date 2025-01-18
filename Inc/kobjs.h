@@ -29,7 +29,7 @@ typedef enum
 #if (K_DEF_MUTEX==ON)
     MUTEX,
 #endif
-#if (K_DEF_SYNCH_MESGQ==ON)
+#if (K_DEF_MESGQ==ON)
     MESGQUEUE,
 #endif
 #if(K_DEF_SLEEPWAKE==ON)
@@ -53,8 +53,6 @@ struct kList
 	BOOL init;
 };
 
-
-struct kDmesg;
 
 struct kTcb
 {
@@ -84,12 +82,6 @@ struct kTcb
 	TICK   lastWakeTime;
 #endif
 
-
-/* Flags */
-    BOOL   runToCompl;
-    BOOL   yield;
-    BOOL   timeOut;
-
 /* Resources */
 
 #if (K_DEF_SEMA == ON)
@@ -110,6 +102,9 @@ struct kTcb
 
 /* Monitoring */
 
+	BOOL   runToCompl;
+    BOOL   yield;
+    BOOL   timeOut;
 	UINT32 lostSignals;
     TID    signalledBy;
 	UINT32 nPreempted;
@@ -172,15 +167,6 @@ struct kEvent
 	K_TIMEOUT_NODE timeoutNode;
 
 };
-
-struct kCondVar
-{
-	struct kMutex* mutex;
-	struct kList   waitingQueue;
-
-	K_TIMEOUT_NODE timeoutNode;
-};
-
 #endif /* K_DEF_SLEEPWAKE */
 
 #define MEMBLKLAST (1)
@@ -207,8 +193,6 @@ struct kMailbox
 {
     BOOL   init;
     ADDR   mailPtr;
-    SIZE   nMesg; /* number of mails */
-    SIZE   currNdx; /* current mail */
     K_TCB* owner;
     struct kList waitingQueue;
     K_TIMEOUT_NODE timeoutNode;
@@ -226,7 +210,7 @@ struct kMesgQ
     SIZE mesgSize;
     SIZE maxMesg;
     SIZE mesgCnt;
-    BYTE* buffer;
+    ADDR buffer;
     SIZE  readIndex;
     SIZE  writeIndex;
     K_TCB* owner;

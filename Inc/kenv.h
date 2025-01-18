@@ -6,7 +6,13 @@
 extern "C" {
 #endif
 
-/*environment libraries */
+#include <stm32f4xx_hal.h>
+#include <cmsis_gcc.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <assert.h>
 
 /*#define K_DEF_PRINTF*/
 

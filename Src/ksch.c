@@ -42,13 +42,13 @@ static PRIO idleTaskPrio = K_DEF_MIN_PRIO + 1;
 static volatile UINT32 readyQBitMask;
 static volatile UINT32 readyQRightMask;
 static volatile UINT32 version;
-
 /* fwded private helpers */
 static inline VOID kReadyRunningTask_(VOID);
 static inline PRIO kCalcNextTaskPrio_();
 #if (K_DEF_SCH_TSLICE == ON)
 static inline BOOL kDecTimeSlice_(void);
 #endif
+
 /*******************************************************************************
  * YIELD
  *******************************************************************************/
@@ -149,27 +149,6 @@ K_TCB* kTCBQPeek(K_TCBQ *const kobj)
 	return K_GET_CONTAINER_ADDR(nodePtr, K_TCB, tcbNode);
 }
 
-K_TCB* kTCBQSearchPID(K_TCBQ *const kobj, TID uPid)
-{
-	if (kobj == NULL || kobj->listDummy.nextPtr == &(kobj->listDummy))
-	{
-		kErrHandler(FAULT_NULL_OBJ);
-	}
-	else
-	{
-		K_LISTNODE *currNodePtr = kobj->listDummy.nextPtr;
-		while (currNodePtr != &(kobj->listDummy))
-		{
-			K_TCB *currTcbPtr = K_LIST_GET_TCB_NODE(currNodePtr, K_TCB);
-			if (currTcbPtr->uPid == uPid)
-			{
-				return (currTcbPtr);
-			}
-			currNodePtr = currNodePtr->nextPtr;
-		}
-	}
-	return (NULL);
-}
 K_ERR kTCBQEnqByPrio(K_TCBQ *const kobj, K_TCB *const tcbPtr)
 {
 	K_ERR err;
@@ -427,24 +406,6 @@ PRIO kGetTaskPrio(TID const taskID)
 	PID pid = kGetTaskPID(taskID);
 	return (tcbs[pid].priority);
 }
-
-/* get user-assigned running task id */
-TID kGetRunningTID(VOID)
-{
-	return (runPtr->uPid);
-}
-
-/* get kernel-assigned running task id */
-TID kGetRunningPID(VOID)
-{
-	return (runPtr->pid);
-}
-
-PRIO kGetRunningPRIO(VOID)
-{
-	return (runPtr->priority);
-}
-
 
 /******************************************************************************
  * KERNEL INITIALISATION

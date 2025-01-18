@@ -1,5 +1,3 @@
-
-
 /*******************************************************************************
  *
  * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
@@ -38,20 +36,18 @@
 
 /* include headers for HAL and compiler in kenv.h */
 /* and set this macro to 1                        */
-#define CUSTOM_ENV (0)
+#define CUSTOM_ENV (1)
 
 
 /**/
-/*** [ System Tasks ] *********************************************************/
-
-#define IDLE_STACKSIZE      	    64
-
-#define TIMHANDLER_STACKSIZE  		128
+/*** [ System Tasks Stack Size (WORDS)] ***************************************/
+#define IDLE_STACKSIZE      	    (64)
+#define TIMHANDLER_STACKSIZE  		(64)
 
 
 /**/
 /*** [ Time Quantum ] *********************************************************/
-#define K_DEF_TICK_PERIOD            (TICK_1MS)
+#define K_DEF_TICK_PERIOD            (TICK_5MS)
 
 /**/
 /*** [ Number of user-defined tasks ] *****************************************/
@@ -69,9 +65,10 @@
 /*** [ App Timers ] ***********************************************************/
 #define K_DEF_N_TIMERS                (K_DEF_N_USRTASKS+1)
 
+
 /**/
 /*** [ Semaphores ] ***********************************************************/
-#define K_DEF_SEMA                    (OFF)
+#define K_DEF_SEMA                    (ON)
 
 #if (K_DEF_SEMA==ON)
 
@@ -94,22 +91,23 @@
 #endif
 
 /**/
-/*** [Sleep/Wake Events] ******************************************************/
-#define K_DEF_SLEEPWAKE                (OFF)
+/*** [ Sleep/Wake Events ] ****************************************************/
+#define K_DEF_SLEEPWAKE                 (OFF)
 
+/**/
 /*** [ Message Queue ] ********************************************************/
-
-#define K_DEF_MESGQ 			      	(OFF)
+#define K_DEF_MESGQ 			      	(ON)
 
 #if (K_DEF_MESGQ == ON)
 /* Queue Discipline				 */
 #define K_DEF_MESGQ_ENQ				    (K_DEF_ENQ_FIFO)
+
 #endif /*mesgq*/
 
 /**/
 /*** [ Mailbox ] **************************************************************/
 
-#define K_DEF_MBOX	                  (OFF)
+#define K_DEF_MBOX	                  (ON)
 
 #if(K_DEF_MBOX==ON)
 
@@ -117,15 +115,14 @@
 #define K_DEF_MBOX_ENQ       		  (K_DEF_ENQ_FIFO)
 
 /* Send-Receive Method */
-#define K_DEF_MBOX_SENDRECV			  (OFF)
+#define K_DEF_MBOX_SENDRECV			  (ON)
 
 #endif
 
 /**/
 /*** [ Pump-Drop Queues ] *****************************************************/
-
 #define K_DEF_PDQ                     (OFF)
 
 
-/**/
+
 #endif /* KCONFIG_H */

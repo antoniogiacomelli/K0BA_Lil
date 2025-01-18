@@ -129,6 +129,7 @@ K_ERR kSuspend(TID const taskID)
 
 }
 
+
 #if (K_DEF_SLEEPWAKE==ON)
 /******************************************************************************
  * SLEEP/WAKE ON EVENTS

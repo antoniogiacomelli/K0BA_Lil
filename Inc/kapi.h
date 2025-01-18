@@ -214,6 +214,9 @@ K_ERR kMboxPend(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
 K_ERR kMboxPostPend(K_MBOX *const kobj, ADDR const sendPtr, ADDR* const recvPPtr,
 		TICK timeout);
 
+
+#endif
+
 /**
  * \brief   Check if a mailbox is full.
  * \return  TRUE or FALSE.
@@ -222,7 +225,7 @@ BOOL kMboxIsFull(K_MBOX *const kobj);
 
 
 #endif
-#endif /*K_DEF_MBOX*/
+
 /******************************************************************************/
 /* MESSAGE QUEUE                                                              */
 /******************************************************************************/
@@ -282,6 +285,14 @@ K_ERR kMesgQSend(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout);
 *\return			K_SUCCESS or error.
 */
 K_ERR kMesgQPeek(K_MESGQ *const kobj, ADDR recvPtr);
+
+/**
+ * \brief			Reset queue indexes and message counter.
+ * \param kobj		Queue address
+ * \return			K_SUCCESS or K_ERR_OBJ_NULL
+ */
+K_ERR kMesgQReset(K_MESGQ* kobj);
+
 
 #endif /*K_DEF_MESGQ*/
 
@@ -431,11 +442,7 @@ UINT32 kEventQuery(K_EVENT* const kobj);
  * \return K_SUCCESS/K_ERROR
  */
 
-/* Timer Reload / Oneshot optionss */
-#define RELOAD      		1
-#define ONESHOT    		    0
-#define K_WAIT_FOREVER      (0xFFFFFFFF)
-#define K_NO_WAIT			(0)
+
 
 K_ERR kTimerInit(STRING timerName, TICK const ticks, CALLOUT const funPtr,
         ADDR const argsPtr, BOOL const reload);

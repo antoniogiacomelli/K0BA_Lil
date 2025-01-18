@@ -88,7 +88,7 @@ typedef enum kErr
 	K_ERR_MESGQ_FULL = 0xB,
 	K_ERR_MESGQ_EMPTY = 0xC,
 	K_ERR_MUTEX_LOCKED = 0xD,
-	K_ERR_SEMA_TAKEN   = 0xE,
+
 	/* FAULTY RETURN VALUES: negative */
 	K_ERROR = (int) 0xFFFFFFFF, /* (0xFFFFFFFF) Generic error placeholder */
 
@@ -215,8 +215,6 @@ typedef struct kMutex K_MUTEX;
 
 #endif
 
-#if (K_DEF_DMESG==ON)
-typedef struct dmesg K_DMESG;
-#endif
+
 
 #endif/*ktypes*/
