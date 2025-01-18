@@ -1584,7 +1584,7 @@ Use <code>K_WAIT_FOREVER</code> for no timeout, and <code>K_NO_WAIT</code> to no
 </tbody>
 </table>
 <div class="paragraph data-line-740">
-<p>For a message queue, user will provide a buffer with enough capacity (number of messages x message size), that will be handled as a circular buffer. Message queues always start empty and they pass by copy. Message Queues are pretty much like classic pipes, except that a transmission has a fixed-size of bytes - the size of a message.</p>
+<p>Mailboxes in K0 are meant as a means of signal-and-data. Although it is fair to say that message queues are to mailboxes as counter semaphores are to mutexes, a message queue is indeed about buffering. For a message queue, user will provide a piece of memory with enough capacity (number of messages x message size), that will be handled as a circular buffer. Contrary to mailboxes, message queues always start empty and they pass by copy. In K0, they are pretty much like classic pipes, except that a transmission has a fixed-size of bytes - the size of a message.</p>
 </div>
 <div class="paragraph data-line-742">
 <p>The primitives for the message queue are <code>send()</code>, <code>recv()</code>,  <code>jam()</code> and <code>peek()</code>.</p>
@@ -1662,10 +1662,10 @@ Use <code>K_WAIT_FOREVER</code> for no timeout, and <code>K_NO_WAIT</code> to no
 <div class="ulist data-line-776">
 <ul>
 <li class="data-line-776">
-<p>For writer: reserve() and pump() .</p>
+<p>For writer: <code>reserve()</code> and <code>pump()</code> .</p>
 </li>
 <li class="data-line-778">
-<p>For readers: fetch() and drop().</p>
+<p>For readers: <code>fetch()</code> and <code>drop()</code>.</p>
 </li>
 </ul>
 </div>
