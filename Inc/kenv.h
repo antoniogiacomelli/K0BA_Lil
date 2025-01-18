@@ -5,21 +5,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stm32f4xx_hal.h>
-#include <cmsis_gcc.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <assert.h>
-
-/*#define K_DEF_PRINTF*/
-
-#ifdef K_DEF_PRINTF
-/* extern data, as peripheral handlers declarations, etc*/
-extern UART_HandleTypeDef huart2;
-#endif
+/***********************************/
+/*>hal and compiler libraries here<*/
+/***********************************/
 
 #ifdef __cplusplus
 }
