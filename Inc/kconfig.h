@@ -38,91 +38,96 @@
 /* and set this macro to 1                        */
 #define CUSTOM_ENV (0)
 
-
 /**/
 /*** [ System Tasks Stack Size (WORDS)] ***************************************/
-#define IDLE_STACKSIZE      	    (64)
-#define TIMHANDLER_STACKSIZE  		(64)
-
+#define IDLE_STACKSIZE      	    	(64)
+#define TIMHANDLER_STACKSIZE  			(64)
 
 /**/
 /*** [ Time Quantum ] *********************************************************/
-#define K_DEF_TICK_PERIOD            (TICK_5MS)
+#define K_DEF_TICK_PERIOD               (TICK_5MS)
 
 /**/
 /*** [ Number of user-defined tasks ] *****************************************/
-#define K_DEF_N_USRTASKS    	     (3)
+#define K_DEF_N_USRTASKS    	        (3)
 
 /**/
 /*** [The lowest effective priority, that is the highest user-defined value]  */
-#define K_DEF_MIN_PRIO	           	 (1)
+#define K_DEF_MIN_PRIO	           	    (1)
 
 /**/
 /*** [ Time-Slice Scheduling ]*************************************************/
-#define K_DEF_SCH_TSLICE			 (OFF)
+#define K_DEF_SCH_TSLICE			    (OFF)
 
 /**/
 /*** [ App Timers ] ***********************************************************/
-#define K_DEF_N_TIMERS                (K_DEF_N_USRTASKS+1)
-
+#define K_DEF_N_TIMERS                  (K_DEF_N_USRTASKS+1)
 
 /**/
 /*** [ Semaphores ] ***********************************************************/
-#define K_DEF_SEMA                    (OFF)
+#define K_DEF_SEMA                      (ON)
 
 #if (K_DEF_SEMA==ON)
 
-/* Queue discipline	 		 */
-#define K_DEF_SEMA_ENQ  		     (K_DEF_ENQ_PRIO)
-
 /* Handle priority inversion */
-#define K_DEF_SEMA_PRIOINV		  	 (OFF)
+#define K_DEF_SEMA_PRIOINV		    	(ON)
 
+#if (K_DEF_SEMA_PRIOINV == OFF)
+/* For priority inversion handling the queue discipline must be by prio */
+/* If not, it is configurable  */
+/* Note that FIFO makes priority inversion worse */
+#define K_DEF_SEMA_ENQ  		        (K_DEF_ENQ_PRIO)
+
+#endif
 #endif
 
 /**/
 /*** [ Mutexes ] **************************************************************/
-#define K_DEF_MUTEX                   (OFF)
+#define K_DEF_MUTEX                     (OFF)
 #if (K_DEF_MUTEX==ON)
-
 /* Queue Discipline:				 */
-#define K_DEF_MUTEX_ENQ				  (K_DEF_ENQ_PRIO)
-
+#define K_DEF_MUTEX_ENQ				    (K_DEF_ENQ_PRIO)
 #endif
 
 /**/
 /*** [ Sleep/Wake Events ] ****************************************************/
-#define K_DEF_SLEEPWAKE                 (OFF)
+#define K_DEF_SLEEPWAKE                  (OFF)
 
 /**/
-/*** [ Message Queue ] ********************************************************/
-#define K_DEF_MESGQ 			      	(OFF)
+/*** [ Mailbox ] *************************************************************/
 
-#if (K_DEF_MESGQ == ON)
-/* Queue Discipline				 */
-#define K_DEF_MESGQ_ENQ				    (K_DEF_ENQ_FIFO)
-
-#endif /*mesgq*/
-
-/**/
-/*** [ Mailbox ] **************************************************************/
-
-#define K_DEF_MBOX	                  (OFF)
+#define K_DEF_MBOX	       	             (ON)
 
 #if(K_DEF_MBOX==ON)
 
+#define SINGLE					 		 (1)
+#define MULTI					  		 (2)
+
+/* Multi-mail or single-mailbox */
+#define K_DEF_MBOX_CAPACITY			    (MULTI)
+
 /* Queue discipline:   				 */
-#define K_DEF_MBOX_ENQ       		  (K_DEF_ENQ_FIFO)
+#define K_DEF_MBOX_ENQ       	    	(K_DEF_ENQ_PRIO)
 
 /* Send-Receive Method */
-#define K_DEF_MBOX_SENDRECV			  (OFF)
+#if (K_DEF_MBOX_CAPACITY==(SINGLE))
+#define K_DEF_MBOX_SENDRECV			    (ON)
+#endif
 
 #endif
 
 /**/
+/*** [ Message Queue ] *********************************************************/
+#define K_DEF_MESGQ			      	    (ON)
+
+#if (K_DEF_MESGQ == ON)
+/* Queue Discipline				 */
+#define K_DEF_MESGQ_ENQ				    (K_DEF_ENQ_PRIO)
+
+#endif /*mesgq*/
+
+/**/
 /*** [ Pump-Drop Queues ] *****************************************************/
-#define K_DEF_PDQ                     (OFF)
-
-
+#define K_DEF_PDQ                       (OFF)
 
 #endif /* KCONFIG_H */

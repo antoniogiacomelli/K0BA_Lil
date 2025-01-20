@@ -188,22 +188,40 @@ struct kMemBlock
 
 #if (K_DEF_MBOX==ON)
 
-/* Mailbox */
+#if (K_DEF_MBOX_CAPACITY==SINGLE)
+/* Mailbox (single capcacity)*/
 struct kMailbox
 {
     BOOL   init;
     ADDR   mailPtr;
-    K_TCB* owner;
     struct kList waitingQueue;
     K_TIMEOUT_NODE timeoutNode;
 
 } __attribute__((aligned(4)));
 
+#elif (K_DEF_MBOX_CAPACITY==MULTI)
+/* Mailbox (multi capacity) */
+struct kMailbox
+{
+    BOOL init;
+    ADDR mailQPtr;
+    UINT headIdx;
+    UINT tailIdx;
+    SIZE maxItems;
+    SIZE countItems;
+    struct kList waitingQueue;
+    K_TIMEOUT_NODE timeoutNode;
+} __attribute__((aligned(4)));
+
 #endif
+
+#endif
+
+
 
 #if ((K_DEF_MESGQ==ON))
 
-/* Message Queue */
+/* Message Queue (Stre*/
 struct kMesgQ
 {
     BOOL init;
@@ -213,7 +231,6 @@ struct kMesgQ
     ADDR buffer;
     SIZE  readIndex;
     SIZE  writeIndex;
-    K_TCB* owner;
     struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;
 } __attribute__((aligned(4)));

@@ -174,14 +174,16 @@ K_ERR kMutexQuery(K_MUTEX* const kobj);
 
 #if (K_DEF_MBOX == ON)
 
+#if (K_DEF_MBOX_CAPACITY==SINGLE)
 /**
- * \brief               Initialises an indirect blocking mailbox.
+ * \brief               Initialises an indirect single mailbox.
  *
  * \param kobj          Mailbox address.
  * \param initMail		If initialising full, address of initial mail.
  * \					Otherwise NULL.
  * \return              K_SUCCESS or specific error.
  */
+
 K_ERR kMboxInit(K_MBOX *const kobj, ADDR initMail);
 /**
  * \brief               Send to a mailbox. Task blocks when full.
@@ -190,16 +192,6 @@ K_ERR kMboxInit(K_MBOX *const kobj, ADDR initMail);
  * \param timeout		Suspension time-out
  * \return              K_SUCCESS or specific error.
  */
-K_ERR kMboxPost(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
-/**
- * \brief               Receive from a mailbox. Block if empty.
- *
- * \param kobj          Mailbox address.
- * \param recvPPtr      Address that will store the message address (pointer-to-pointer).
- * \param timeout		Suspension time-out
- * \return				K_SUCCESS or specific error.
- */
-K_ERR kMboxPend(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
 
 #if (K_DEF_MBOX_SENDRECV==ON)
 
@@ -214,14 +206,47 @@ K_ERR kMboxPend(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
 K_ERR kMboxPostPend(K_MBOX *const kobj, ADDR const sendPtr, ADDR* const recvPPtr,
 		TICK timeout);
 
-
-#endif
-
 /**
  * \brief   Check if a mailbox is full.
  * \return  TRUE or FALSE.
  */
 BOOL kMboxIsFull(K_MBOX *const kobj);
+
+#endif
+
+#elif (K_DEF_MBOX_CAPACITY==MULTI)
+
+/**
+ * \brief				Initialises an indirect multi-item mailbox.
+ * \param kobj			Mailbox address.
+ * \param memPtr		Pointer to the mailbox memory.
+ * \param maxItems		Maximum number of items.
+ * \return
+ */
+K_ERR kMboxInit(K_MBOX *const kobj, ADDR memPtr, SIZE maxItems);
+
+/**
+ * \brief   Get the number of mails on a mailbox.
+ * \return  Number of mails.
+ */
+SIZE kMboxMailCount(K_MBOX *const kobj);
+
+
+#endif
+
+/*Post and Pend methods are common to both modes */
+K_ERR kMboxPost(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
+/**
+ * \brief               Receive from a mailbox. Block if empty.
+ *
+ * \param kobj          Mailbox address.
+ * \param recvPPtr      Address that will store the message address (pointer-to-pointer).
+ * \param timeout		Suspension time-out
+ * \return				K_SUCCESS or specific error.
+ */
+K_ERR kMboxPend(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
+
+
 
 
 #endif
@@ -410,16 +435,22 @@ K_ERR kEventInit(K_EVENT* const kobj);
 /**
  * \brief 			Suspends a task waiting for a specific event
  * \param kobj 		Pointer to a K_EVENT object
- * \param timeout	Suspension time. (0 is is FOREVER)
+ * \param timeout	Suspension time.
  */
-VOID kEventSleep(K_EVENT* const kobj, TICK timeout);
+K_ERR kEventSleep(K_EVENT* const kobj, TICK timeout);
 
 /**
  * \brief Wakes all tasks sleeping for a specific event
  * \param kobj Pointer to a K_EVENT object
- * \return K_SUCCESS/K_ERROR
  */
 VOID kEventWake(K_EVENT* const kobj);
+
+/**
+ * \brief Wakes a single task sleeping for a specific event
+ *        (by priority)
+ * \param kobj Pointer to a K_EVENT object
+ */
+VOID kEventSignal(K_EVENT* const kobj);
 
 
 /**

@@ -32,7 +32,7 @@ K_ERR kSignal(TID const);
 #if (K_DEF_SLEEPWAKE==ON)
 
 K_ERR kEventInit(K_EVENT* const);
-VOID kEventSleep(K_EVENT* const, TICK);
+K_ERR kEventSleep(K_EVENT* const, TICK);
 VOID kEventWake(K_EVENT* const);
 
 #endif
