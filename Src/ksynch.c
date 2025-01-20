@@ -129,7 +129,6 @@ K_ERR kSuspend(TID const taskID)
 
 }
 
-
 #if (K_DEF_SLEEPWAKE==ON)
 /******************************************************************************
  * SLEEP/WAKE ON EVENTS
@@ -154,7 +153,7 @@ K_ERR kEventInit(K_EVENT *const kobj)
 	K_EXIT_CR
 	return (K_SUCCESS);
 }
-VOID kEventSleep(K_EVENT *kobj, TICK timeout)
+K_ERR kEventSleep(K_EVENT *kobj, TICK timeout)
 {
 
 	if (kIsISR())
@@ -173,19 +172,25 @@ VOID kEventSleep(K_EVENT *kobj, TICK timeout)
 	K_CR_AREA
 	K_ENTER_CR
 
-	if (kobj->init == TRUE)
+	kTCBQEnqByPrio(&kobj->waitingQueue, runPtr);
+	runPtr->status = SLEEPING;
+	runPtr->pendingEv = kobj;
+	if ((timeout > 0) && (timeout < K_WAIT_FOREVER))
 	{
-		if (timeout > 0)
-			kTimeOut(&kobj->timeoutNode, timeout);
-
-		kTCBQEnq(&kobj->waitingQueue, runPtr);
-		runPtr->status = SLEEPING;
-		runPtr->pendingEv = kobj;
-		K_PEND_CTXTSWTCH
-		K_EXIT_CR
-		return;
+		kTimeOut(&kobj->timeoutNode, timeout);
 	}
+	K_PEND_CTXTSWTCH
+	/* resuming here, if time is out, return error */
+	if (runPtr->timeOut)
+	{
+		runPtr->timeOut = FALSE;
+		K_EXIT_CR
+		return (K_ERR_TIMEOUT);
+	}
+
 	K_EXIT_CR
+	return (K_SUCCESS);
+
 }
 
 VOID kEventWake(K_EVENT *kobj)
@@ -194,7 +199,6 @@ VOID kEventWake(K_EVENT *kobj)
 	{
 		kErrHandler(FAULT_NULL_OBJ);
 	}
-
 	if (kobj->waitingQueue.size == 0)
 		return;
 	K_CR_AREA
