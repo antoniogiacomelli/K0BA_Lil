@@ -1468,7 +1468,7 @@ Use <code>K_WAIT_FOREVER</code> for no timeout, and <code>K_NO_WAIT</code> to no
 <td class="tableblock halign-left valign-top"><p class="tableblock">Waiting queue</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Owner task</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(DEPRECATED) Owner task</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Timeout</p></td>
@@ -1482,7 +1482,7 @@ Use <code>K_WAIT_FOREVER</code> for no timeout, and <code>K_NO_WAIT</code> to no
 <p>In K0BA a mailbox is a message-as-signal mechanism. Strictly it is not a message passing - it is a shared memory protocol. The mail passed is the address of an object that contains a message - there is no copy. This object is application-dependent, so sender and receiver must agree on the concrete type and mantain the message scope.</p>
 </div>
 <div class="paragraph data-line-693">
-<p>Mailboxes can initialise full/empty, have their own waiting queue and handle priority propagation - when passing a token/message between tasks, they synchronise on a turnstile - what is a handy use for them.</p>
+<p>Mailboxes can initialise full/empty - when passing a token/message between tasks, they synchronise on a turnstile - what is a handy use for them.</p>
 </div>
 <div class="paragraph data-line-695">
 <p>A mailbox interface contract can be defined as follows:</p>
@@ -1496,7 +1496,7 @@ Use <code>K_WAIT_FOREVER</code> for no timeout, and <code>K_NO_WAIT</code> to no
 <p>If starting FULL, it is initialised with an address.</p>
 </li>
 <li class="data-line-701">
-<p>A mailbox will always have an assigned 'owner' after the first send() or recv() primitive. The owner is the task who succeded gaining access to the box.</p>
+<p>(DEPRECATED) A mailbox will always have an assigned 'owner' after the first send() or recv() primitive. The owner is the task who succeded gaining access to the box.</p>
 </li>
 <li class="data-line-703">
 <p>When a producer <code>post()</code>  to a FULL mailbox, it is enqueued on the mailbox waiting queue, and its task will now be on state SENDING.</p>
@@ -1505,7 +1505,7 @@ Use <code>K_WAIT_FOREVER</code> for no timeout, and <code>K_NO_WAIT</code> to no
 <p>Likewise, a consumer blocks when issuing a <code>pend()</code> on an empty mailbox. Task status switches to RECEIVING and it is enqueued on the mailbox waiting queue.</p>
 </li>
 <li class="data-line-707">
-<p>A mailbox implements a priority propagation protocol, boosting the owner priority on the occasion a higher priority task blocks waiting.</p>
+<p>(DEPRECATED) A mailbox implements a priority propagation protocol, boosting the owner priority on the occasion a higher priority task blocks waiting.</p>
 </li>
 <li class="data-line-709">
 <p>The waiting queue for a mailbox, has a discipline that can either be priority or FIFO. Default is by priority, to be coherent with the scheduler.</p>
@@ -1576,7 +1576,7 @@ Use <code>K_WAIT_FOREVER</code> for no timeout, and <code>K_NO_WAIT</code> to no
 <td class="tableblock halign-left valign-top"><p class="tableblock">Message Count</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Owner task</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(DEPRECATED) Owner task</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Timeout</p></td>
@@ -1590,7 +1590,7 @@ Use <code>K_WAIT_FOREVER</code> for no timeout, and <code>K_NO_WAIT</code> to no
 <p>The primitives for the message queue are <code>send()</code>, <code>recv()</code>,  <code>jam()</code> and <code>peek()</code>.</p>
 </div>
 <div class="paragraph data-line-744">
-<p>Message Queues also propagate priority when blocking, and the blocking queue discipline is configured either as by priority or FIFO. This is not to be confused with the message buffering, the first message placed is the first extracted - except for the jam() that places a messages on the queue front. But who sends/receives a message is a matter of task precedence when accessing a queue.</p>
+<p>The blocking queue discipline is configured either as by priority or FIFO. This is not to be confused with the message buffering, the first message placed is the first extracted - except for the jam() that places a message on the queue front. But who sends/receives a message is a matter of task precedence when accessing a queue.</p>
 </div>
 <div class="admonitionblock note data-line-748">
 <table>
