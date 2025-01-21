@@ -1315,9 +1315,6 @@ VOID Task3(VOID)
 <td class="tableblock halign-left valign-top"><p class="tableblock">Signed Counter</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Acquirer Task</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Waiting Queue</p></td>
 </tr>
 <tr>
@@ -1333,9 +1330,6 @@ VOID Task3(VOID)
 </div>
 <div class="paragraph data-line-619">
 <p>When signalled only one task is unblocked. If a semaphore has a dedicated queue it is 'strong', because it establishes an order. Not having a queue makes a 'weak' semaphore, as the task to be released depends on the position of the task who signals.</p>
-</div>
-<div class="paragraph data-line-621">
-<p>For a section guarded by a semaphore, many tasks can be active. The owner of a guarded region is defined as the highest priority task able to pass a <code>wait()</code>. When a task blocks on a semaphore, if its priority is higher than the owner&#8217;s priority the blocked task propagates its priority to the owner, as a means to diminish the priority inversion time. When a task <code>signal()</code> a semaphore (after a <code>wait()</code>), it is leaving the guarded region so its priority is restored. This technique has limitations though. To diminish the priority inversion problem the system programmer may use mutexes for resource sharing whenever possible or mindfully choose the priorities of tasks that will cooperate using a semaphore and consider using time-outs for the <code>wait()</code> primitive.</p>
 </div>
 <div class="paragraph data-line-623">
 <p>The queue discipline for a semaphore can be configured either as FIFO or priority-based - the former being the default.</p>
