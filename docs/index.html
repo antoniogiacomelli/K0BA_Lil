@@ -1322,17 +1322,6 @@ VOID Task3(VOID)
 </tr>
 </tbody>
 </table>
-<div class="paragraph data-line-615">
-<p>K0 semaphores can be classified as 'strong counter' semaphores. Counter means the primitives <code>signal()</code> and <code>wait()</code> will increase and decrease, respectively, the initial signed value 'N' a semaphore is assigned (a semaphore cannot be initialised with a negative value).</p>
-</div>
-<div class="paragraph data-line-617">
-<p>When <code>wait()</code> results in a negative value, the caller will be blocked within the semaphore queue. The negative value of a counter semaphore inform us straight away how many tasks are blocked waiting for a signal.</p>
-</div>
-<div class="paragraph data-line-619">
-<p>When signalled only one task is unblocked. If a semaphore has a dedicated queue it is 'strong', because it establishes an order. Not having a queue makes a 'weak' semaphore, as the task to be released depends on the position of the task who signals.</p>
-</div>
-<div class="paragraph data-line-623">
-<p>The queue discipline for a semaphore can be configured either as FIFO or priority-based - the former being the default.</p>
 </div>
 </div>
 </div>
