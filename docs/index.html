@@ -503,14 +503,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#usage_patterns"><strong>Usage Patterns</strong></a>
 <ul class="sectlevel1">
 <li><a href="#multi_condition_notification_with_a_mailbox">1. Multi-Condition Notification with a mailbox</a></li>
-<li><a href="#multi_condition_notification_with_event_flagsevent_groups">2. Multi-Condition Notification with Event Flags/Event Groups</a>
-<ul class="sectlevel2">
-<li><a href="#monitor_synchronisation_barrier">2.1. Monitor: Synchronisation Barrier</a></li>
-<li><a href="#monitor_turnstile">2.2. Monitor: Turnstile</a></li>
-<li><a href="#synchronous_multi_client_server_with_exchange_mailboxes">2.3. Synchronous Multi-Client Server with Exchange Mailboxes</a></li>
-<li><a href="#message_queueing_pattern">2.4. Message Queueing Pattern</a></li>
-</ul>
-</li>
+<li><a href="#multi_condition_notification_with_event_flagsevent_groups">2. Multi-Condition Notification with Event Flags/Event Groups</a></li>
+<li><a href="#monitor_synchronisation_barrier">3. Monitor: Synchronisation Barrier</a></li>
+<li><a href="#monitor_turnstile">4. Monitor: Turnstile</a></li>
+<li><a href="#synchronous_multi_client_server_with_exchange_mailboxes">5. Synchronous Multi-Client Server with Exchange Mailboxes</a></li>
+<li><a href="#queueing_pattern">6. Queueing Pattern</a></li>
 </ul>
 </li>
 </ul>
@@ -1773,9 +1770,10 @@ If using semaphores for resource sharing, the system programmer need to carefull
 </tr>
 </table>
 </div>
-<div class="paragraph data-line-828">
+<div class="paragraph data-line-827">
 <p>Note the message passed is again an address. Different from the mailbox the size is also a parameter. The receiver can copy the message to local a buffer, since a PD-buffer is never deallocated while in use and never fetched if there is a new buffer.</p>
 </div>
+<hr>
 </div>
 </div>
 </div>
@@ -2039,8 +2037,11 @@ VOID Task4(VOID) /* just want flag 3*/
 <img src="images/images/eventflags.png" alt="eventflags">
 </div>
 </div>
-<div class="sect2 data-line-1078">
-<h3 id="monitor_synchronisation_barrier">2.1. Monitor: Synchronisation Barrier</h3>
+</div>
+</div>
+<div class="sect1 data-line-1078">
+<h2 id="monitor_synchronisation_barrier">3. Monitor: Synchronisation Barrier</h2>
+<div class="sectionbody">
 <div class="paragraph data-line-1081">
 <p>Usage: resource access/tasks coordination</p>
 </div>
@@ -2127,8 +2128,10 @@ VOID Task3(VOID)
 </div>
 </div>
 </div>
-<div class="sect2 data-line-1163">
-<h3 id="monitor_turnstile">2.2. Monitor: Turnstile</h3>
+</div>
+<div class="sect1 data-line-1163">
+<h2 id="monitor_turnstile">4. Monitor: Turnstile</h2>
+<div class="sectionbody">
 <div class="paragraph data-line-1165">
 <p>In this variation we use single-item mailboxes for turnstile. Also the task that wakes up all others will use the resource within the monitor (be active).</p>
 </div>
@@ -2211,8 +2214,10 @@ VOID Task3(VOID)
 </div>
 </div>
 </div>
-<div class="sect2 data-line-1243">
-<h3 id="synchronous_multi_client_server_with_exchange_mailboxes">2.3. Synchronous Multi-Client Server with Exchange Mailboxes</h3>
+</div>
+<div class="sect1 data-line-1243">
+<h2 id="synchronous_multi_client_server_with_exchange_mailboxes">5. Synchronous Multi-Client Server with Exchange Mailboxes</h2>
+<div class="sectionbody">
 <div class="paragraph data-line-1245">
 <p>Usage: Many-to-one command-response</p>
 </div>
@@ -2349,8 +2354,10 @@ VOID Client2(VOID)
 </div>
 </div>
 </div>
-<div class="sect2 data-line-1376">
-<h3 id="message_queueing_pattern">2.4. Message Queueing Pattern</h3>
+</div>
+<div class="sect1 data-line-1376">
+<h2 id="queueing_pattern">6. Queueing Pattern</h2>
+<div class="sectionbody">
 <div class="paragraph data-line-1378">
 <p>Usage: Asynch (like) comm, serialising access, logging, monitoring</p>
 </div>
@@ -2448,12 +2455,20 @@ VOID SensorLogging(VOID)
 /* why enqueue and not log when reading? to not loose track, events are buffered and log happens on another task */</code></pre>
 </div>
 </div>
+<div class="imageblock data-line-1475">
+<div class="content">
+<img src="images/image/images/queuing.png" alt="queuing">
+</div>
+</div>
 <hr>
-<div class="imageblock text-center data-line-1477">
+<div class="imageblock text-center data-line-1479">
 <div class="content">
 <img src="images/images/mascott.png" alt="mascott" width="100">
 </div>
 </div>
+<div class="paragraph data-line-1482">
+<div class="title">to Hoare, Dijkstra, Hansen, Ritchie, Alf and Ernesto</div>
+<p>~~</p>
 </div>
 </div>
 </div>
