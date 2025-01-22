@@ -282,11 +282,6 @@ K_ERR kSemaInit(K_SEMA *const kobj, INT32 const value)
 		return (K_ERROR);
 	}
 	kobj->init = TRUE;
-#if (K_DEF_SEMA_PRIOINV==ON)
-
-	kobj->ownerPtr = NULL;
-
-#endif
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
 	kobj->timeoutNode.kobj = kobj;
@@ -294,7 +289,6 @@ K_ERR kSemaInit(K_SEMA *const kobj, INT32 const value)
 	K_EXIT_CR
 	return (K_SUCCESS);
 }
-
 K_ERR kSemaWait(K_SEMA *const kobj, TICK const timeout)
 {
 	if (kIsISR())
@@ -305,7 +299,6 @@ K_ERR kSemaWait(K_SEMA *const kobj, TICK const timeout)
 	{
 		kErrHandler(FAULT_OBJ_NOT_INIT);
 	}
-
 	if (kobj == NULL)
 	{
 		kErrHandler(FAULT_NULL_OBJ);
@@ -326,17 +319,8 @@ K_ERR kSemaWait(K_SEMA *const kobj, TICK const timeout)
 		runPtr->status = BLOCKED;
 		runPtr->pendingSema = kobj;
 		DMB
-
-		kTimeOut(&kobj->timeoutNode, timeout);
-#if (K_DEF_SEMA_PRIOINV==ON)
-		if (kobj->ownerPtr)
-		{
-			if (runPtr->priority < kobj->ownerPtr->priority)
-			{
-				kobj->ownerPtr->priority = runPtr->priority;
-			}
-		}
-#endif
+		if (timeout > K_NO_WAIT && timeout < K_WAIT_FOREVER)
+			kTimeOut(&kobj->timeoutNode, timeout);
 		K_PEND_CTXTSWTCH
 		K_EXIT_CR
 		K_ENTER_CR
@@ -347,22 +331,10 @@ K_ERR kSemaWait(K_SEMA *const kobj, TICK const timeout)
 			K_EXIT_CR
 			return (K_ERR_TIMEOUT);
 		}
-	}
-#if (K_DEF_SEMA_PRIOINV==ON)
 
-	if (kobj->ownerPtr == NULL)
-	{
-		kobj->ownerPtr = runPtr;
+		K_EXIT_CR
+		return (K_SUCCESS);
 	}
-	/* guarantee the owner is the highest priority task within a guarded region */
-	else
-	{
-		if (kobj->ownerPtr->priority > runPtr->priority)
-		{
-			kobj->ownerPtr = runPtr;
-		}
-	}
-#endif
 
 	K_EXIT_CR
 	return (K_SUCCESS);
@@ -386,19 +358,12 @@ VOID kSemaSignal(K_SEMA *const kobj)
 	DMB
 	if ((kobj->value) <= 0)
 	{
-		/* if here, the semaphore has sleeping tasks            */
 		K_ERR err = kTCBQDeq(&(kobj->waitingQueue), &nextTCBPtr);
 		assert(err == 0);
 		assert(nextTCBPtr != NULL);
 		nextTCBPtr->pendingSema = NULL;
-		/* a task will resume on the waiting queue, gaining access*/
 		err = kReadyCtxtSwtch(nextTCBPtr);
 	}
-#if (K_DEF_SEMA_PRIOINV==ON)
-
-	runPtr->priority = runPtr->realPrio;
-#endif
-
 	K_EXIT_CR
 	return;
 }

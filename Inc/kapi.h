@@ -76,7 +76,8 @@
  *
  * \return K_SUCCESS on success, K_ERROR on failure
  */
-K_ERR kCreateTask(TASKENTRY const taskFuncPtr,
+K_ERR kCreateTask
+		(TASKENTRY const taskFuncPtr,
 		STRING taskName,
 		TID const taskID,
         INT* const stackAddrPtr,
@@ -85,7 +86,8 @@ K_ERR kCreateTask(TASKENTRY const taskFuncPtr,
         TICK const timeSlice,
 #endif
 		PRIO const priority,
-		BOOL const runToCompl);
+		BOOL const runToCompl
+		);
 
 
 /**
@@ -100,7 +102,18 @@ VOID kInit(VOID);
  *
  */
 VOID kYield(VOID);
+/**
+ * \brief			A task changes its priority
+ * \param newPrio   New priority value
+ * \return			K_SUCCESS or specific error
+ */
+K_ERR kTaskChangePrio(PRIO newPrio);
 
+/**
+ * \brief			A task restore its original priority
+  * \return			K_SUCCESS or specific error
+ */
+K_ERR kTaskRestorePrio(VOID);
 /*******************************************************************************
  SEMAPHORES
  *******************************************************************************/
@@ -174,7 +187,7 @@ K_ERR kMutexQuery(K_MUTEX* const kobj);
 
 #if (K_DEF_MBOX == ON)
 
-#if (K_DEF_MBOX_CAPACITY==SINGLE)
+#if (K_DEF_MBOX_TYPE==EXCHANGE)
 /**
  * \brief               Initialises an indirect single mailbox.
  *
@@ -214,16 +227,16 @@ BOOL kMboxIsFull(K_MBOX *const kobj);
 
 #endif
 
-#elif (K_DEF_MBOX_CAPACITY==MULTI)
+#elif (K_DEF_MBOX_TYPE==QUEUE)
 
 /**
  * \brief				Initialises an indirect multi-item mailbox.
  * \param kobj			Mailbox address.
- * \param memPtr		Pointer to the mailbox memory.
+ * \param memPPtr		Pointer-to-pointer to the mailbox memory.
  * \param maxItems		Maximum number of items.
  * \return
  */
-K_ERR kMboxInit(K_MBOX *const kobj, ADDR memPtr, SIZE maxItems);
+K_ERR kMboxInit(K_MBOX *const kobj, ADDR *memPPtr, SIZE maxItems);
 
 /**
  * \brief   Get the number of mails on a mailbox.
@@ -246,13 +259,32 @@ K_ERR kMboxPost(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
  */
 K_ERR kMboxPend(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
 
+#if (K_DEF_FUNC_MBOX_PEEK==ON)
+/**
+ * \brief 			   Reads the message on head of queue
+ * 					   without extracting it.
+ * \param kobj		   Mailbox address.
+ * \param peekPPtr	   Pointer to receive address.
+ * \return			   K_SUCCESS or specific error.
+ */
+K_ERR kMboxPeek(K_MBOX *const kobj, ADDR *peekPPtr);
+#endif
+
+#if (K_DEF_FUNC_MBOX_MAILCOUNT==ON)
+/**
+ * \brief			  Get the number of mails within a queue
+ * \param kobj
+ * \return
+ */
+SIZE kMboxMailCount(K_MBOX *const kobj);
+#endif
 
 
 
 #endif
 
 /******************************************************************************/
-/* MESSAGE QUEUE                                                              */
+/* MESSAGE STREAM (PIPE/MESSAGE QUEUE)                                        */
 /******************************************************************************/
 #if (K_DEF_MESGQ == ON)
 /**
@@ -267,6 +299,8 @@ K_ERR kMboxPend(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
 K_ERR kMesgQInit(K_MESGQ *const kobj, ADDR buffer, SIZE messageSize,
 		SIZE maxMessages);
 
+#if (K_DEF_FUNC_MESGQ_MESGCOUNT==ON)
+
 /**
  *\brief 			Get the current number of messages within a message queue.
  *\param kobj		Queue address
@@ -276,6 +310,10 @@ K_ERR kMesgQInit(K_MESGQ *const kobj, ADDR buffer, SIZE messageSize,
 
 K_ERR kMesgQGetMesgCount(K_MESGQ *const kobj, UINT32 *const mesgCntPtr);
 
+#endif
+
+#if (K_DEF_FUNC_MESGQ_JAM == ON)
+
 /**
  *\brief 			Sends a message to the queue front.
  *\param kobj		Queue address
@@ -284,6 +322,8 @@ K_ERR kMesgQGetMesgCount(K_MESGQ *const kobj, UINT32 *const mesgCntPtr);
  *\return			K_SUCCESS or specific error
  */
 K_ERR kMesgQJam(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout);
+
+#endif
 
 /**
  *\brief 			Receive a message from the queue
@@ -301,6 +341,7 @@ K_ERR kMesgQRecv(K_MESGQ *const kobj, ADDR recvPtr, TICK timeout);
  */
 K_ERR kMesgQSend(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout);
 
+#if (K_DEF_FUNC_MESGQ_PEEK==ON)
 
 /**
 *\brief 			Receive the front message of a queue
@@ -311,6 +352,9 @@ K_ERR kMesgQSend(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout);
 */
 K_ERR kMesgQPeek(K_MESGQ *const kobj, ADDR recvPtr);
 
+#endif
+
+#if (K_DEF_FUNC_MESGQ_RESET==ON)
 /**
  * \brief			Reset queue indexes and message counter.
  * \param kobj		Queue address
@@ -318,6 +362,7 @@ K_ERR kMesgQPeek(K_MESGQ *const kobj, ADDR recvPtr);
  */
 K_ERR kMesgQReset(K_MESGQ* kobj);
 
+#endif
 
 #endif /*K_DEF_MESGQ*/
 
@@ -325,7 +370,7 @@ K_ERR kMesgQReset(K_MESGQ* kobj);
  * PUMP-DROP QUEUE (CYCLIC ASYNCHRONOUS BUFFERS - CABs)
  *******************************************************************************/
 
-#if (K_DEF_PDQ == ON)
+#if (K_DEF_PDMESG == ON)
 
 /**
  * \brief          Pump-drop queue initialisation.
@@ -336,7 +381,7 @@ K_ERR kMesgQReset(K_MESGQ* kobj);
  * \param nBufs    		Number of buffers for this queue.
  * \return         see ktypes.h
  */
-K_ERR kPDQInit(K_PDQ* const kobj, K_MEM* const memCtrlPtr, K_PDBUF* const bufPool, BYTE const nBufs);
+K_ERR kPDMesgInit(K_PDMESG* const kobj, K_MEM* const memCtrlPtr, K_PDBUF* const bufPool, BYTE const nBufs);
 
 /**
  * \brief          Reserves a pump-drop buffer before writing on it.
@@ -344,7 +389,7 @@ K_ERR kPDQInit(K_PDQ* const kobj, K_MEM* const memCtrlPtr, K_PDBUF* const bufPoo
  * \param kobj     Queue address.
  * \return         see ktypes.h
  */
-K_PDBUF* kPDQReserve(K_PDQ* const kobj);
+K_PDBUF* kPDMesgReserve(K_PDMESG* const kobj);
 
 
 /**
@@ -364,7 +409,7 @@ K_ERR kPDBufWrite(K_PDBUF* bufPtr, ADDR srcPtr, SIZE dataSize);
  * \param kobj     Queue address.
  * \return         Address of a written PD buffer.
  */
-K_ERR kPDQPump(K_PDQ* const kobj, K_PDBUF* bufPtr);
+K_ERR kPDMesgPump(K_PDMESG* const kobj, K_PDBUF* bufPtr);
 
 /**
  * \brief          Fetches the most recent buffer pumped in the queue.
@@ -372,7 +417,7 @@ K_ERR kPDQPump(K_PDQ* const kobj, K_PDBUF* bufPtr);
  * \param kobj     Queue address.
  * \return         Address of a PD buffer available for reading.
  */
-K_PDBUF* kPDQFetch(K_PDQ* const kobj);
+K_PDBUF* kPDMesgFetch(K_PDMESG* const kobj);
 
 /**
  * \brief          Copies the message from a PD Buffer to a chosen address.
@@ -392,7 +437,7 @@ K_ERR kPDBufRead(K_PDBUF* const bufPtr, ADDR destPtr);
  * \param kobj    Queue address;
  * \return        see ktypes.h
  */
-K_ERR kPDQDrop(K_PDQ* const kobj, K_PDBUF* const bufPtr);
+K_ERR kPDMesgDrop(K_PDMESG* const kobj, K_PDBUF* const bufPtr);
 
 
 #endif

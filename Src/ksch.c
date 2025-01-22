@@ -407,6 +407,30 @@ PRIO kGetTaskPrio(TID const taskID)
 	return (tcbs[pid].priority);
 }
 
+
+K_ERR kTaskChangePrio(PRIO newPrio)
+{
+	if (kIsISR())
+		return (K_ERR_INVALID_ISR_PRIMITIVE);
+	K_CR_AREA
+	K_ENTER_CR
+	runPtr->priority = newPrio;
+	K_EXIT_CR
+	return (K_SUCCESS);
+}
+
+K_ERR kTaskRestorePrio(VOID)
+{
+	if (kIsISR())
+		return (K_ERR_INVALID_ISR_PRIMITIVE);
+	K_CR_AREA
+	K_ENTER_CR
+	runPtr->priority = runPtr->realPrio;
+	K_EXIT_CR
+	return (K_SUCCESS);
+}
+
+
 /******************************************************************************
  * KERNEL INITIALISATION
  *******************************************************************************/
@@ -648,4 +672,5 @@ VOID kSchSwtch(VOID)
 	}
 	return;
 }
+
 

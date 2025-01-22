@@ -33,6 +33,8 @@ VOID kYield(VOID);
 VOID kApplicationInit(VOID);
 PID kGetTaskPID(TID const);
 PRIO kGetTaskPrio(TID const);
+K_ERR kTaskChangePrio(PRIO newPrio);
+K_ERR kTaskRestorePrio(VOID);
 extern unsigned __getReadyPrio(unsigned);
 
 

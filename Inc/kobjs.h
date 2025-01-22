@@ -30,7 +30,7 @@ typedef enum
     MUTEX,
 #endif
 #if (K_DEF_MESGQ==ON)
-    MESGQUEUE,
+    MESGQ,
 #endif
 #if(K_DEF_SLEEPWAKE==ON)
 	EVENT,
@@ -134,12 +134,10 @@ typedef struct kTimeoutNode
 
 struct kSema
 {
-	INT32 value;
-	struct kList waitingQueue;
-#if (K_DEF_SEMA_PRIOINV == ON)
-	struct kTcb* ownerPtr;
-#endif
 	BOOL init;
+	INT32 value;
+	struct kTcb* owner;
+	struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;
 };
 
@@ -188,7 +186,7 @@ struct kMemBlock
 
 #if (K_DEF_MBOX==ON)
 
-#if (K_DEF_MBOX_CAPACITY==SINGLE)
+#if (K_DEF_MBOX_TYPE==(EXCHANGE))
 /* Mailbox (single capcacity)*/
 struct kMailbox
 {
@@ -199,7 +197,7 @@ struct kMailbox
 
 } __attribute__((aligned(4)));
 
-#elif (K_DEF_MBOX_CAPACITY==MULTI)
+#elif (K_DEF_MBOX_TYPE==(QUEUE))
 /* Mailbox (multi capacity) */
 struct kMailbox
 {
@@ -231,13 +229,14 @@ struct kMesgQ
     ADDR buffer;
     SIZE  readIndex;
     SIZE  writeIndex;
+    K_TCB* owner;
     struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;
 } __attribute__((aligned(4)));
 
 #endif /*K_DEF_MSG_QUEUE*/
 
-#if (K_DEF_PDQ== ON)
+#if (K_DEF_PDMESG== ON)
 
 struct kPumpDropBuf
 {

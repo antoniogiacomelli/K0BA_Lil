@@ -65,20 +65,14 @@
 
 /**/
 /*** [ Semaphores ] ***********************************************************/
-#define K_DEF_SEMA                      (ON)
+#define K_DEF_SEMA                      (OFF)
 
 #if (K_DEF_SEMA==ON)
 
 /* Handle priority inversion */
-#define K_DEF_SEMA_PRIOINV		    	(ON)
-
-#if (K_DEF_SEMA_PRIOINV == OFF)
-/* For priority inversion handling the queue discipline must be by prio */
-/* If not, it is configurable  */
-/* Note that FIFO makes priority inversion worse */
 #define K_DEF_SEMA_ENQ  		        (K_DEF_ENQ_PRIO)
 
-#endif
+
 #endif
 
 /**/
@@ -96,38 +90,76 @@
 /**/
 /*** [ Mailbox ] *************************************************************/
 
-#define K_DEF_MBOX	       	             (ON)
+#define K_DEF_MBOX	       	             (OFF)
 
 #if(K_DEF_MBOX==ON)
 
-#define SINGLE					 		 (1)
-#define MULTI					  		 (2)
+/******************************************************
+ * A mailbox item is a pointer-sized variable.
+ * Exchange is mailbox that can store a single item.
+ * Queue is a mailbox that can store multiple items.
+ *****************************************************/
+
+#define EXCHANGE				 		 (1)
+#define QUEUE					  		 (2)
 
 /* Multi-mail or single-mailbox */
-#define K_DEF_MBOX_CAPACITY			    (MULTI)
+#define K_DEF_MBOX_TYPE				    (EXCHANGE)
 
 /* Queue discipline:   				 */
 #define K_DEF_MBOX_ENQ       	    	(K_DEF_ENQ_PRIO)
 
-/* Send-Receive Method */
-#if (K_DEF_MBOX_CAPACITY==(SINGLE))
-#define K_DEF_MBOX_SENDRECV			    (ON)
+/* Common Optional Methods	   */
+
+#define K_DEF_FUNC_MBOX_ISFULL			(OFF)
+#define K_DEF_FUNC_MBOX_PEEK			(OFF)
+
+/* Specific optional methods */
+
+#if (K_DEF_MBOX_TYPE==(EXCHANGE))
+
+#define K_DEF_MBOX_POSTPEND		    	(OFF)
+
+#endif
+
+#if (K_DEF_MBOX_TYPE==(QUEUE))
+
+#define K_DEF_FUNC_MBOX_PEEK		    (OFF)
+#define K_DEF_FUNC_MBOX_JAM				(OFF)
+#define K_DEF_FUNC_MBOX_MAILCOUNT		(OFF)
 #endif
 
 #endif
 
 /**/
-/*** [ Message Queue ] *********************************************************/
-#define K_DEF_MESGQ			      	    (ON)
+/*** [ Message Queue ] *******************************************************/
+
+/***********************************************************
+ * A message queue is a fixed-size byte stream sent through
+ * a buffer with capacity equals N message x Message size.
+ * Very similar to a classic pipe, except that pipes can
+ * stream random number of bytes on each operation, a
+ * message  queue will stream a fixed-size block of bytes
+ * on each operation. This size is a property of the message
+ * queue instance.
+ ************************************************************/
+
+#define K_DEF_MESGQ			      	    (OFF)
 
 #if (K_DEF_MESGQ == ON)
 /* Queue Discipline				 */
 #define K_DEF_MESGQ_ENQ				    (K_DEF_ENQ_PRIO)
 
+/* Optional methods */
+#define K_DEF_FUNC_MESGQ_JAM			 (OFF)
+#define K_DEF_FUNC_MESGQ_PEEK			 (OFF)
+#define K_DEF_FUNC_MESGQ_MESGCOUNT		 (OFF)
+#define K_DEF_FUNC_MESGQ_RESET			 (OFF)
+
 #endif /*mesgq*/
 
 /**/
 /*** [ Pump-Drop Queues ] *****************************************************/
-#define K_DEF_PDQ                       (OFF)
+#define K_DEF_PDMESG                       (OFF)
 
 #endif /* KCONFIG_H */

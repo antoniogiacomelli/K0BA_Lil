@@ -126,8 +126,8 @@ typedef enum kErr
 	K_ERR_MBOX_INIT_MAIL = (int) 0xFFFF0013,
 	K_ERR_MUTEX_REC_LOCK = (int) 0xFFFF0014,
 	K_ERR_CANT_SUSPEND_PRIO = (int) 0xFFFF0015,
-	K_ERR_DMESG_NO_BUFFER = (int)0xFFFFF0016
-
+	K_ERR_DMESG_NO_BUFFER = (int)0xFFFFF0016,
+	K_ERR_INVALID_ISR_PRIMITIVE = (int)0xFFFFF0017
 } K_ERR;
 
 /**
@@ -202,10 +202,10 @@ typedef struct kEvent K_EVENT;
 
 #endif
 
-#if (K_DEF_PDQ== ON)
+#if (K_DEF_PDMESG== ON)
 
 typedef struct kPumpDropBuf K_PDBUF;
-typedef struct kPumpDropQueue K_PDQ;
+typedef struct kPumpDropQueue K_PDMESG;
 
 #endif
 
