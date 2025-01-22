@@ -502,12 +502,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#usage_patterns"><strong>Usage Patterns</strong></a>
 <ul class="sectlevel1">
-<li><a href="#multi_condition_notification_with_a_mailbox">1. Multi-Condition Notification with a mailbox</a></li>
-<li><a href="#multi_condition_notification_with_event_flagsevent_groups">2. Multi-Condition Notification with Event Flags/Event Groups</a></li>
-<li><a href="#monitor_synchronisation_barrier">3. Monitor: Synchronisation Barrier</a></li>
-<li><a href="#monitor_turnstile">4. Monitor: Turnstile</a></li>
-<li><a href="#synchronous_multi_client_server_with_exchange_mailboxes">5. Synchronous Multi-Client Server with Exchange Mailboxes</a></li>
-<li><a href="#queueing_pattern">6. Queueing Pattern</a></li>
+<li><a href="#monitor_0_barrier">1. Monitor #0 (Barrier)</a></li>
+<li><a href="#monitor_1_turnstile">2. Monitor #1 (Turnstile)</a></li>
+<li><a href="#multi_condition_notification_0">3. Multi-condition Notification #0</a></li>
+<li><a href="#multi_condition_notification_1">4. Multi-condition Notification #1</a></li>
+<li><a href="#extended_rendez_vous_0">5. Extended rendez-vous #0</a></li>
+<li><a href="#extended_rendez_vous_1">6. Extended rendez-vous #1</a></li>
+<li><a href="#queueing_pattern_0">7. Queueing Pattern #0</a></li>
 </ul>
 </li>
 </ul>
@@ -1522,7 +1523,7 @@ If sharing resources with semaphores, carefully prioritising the tasks; establis
 <p>The mail passed is the address of an object that contains a message - there is no copy. This object is application-dependent, so sender and receiver must agree on the concrete type and mantain the message scope.</p>
 </div>
 <div class="paragraph data-line-702">
-<p>The kernel can be configured to have one type of <em>mailbox</em>: the so-called <em>Exchange</em> (the classic single-item RTOS mailbox that has disappeared), or as a <em>Queue</em> (a queue of pointers then). Here at K0BA headquarters we have a strong preference for Exchanges, because enqueuing pointers is error-prone. Besides, <em>Exchanges</em> can be made logically unbuffered, by forcing the sender to for a receiver acknowledgment.</p>
+<p>The kernel can be configured to have one type of <em>mailbox</em>: the so-called <em>Exchange</em> (the classic single-item RTOS mailbox that has disappeared), or as a <em>Queue</em> (a queue of pointers).</p>
 </div>
 <div class="paragraph data-line-704">
 <p>It is up for the system programmer to decide what mechanism fits as they will not cohexist. Of course, if mailboxes are configured as <em>Queues</em>,  a given instance can still be declared with capacity 1 and will behave as an <em>Exchange</em>, but there is some functional overlap with <em>Message Queues</em> (presented later).</p>
@@ -1556,53 +1557,41 @@ If sharing resources with semaphores, carefully prioritising the tasks; establis
 <div class="paragraph data-line-716">
 <p>In K0BA an <em>Exchange</em> has the purpose of being a <em>message-as-signal</em> mechanism - in the sense they are well suited when signals to wake a task come along with data. They are useful for turnstile synchronisation schemes and fully synchronous communication (<em>zero-buffer</em>).</p>
 </div>
-<div class="admonitionblock note data-line-719">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<em>Exchange</em> is an old-fashioned term for (single-item) mailboxes in RTOSes.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph data-line-722">
+<div class="paragraph data-line-719">
 <p>As an Exchange, a mailbox interface contract can be defined as follows:</p>
 </div>
-<div class="olist arabic data-line-724">
+<div class="olist arabic data-line-721">
 <ol class="arabic">
-<li class="data-line-724">
+<li class="data-line-721">
 <p>A mailbox starts either EMPTY or FULL.</p>
 </li>
-<li class="data-line-726">
+<li class="data-line-723">
 <p>An empty mailbox has its storage pointing to NULL. A full mailbox has its storage with a valid address.</p>
 </li>
-<li class="data-line-728">
+<li class="data-line-725">
 <p>When a producer <code>post()</code> to a FULL mailbox, it is enqueued on the mailbox waiting queue, and the associated task will switch to state <code>SENDING</code>.</p>
 </li>
-<li class="data-line-730">
+<li class="data-line-727">
 <p>Likewise, a consumer blocks when issuing a <code>pend()</code> on an empty mailbox. Task status switches to <code>RECEIVING</code> and it is enqueued on the mailbox waiting queue.</p>
 </li>
-<li class="data-line-732">
+<li class="data-line-729">
 <p>The waiting queue for a mailbox, has a discipline that can either be priority or FIFO. Default is by priority, to be coherent with the scheduler.</p>
 </li>
 </ol>
 </div>
-<div class="paragraph data-line-734">
+<div class="paragraph data-line-731">
 <p>You need to be aware of how the priority of tasks and mailbox queue discipline impact the message exchange, and therefore the program flow.</p>
 </div>
-<div class="paragraph data-line-736">
+<div class="paragraph data-line-733">
 <p>Say you have a bad idea: two producers and a consumer with priorities High, Medium and Low, respectively. Producers <code>post()</code>  and consumer <code>pend()</code>  - no other blocking conditions. If the queue discipline for the mailbox is ordered by priority, the medium priority producer will block once and deadlock - since when the consumer empties the box, who is released is the higher priority - always. If it is a FIFO, it will receive the two messages serially - if you configure as FIFO, mind you are choosing to delay a higher priority task.</p>
 </div>
-<div class="paragraph data-line-738">
-<p>The optional <code>postpend()</code> primitive sends a message and waits for a reply, and is only available for <em>Exchanges</em>.</p>
+<div class="paragraph data-line-735">
+<p>The optional <code>postpend()</code> primitive sends a message and waits for a reply.</p>
 </div>
 </div>
-<div class="sect2 data-line-740">
+<div class="sect2 data-line-737">
 <h3 id="multi_item_mailbox_queue">6.2. Multi-item Mailbox (Queue)</h3>
-<table class="tableblock frame-all grid-all stretch data-line-743">
+<table class="tableblock frame-all grid-all stretch data-line-740">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1638,7 +1627,7 @@ If sharing resources with semaphores, carefully prioritising the tasks; establis
 </tr>
 </tbody>
 </table>
-<div class="admonitionblock tip data-line-756">
+<div class="admonitionblock tip data-line-753">
 <table>
 <tr>
 <td class="icon">
@@ -1650,42 +1639,42 @@ It is fair to say that <em>Queues</em> are to <em>Exchanges</em> as <em>Counter 
 </tr>
 </table>
 </div>
-<div class="paragraph data-line-758">
-<p>Multi-item mailboxes are like a ring buffer of mailboxes. They can be handy when multiple messages need to be passed and they are too long to be passed by copy.</p>
+<div class="paragraph data-line-755">
+<p>Multi-item mailboxes are like a ring buffer of mailboxes. They can (maybe) be handy when multiple messages need to be passed and they are too long to be passed by copy. And the opposite also holds, when small data which scope is well constrained needs to be passed - as when controlling access to a shared resource using a token-message.</p>
 </div>
-<div class="paragraph data-line-760">
+<div class="paragraph data-line-757">
 <p>The associated storage might be chunk of memory capable of holding N pointer-sized items.</p>
 </div>
-<div class="paragraph data-line-762">
+<div class="paragraph data-line-759">
 <p>A <code>post()</code> places an item on the tail of the ring-buffer, and a <code>pend()</code> removes an item from the head of ring buffer. So it is a FIFO queue.</p>
 </div>
-<div class="admonitionblock note data-line-765">
+<div class="admonitionblock note data-line-762">
 <table>
 <tr>
 <td class="icon">
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="paragraph data-line-766">
+<div class="paragraph data-line-763">
 <p>Enqueuing pointers is error prone - while a single-item mailbox makes it easier, for queues a safe approach is to use an allocator: pair <code>post()</code> with <code>alloc()</code> and <code>pend()</code> with <code>free()</code>.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph data-line-769">
+<div class="paragraph data-line-766">
 <p>Multi-item mailboxes have <code>peek()</code> to retrieve the item on the head <em>without extracting</em> it and <code>jam()</code> to place an item on the head - as an urgent data.</p>
 </div>
-<div class="paragraph data-line-771">
-<p>Opposed to single mailboxes, multi-item mailboxes always start empty, and the <code>postpend()</code> primitive is not available, as it would not make sense to create multiple buffers to a logically unbuffered operation.</p>
+<div class="paragraph data-line-768">
+<p>Opposed to single mailboxes, multi-item mailboxes always start empty.</p>
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-774">
+<div class="sect1 data-line-771">
 <h2 id="message_stream_message_queue">7. Message Stream (Message Queue)</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch data-line-776">
+<table class="tableblock frame-all grid-all stretch data-line-773">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1718,32 +1707,32 @@ It is fair to say that <em>Queues</em> are to <em>Exchanges</em> as <em>Counter 
 </tr>
 </tbody>
 </table>
-<div class="paragraph data-line-788">
+<div class="paragraph data-line-785">
 <p>In K0 a Message Stream - or a Message Queue - is a byte stream mechanism that performs deep copy, and thus, resemble classic pipes - the difference is that each transmission/reception has a pre-defined size - the size of a message. This size is defined when initialising the Message Queue.</p>
 </div>
-<div class="paragraph data-line-790">
-<p>For a message queue, user will provide a buffer with enough capacity (number of messages x message size), that will be handled as a circular buffer. Message queues always start empty and they pass by copy.</p>
+<div class="paragraph data-line-787">
+<p>For a stream, user will provide a buffer with enough capacity (number of messages <em>x</em> message size), that will be handled as a circular buffer. Message Queues always start empty - and crucial difference to mailboxes: they <em>deep copy</em> from the sender storage to the queue storage, and from the queue storage to the receiver storage.</p>
 </div>
-<div class="paragraph data-line-792">
+<div class="paragraph data-line-789">
 <p>The important primitives for Message Queues are <code>send()</code>, <code>recv()</code>, <code>jam()</code> and <code>peek()</code>.</p>
 </div>
-<div class="admonitionblock tip data-line-796">
+<div class="admonitionblock note data-line-793">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="paragraph data-line-797">
-<p>You can stream pointers if having too long messages - still they will be a copy of addresses (4-byte messages).</p>
+<div class="paragraph data-line-794">
+<p>You can stream pointers if having too long messages - as 4-byte copy-messages. But, complex structures more often than not need deep-copies and will be incomplete with shallow copies.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="sect2 data-line-800">
+<div class="sect2 data-line-797">
 <h3 id="pump_drop_buffers">7.1. Pump-Drop Buffers</h3>
-<table class="tableblock frame-all grid-all stretch data-line-803">
+<table class="tableblock frame-all grid-all stretch data-line-800">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1773,339 +1762,81 @@ It is fair to say that <em>Queues</em> are to <em>Exchanges</em> as <em>Counter 
 </tr>
 </tbody>
 </table>
-<div class="paragraph data-line-817">
+<div class="paragraph data-line-814">
 <p>Between a message that does not arrive, and one that arrives with information that is not useful, there is no practical difference. But if a message arrives with information that will deceive your control loop to perform a wrong action - this is the worse. This is why <em>Pump-Drop Buffers</em> are a feature in K0BA.</p>
 </div>
-<div class="paragraph data-line-819">
+<div class="paragraph data-line-816">
 <p>Pump-Drop buffering resembles double buffering: buffers switch back and forth as write-only and read-only. It is an asynchronous method meant to be used when message queues do not fit: when the reader needs the most recent data and is up to afford loosing some data (producer is faster), or reading the same (producer is slower). It is a <em>one-to-many</em> channel associated to an allocator. It is essentialy the mechanism proposed on the HARTIK kernel.</p>
 </div>
-<div class="paragraph data-line-821">
+<div class="paragraph data-line-818">
 <p>Primitives for Pump-Drop Messages are:</p>
 </div>
-<div class="ulist data-line-823">
+<div class="ulist data-line-820">
 <ul>
-<li class="data-line-823">
+<li class="data-line-820">
 <p>For writer: <code>reserve()</code> and <code>pump()</code>.</p>
 </li>
-<li class="data-line-825">
+<li class="data-line-822">
 <p>For readers: <code>fetch()</code>  and <code>drop()</code>.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph data-line-827">
+<div class="paragraph data-line-824">
 <p>The semantics is as follows - remember it is one writer to many readers:</p>
 </div>
-<div class="olist arabic data-line-829">
+<div class="olist arabic data-line-826">
 <ol class="arabic">
-<li class="data-line-829">
+<li class="data-line-826">
 <p>When the producer needs to write a new message, first it reserves a PD-buffer. This might already be allocated - if it is allocated but has readers, a new PD-buffer is allocated, to ensure data consistency.</p>
 </li>
-<li class="data-line-831">
+<li class="data-line-828">
 <p>Writer now appends a message to be sent (application-dependent) and pump the buffer.</p>
 </li>
-<li class="data-line-833">
+<li class="data-line-830">
 <p>After pumped, the PD buffer is marked as the current buffer. From now on, the former pumped PDB cannot be fetched and will eventually drop to 0 readers.</p>
 </li>
-<li class="data-line-835">
+<li class="data-line-832">
 <p>A reader first 'fetches' a PDB. A non-null return for a fetch will increase the readers count on the PDB.</p>
 </li>
-<li class="data-line-837">
+<li class="data-line-834">
 <p>After 'having' the message, a reader 'drops the PD-buffer': the kernel checks if it was the last reader and it is not the current PDB - if these two conditions are met, the buffer is deallocated. (checking it is NOT the current PDB guarantees there is already a new PDB in the circuit so readers won’t starve).</p>
 </li>
 </ol>
 </div>
-<div class="admonitionblock note data-line-840">
+<div class="admonitionblock note data-line-837">
 <table>
 <tr>
 <td class="icon">
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="paragraph data-line-841">
+<div class="paragraph data-line-838">
 <p>This mechanism guarantees the information is always updated, but no message is corrupted. The ideal pool size, thus, is simply the number of tasks + 1.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph data-line-844">
+<div class="paragraph data-line-841">
 <p>Note the message passed is again an address. Different from the mailbox the size is also a parameter. The receiver can copy the message to local a buffer, since a PD-buffer is never deallocated while in use and never fetched if there is a new buffer.</p>
 </div>
 <hr>
 </div>
 </div>
 </div>
-<h1 id="usage_patterns" class="sect0 data-line-847"><strong>Usage Patterns</strong></h1>
-<div class="paragraph data-line-849">
+<h1 id="usage_patterns" class="sect0 data-line-845"><strong>Usage Patterns</strong></h1>
+<div class="paragraph data-line-847">
 <p>In this section some simple usage patterns are being attached. The board used to run these snippets is a Nucleo-F103RB (ARM Cortex-M3 based).</p>
 </div>
-<div class="sect1 data-line-851">
-<h2 id="multi_condition_notification_with_a_mailbox">1. Multi-Condition Notification with a mailbox</h2>
+<div class="sect1 data-line-849">
+<h2 id="monitor_0_barrier">1. Monitor #0 (Barrier)</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-853">
-<p>Usage: coordinate a notified task action on a combination of events</p>
+<div class="paragraph data-line-851">
+<p>Usage: resource access/tasks coordination.</p>
 </div>
-<div class="listingblock data-line-855">
+<div class="listingblock data-line-853">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">/* @file application.c */
-
-#include "application.h"
-
-/* waiting 4 flags to be active before going */
-
-INT stack1[STACKSIZE];
-INT stack2[STACKSIZE];
-INT stack3[STACKSIZE];
-
-typedef enum
-{
-	TEMPERATURE = 1, HUMIDITY, CO2, FLOW
-} UPDATE_t;
-
-K_MBOX mbox;
-
-/*** Init kernel objects here */
-VOID kApplicationInit(VOID)
-{
-	kMboxInit(&amp;mbox, EMPTY, NULL);
-}
-
-/* this task notifies which sensors had been updated */
-VOID NotifyTask(VOID)
-{
-	UINT32 sendFlag = 0;
-	UPDATE_t updateType = 0;
-
-	while (1)
-	{   /* simple sum to switch sensor type */
-
-			updateType = (updateType + 1);
-			if (updateType &gt; 4)
-			{
-				updateType = 1;
-			}
-			switch (updateType)
-			{
-			case (TEMPERATURE):
-				sendFlag = FLAG_TEMP_SENSOR_UPDATE;
-				break;
-			case (HUMIDITY):
-				sendFlag = FLAG_HUM_SENSOR_UPDATE;
-				break;
-			case (CO2):
-				sendFlag = FLAG_CO2_SENSOR_UPDATE;
-				break;
-			case (FLOW):
-				sendFlag = FLAG_FLOW_SENSOR_UPDATE;
-				break;
-			default:
-				break;
-			}
-			K_ERR err = kMboxSend(&amp;mbox, (ADDR) &amp;sendFlag, K_WAIT_FOREVER);
-			kSleepUntil(2); /* every 10ms */
-		}
-}
-
-/* this task stores events by OR'ing. when it matches the expected event record it expects to take an action, the storage is reset.
-alternatively it could take an action whenever a single flag was active */
-
-VOID NotifiedTask(VOID)
-{
-	UINT32 *rcvdFlag = 0;
-	TID senderPid = 0;
-	UINT32 wantedFlags = FLAG_TEMP_SENSOR_UPDATE | FLAG_HUM_SENSOR_UPDATE |
-	FLAG_CO2_SENSOR_UPDATE |
-	FLAG_FLOW_SENSOR_UPDATE;
-	UINT32 rcvdFlags = 0;
-	while (1)
-	{
-		 K_ERR err = kMboxRecv(&amp;mbox, (ADDR) &amp;rcvdFlag, &amp;senderPid,
-				 K_WAIT_FOREVER);
-		if (err == 0)
-		{
-
-			if (senderPid == 1)
-			{
-
-				rcvdFlags |= *rcvdFlag;
-				if (rcvdFlags == wantedFlags)
-				{
-/* the term 'synchronisation' is a bit loose here. the tasks are synch'ed
-since they are running back-and-forth, but the NotifiedTask() will take
-an specific action after being notified 4 different sensors had eventually been
-updated. it is more like ''coordination'' */
-
-					rcvdFlags = 0; /* clear rcvd flags */
-					kprintf("Task synchronized\n\r");
-					/* do work */
-				}
-				else
-				{
-					kprintf("Still missing a flag\n\r");
-					kBusyDelay(1);
-				}
-			}
-
-		}
-	}
-}
-
-
-VOID Task3(VOID)
-{
-	while (1)
-	{
-		kSleep(1);
-
-	}
-
-}</code></pre>
-</div>
-</div>
-<div class="imageblock data-line-971">
-<div class="content">
-<img src="images/images/mboxflags.png" alt="mboxflags">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1 data-line-973">
-<h2 id="multi_condition_notification_with_event_flagsevent_groups">2. Multi-Condition Notification with Event Flags/Event Groups</h2>
-<div class="sectionbody">
-<div class="paragraph data-line-975">
-<p>Usage: multi-condition broadcast, notification, observer pattern</p>
-</div>
-<div class="paragraph data-line-977">
-<p>Here is one of the many ways to implement event groups with flags. A simple combination of the already provided mechanisms that could be shipped as a feature.</p>
-</div>
-<div class="listingblock data-line-979">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#include "application.h"
-#include &lt;stdlib.h&gt;
-#include &lt;stdio.h&gt;
-
-INT stack1[STACKSIZE];
-INT stack2[STACKSIZE];
-INT stack3[STACKSIZE];
-INT stack4[STACKSIZE];
-
-#define MAX_FLAGS 32
-#define FLAG_1 (1U &lt;&lt; 0) /* subject 1 */
-#define FLAG_2 (1U &lt;&lt; 1) /* subject 2 */
-#define FLAG_3 (1U &lt;&lt; 2) /* subject 3 */
-
-K_EVENT eventGroup;
-K_MUTEX flagMutex; /* lock for protecting the flag variable */
-static volatile UINT32 eventFlags = 0U; /*  event state representation */
-
-VOID kApplicationInit(VOID)
-{
-	kEventInit(&amp;eventGroup);
-	kMutexInit(&amp;flagMutex);
-}
-
-/* set flags (publish/notify) */
-VOID setEventFlags(uint32_t flagMask)
-{
-	kMutexLock(&amp;flagMutex, K_WAIT_FOREVER);
-	eventFlags |= flagMask;
-	kMutexUnlock(&amp;flagMutex);
-
-	kEventWake(&amp;eventGroup);
-}
-
-/* subscribe/observe */
-VOID waitForEventFlags(UINT32 flagMask, BOOL all) /* ALL or ANY */
-{
-		SLEEP:
-		kEventSleep(&amp;eventGroup, K_WAIT_FOREVER);
-		/* a task wakes and lock  */
-		kMutexLock(&amp;flagMutex, K_WAIT_FOREVER);
-		UINT32 currentFlags = eventFlags; /* temp copy */
-		/* check value */
-		if ((all &amp;&amp; ((currentFlags &amp; flagMask) == flagMask)) || /* all flags */
-		(!all &amp;&amp; (currentFlags &amp; flagMask))) /* any flags */
-		/* unlock */
-		{
-			kMutexUnlock(&amp;flagMutex);
-			return; /* good to go */
-		}
-		kMutexUnlock(&amp;flagMutex); /* nope, get back sleeping */
-	    goto SLEEP;
-}
-
-VOID clearEventFlags(UINT32 flagMask)
-{
-	kMutexLock(&amp;flagMutex, K_WAIT_FOREVER);
-	eventFlags &amp;= ~flagMask;
-	kMutexUnlock(&amp;flagMutex);
-}
-
-VOID Task1(VOID) /* the setter, highest priority task  */
-{
-	while (1)
-	{
-		kSleep(1);
-		setEventFlags(FLAG_1);
-		setEventFlags(FLAG_2);
-		kSleep(20);
-		setEventFlags(FLAG_3);
-	}
-}
-
-VOID Task2(VOID) /* waits for all flags */
-{
-
-	while (1)
-	{
-		waitForEventFlags(FLAG_1 | FLAG_2 | FLAG_3, TRUE); /* all flags */
-		/* callback(); */
-		kprintf("T2: got all flags \n\r");
-		clearEventFlags(FLAG_1 | FLAG_2 | FLAG_3); /*clear*/
-	}
-}
-
-VOID Task3(VOID) /* waits for any flags */
-{
-	while (1)
-	{
-		waitForEventFlags(FLAG_1 | FLAG_2, FALSE);
-		/* callback(FLAG_1); or callback(FLAG_2); */
-		kprintf("T3: At least one flag is set!\n\r");
-		clearEventFlags(FLAG_1 | FLAG_2);
-	}
-}
-
-
-VOID Task4(VOID) /* just want flag 3*/
-{
-	while (1)
-	{
-		waitForEventFlags(FLAG_3, TRUE);
-		/* callback(); */
-		kprintf("T4: FLAG_3 is up!\n\r");
-		clearEventFlags(FLAG_3);
-	}
-
-}</code></pre>
-</div>
-</div>
-<div class="imageblock data-line-1092">
-<div class="content">
-<img src="images/images/eventflags.png" alt="eventflags">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1 data-line-1095">
-<h2 id="monitor_synchronisation_barrier">3. Monitor: Synchronisation Barrier</h2>
-<div class="sectionbody">
-<div class="paragraph data-line-1098">
-<p>Usage: resource access/tasks coordination</p>
-</div>
-<div class="listingblock data-line-1100">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#include "application.h"
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 
 K_EVENT syncEvent; /* state event				    */
 UINT32 syncCounter; /* state representation        */
@@ -2113,8 +1844,18 @@ K_MUTEX syncMutex; /* monitor lock				    */
 K_MUTEX resourceLock; /* if there is a resource */
 #define SYNC_CONDITION (syncCounter&gt;=3) /* needed tasks in the barrier */
 
+
+VOID kApplicationInit(VOID)
+{
+	kMutexInit(&amp;syncMutex);
+	kEventInit(&amp;syncEvent);
+	kMutexInit(&amp;resourceLock);
+	syncCounter = 0;
+}
+
+
 /* only one task can be active within a monitor
- they are enqueued either on the mutex or on the event sleeping-queue
+ they are enqueued either on the mutex or on the event
  */
 static VOID synch(VOID)
 {
@@ -2140,14 +1881,6 @@ static VOID synch(VOID)
 
 	}
 	kprintf("Task %d leaves monitor...\n\r", K_RUNNING_TID);
-}
-
-VOID kApplicationInit(VOID)
-{
-	kMutexInit(&amp;syncMutex);
-	kEventInit(&amp;syncEvent);
-	kMutexInit(&amp;resourceLock);
-	syncCounter = 0;
 }
 
 VOID Task1(VOID)
@@ -2180,22 +1913,22 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1178">
+<div class="imageblock data-line-933">
 <div class="content">
 <img src="images/images/syncbarr.png" alt="syncbarr">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1180">
-<h2 id="monitor_turnstile">4. Monitor: Turnstile</h2>
+<div class="sect1 data-line-936">
+<h2 id="monitor_1_turnstile">2. Monitor #1 (Turnstile)</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1182">
-<p>In this variation we use single-item mailboxes for turnstile. Also the task that wakes up all others will use the resource within the monitor (be active).</p>
+<div class="paragraph data-line-938">
+<p>In this variation we use mailboxes for turnstile. Also the task that wakes up all others will use the resource within the monitor (be active).</p>
 </div>
-<div class="listingblock data-line-1184">
+<div class="listingblock data-line-940">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">K_EVENT syncEvent; /* state event				    */
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">K_EVENT syncEvent; /* state event				    */
 UINT32 syncCounter; /* state representation        */
 K_MBOX syncMbox;
 K_MBOX resourceMbox;
@@ -2266,22 +1999,267 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1258">
-<div class="content">
-<img src="images/images/syncbarr.png" alt="syncbarr">
+<div class="paragraph data-line-1013">
+<p><span class="image"><img src="images/images/mboxturnstiles.png" alt="mboxturnstiles"></span></p>
 </div>
 </div>
 </div>
-</div>
-<div class="sect1 data-line-1260">
-<h2 id="synchronous_multi_client_server_with_exchange_mailboxes">5. Synchronous Multi-Client Server with Exchange Mailboxes</h2>
+<div class="sect1 data-line-1015">
+<h2 id="multi_condition_notification_0">3. Multi-condition Notification #0</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1262">
-<p>Usage: Many-to-one command-response</p>
+<div class="paragraph data-line-1017">
+<p>Usage: coordinate a notified task action on a combination of events.</p>
 </div>
-<div class="listingblock data-line-1264">
+<div class="listingblock data-line-1019">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#include "application.h"
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/* @file application.c */
+
+#include "application.h"
+
+/* waiting 4 flags to be active before going */
+
+INT stack1[STACKSIZE];
+INT stack2[STACKSIZE];
+INT stack3[STACKSIZE];
+
+typedef enum
+{
+	TEMPERATURE = 1, HUMIDITY, CO2, FLOW
+} UPDATE_t;
+
+#define FLAG_TEMP_SENSOR_UPDATE   (1U &lt;&lt; 0)
+#define FLAG_HUM_SENSOR_UPDATE    (1U &lt;&lt; 1)
+#define FLAG_CO2_SENSOR_UPDATE    (1U &lt;&lt; 2)
+#define FLAG_FLOW_SENSOR_UPDATE   (1U &lt;&lt; 3)
+
+K_MBOX mbox;
+
+/*** Init kernel objects here */
+VOID kApplicationInit(VOID)
+{
+	kMboxInit(&amp;mbox, NULL);
+}
+
+/* this task notifies which sensors had been updated */
+VOID NotifyTask(VOID)
+{
+	UINT32 sendFlag = 0;
+	UPDATE_t updateType = 0;
+
+	while (1)
+	{   /* simple sum to switch sensor type */
+
+			updateType = (updateType + 1);
+			if (updateType &gt; 4)
+			{
+				updateType = 1;
+			}
+			switch (updateType)
+			{
+			case (TEMPERATURE):
+				sendFlag = FLAG_TEMP_SENSOR_UPDATE;
+				break;
+			case (HUMIDITY):
+				sendFlag = FLAG_HUM_SENSOR_UPDATE;
+				break;
+			case (CO2):
+				sendFlag = FLAG_CO2_SENSOR_UPDATE;
+				break;
+			case (FLOW):
+				sendFlag = FLAG_FLOW_SENSOR_UPDATE;
+				break;
+			default:
+				break;
+			}
+			K_ERR err = kMboxPost(&amp;mbox, (ADDR) &amp;sendFlag, K_WAIT_FOREVER);
+			kSleepUntil(2); /* every 10ms */
+		}
+}
+
+/* this task stores events by OR'ing. when it matches the expected event record it expects to take an action, the storage is reset.
+alternatively it could take an action whenever a single flag was active */
+
+VOID NotifiedTask(VOID)
+{
+	UINT32 *rcvdFlag = 0;
+	UINT32 wantedFlags = FLAG_TEMP_SENSOR_UPDATE | FLAG_HUM_SENSOR_UPDATE |
+	FLAG_CO2_SENSOR_UPDATE |
+	FLAG_FLOW_SENSOR_UPDATE;
+	UINT32 rcvdFlags = 0;
+	while (1)
+	{
+		K_ERR err = kMboxPend(&amp;mbox, (ADDR) &amp;rcvdFlag, K_WAIT_FOREVER);
+		if (err == 0)
+		{
+			rcvdFlags |= *rcvdFlag;
+			if (rcvdFlags == wantedFlags)
+			{
+				rcvdFlags = 0; /* clear rcvd flags */
+				kprintf("Task synchronized\n\r");
+					/* do work */
+			}
+			else
+			{
+				kprintf("Still missing a flag\n\r");
+			}
+		}
+	}
+}
+
+
+VOID Task3(VOID)
+{
+	while (1)
+	{
+		kSleep(1);
+
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph data-line-1125">
+<p><span class="image"><img src="images/images/mboxflags.png" alt="mboxflags"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1 data-line-1127">
+<h2 id="multi_condition_notification_1">4. Multi-condition Notification #1</h2>
+<div class="sectionbody">
+<div class="paragraph data-line-1128">
+<p>Usage: multi-condition broadcast, notification, observer pattern.</p>
+</div>
+<div class="paragraph data-line-1130">
+<p>By a rather simple combination of the provided services, Event Flags are constructed, handling pretty much everything that could had been shipped as another kernel service.</p>
+</div>
+<div class="listingblock data-line-1132">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+INT stack1[STACKSIZE];
+INT stack2[STACKSIZE];
+INT stack3[STACKSIZE];
+INT stack4[STACKSIZE];
+
+#define MAX_FLAGS 32
+#define FLAG_1 (1U &lt;&lt; 0) /* subject 1 */
+#define FLAG_2 (1U &lt;&lt; 1) /* subject 2 */
+#define FLAG_3 (1U &lt;&lt; 2) /* subject 3 */
+
+K_EVENT eventGroup;
+K_MUTEX flagMutex; /* lock for protecting the flag variable */
+static volatile UINT32 eventFlags = 0U; /*  event state representation */
+
+VOID kApplicationInit(VOID)
+{
+	kEventInit(&amp;eventGroup);
+	kMutexInit(&amp;flagMutex);
+}
+
+/* set flags (publish/notify) */
+VOID setEventFlags(UINT32 flagMask)
+{
+	kMutexLock(&amp;flagMutex, K_WAIT_FOREVER);
+	eventFlags |= flagMask;
+	kMutexUnlock(&amp;flagMutex);
+
+	kEventWake(&amp;eventGroup);
+}
+
+/* subscribe/observe */
+VOID waitForEventFlags(UINT32 flagMask, BOOL all) /* ALL or ANY */
+{
+		SLEEP:
+		kEventSleep(&amp;eventGroup, K_WAIT_FOREVER);
+		/* a taks wakes here,  */
+        /* then lock */
+		kMutexLock(&amp;flagMutex, K_WAIT_FOREVER);
+		UINT32 currentFlags = eventFlags; /* temp copy */
+		/* check */
+		if ((all &amp;&amp; ((currentFlags &amp; flagMask) == flagMask)) || /* all flags */
+		(!all &amp;&amp; (currentFlags &amp; flagMask))) /* any flags */
+		{
+			kMutexUnlock(&amp;flagMutex);
+			return; /* good to go */
+		}
+		kMutexUnlock(&amp;flagMutex); /* nope, get back sleeping */
+	    goto SLEEP;
+}
+
+VOID clearEventFlags(UINT32 flagMask)
+{
+	kMutexLock(&amp;flagMutex, K_WAIT_FOREVER);
+	eventFlags &amp;= ~flagMask;
+	kMutexUnlock(&amp;flagMutex);
+}
+
+VOID Task1(VOID) /* the setter, highest priority task  */
+{
+	while (1)
+	{
+		kSleep(1);
+		setEventFlags(FLAG_1);
+		setEventFlags(FLAG_2);
+		kSleep(20);
+		setEventFlags(FLAG_3);
+	}
+}
+
+VOID Task2(VOID) /* waits for all flags */
+{
+
+	while (1)
+	{
+		waitForEventFlags(FLAG_1 | FLAG_2 | FLAG_3, TRUE); /* all flags */
+		/* callback(); */
+		kprintf("T2: got all flags \n\r");
+		clearEventFlags(FLAG_1 | FLAG_2 | FLAG_3); /*clear*/
+	}
+}
+
+VOID Task3(VOID) /* waits for any flags */
+{
+	while (1)
+	{
+		waitForEventFlags(FLAG_1 | FLAG_2, FALSE);
+		/* callback(FLAG_1); or callback(FLAG_2); */
+		kprintf("T3: At least one flag is set!\n\r");
+		clearEventFlags(FLAG_1 | FLAG_2);
+	}
+}
+
+
+VOID Task4(VOID) /* just want flag 3*/
+{
+	while (1)
+	{
+		waitForEventFlags(FLAG_3, TRUE);
+		/* callback(); */
+		kprintf("T4: FLAG_3 is up!\n\r");
+		clearEventFlags(FLAG_3);
+	}
+
+}</code></pre>
+</div>
+</div>
+<div class="imageblock data-line-1243">
+<div class="content">
+<img src="images/images/eventflags.png" alt="eventflags">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 data-line-1245">
+<h2 id="extended_rendez_vous_0">5. Extended rendez-vous #0</h2>
+<div class="sectionbody">
+<div class="paragraph data-line-1246">
+<p>Usage: Many-to-one command-response.</p>
+</div>
+<div class="listingblock data-line-1248">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 
 
 #define MAX_PAYLOAD 36
@@ -2301,9 +2279,9 @@ typedef struct
 
 void kApplicationInit(VOID)
 {
-	kMboxInit(&amp;serverMbox, EMPTY, NULL);
-	kMboxInit(&amp;clientMbox1, EMPTY, NULL);
-	kMboxInit(&amp;clientMbox2, EMPTY, NULL);
+	kMboxInit(&amp;serverMbox, NULL);
+	kMboxInit(&amp;clientMbox1,NULL);
+	kMboxInit(&amp;clientMbox2,NULL);
 }
 
 /* Hello-server */
@@ -2314,7 +2292,7 @@ VOID Server(VOID)
 	while (1)
 	{
 		/* Wait for a request */
-		if (kMboxRecv(&amp;serverMbox, &amp;request, NULL, K_WAIT_FOREVER) == K_SUCCESS)
+		if (kMboxPend(&amp;serverMbox, &amp;request, NULL, K_WAIT_FOREVER) == K_SUCCESS)
 		{
 			kprintf("Server received request: %s\n\r", request-&gt;payload);
 
@@ -2324,7 +2302,7 @@ VOID Server(VOID)
 					request-&gt;payload);
 
 			/* Send the response back to the client's reply mailbox */
-			if (kMboxSend(request-&gt;replyMbox, &amp;response, K_WAIT_FOREVER) != K_SUCCESS)
+			if (kMboxPost(request-&gt;replyMbox, &amp;response, K_WAIT_FOREVER) != K_SUCCESS)
 			{
 				kprintf("ACK fail\n\r");
 			}
@@ -2347,11 +2325,11 @@ VOID Client1(VOID)
 		request.replyMbox = &amp;clientMbox1; /* Specify the reply mailbox */
 
 		/* Send the request to the server */
-		if (kMboxSend(&amp;serverMbox, &amp;request, K_WAIT_FOREVER) == K_SUCCESS)
+		if (kMboxPost(&amp;serverMbox, &amp;request, K_WAIT_FOREVER) == K_SUCCESS)
 		{
 
 			/* Wait for the response */
-			if (kMboxRecv(&amp;clientMbox1, (ADDR*)&amp;response, NULL, K_WAIT_FOREVER)
+			if (kMboxPend(&amp;clientMbox1, (ADDR*)&amp;response, K_WAIT_FOREVER)
 					== K_SUCCESS)
 			{
 				kprintf("C1 ACK'ed %s\n\r", response-&gt;payload);
@@ -2382,11 +2360,11 @@ VOID Client2(VOID)
 		request.replyMbox = &amp;clientMbox2; /* Specify the reply mailbox */
 
 		/* Send the request to the server */
-		if (kMboxSend(&amp;serverMbox, &amp;request, K_WAIT_FOREVER) == K_SUCCESS)
+		if (kMboxPost(&amp;serverMbox, &amp;request, K_WAIT_FOREVER) == K_SUCCESS)
 		{
 
 			/* Wait for the response */
-			if (kMboxRecv(&amp;clientMbox2, (ADDR*)&amp;response, NULL, K_WAIT_FOREVER)
+			if (kMboxPend(&amp;clientMbox2, (ADDR*)&amp;response, K_WAIT_FOREVER)
 					== K_SUCCESS)
 			{
 				kprintf("C2 ACK'ed: %s\n\r", response-&gt;payload);
@@ -2406,22 +2384,121 @@ VOID Client2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1391">
+<div class="imageblock data-line-1374">
 <div class="content">
 <img src="images/images/multiclient.png" alt="multiclient">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1393">
-<h2 id="queueing_pattern">6. Queueing Pattern</h2>
+<div class="sect1 data-line-1376">
+<h2 id="extended_rendez_vous_1">6. Extended rendez-vous #1</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1395">
-<p>Usage: Asynch (like) comm, serialising access, logging, monitoring</p>
+<div class="paragraph data-line-1377">
+<p>Usage: client-server communication.</p>
 </div>
-<div class="listingblock data-line-1397">
+<div class="listingblock data-line-1379">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#include "application.h"
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/* our server performs arithmetic operations. very useful... */
+
+typedef enum
+{
+	ADD, SUB, MULT
+
+} OP_ID_t;
+
+struct request
+{
+	OP_ID_t opcode;
+	INT parm1;
+	INT parm2;
+
+};
+
+typedef struct request REQ_t;
+
+K_MBOX mbox;
+
+VOID kApplicationInit(VOID)
+{
+
+	kMboxInit(&amp;mbox, NULL);
+}
+
+VOID Task1(VOID)
+{
+
+	REQ_t req;
+	INT *resultPtr;
+	req.opcode = 0;
+
+	while (1)
+	{
+		req.parm1 = 1531;
+		req.parm2 = 33;
+		kprintf("Requesting server ... -&gt;\n\r");
+		kMboxPostRecv(&amp;mbox, &amp;req, (ADDR*)&amp;resultPtr, K_WAIT_FOREVER);
+		kprintf("-&gt; The result is %d\n\r", (INT)*resultPtr);
+		req.opcode++;
+		if (req.opcode &gt; 2)
+			req.opcode = ADD;
+	}
+}
+
+VOID Task2(VOID)
+{
+	REQ_t *clientReq;
+	while (1)
+	{
+		kMboxPend(&amp;mbox, (ADDR*)&amp;clientReq, K_WAIT_FOREVER);
+		INT parm1 = clientReq-&gt;parm1;
+		INT parm2 = clientReq-&gt;parm2;
+		INT result = 0;
+		kprintf("Recv client request &lt;-\n\r");
+		switch (clientReq-&gt;opcode)
+		{
+		case (ADD):
+			kprintf("Adding...\n\r");
+			result = parm1 + parm2;
+			break;
+		case (SUB):
+			kprintf("Subtracting...\n\r");
+			result = parm1 - parm2;
+			break;
+		case (MULT):
+			kprintf("Multiplying...\n\r");
+
+			result = parm1 * parm2;
+			break;
+		default:
+			kprintf("Unknown...\n\r");
+
+			break;
+
+		}
+		kprintf("&lt;- Sending response..\n\r");
+		kMboxPost(&amp;mbox, &amp;result, 0);
+
+	}
+}</code></pre>
+</div>
+</div>
+<div class="imageblock data-line-1465">
+<div class="content">
+<img src="images/images/sendrecv.png" alt="sendrecv">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 data-line-1467">
+<h2 id="queueing_pattern_0">7. Queueing Pattern #0</h2>
+<div class="sectionbody">
+<div class="paragraph data-line-1468">
+<p>Usage: Asynch (like) comm, serialising access, logging, monitoring.</p>
+</div>
+<div class="listingblock data-line-1470">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 #include &lt;stdlib.h&gt;
 #include &lt;stdio.h&gt;
 
@@ -2510,16 +2587,17 @@ VOID SensorLogging(VOID)
 	}
 }
 
+
 /* why enqueue and not log when reading? to not loose track, events are buffered and log happens on another task */</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1492">
+<div class="imageblock data-line-1565">
 <div class="content">
 <img src="images/images/queuing.png" alt="queuing">
 </div>
 </div>
 <hr>
-<div class="imageblock text-center data-line-1495">
+<div class="imageblock text-center data-line-1568">
 <div class="content">
 <img src="images/images/mascott.png" alt="mascott" width="105">
 </div>
