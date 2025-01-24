@@ -1293,16 +1293,16 @@ VOID Task3(VOID)
 <div class="olist arabic data-line-596">
 <ol class="arabic">
 <li class="data-line-596">
-<p>Some messages are consumed by tasks that have nothing else to do besides processing that information - thus, these messages end up also being signals.</p>
+<p>Some messages are consumed by tasks that can&#8217;t do anything before processing a information - thus, these messages end up also being signals. <em>E.g.: a server that needs a command to process, or a client that blocks for an answer</em>.</p>
 </li>
 <li class="data-line-597">
-<p>Two tasks with different rates need to communicate data - a faster producer might use a buffer to accomodate a relative small burst of generated data.</p>
+<p>Two tasks with different rates need to communicate data - a faster producer might use a buffer to accomodate a relative small burst of generated data, or a faster consumer will drop equal data that is received.</p>
 </li>
 <li class="data-line-598">
-<p>Other times, we might need correlate data with time for processing, so, using a queue gives us the idea of data motion.</p>
+<p>Other times, we might need correlate data with time for processing, so, using a queue gives us the idea of data motion. <em>Eg., when calculating the mean value of transductor on a period</em>.</p>
 </li>
 <li class="data-line-599">
-<p>On the other hand, for some tasks past data is useless - they need the most recent data for processing.</p>
+<p>On the other hand, for some tasks past data is useless - they need the most recent data for processing - <em>e.g., a drive-by-wire mechanism is interested in the most recent data during its operation</em>.</p>
 </li>
 </ol>
 </div>
