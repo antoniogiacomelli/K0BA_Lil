@@ -95,7 +95,7 @@ typedef struct kTcb TCB;
       BYTE* dt = (BYTE*) d;                           \
       BYTE const* st = (BYTE const*) s;               \
       r=0;                                            \
-     for (SIZE i = 0; i < z; ++i)                     \
+     for (ULONG i = 0; i < z; ++i)                     \
       {                                               \
           dt[i] = st[i];                              \
           r ++;                                       \

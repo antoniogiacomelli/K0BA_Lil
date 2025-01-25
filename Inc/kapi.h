@@ -236,13 +236,13 @@ BOOL kMboxIsFull(K_MBOX *const kobj);
  * \param maxItems		Maximum number of items.
  * \return
  */
-K_ERR kMboxInit(K_MBOX *const kobj, ADDR *memPPtr, SIZE maxItems);
+K_ERR kMboxInit(K_MBOX *const kobj, ADDR *memPPtr, ULONG maxItems);
 
 /**
  * \brief   Get the number of mails on a mailbox.
  * \return  Number of mails.
  */
-SIZE kMboxMailCount(K_MBOX *const kobj);
+ULONG kMboxMailCount(K_MBOX *const kobj);
 
 
 #endif
@@ -276,7 +276,7 @@ K_ERR kMboxPeek(K_MBOX *const kobj, ADDR *peekPPtr);
  * \param kobj
  * \return
  */
-SIZE kMboxMailCount(K_MBOX *const kobj);
+ULONG kMboxMailCount(K_MBOX *const kobj);
 #endif
 
 
@@ -296,8 +296,8 @@ SIZE kMboxMailCount(K_MBOX *const kobj);
  *\param maxMessage  Max number of messages
  *\return 			 K_SUCCESS or specific errors
  */
-K_ERR kMesgQInit(K_MESGQ *const kobj, ADDR buffer, SIZE messageSize,
-		SIZE maxMessages);
+K_ERR kMesgQInit(K_MESGQ *const kobj, ADDR buffer, ULONG messageSize,
+		ULONG maxMessages);
 
 #if (K_DEF_FUNC_MESGQ_MESGCOUNT==ON)
 
@@ -401,7 +401,7 @@ K_PDBUF* kPDMesgReserve(K_PDMESG* const kobj);
  * \param dataSize  Message size.
  * \return
  */
-K_ERR kPDBufWrite(K_PDBUF* bufPtr, ADDR srcPtr, SIZE dataSize);
+K_ERR kPDBufWrite(K_PDBUF* bufPtr, ADDR srcPtr, ULONG dataSize);
 
 /**
  * \brief          Pump a buffer into the queue - make it available for readers.
@@ -497,7 +497,6 @@ VOID kEventWake(K_EVENT* const kobj);
  */
 VOID kEventSignal(K_EVENT* const kobj);
 
-
 /**
  * \brief  Return the number of tasks sleeping on an event.
  */
@@ -517,9 +516,6 @@ UINT32 kEventQuery(K_EVENT* const kobj);
  * \param reload TRUE for reloading after timer-out. FALSE for an one-shot
  * \return K_SUCCESS/K_ERROR
  */
-
-
-
 K_ERR kTimerInit(STRING timerName, TICK const ticks, CALLOUT const funPtr,
         ADDR const argsPtr, BOOL const reload);
 
@@ -607,7 +603,7 @@ unsigned int kGetVersion(void);
  * \param   size - number of bytes to be copyied
  * \return  Effective number of copyied bytes.
  */
-SIZE kMemCpy(ADDR destPtr, ADDR const srcPtr, SIZE size);
+ULONG kMemCpy(ADDR destPtr, ADDR const srcPtr, ULONG size);
 
 
 /* 				*				*				*				*			  */

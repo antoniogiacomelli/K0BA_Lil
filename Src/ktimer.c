@@ -363,7 +363,7 @@ VOID kRemoveTaskFromMutex(ADDR kobj)
 }
 #endif
 
-#if (K_DEF_SYNCH_MESGQ==ON)
+#if (K_DEF_MESGQ==ON)
 
 VOID kRemoveTaskFromQueue(ADDR kobj)
 {
@@ -446,8 +446,8 @@ BOOL kHandleTimeoutList(void)
 				kRemoveTaskFromMutex(node->kobj);
 				break;
 #endif
-#if (K_DEF_SYNCH_MESGQ==ON)
-			case MESGQUEUE:
+#if (K_DEF_MESGQ==ON)
+			case MESGQ:
 				kRemoveTaskFromQueue(node->kobj);
 				break;
 #endif

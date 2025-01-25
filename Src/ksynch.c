@@ -6,7 +6,7 @@
  ******************************************************************************
  *  Module              : Inter-task Synchronisation
  *  Depends on          : Scheduler
- *  Provides to         : Message Passing, Appli
+ *  Provides to         : Message Passing, Application
  *  Public API  	    : Yes
  *
  * 	In this unit:
@@ -207,10 +207,10 @@ VOID kEventWake(K_EVENT *kobj)
 	{
 		kErrHandler(FAULT_OBJ_NOT_INIT);
 	}
-	SIZE sleepThreads = kobj->waitingQueue.size;
+	ULONG sleepThreads = kobj->waitingQueue.size;
 	if (sleepThreads > 0)
 	{
-		for (SIZE i = 0; i < sleepThreads; ++i)
+		for (ULONG i = 0; i < sleepThreads; ++i)
 		{
 			K_TCB *nextTCBPtr;
 			kTCBQDeq(&kobj->waitingQueue, &nextTCBPtr);
@@ -331,11 +331,7 @@ K_ERR kSemaWait(K_SEMA *const kobj, TICK const timeout)
 			K_EXIT_CR
 			return (K_ERR_TIMEOUT);
 		}
-
-		K_EXIT_CR
-		return (K_SUCCESS);
 	}
-
 	K_EXIT_CR
 	return (K_SUCCESS);
 }

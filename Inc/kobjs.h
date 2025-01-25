@@ -205,8 +205,8 @@ struct kMailbox
     ADDR mailQPtr;
     UINT headIdx;
     UINT tailIdx;
-    SIZE maxItems;
-    SIZE countItems;
+    ULONG maxItems;
+    ULONG countItems;
     struct kList waitingQueue;
     K_TIMEOUT_NODE timeoutNode;
 } __attribute__((aligned(4)));
@@ -223,12 +223,12 @@ struct kMailbox
 struct kMesgQ
 {
     BOOL init;
-    SIZE mesgSize;
-    SIZE maxMesg;
-    SIZE mesgCnt;
+    ULONG mesgSize;
+    ULONG maxMesg;
+    ULONG mesgCnt;
     ADDR buffer;
-    SIZE  readIndex;
-    SIZE  writeIndex;
+    ULONG  readIndex;
+    ULONG  writeIndex;
     K_TCB* owner;
     struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;
@@ -242,7 +242,7 @@ struct kPumpDropBuf
 {
 
      ADDR   dataPtr;
-     SIZE   dataSize;                /* mesg size in this buf */
+     ULONG   dataSize;                /* mesg size in this buf */
      UINT32 nUsers;                  /* number of tasks using */
 };
 struct kPumpDropQueue

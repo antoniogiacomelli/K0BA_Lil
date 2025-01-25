@@ -21,9 +21,9 @@
 #include "kitc.h"
 
 
-SIZE kStrLen(STRING s)
+ULONG kStrLen(STRING s)
 {
-	SIZE len = 0;
+	ULONG len = 0;
 	while ( *s != '\0')
 	{
 		s ++;
@@ -32,16 +32,16 @@ SIZE kStrLen(STRING s)
 	return (len);
 }
 
-SIZE kMemCpy(ADDR destPtr, ADDR const srcPtr, SIZE size)
+ULONG kMemCpy(ADDR destPtr, ADDR const srcPtr, ULONG size)
 {
 	if ((IS_NULL_PTR(destPtr)) || (IS_NULL_PTR(srcPtr)))
 	{
 		kErrHandler(FAULT_NULL_OBJ);
 	}
-	SIZE n = 0;
+	ULONG n = 0;
 	BYTE* destTempPtr = (BYTE*) destPtr;
 	BYTE const* srcTempPtr = (BYTE const*) srcPtr;
-	for (SIZE i = 0; i < size; ++i)
+	for (ULONG i = 0; i < size; ++i)
 	{
 		destTempPtr[i] = srcTempPtr[i];
 		n ++;

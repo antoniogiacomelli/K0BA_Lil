@@ -22,6 +22,7 @@ typedef char CHAR;
 typedef unsigned char BYTE;
 typedef int INT;	/* stack type */
 typedef unsigned int UINT;
+typedef unsigned long ULONG;
 
 /*** typedef (there is no harm) the stdint for "stylistic"                  */
 /*** readability purposes: both never a consensus.                          */
@@ -34,7 +35,6 @@ typedef uint64_t UINT64;
 typedef int64_t INT64;
 typedef int16_t INT16;
 typedef uint16_t UINT16;
-typedef size_t SIZE;
 
 /*** if you dont provide a stdbool                                          */
 #if !defined(bool)

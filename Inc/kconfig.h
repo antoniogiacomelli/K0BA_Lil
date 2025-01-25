@@ -65,7 +65,7 @@
 
 /**/
 /*** [ Semaphores ] ***********************************************************/
-#define K_DEF_SEMA                      (OFF)
+#define K_DEF_SEMA                      (ON)
 
 #if (K_DEF_SEMA==ON)
 
@@ -77,7 +77,7 @@
 
 /**/
 /*** [ Mutexes ] **************************************************************/
-#define K_DEF_MUTEX                     (OFF)
+#define K_DEF_MUTEX                     (ON)
 #if (K_DEF_MUTEX==ON)
 /* Queue Discipline:				 */
 #define K_DEF_MUTEX_ENQ				    (K_DEF_ENQ_PRIO)
@@ -85,12 +85,12 @@
 
 /**/
 /*** [ Sleep/Wake Events ] ****************************************************/
-#define K_DEF_SLEEPWAKE                  (OFF)
+#define K_DEF_SLEEPWAKE                  (ON)
 
 /**/
 /*** [ Mailbox ] *************************************************************/
 
-#define K_DEF_MBOX	       	             (OFF)
+#define K_DEF_MBOX	       	             (ON)
 
 #if(K_DEF_MBOX==ON)
 
@@ -104,29 +104,29 @@
 #define QUEUE					  		 (2)
 
 /* Multi-mail or single-mailbox */
-#define K_DEF_MBOX_TYPE				    (EXCHANGE)
+#define K_DEF_MBOX_TYPE				    (QUEUE)
 
 /* Queue discipline:   				 */
 #define K_DEF_MBOX_ENQ       	    	(K_DEF_ENQ_PRIO)
 
 /* Common Optional Methods	   */
 
-#define K_DEF_FUNC_MBOX_ISFULL			(OFF)
-#define K_DEF_FUNC_MBOX_PEEK			(OFF)
+#define K_DEF_FUNC_MBOX_ISFULL			(ON)
+#define K_DEF_FUNC_MBOX_PEEK			(ON)
 
 /* Specific optional methods */
 
 #if (K_DEF_MBOX_TYPE==(EXCHANGE))
 
-#define K_DEF_MBOX_POSTPEND		    	(OFF)
+#define K_DEF_MBOX_POSTPEND		    	(ON)
 
 #endif
 
 #if (K_DEF_MBOX_TYPE==(QUEUE))
 
-#define K_DEF_FUNC_MBOX_PEEK		    (OFF)
-#define K_DEF_FUNC_MBOX_JAM				(OFF)
-#define K_DEF_FUNC_MBOX_MAILCOUNT		(OFF)
+#define K_DEF_FUNC_MBOX_PEEK		    (ON)
+#define K_DEF_FUNC_MBOX_JAM				(ON)
+#define K_DEF_FUNC_MBOX_MAILCOUNT		(ON)
 #endif
 
 #endif
@@ -144,22 +144,22 @@
  * queue instance.
  ************************************************************/
 
-#define K_DEF_MESGQ			      	    (OFF)
+#define K_DEF_MESGQ			      	    (ON)
 
 #if (K_DEF_MESGQ == ON)
 /* Queue Discipline				 */
 #define K_DEF_MESGQ_ENQ				    (K_DEF_ENQ_PRIO)
 
 /* Optional methods */
-#define K_DEF_FUNC_MESGQ_JAM			 (OFF)
-#define K_DEF_FUNC_MESGQ_PEEK			 (OFF)
-#define K_DEF_FUNC_MESGQ_MESGCOUNT		 (OFF)
-#define K_DEF_FUNC_MESGQ_RESET			 (OFF)
+#define K_DEF_FUNC_MESGQ_JAM			 (ON)
+#define K_DEF_FUNC_MESGQ_PEEK			 (ON)
+#define K_DEF_FUNC_MESGQ_MESGCOUNT		 (ON)
+#define K_DEF_FUNC_MESGQ_RESET			 (ON)
 
 #endif /*mesgq*/
 
 /**/
 /*** [ Pump-Drop Queues ] *****************************************************/
-#define K_DEF_PDMESG                       (OFF)
+#define K_DEF_PDMESG                       (ON)
 
 #endif /* KCONFIG_H */

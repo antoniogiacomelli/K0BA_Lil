@@ -15,8 +15,8 @@ extern "C" {
 #endif
 
 
-SIZE kStrLen(STRING s);
-SIZE kMemCpy(ADDR destPtr, ADDR const srcPtr, SIZE size);
+ULONG kStrLen(STRING s);
+ULONG kMemCpy(ADDR destPtr, ADDR const srcPtr, ULONG size);
 
 extern UART_HandleTypeDef huart2;
 int _write(int file, char* ptr, int len);

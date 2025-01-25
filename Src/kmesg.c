@@ -343,7 +343,7 @@ K_ERR kMboxPostPend(K_MBOX *const kobj, ADDR const sendPtr,
 
 #elif (K_DEF_MBOX_TYPE==(QUEUE))
 
-K_ERR kMboxInit(K_MBOX *const kobj, ADDR memPtr, SIZE maxItems)
+K_ERR kMboxInit(K_MBOX *const kobj, ADDR memPtr, ULONG maxItems)
 {
 	K_CR_AREA
 
@@ -422,7 +422,7 @@ K_ERR kMboxPost(K_MBOX *const kobj, ADDR sendPtr, TICK timeout)
 		} while (kobj->countItems == kobj->maxItems);
 	}
 	/* post on tail */
-	ADDR *tailAddr = (ADDR*) ((UINT*) kobj->mailQPtr + kobj->tailIdx);
+	ADDR *tailAddr = (ADDR*) ((ULONG*) kobj->mailQPtr + kobj->tailIdx);
 	*tailAddr = sendPtr;
 	kobj->tailIdx = (kobj->tailIdx + 1) % kobj->maxItems;
 	kobj->countItems++;
@@ -494,7 +494,7 @@ K_ERR kMboxPend(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 		} while (kobj->countItems == 0);
 	}
 
-	ADDR *headAddr = (ADDR*) ((UINT*) kobj->mailQPtr + kobj->headIdx);
+	ADDR *headAddr = (ADDR*) ((ULONG*) kobj->mailQPtr + kobj->headIdx);
 	*recvPPtr = *headAddr;
 	kobj->headIdx = (kobj->headIdx + 1) % kobj->maxItems;
 	kobj->countItems--;
@@ -536,7 +536,7 @@ K_ERR kMboxPeek(K_MBOX *const kobj, ADDR *peekPPtr)
 		return (K_ERROR);
 	}
 
-	ADDR *headAddr = (ADDR*) ((UINT*) kobj->mailQPtr + kobj->headIdx);
+	ADDR *headAddr = (ADDR*) ((ULONG*) kobj->mailQPtr + kobj->headIdx);
 
 	*peekPPtr = *headAddr;
 
@@ -596,7 +596,7 @@ K_ERR kMboxJam(K_MBOX *const kobj, ADDR sendPtr, TICK timeout)
 	}
     /* empty or wrapped ? just place. otherwise, get back */
 	kobj->headIdx = (kobj->headIdx == 0) ?	(0) : (kobj->headIdx - 1);
-	ADDR *putAddr = (ADDR*) ((UINT*) kobj->mailQPtr + kobj->headIdx);
+	ADDR *putAddr = (ADDR*) ((ULONG*) kobj->mailQPtr + kobj->headIdx);
 	*putAddr = sendPtr;
 	kobj->countItems++;
 	/* unblock a receiver if any */
@@ -621,7 +621,7 @@ K_ERR kMboxJam(K_MBOX *const kobj, ADDR sendPtr, TICK timeout)
 
 #if (K_DEF_FUNC_MBOX_MAILCOUNT==ON)
 
-SIZE kMboxMailCount(K_MBOX *const kobj)
+ULONG kMboxMailCount(K_MBOX *const kobj)
 {
 	return (kobj->countItems);
 }
@@ -642,8 +642,8 @@ BOOL kMboxIsFull(K_MBOX *const kobj)
  *******************************************************************************/
 #if(K_DEF_MESGQ==ON)
 
-K_ERR kMesgQInit(K_MESGQ *const kobj, ADDR const buffer, SIZE const mesgSize,
-		SIZE const nMesg)
+K_ERR kMesgQInit(K_MESGQ *const kobj, ADDR const buffer, ULONG const mesgSize,
+		ULONG const nMesg)
 {
 	K_CR_AREA
 	if ((kobj == NULL) || (buffer == NULL))
@@ -719,7 +719,7 @@ K_ERR kMesgQPeek(K_MESGQ *const kobj, ADDR recvPtr)
 	}
 	BYTE const *src = kobj->buffer + (kobj->readIndex * kobj->mesgSize);
 	BYTE *dest = (BYTE*) recvPtr;
-	SIZE err = 0;
+	ULONG err = 0;
 	CPYQ(dest, src, kobj->mesgSize, err);
 	if (err != kobj->mesgSize)
 	{
@@ -773,7 +773,7 @@ K_ERR kMesgQSend(K_MESGQ *const kobj, ADDR const sendPtr, TICK const timeout)
 	}
 	BYTE *dest = kobj->buffer + (kobj->writeIndex * kobj->mesgSize);
 	BYTE const *src = (BYTE const*) sendPtr;
-	SIZE err = 0;
+	ULONG err = 0;
 	CPYQ(dest, src, kobj->mesgSize, err);
 	if (err != kobj->mesgSize)
 	{
@@ -842,7 +842,7 @@ K_ERR kMesgQRecv(K_MESGQ *const kobj, ADDR recvPtr, TICK const timeout)
 	}
 	BYTE const *src = kobj->buffer + (kobj->readIndex * kobj->mesgSize);
 	BYTE *dest = (BYTE*) recvPtr;
-	SIZE err = 0;
+	ULONG err = 0;
 	CPYQ(dest, src, kobj->mesgSize, err);
 	if (err != kobj->mesgSize)
 	{
@@ -915,7 +915,7 @@ K_ERR kMesgQJam(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout)
 					(kobj->maxMesg - 1) : (kobj->readIndex - 1);
 	BYTE *dest = kobj->buffer + (kobj->readIndex * kobj->mesgSize);
 	BYTE const *src = (BYTE const*) sendPtr;
-	SIZE err = 0;
+	ULONG err = 0;
 	CPYQ(dest, src, kobj->mesgSize, err);
 	if (err != kobj->mesgSize)
 	{
