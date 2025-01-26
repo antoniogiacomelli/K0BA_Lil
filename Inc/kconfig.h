@@ -68,11 +68,7 @@
 #define K_DEF_SEMA                      (ON)
 
 #if (K_DEF_SEMA==ON)
-
-/* Handle priority inversion */
 #define K_DEF_SEMA_ENQ  		        (K_DEF_ENQ_PRIO)
-
-
 #endif
 
 /**/
