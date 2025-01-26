@@ -12,10 +12,10 @@
 #define KTYPES_H
 
 #include "kenv.h"
-
 /**
  * \brief C standard library primitives alias
  */
+
 /*** these are immutable:                                                   */
 typedef void VOID;
 typedef char CHAR;
