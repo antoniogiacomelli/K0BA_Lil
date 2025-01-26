@@ -36,7 +36,7 @@ K_ERR kPend(VOID)
 {
 
 	if (kIsISR())
-		kErrHandler(FAULT_ISR_INVALID_PRIMITVE);
+		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	K_CR_AREA
 
 	K_ENTER_CR
@@ -88,24 +88,6 @@ K_ERR kSuspend(TID const taskID)
 		K_EXIT_CR
 		return (K_ERR_INVALID_TID);
 	}
-	if (kIsISR())
-	{
-		if ((tcbs[pid].status == READY) || (tcbs[pid].status == RUNNING))
-		{
-			K_ERR err = kTCBQEnq(&sleepingQueue, &tcbs[pid]);
-			if (err == K_SUCCESS)
-			{
-				tcbs[pid].status = SUSPENDED;
-				K_EXIT_CR
-				return (err);
-			}
-			else
-			{
-				K_EXIT_CR
-				return (err);
-			}
-		}
-	}
 	if (runPtr->priority > tcbs[pid].priority)
 	{
 		K_EXIT_CR
@@ -138,7 +120,7 @@ K_ERR kEventInit(K_EVENT *const kobj)
 
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 	}
 	K_CR_AREA
 	K_ENTER_CR
@@ -158,15 +140,15 @@ K_ERR kEventSleep(K_EVENT *kobj, TICK timeout)
 
 	if (kIsISR())
 	{
-		kErrHandler(FAULT_ISR_INVALID_PRIMITVE);
+		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 	}
 	if (kobj->init == FALSE)
 	{
-		kErrHandler(FAULT_OBJ_NOT_INIT);
+		KFAULT(FAULT_OBJ_NOT_INIT);
 	}
 
 	K_CR_AREA
@@ -197,7 +179,7 @@ VOID kEventWake(K_EVENT *kobj)
 {
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 	}
 	if (kobj->waitingQueue.size == 0)
 		return;
@@ -205,7 +187,7 @@ VOID kEventWake(K_EVENT *kobj)
 	K_ENTER_CR
 	if (kobj->init == FALSE)
 	{
-		kErrHandler(FAULT_OBJ_NOT_INIT);
+		KFAULT(FAULT_OBJ_NOT_INIT);
 	}
 	ULONG sleepThreads = kobj->waitingQueue.size;
 	if (sleepThreads > 0)
@@ -226,7 +208,7 @@ VOID kEventSignal(K_EVENT *kobj)
 {
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 	}
 
 	if (kobj->waitingQueue.size == 0)
@@ -235,7 +217,7 @@ VOID kEventSignal(K_EVENT *kobj)
 	K_ENTER_CR
 	if (kobj->init == FALSE)
 	{
-		kErrHandler(FAULT_OBJ_NOT_INIT);
+		KFAULT(FAULT_OBJ_NOT_INIT);
 	}
 
 	K_TCB *nextTCBPtr;
@@ -251,7 +233,7 @@ UINT kEventQuery(K_EVENT *const kobj)
 {
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 	}
 	return (kobj->waitingQueue.size);
 }
@@ -268,16 +250,16 @@ K_ERR kSemaInit(K_SEMA *const kobj, INT32 const value)
 	K_ENTER_CR
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 		K_EXIT_CR
 		return (K_ERR_OBJ_NULL);
 	}
 	if (value < 0)
-		kErrHandler(FAULT);
+		KFAULT(FAULT);
 	kobj->value = value;
 	if (kTCBQInit(&(kobj->waitingQueue), "semaQ") != K_SUCCESS)
 	{
-		kErrHandler(FAULT_LIST);
+		KFAULT(FAULT_LIST);
 		K_EXIT_CR
 		return (K_ERROR);
 	}
@@ -293,15 +275,15 @@ K_ERR kSemaWait(K_SEMA *const kobj, TICK const timeout)
 {
 	if (kIsISR())
 	{
-		kErrHandler(FAULT_ISR_INVALID_PRIMITVE);
+		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
 	if (kobj->init == FALSE)
 	{
-		kErrHandler(FAULT_OBJ_NOT_INIT);
+		KFAULT(FAULT_OBJ_NOT_INIT);
 	}
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 	}
 
 	K_CR_AREA
@@ -342,12 +324,12 @@ VOID kSemaSignal(K_SEMA *const kobj)
 	K_ENTER_CR
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 		K_EXIT_CR
 	}
 	if (kobj->init == FALSE)
 	{
-		kErrHandler(FAULT_OBJ_NOT_INIT);
+		KFAULT(FAULT_OBJ_NOT_INIT);
 	}
 	K_TCB *nextTCBPtr = NULL;
 	(kobj->value) = (kobj->value) + 1;
@@ -368,12 +350,12 @@ INT32 kSemaQuery(K_SEMA *const kobj)
 {
 	if (kobj->init == FALSE)
 	{
-		kErrHandler(FAULT_OBJ_NOT_INIT);
+		KFAULT(FAULT_OBJ_NOT_INIT);
 	}
 
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 	}
 	return (kobj->value);
 }
@@ -389,14 +371,14 @@ K_ERR kMutexInit(K_MUTEX *const kobj)
 
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 		return (K_ERROR);
 	}
 	kobj->lock = FALSE
 	;
 	if (kTCBQInit(&(kobj->waitingQueue), "mutexQ") != K_SUCCESS)
 	{
-		kErrHandler(FAULT_LIST);
+		KFAULT(FAULT_LIST);
 		return (K_ERROR);
 	}
 	kobj->init = TRUE;
@@ -416,11 +398,11 @@ K_ERR kMutexLock(K_MUTEX *const kobj, TICK timeout)
 	}
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 	}
 	if (kIsISR())
 	{
-		kErrHandler(FAULT_ISR_INVALID_PRIMITVE);
+		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
 	if (kobj->lock == FALSE)
 	{
@@ -484,9 +466,13 @@ VOID kMutexUnlock(K_MUTEX *const kobj)
 	K_CR_AREA
 	K_ENTER_CR
 	K_TCB *tcbPtr;
+	if (kIsISR())
+	{
+		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
+	}
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		KFAULT(FAULT_NULL_OBJ);
 	}
 	if (kobj->init == FALSE)
 	{
@@ -517,7 +503,7 @@ VOID kMutexUnlock(K_MUTEX *const kobj)
 		 * mutex is still locked */
 		kTCBQDeq(&(kobj->waitingQueue), &tcbPtr);
 		if (IS_NULL_PTR(tcbPtr))
-			kErrHandler(FAULT_NULL_OBJ);
+			KFAULT(FAULT_NULL_OBJ);
 		/* here only runptr can unlock a mutex*/
 		if (runPtr->priority < runPtr->realPrio)
 		{
@@ -532,7 +518,7 @@ VOID kMutexUnlock(K_MUTEX *const kobj)
 			}
 			else
 			{
-				kErrHandler(FAULT_READY_QUEUE);
+				KFAULT(FAULT_READY_QUEUE);
 			}
 	}
 	K_EXIT_CR
