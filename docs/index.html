@@ -1291,10 +1291,10 @@ VOID Task3(VOID)
 <p>In this section a high-level description of the mechanisms used for synchronisation and communication between tasks is presented. The most part of these mechanisms are components that can be enabled/disabled and configured - exception is for direct signals.</p>
 </div>
 <div class="paragraph data-line-593">
-<p><strong><em>Synchronisation</em></strong></p>
+<p><strong><em>Tasks coordination and precedence</em></strong></p>
 </div>
 <div class="paragraph data-line-595">
-<p>K0 handles synchronisation by <a href="https://kernel0.org/2025/01/08/inter-task-communication-on-embedded-operating-systems/">events</a> using direct signals, semaphores, mutexes and sleep/wake events. The provided mechanisms are enough to create more elaborated synchronisation protocols, such as monitors, event groups and event flags.</p>
+<p>K0 handles synchronisation by <a href="https://kernel0.org/2025/01/08/inter-task-communication-on-embedded-operating-systems/">events</a> using direct signals, semaphores and sleep/wake events. Mutexes with priority inheritance are for locking resources and critical regions. The provided mechanisms are enough to create more elaborated schemes, such as condition variables and event groups.</p>
 </div>
 <div class="paragraph data-line-598">
 <p><strong><em>Message Passing</em></strong></p>
