@@ -67,12 +67,12 @@
 
 #ifndef KLIST_H
 #define KLIST_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "kinternals.h"
-#define K_CODE
 
+#include "kinternals.h"
 
 #define K_LIST_GET_TCB_NODE(nodePtr, containerType) \
     K_GET_CONTAINER_ADDR(nodePtr, containerType, tcbNode)
