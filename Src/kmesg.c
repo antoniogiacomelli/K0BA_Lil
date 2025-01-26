@@ -60,7 +60,7 @@ K_ERR kMboxPost(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout)
 	K_CR_AREA
 	K_ENTER_CR
 
-	if (kIsISR() && timeout)
+	if (IS_BLOCK_ON_ISR(timeout))
 	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
@@ -131,10 +131,9 @@ K_ERR kMboxPend(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 	K_CR_AREA
 	K_ENTER_CR
 
-	if (kIsISR() && timeout)
+	if (IS_BLOCK_ON_ISR(timeout))
 	{
-		K_EXIT_CR
-		return (K_ERR_MBOX_ISR);
+		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
 	if ((kobj == NULL) || (recvPPtr == NULL))
 	{
@@ -346,6 +345,10 @@ K_ERR kMboxPostPend(K_MBOX *const kobj, ADDR const sendPtr,
 K_ERR kMboxInit(K_MBOX *const kobj, ADDR memPtr, ULONG maxItems)
 {
 	K_CR_AREA
+	if (IS_BLOCK_ON_ISR(timeout))
+	{
+		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
+	}
 
 	if (kobj == NULL || memPtr == NULL || maxItems == 0)
 	{
@@ -377,6 +380,11 @@ K_ERR kMboxInit(K_MBOX *const kobj, ADDR memPtr, ULONG maxItems)
 K_ERR kMboxPost(K_MBOX *const kobj, ADDR sendPtr, TICK timeout)
 {
 	K_CR_AREA
+
+	if (IS_BLOCK_ON_ISR(timeout))
+	{
+		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
+	}
 
 	if (kobj == NULL || sendPtr == NULL)
 	{
@@ -456,6 +464,11 @@ K_ERR kMboxPend(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 		KFAULT(FAULT_NULL_OBJ);
 		return (K_ERROR);
 	}
+	if (IS_BLOCK_ON_ISR())
+	{
+		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
+	}
+
 	if (!kobj->init)
 	{
 		KFAULT(FAULT_OBJ_NOT_INIT);
@@ -560,6 +573,10 @@ K_ERR kMboxJam(K_MBOX *const kobj, ADDR sendPtr, TICK timeout)
 	{
 		KFAULT(FAULT_OBJ_NOT_INIT);
 		return (K_ERROR);
+	}
+	if (IS_BLOCK_ON_ISR(timeout))
+	{
+		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
 	K_ENTER_CR
 
@@ -739,8 +756,10 @@ K_ERR kMesgQSend(K_MESGQ *const kobj, ADDR const sendPtr, TICK const timeout)
 	{
 		return (K_ERROR);
 	}
-	if (kIsISR())
+	if (IS_BLOCK_ON_ISR(timeout))
+	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
+	}
 	K_ENTER_CR
 	if (kobj->mesgCnt >= kobj->maxMesg) /*full*/
 	{
@@ -806,8 +825,10 @@ K_ERR kMesgQRecv(K_MESGQ *const kobj, ADDR recvPtr, TICK const timeout)
 	{
 		return (K_ERROR);
 	}
-	if (kIsISR())
+	if (IS_BLOCK_ON_ISR(timeout))
+	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
+	}
 
 	K_ENTER_CR
 
@@ -877,9 +898,10 @@ K_ERR kMesgQJam(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout)
 	{
 		return (K_ERROR);
 	}
-	if (kIsISR())
+	if (IS_BLOCK_ON_ISR(timeout))
+	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
-
+	}
 	K_ENTER_CR
 
 	if (kobj->mesgCnt >= kobj->maxMesg) /*full*/
