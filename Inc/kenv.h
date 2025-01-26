@@ -6,14 +6,19 @@
 extern "C" {
 #endif
 
-#include <stm32f4xx_hal.h>
+/*******************************************
+environment libraries:
+after including set CUSTOM_ENV to (1)
+in kconfig.h
+
+#include <hal.h>
 #include <cmsis_gcc.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <assert.h>
-
+********************************************/
 /*#define K_DEF_PRINTF*/
 
 #ifdef K_DEF_PRINTF

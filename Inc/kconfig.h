@@ -88,42 +88,34 @@
 #define K_DEF_SLEEPWAKE                  (ON)
 
 /**/
-/*** [ Mailbox ] *************************************************************/
+/*** [ Mailbox ] **************************************************************/
 
 #define K_DEF_MBOX	       	             (ON)
 
 #if(K_DEF_MBOX==ON)
 
-/******************************************************
- * A mailbox item is a pointer-sized variable.
- * Exchange is mailbox that can store a single item.
- * Queue is a mailbox that can store multiple items.
- *****************************************************/
-
 #define EXCHANGE				 		 (1)
 #define QUEUE					  		 (2)
 
 /* Multi-mail or single-mailbox */
-#define K_DEF_MBOX_TYPE				    (QUEUE)
+#define K_DEF_MBOX_TYPE				    (EXCHANGE)
 
 /* Queue discipline:   				 */
 #define K_DEF_MBOX_ENQ       	    	(K_DEF_ENQ_PRIO)
 
-/* Common Optional Methods	   */
 
-#define K_DEF_FUNC_MBOX_ISFULL			(ON)
-#define K_DEF_FUNC_MBOX_PEEK			(ON)
-
-/* Specific optional methods */
+/* Optional methods */
 
 #if (K_DEF_MBOX_TYPE==(EXCHANGE))
-
+/* Exchange */
 #define K_DEF_MBOX_POSTPEND		    	(ON)
+#define K_DEF_FUNC_MBOX_ISFULL			(ON)
+#define K_DEF_FUNC_MBOX_PEEK			(ON)
 
 #endif
 
 #if (K_DEF_MBOX_TYPE==(QUEUE))
-
+/* Queue */
 #define K_DEF_FUNC_MBOX_PEEK		    (ON)
 #define K_DEF_FUNC_MBOX_JAM				(ON)
 #define K_DEF_FUNC_MBOX_MAILCOUNT		(ON)
@@ -133,16 +125,6 @@
 
 /**/
 /*** [ Message Queue ] *******************************************************/
-
-/***********************************************************
- * A message queue is a fixed-size byte stream sent through
- * a buffer with capacity equals N message x Message size.
- * Very similar to a classic pipe, except that pipes can
- * stream random number of bytes on each operation, a
- * message  queue will stream a fixed-size block of bytes
- * on each operation. This size is a property of the message
- * queue instance.
- ************************************************************/
 
 #define K_DEF_MESGQ			      	    (ON)
 

@@ -167,7 +167,7 @@ struct kEvent
 };
 #endif /* K_DEF_SLEEPWAKE */
 
-#define MEMBLKLAST (1)
+#define MEMBLKLAST (0)
 
 /* Fixed-size pool memory control block (BLOCK POOL) */
 struct kMemBlock
@@ -215,8 +215,6 @@ struct kMailbox
 
 #endif
 
-
-
 #if ((K_DEF_MESGQ==ON))
 
 /* Message Queue (Stre*/
@@ -229,7 +227,6 @@ struct kMesgQ
     ADDR buffer;
     ULONG  readIndex;
     ULONG  writeIndex;
-    K_TCB* owner;
     struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;
 } __attribute__((aligned(4)));
