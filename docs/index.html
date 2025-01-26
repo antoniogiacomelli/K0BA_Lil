@@ -1648,16 +1648,16 @@ If sharing resources with semaphores, carefully prioritising the tasks; establis
 </tbody>
 </table>
 <div class="paragraph data-line-753">
-<p>Some RTOSes implement Message Queues using linked-lists, and in these cases might exist a central pool of buffers. This was the case on K0 until recently.</p>
+<p>The classic Message Queue on UNIX SVR4 is defined as the 'head of a linked-list of messages'. Some RTOSes implement Message Queues using linked-lists, and in these cases might exist a central pool of buffers. In K0 it was like this until recently.</p>
 </div>
 <div class="paragraph data-line-755">
-<p>Now, K0 Message Queues are a byte-stream mechanism (opposite to the mailboxes) and there is no central pool of buffers on the kernel anymore. This design resemble classic pipes: the difference is that each transmission/reception has fixed-size block of bytes - a message. Pipes, on the other hand, transmit and receive a random number of bytes on each operation.</p>
+<p>On <code>VER0.3.1</code> K0 Message Queues are a byte-stream mechanism and there is no central pool of buffers on the kernel anymore. This design avoids the overhead of a list, is faster and creates less contention by not having a shared pool.  For each Message Queue the user provides a buffer address with enough capacity (number of messages <em>x</em> message size) that is handled as circular buffer.</p>
 </div>
 <div class="paragraph data-line-757">
-<p>For each Message Queue the user provides a buffer address with enough capacity (number of messages <em>x</em> message size). As on pipes, this buffer is handled as circular buffer.</p>
+<p>Thus, it resembles classic pipes: the difference is that as messages have a format they have fixed-size. Pipes, on the other hand, transmit and receive a random number of bytes on each operation.</p>
 </div>
 <div class="paragraph data-line-759">
-<p>The message size associated a Message Queue instance is defined on its initialisation.  Having a fixed-size keeps them deterministic. A transmission performs a <em>deep copy</em> from the sender storage to the queue storage; a reception, from the queue storage to the receiver storage.</p>
+<p>The message size associated a Message Queue instance is defined on its initialisation.  On a transmission a <em>deep copy</em>  of a message from the sender storage to the queue storage takes place; on a reception, from the queue storage to the receiver storage.</p>
 </div>
 <div class="paragraph data-line-761">
 <p>The important primitives for Message Queues are <code>send()</code>, <code>recv()</code>, <code>jam()</code> and <code>peek()</code>.</p>
@@ -1761,11 +1761,11 @@ If sharing resources with semaphores, carefully prioritising the tasks; establis
 </li>
 </ol>
 </div>
-<div class="admonitionblock note data-line-809">
+<div class="admonitionblock tip data-line-809">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
 <div class="paragraph data-line-810">
@@ -1776,7 +1776,7 @@ If sharing resources with semaphores, carefully prioritising the tasks; establis
 </table>
 </div>
 <div class="paragraph data-line-813">
-<p>Note the message passed is again an address. Different from the mailbox the size is also a parameter. The receiver can copy the message to local a buffer, since a PD-buffer is never deallocated while in use and never fetched if there is a new buffer.</p>
+<p>Note the message passed is again an address. The receiver can copy the message to local a buffer, since a PD-buffer is never deallocated while in use and never fetched if there is a new buffer.</p>
 </div>
 <hr>
 </div>
