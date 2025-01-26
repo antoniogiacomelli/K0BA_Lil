@@ -1620,9 +1620,9 @@ A <em>Queue</em> keeps track of the its current number of items, to switch to <c
 <p>Both queues and exchanges have a <code>peek()</code> primitive to retrieve the item on the head (or, the only item for Exchanges) <em>without extracting</em> it - and for queues, there is the <code>jam()</code> primitive to place an item on the head - as an urgent data.</p>
 </div>
 <div class="paragraph data-line-746">
-<p>The choice between using Mailboxes as <em>Exchanges</em> or <em>Queues</em> depends on the application demand. At the K0 headquarters we have a strong preference for <em>Exchanges</em>, to be used as a signal/wait mechanism that conveys data.
-When data is needed to be transmited so it decouples sender and receiver on both time and data-scope, the Message Queues that will be presented below are seen as a more convenient alternative.
-It should be noted though that Mailboxes <em>Queues</em> are the most flexible.</p>
+<p>The choice between using Mailboxes as <em>Exchanges</em> or <em>Queues</em> depends on the application demand. <em>Exchanges</em> are meant to be used as a "data-as-signal" mechanism.
+When data is needed to be transmited so it decouples sender and receiver on both time and data-scope, the _Message Queues_ that will be presented below are more convenient.
+It should be noted though that Mailboxes as <em>Queues</em> are the most flexible: with little additional code you can pass by copy, decoupling producers and consumers on both time and data scope. As you can fine-tune the behaviour for each instance, they can be the only message passing mechanism enabled.</p>
 </div>
 </div>
 </div>
