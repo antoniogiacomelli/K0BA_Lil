@@ -49,7 +49,7 @@ struct kList
 {
 	struct kListNode listDummy;
 	STRING listName;
-	UINT32 size;
+	UINT size;
 	BOOL init;
 };
 
@@ -60,12 +60,12 @@ struct kTcb
 
 	INT* sp;
 	K_TASK_STATUS status;
-	UINT32 runCnt;
+	UINT runCnt;
 
 /**/
 	STRING taskName;
 	INT* stackAddrPtr;
-	UINT32 stackSize;
+	UINT stackSize;
 	PID pid;              /* System-defined task ID */
 	TID uPid;             /* User-defined   task ID */
 	PRIO priority;        /* Task priority (0-31) 32 is invalid */
@@ -105,9 +105,9 @@ struct kTcb
 	BOOL   runToCompl;
     BOOL   yield;
     BOOL   timeOut;
-	UINT32 lostSignals;
+	UINT lostSignals;
     TID    signalledBy;
-	UINT32 nPreempted;
+	UINT nPreempted;
 	PID    preemptedBy;
 
 	struct kListNode tcbNode;
@@ -117,7 +117,7 @@ struct kTcb
 struct kRunTime
 {
 	TICK globalTick;
-	UINT32 nWraps;
+	UINT nWraps;
 };
 extern struct kRunTime runTime;
 
@@ -161,7 +161,7 @@ struct kEvent
 {
 	struct kList waitingQueue;
 	BOOL init;
-	UINT32 eventID;
+	UINT eventID;
 	K_TIMEOUT_NODE timeoutNode;
 
 };
@@ -240,13 +240,13 @@ struct kPumpDropBuf
 
      ADDR   dataPtr;
      ULONG   dataSize;                /* mesg size in this buf */
-     UINT32 nUsers;                  /* number of tasks using */
+     UINT nUsers;                  /* number of tasks using */
 };
 struct kPumpDropQueue
 {
     struct kMemBlock*       memCtrlPtr;    /* associated allocator */
     struct kPumpDropBuf*    currBufPtr;    /* current buffer   */
-    UINT32 failReserve;
+    UINT failReserve;
     BOOL                    init;
 };
 

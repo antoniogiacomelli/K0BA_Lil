@@ -944,7 +944,7 @@ K_ERR kMesgQJam(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout)
 #endif
 
 #if (K_DEF_FUNC_MESGQ_MESGCOUNT==ON)
-K_ERR kMesgQGetMesgCount(K_MESGQ *const kobj, UINT32 *const mesgCntPtr)
+K_ERR kMesgQGetMesgCount(K_MESGQ *const kobj, UINT *const mesgCntPtr)
 {
 	K_CR_AREA
 	if (kobj)

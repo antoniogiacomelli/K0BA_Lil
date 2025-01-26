@@ -26,8 +26,8 @@ extern K_TCBQ timeOutQueue;
 
 BOOL kSchNeedReschedule(K_TCB*);
 VOID kSchSwtch(VOID);
-UINT32 kEnterCR(VOID);
-VOID kExitCR(UINT32);
+UINT kEnterCR(VOID);
+VOID kExitCR(UINT);
 VOID kInit(VOID);
 VOID kYield(VOID);
 VOID kApplicationInit(VOID);

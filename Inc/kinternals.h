@@ -117,7 +117,7 @@ __STATIC_FORCEINLINE unsigned kIsISR()
 #define K_GET_CONTAINER_ADDR(memberPtr, containerType, memberName) \
     ((containerType *)((unsigned char *)(memberPtr) - \
      offsetof(containerType, memberName)))
-#define K_CR_AREA  UINT32 crState_;
+#define K_CR_AREA  UINT crState_;
 #define K_ENTER_CR crState_ = kEnterCR();
 #define K_EXIT_CR  kExitCR(crState_);
 #define K_PEND_CTXTSWTCH K_TRAP_PENDSV

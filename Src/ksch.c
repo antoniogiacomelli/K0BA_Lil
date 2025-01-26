@@ -39,14 +39,14 @@ static PRIO highestPrio = 0;
 static PRIO const lowestPrio = K_DEF_MIN_PRIO;
 static PRIO nextTaskPrio = 0;
 static PRIO idleTaskPrio = K_DEF_MIN_PRIO + 1;
-static volatile UINT32 readyQBitMask;
-static volatile UINT32 readyQRightMask;
-static volatile UINT32 version;
+static volatile UINT readyQBitMask;
+static volatile UINT readyQRightMask;
+static volatile UINT version;
 /* fwded private helpers */
 static inline VOID kReadyRunningTask_(VOID);
 static inline PRIO kCalcNextTaskPrio_();
 #if (K_DEF_SCH_TSLICE == ON)
-static inline BOOL kDecTimeSlice_(void);
+static inline BOOL kDecTimeSlice_(VOID);
 #endif
 
 /*******************************************************************************
@@ -224,13 +224,15 @@ K_ERR kReadyQDeq(K_TCB **const tcbPPtr, PRIO priority)
  *******************************************************************************/
 static PID pPid = 0; /** system pid for each task 	*/
 
-static K_ERR kInitStack_(INT *const stackAddrPtr, UINT32 const stackSize,
+/* fwded private prototypes */
+static K_ERR kInitStack_(INT *const stackAddrPtr, UINT const stackSize,
 		TASKENTRY const taskFuncPtr); /* init stacks */
 
 static K_ERR kInitTcb_(TASKENTRY const taskFuncPtr, INT *const stackAddrPtr,
-		UINT32 const stackSize);
+		UINT const stackSize);
+/**/
 
-static K_ERR kInitStack_(INT *const stackAddrPtr, UINT32 const stackSize,
+static K_ERR kInitStack_(INT *const stackAddrPtr, UINT const stackSize,
 		TASKENTRY const taskFuncPtr)
 {
 	if (stackAddrPtr == NULL || stackSize == 0 || taskFuncPtr == NULL)
@@ -254,7 +256,7 @@ static K_ERR kInitStack_(INT *const stackAddrPtr, UINT32 const stackSize,
 	stackAddrPtr[stackSize - R5_OFFSET] = 0x05050505;
 	stackAddrPtr[stackSize - R4_OFFSET] = 0x04040404;
 	/*stack painting*/
-	for (UINT32 j = 17; j < stackSize; j++)
+	for (UINT j = 17; j < stackSize; j++)
 	{
 		stackAddrPtr[stackSize - j] = (INT) 0xBADC0FFE;
 	}
@@ -262,8 +264,8 @@ static K_ERR kInitStack_(INT *const stackAddrPtr, UINT32 const stackSize,
 	return (K_SUCCESS);
 }
 
-K_ERR kInitTcb_(TASKENTRY const taskFuncPtr, INT *const stackAddrPtr,
-		UINT32 const stackSize)
+static K_ERR kInitTcb_(TASKENTRY const taskFuncPtr, INT *const stackAddrPtr,
+		UINT const stackSize)
 {
 	if (kInitStack_(stackAddrPtr, stackSize, taskFuncPtr) == K_SUCCESS)
 	{
@@ -279,7 +281,7 @@ K_ERR kInitTcb_(TASKENTRY const taskFuncPtr, INT *const stackAddrPtr,
 }
 
 K_ERR kCreateTask(TASKENTRY const taskFuncPtr, STRING taskName, TID const id,
-		INT *const stackAddrPtr, UINT32 const stackSize,
+		INT *const stackAddrPtr, UINT const stackSize,
 #if(K_DEF_SCH_TSLICE==ON)
         TICK const timeSlice,
 #endif
@@ -359,11 +361,11 @@ K_ERR kCreateTask(TASKENTRY const taskFuncPtr, STRING taskName, TID const id,
  * CRITICAL REGIONS
  *******************************************************************************/
 
-UINT32 kEnterCR(VOID)
+UINT kEnterCR(VOID)
 {
 	asm volatile("DSB");
 
-	UINT32 crState;
+	UINT crState;
 
 	crState = __get_PRIMASK();
 	if (crState == 0)
@@ -378,7 +380,7 @@ UINT32 kEnterCR(VOID)
 	return (crState);
 }
 
-VOID kExitCR(UINT32 crState)
+VOID kExitCR(UINT crState)
 {
 	asm volatile("DSB");
 	__set_PRIMASK(crState);
@@ -407,7 +409,6 @@ PRIO kGetTaskPrio(TID const taskID)
 	return (tcbs[pid].priority);
 }
 
-
 K_ERR kTaskChangePrio(PRIO newPrio)
 {
 	if (kIsISR())
@@ -430,17 +431,16 @@ K_ERR kTaskRestorePrio(VOID)
 	return (K_SUCCESS);
 }
 
-
 /******************************************************************************
  * KERNEL INITIALISATION
  *******************************************************************************/
 
-static void kInitRunTime_(void)
+static VOID kInitRunTime_(VOID)
 {
 	runTime.globalTick = 0;
 	runTime.nWraps = 0;
 }
-static K_ERR kInitQueues_(void)
+static K_ERR kInitQueues_(VOID)
 {
 	K_ERR err = 0;
 	for (PRIO prio = 0; prio < NPRIO + 1; prio++)
@@ -452,7 +452,7 @@ static K_ERR kInitQueues_(void)
 	return (err);
 }
 
-void kInit(void)
+VOID kInit(VOID)
 {
 
 	version = kGetVersion();
@@ -461,7 +461,7 @@ void kInit(void)
 	kInitQueues_();
 	kInitRunTime_();
 	highestPrio = tcbs[0].priority;
-	for (int i = 0; i < NTHREADS; i++)
+	for (UINT i = 0; i < NTHREADS; i++)
 	{
 		if (tcbs[i].priority < highestPrio)
 		{
@@ -469,7 +469,7 @@ void kInit(void)
 		}
 	}
 
-	for (int i = 0; i < NTHREADS; i++)
+	for (UINT i = 0; i < NTHREADS; i++)
 	{
 		kTCBQEnq(&readyQueue[tcbs[i].priority], &tcbs[i]);
 	}
@@ -498,7 +498,7 @@ static inline VOID kReadyRunningTask_(VOID)
 }
 
 #if (K_DEF_SCH_TSLICE == ON)
-static BOOL kDecTimeSlice_(void)
+static BOOL kDecTimeSlice_(VOID)
 {
     if ( (runPtr->status == RUNNING) && (runPtr->runToCompl == FALSE))
     {
@@ -555,7 +555,7 @@ static BOOL kSleepHandle_(VOID)
 
 }
 
-BOOL kTickHandler(void)
+BOOL kTickHandler(VOID)
 {
 	/* return is short-circuit to !runToCompl & */
 	BOOL runToCompl = FALSE;
@@ -624,9 +624,10 @@ BOOL kTickHandler(void)
 		kReadyRunningTask_();
 	}
 #endif
-	ret = (!runToCompl)
+	ret = ((!runToCompl)
 			& ((runPtr->status == READY) | readySleepTask | timeOutTask
-					| (runPtr->yield == TRUE));
+					| (runPtr->yield == TRUE)));
+
 	return (ret);
 }
 
@@ -672,5 +673,4 @@ VOID kSchSwtch(VOID)
 	}
 	return;
 }
-
 

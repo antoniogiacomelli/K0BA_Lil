@@ -81,7 +81,7 @@ K_ERR kCreateTask
 		STRING taskName,
 		TID const taskID,
         INT* const stackAddrPtr,
-		UINT32 const stackSize,
+		UINT const stackSize,
 #if(K_DEF_SCH_TSLICE==ON)
         TICK const timeSlice,
 #endif
@@ -308,7 +308,7 @@ K_ERR kMesgQInit(K_MESGQ *const kobj, ADDR buffer, ULONG messageSize,
  *\return			K_SUCCESS or a specific error.
  */
 
-K_ERR kMesgQGetMesgCount(K_MESGQ *const kobj, UINT32 *const mesgCntPtr);
+K_ERR kMesgQGetMesgCount(K_MESGQ *const kobj, UINT *const mesgCntPtr);
 
 #endif
 
@@ -500,7 +500,7 @@ VOID kEventSignal(K_EVENT* const kobj);
 /**
  * \brief  Return the number of tasks sleeping on an event.
  */
-UINT32 kEventQuery(K_EVENT* const kobj);
+UINT kEventQuery(K_EVENT* const kobj);
 
 #endif
 

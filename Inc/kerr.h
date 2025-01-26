@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 extern volatile K_FAULT faultID;
-VOID ITM_SendValue(UINT32);
+VOID ITM_SendValue(UINT);
 VOID kErrHandler(K_FAULT);
 #ifdef __cplusplus
 }

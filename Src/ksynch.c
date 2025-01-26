@@ -142,7 +142,7 @@ K_ERR kEventInit(K_EVENT *const kobj)
 	}
 	K_CR_AREA
 	K_ENTER_CR
-	kobj->eventID = (UINT32) kobj;
+	kobj->eventID = (UINT) kobj;
 	assert(!kTCBQInit(&(kobj->waitingQueue), "eventQ"));
 	kobj->init = TRUE
 	;
@@ -247,7 +247,7 @@ VOID kEventSignal(K_EVENT *kobj)
 	return;
 }
 
-UINT32 kEventQuery(K_EVENT *const kobj)
+UINT kEventQuery(K_EVENT *const kobj)
 {
 	if (kobj == NULL)
 	{
