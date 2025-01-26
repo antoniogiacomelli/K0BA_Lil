@@ -445,7 +445,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel0">
-<li><a href="#the_kernel_on_a_glance"><strong>The kernel on a glance</strong></a></li>
+<li><a href="#the_kernel_on_a_glance"><strong>The kernel on a glance</strong></a>
+<ul class="sectlevel1">
+<li><a href="#a_real_time_executive">1. A real-time executive</a></li>
+</ul>
+</li>
 <li><a href="#core_mechanisms"><strong><em>Core Mechanisms</em></strong></a>
 <ul class="sectlevel1">
 <li><a href="#data_structures">1. Data Structures</a>
@@ -507,21 +511,36 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="admonitionblock note data-line-5">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This document is high-level system description. API usage can be found at the project <a href="https://github.com/antoniogiacomelli/K0BA_Lil">repository</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 <h1 id="the_kernel_on_a_glance" class="sect0 data-line-14"><strong>The kernel on a glance</strong></h1>
-<div class="paragraph data-line-16">
-<div class="title"><strong>This is a high-level system description. Source code at the <a href="https://github.com/antoniogiacomelli/K0BA_Lil">repository</a>.</strong></div>
+<div class="sect1 data-line-17">
+<h2 id="a_real_time_executive">1. A real-time executive</h2>
+<div class="sectionbody">
+<div class="paragraph data-line-19">
 <p>If no more details are to be provided the kernel has a top and a bottom layer - on the top, the <em>Executive</em>  manages the resources needed by the application; on the bottom, the <em>Low-level Scheduler</em> works as a software extension of the machine.</p>
 </div>
-<div class="paragraph data-line-18">
+<div class="paragraph data-line-21">
 <p>Together they implement the <em>Task</em> concept and provide the primitives for a programmable multitasking environment.</p>
 </div>
-<div class="imageblock data-line-20">
+<div class="imageblock data-line-23">
 <div class="content">
 <img src="images/images/layeredkernel.png" alt="layeredkernel">
 </div>
-</div>
-<div class="paragraph data-line-23">
-<p><strong>The execution unit</strong></p>
 </div>
 <div class="paragraph data-line-25">
 <p>A process is composed by an execution image and an address space - the modern process concept is  about program execution and about memory isolation. A thread is a logical sequence of instructions. Several threads co-exist in the same address space, within the same process.</p>
@@ -539,9 +558,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>This arrangement yields an operating system entitity to handle - an execution unit: in K0 we name it a <em>Task</em> (the terms task and thread are used interchangeably on this document.)</p>
 </div>
 <div class="paragraph data-line-35">
-<p>Importantly, there is no userland on the strict sense. Low-end MCUs based on the supported architecture (ARMv7M) often do not come with an Memory Protection Unit - so privilege levels are limited to the CPU scope: instructions and registers. This level of safety does not compensate for the overhead of system calls.</p>
+<p>Importantly, there is no userland on the strict sense. Low-end MCUs based on the supported architecture (ARMv7M) often do not come with a Memory Protection Unit - so privilege levels are limited to the CPU scope: instructions and registers. This level of safety does not compensate for the overhead of system calls, as they harm determinism and responsiveness.</p>
 </div>
 <hr>
+</div>
+</div>
 <h1 id="core_mechanisms" class="sect0 data-line-39"><strong><em>Core Mechanisms</em></strong></h1>
 <div class="paragraph data-line-41">
 <p>In this section a high-level description of the kernel core mechanisms is provided. These mechanisms are always present: scheduler, timers and memory allocator.</p>
