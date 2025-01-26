@@ -1,7 +1,9 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
+/* minimal includes */
 #include "kenv.h"
 #include "kapi.h"
+
 /*******************************************************************************
  * TASK STACKS EXTERN DECLARATION
  *******************************************************************************/
@@ -26,8 +28,6 @@ VOID Task3(VOID);
 
 
 
-/*****/
-#define K_DEF_PRINTF
 #ifdef K_DEF_PRINTF
 extern UART_HandleTypeDef huart2;
 #define kprintf(...) \
