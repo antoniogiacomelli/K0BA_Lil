@@ -1,6 +1,4 @@
 #include "application.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 INT stack1[STACKSIZE];
 INT stack2[STACKSIZE];
