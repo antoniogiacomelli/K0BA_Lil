@@ -142,6 +142,7 @@ __STATIC_FORCEINLINE unsigned kIsISR()
 #define TOSTRING(x) STRINGIFY(x)
 #define IS_INIT(obj) (obj)->init) ? (1) : (0)
 #define IS_VALID_TID(id) ((id == (IDLETASK_ID)) || (id == (TIMHANDLER_ID))) ? (0) : (1)
+#define IS_BLOCK_ON_ISR(timeout) ((kIsISR() && (timeout > 0)) ? (1) : (0))
 #define RELOAD      		1
 #define ONESHOT    		    0
 #define K_WAIT_FOREVER      (0xFFFFFFFF)
