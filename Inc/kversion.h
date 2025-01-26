@@ -15,7 +15,7 @@
 
 /*** Minimal valid version **/
 /** This is to manage API retrocompatibilities */
-#define K_DEF_MINIMAL_VER        0U
+#define K_DEF_MINIMAL_VER        (0U)
 
 extern struct kversion const KVERSION;
 
