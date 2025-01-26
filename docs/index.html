@@ -1412,7 +1412,7 @@ VOID Task3(VOID)
 <p>Let TH, TM, TL to be 3 tasks with priority high (H), medium (M) and low (L) respectively. Say TH is dispatched, just to be blocked on a semaphore 'TL' has acquired. Say 'TM' was made ready an dispatched and it does not need the resource. It will preempt 'TL'.</p>
 </div>
 <div class="paragraph data-line-652">
-<p>Being blocked on resource which 'TL' causes 'TH' to have an <em>unbounded waiting time</em> because any task with priority higher than 'L' that do not need the resource are indirectly preventing it to be unblocked.</p>
+<p>Being blocked on resource which 'TL' holds, causes 'TH' to have an <em>unbounded waiting time</em> because any task with priority higher than 'L' that do not need the resource is indirectly preventing it to be unblocked.</p>
 </div>
 <div class="paragraph data-line-654">
 <p>Mutexes in K0 implement a protocol called priority inheritance - 'TL' will have its priority raised to the same as 'H', while holding the resource, so 'TM' cannot preempt it anymore. Thus, consider using mutexes for resource sharing whenever possible.</p>
