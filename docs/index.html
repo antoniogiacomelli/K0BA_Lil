@@ -1692,7 +1692,7 @@ VOID Task2(VOID)
 	struct mesg *recvPtr = NULL;
 	while (1)
 	{
-		kMboxPend(&amp;mbox, (ADDR) &amp;recvPtr, K_WAIT_FOREVER); /* will on empty mailbox */
+		kMboxPend(&amp;mbox, (ADDR) &amp;recvPtr, K_WAIT_FOREVER); /* will block on empty mailbox */
 		kprintf("Received: %s \n\r", recvPtr-&gt;mesg);
 		kBusyDelay(2);
 		kMemFree(&amp;mem, (ADDR) recvPtr); /* free memory */
