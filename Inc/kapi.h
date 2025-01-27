@@ -125,7 +125,7 @@ K_ERR kTaskRestorePrio(VOID);
  *\return      \see ktypes.h
  */
 
-K_ERR kSemaInit(K_SEMA* const kobj, INT32 const value);
+K_ERR kSemaInit(K_SEMA* const kobj, INT const value);
 
 /**
  *\brief 			Wait on a semaphore
@@ -145,7 +145,7 @@ VOID kSemaSignal(K_SEMA* const kobj);
  *\param kobj Semaphore address
  *\return      Counter's value
  */
-INT32 kSemaQuery(K_SEMA* const kobj);
+INT kSemaQuery(K_SEMA* const kobj);
 
 #endif
 /*******************************************************************************

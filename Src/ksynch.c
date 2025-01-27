@@ -244,7 +244,7 @@ UINT kEventQuery(K_EVENT *const kobj)
 /******************************************************************************
  * SEMAPHORES
  ******************************************************************************/
-K_ERR kSemaInit(K_SEMA *const kobj, INT32 const value)
+K_ERR kSemaInit(K_SEMA *const kobj, INT const value)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -346,7 +346,7 @@ VOID kSemaSignal(K_SEMA *const kobj)
 	return;
 }
 
-INT32 kSemaQuery(K_SEMA *const kobj)
+INT kSemaQuery(K_SEMA *const kobj)
 {
 	if (kobj->init == FALSE)
 	{

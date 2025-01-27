@@ -12,29 +12,17 @@
 #define KTYPES_H
 
 #include "kenv.h"
-/**
- * \brief C standard library primitives alias
- */
 
+/**
+ * \brief C primitives
+ */
 /*** these are immutable:                                                   */
 typedef void VOID;
 typedef char CHAR;
 typedef unsigned char BYTE;
-typedef int INT;	/* stack type */
-typedef unsigned int UINT;
+typedef signed INT;	/* stack type */
+typedef unsigned UINT;
 typedef unsigned long ULONG;
-
-/*** typedef (there is no harm) the stdint for "stylistic"                  */
-/*** readability purposes: both never a consensus.                          */
-/*** still, K0BA needs you provide a stdint compatible to your environment  */
-/*** and you can use the stdint for user-defined code                       */
-typedef int8_t INT8;
-typedef int32_t INT32;
-typedef uint32_t UINT32;
-typedef uint64_t UINT64;
-typedef int64_t INT64;
-typedef int16_t INT16;
-typedef uint16_t UINT16;
 
 /*** if you dont provide a stdbool                                          */
 #if !defined(bool)
@@ -52,13 +40,13 @@ typedef _Bool BOOL;
  */
 /*** User-defined Task ID range: 0-255.                         */
 /*** Priority range: 0-31 - tasks can have the same priority    */
-typedef void *ADDR; /* Generic address type  */
-typedef const char *STRING; /* Read-only String alias  */
+typedef void *ADDR; /* Generic address type 		*/
+typedef char *STRING; /*Pointer to string of chars */
 
 typedef unsigned char PID; /* System defined Task ID type */
 typedef unsigned char TID; /* User defined Task ID */
 typedef unsigned char PRIO; /* Task priority type */
-typedef unsigned int TICK; /* Tick count type */
+typedef unsigned TICK; /* Tick count type */
 
 /*** Func ptrs typedef */
 typedef void (*TASKENTRY)(void); /* Task entry function pointer */

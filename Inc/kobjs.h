@@ -135,7 +135,7 @@ typedef struct kTimeoutNode
 struct kSema
 {
 	BOOL init;
-	INT32 value;
+	INT value;
 	struct kTcb* owner;
 	struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;

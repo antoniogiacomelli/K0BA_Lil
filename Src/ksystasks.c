@@ -14,7 +14,6 @@
  *****************************************************************************/
 
 #define K_CODE
-
 #include "kenv.h"
 #include "kconfig.h"
 #include "kobjs.h"

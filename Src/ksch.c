@@ -240,7 +240,7 @@ static K_ERR kInitStack_(INT *const stackAddrPtr, UINT const stackSize,
 		return (K_ERROR);
 	}
 	stackAddrPtr[stackSize - PSR_OFFSET] = 0x01000000;
-	stackAddrPtr[stackSize - PC_OFFSET] = (INT32) taskFuncPtr;
+	stackAddrPtr[stackSize - PC_OFFSET] = (INT) taskFuncPtr;
 	stackAddrPtr[stackSize - LR_OFFSET] = 0x14141414;
 	stackAddrPtr[stackSize - R12_OFFSET] = 0x12121212;
 	stackAddrPtr[stackSize - R3_OFFSET] = 0x03030303;

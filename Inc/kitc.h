@@ -28,9 +28,11 @@ K_ERR kPend(VOID);
 K_ERR kSignal(TID const);
 
 #if (K_DEF_SLEEPWAKE==ON)
+
 K_ERR kEventInit(K_EVENT* const);
 K_ERR kEventSleep(K_EVENT* const, TICK);
 VOID kEventWake(K_EVENT* const);
+
 #endif
 
 #ifdef __cplusplus
