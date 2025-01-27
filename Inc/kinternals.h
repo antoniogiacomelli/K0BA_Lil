@@ -11,7 +11,9 @@
 
 #ifndef SYS_ALIAS
 #define SYS_ALIAS
+
 #include "kenv.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -54,6 +56,7 @@ extern "C" {
 #define TICK_5MS            (SystemCoreClock/2000)  /* Tick period of 5ms */
 #define TICK_1MS            (SystemCoreClock/10000) /*  Tick period of 1ms */
 
+
 /* Mapped API */
 
 typedef struct kSema SEMA;
@@ -88,7 +91,9 @@ typedef struct kTcb TCB;
 #define _K_STUP asm volatile("svc #0xAA");
 
 /*  helpers */
-
+/*todo: improve copy by advancing dst and src and reusing
+ * as indexes for mesgq
+ */
 #define CPY(d,s,z, r)                                 \
  do                                                   \
  {                                                    \
@@ -102,9 +107,7 @@ typedef struct kTcb TCB;
       }                                               \
   } while(0U)
 
-/*todo: improve copy by advancing dst and src and reusing
- * as indexes for mesgq
- */
+
 #define CPYQ(d,s,z,r) CPY(d,s,z,r)
 __STATIC_FORCEINLINE unsigned kIsISR()
 {

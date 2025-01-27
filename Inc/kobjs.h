@@ -7,6 +7,7 @@
  * 					o Kernel objects definition
  *
  ******************************************************************************/
+ 
 #ifndef KOBJS_H
 #define KOBJS_H
 

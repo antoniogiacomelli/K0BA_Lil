@@ -19,6 +19,7 @@
  *****************************************************************************/
 
 #define K_CODE
+
 #include "kconfig.h"
 #include "ktypes.h"
 #include "kobjs.h"

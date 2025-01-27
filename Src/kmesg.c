@@ -203,11 +203,13 @@ K_ERR kMboxPend(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 	return (K_SUCCESS);
 }
 
+#if (K_DEF_FUNC_MBOX_ISFULL==ON)
 BOOL kMboxIsFull(K_MBOX *const kobj)
 {
 
 	return ((kobj->mailPtr == NULL) ? FALSE : TRUE);
 }
+#endif
 
 #if (K_DEF_FUNC_MBOX_PEEK==ON)
 K_ERR kMboxPeek(K_MBOX *const kobj, ADDR *peekPPtr)

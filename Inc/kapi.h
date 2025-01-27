@@ -1,15 +1,15 @@
 /******************************************************************************
  *
  * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
- *
+ * 
  ******************************************************************************/
 
 /**
  * \file     kapi.h
  * \brief    Kernel API
  * \version  0.3.1
- * \author   Antonio Giacomelli
- *
+ * \author   Antonio Giacomelli (wwww.kernel0.org)
+ * 
  *
  * \verbatim
  *  ________________________________________

@@ -9,8 +9,8 @@
  *
  *    Number of user tasks.
  *
- * - **Lowest effective priority:**      (`K_DEF_N_MINPRIO`)
- *   Priorities range are from `0` to ``K_DEF_N_MINPRIO`.
+ * - **Lowest effective priority:**      (`K_DEF_MINPRIO`)
+ *   Priorities range are from `0` to ``K_DEF_MINPRIO`.
  *   (0 is highest effective priority)
  *
  * - **Number of timers:**     (`K_DEF_N_TIMERS`)
@@ -29,6 +29,7 @@
 
 #ifndef KCONFIG_H
 #define KCONFIG_H
+
 #include "kinternals.h"
 
 #define ON     (1)
@@ -37,10 +38,6 @@
 /* include headers for HAL and compiler in kenv.h */
 /* and set this macro to 1                        */
 #define CUSTOM_ENV (0)
-/**/
-/*** [ System Tasks Stack Size (WORDS)] ***************************************/
-#define IDLE_STACKSIZE      	    	(64)
-#define TIMHANDLER_STACKSIZE  			(64)
 
 /**/
 /*** [ Time Quantum ] *********************************************************/
@@ -97,7 +94,6 @@
 
 /* Queue discipline:   				 */
 #define K_DEF_MBOX_ENQ       	    	(K_DEF_ENQ_PRIO)
-
 
 /* Optional methods */
 

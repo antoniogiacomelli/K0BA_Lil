@@ -15,6 +15,7 @@
 extern "C" {
 #endif
 
+
 ULONG kStrLen(STRING s);
 ULONG kMemCpy(ADDR destPtr, ADDR const srcPtr, ULONG size);
 

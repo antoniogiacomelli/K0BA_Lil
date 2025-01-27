@@ -14,7 +14,9 @@
 #define K_ITC_H
 
 #ifdef __cplusplus
+
 extern "C" {
+
 #endif
 
 #include "kconfig.h"
@@ -36,6 +38,7 @@ VOID kEventWake(K_EVENT* const);
 #endif
 
 #ifdef __cplusplus
+
 }
 #endif
 #endif /* K_ITC_H */
