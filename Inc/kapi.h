@@ -184,8 +184,51 @@ K_ERR kMutexQuery(K_MUTEX* const kobj);
 /*******************************************************************************
  * MAILBOX
  *******************************************************************************/
-
 #if (K_DEF_MBOX == ON)
+
+/**
+ * \brief 				Send a message to mailbox.
+ * \param kobj			Mailbox address.
+ * \param sendPtr		Message address.
+ * \param timeout		Suspension timeout.
+ * \return				K_SUCCESS or specific error.
+ */
+K_ERR kMboxPost(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
+/**
+ * \brief               Receive from a mailbox. Block if empty.
+ *
+ * \param kobj          Mailbox address.
+ * \param recvPPtr      Address that will store the message address (pointer-to-pointer).
+ * \param timeout		Suspension time-out
+ * \return				K_SUCCESS or specific error.
+ */
+K_ERR kMboxPend(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
+
+
+#if (K_DEF_FUNC_MBOX_RESET==ON)
+
+/**
+ * \brief			Reset mailbox to initial state.
+ * 					All tasks pending switch to READY state.
+ * \param kobj		Mailbox address
+ * \return			K_SUCCESS or K_ERR_OBJ_NULL
+ */
+K_ERR kMboxReset(K_MESGQ* kobj);
+
+#endif
+
+#if (K_DEF_FUNC_MBOX_PEEK==ON)
+
+/**
+ * \brief 			   Reads the message on head of queue
+ * 					   without extracting it.
+ * \param kobj		   Mailbox address.
+ * \param peekPPtr	   Pointer to receive address.
+ * \return			   K_SUCCESS or specific error.
+ */
+K_ERR kMboxPeek(K_MBOX *const kobj, ADDR *peekPPtr);
+
+#endif
 
 #if (K_DEF_MBOX_TYPE==EXCHANGE)
 /**
@@ -206,7 +249,7 @@ K_ERR kMboxInit(K_MBOX *const kobj, ADDR initMail);
  * \return              K_SUCCESS or specific error.
  */
 
-#if (K_DEF_MBOX_SENDRECV==ON)
+#if (K_DEF_FUNC_MBOX_POSTPEND==ON)
 
 /**
  * \brief               Send and receive from the same mailbox.
@@ -219,6 +262,9 @@ K_ERR kMboxInit(K_MBOX *const kobj, ADDR initMail);
 K_ERR kMboxPostPend(K_MBOX *const kobj, ADDR const sendPtr, ADDR* const recvPPtr,
 		TICK timeout);
 
+#endif
+
+#if (K_DEF_FUNC_MBOX_ISFULL==ON)
 /**
  * \brief   Check if a mailbox is full.
  * \return  TRUE or FALSE.
@@ -227,7 +273,9 @@ BOOL kMboxIsFull(K_MBOX *const kobj);
 
 #endif
 
-#elif (K_DEF_MBOX_TYPE==QUEUE)
+#endif /* EXCHANGE */
+
+#if (K_DEF_MBOX_TYPE==QUEUE)
 
 /**
  * \brief				Initialises an indirect multi-item mailbox.
@@ -238,36 +286,14 @@ BOOL kMboxIsFull(K_MBOX *const kobj);
  */
 K_ERR kMboxInit(K_MBOX *const kobj, ADDR *memPPtr, ULONG maxItems);
 
+#if (K_DEF_FUNC_MBOX_MAILCOUNT==ON)
+
 /**
  * \brief   Get the number of mails on a mailbox.
  * \return  Number of mails.
  */
 ULONG kMboxMailCount(K_MBOX *const kobj);
 
-
-#endif
-
-/*Post and Pend methods are common to both modes */
-K_ERR kMboxPost(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
-/**
- * \brief               Receive from a mailbox. Block if empty.
- *
- * \param kobj          Mailbox address.
- * \param recvPPtr      Address that will store the message address (pointer-to-pointer).
- * \param timeout		Suspension time-out
- * \return				K_SUCCESS or specific error.
- */
-K_ERR kMboxPend(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
-
-#if (K_DEF_FUNC_MBOX_PEEK==ON)
-/**
- * \brief 			   Reads the message on head of queue
- * 					   without extracting it.
- * \param kobj		   Mailbox address.
- * \param peekPPtr	   Pointer to receive address.
- * \return			   K_SUCCESS or specific error.
- */
-K_ERR kMboxPeek(K_MBOX *const kobj, ADDR *peekPPtr);
 #endif
 
 #if (K_DEF_FUNC_MBOX_MAILCOUNT==ON)
@@ -277,11 +303,12 @@ K_ERR kMboxPeek(K_MBOX *const kobj, ADDR *peekPPtr);
  * \return
  */
 ULONG kMboxMailCount(K_MBOX *const kobj);
-#endif
-
-
 
 #endif
+
+#endif /* QUEUE */
+
+#endif /* MBOX  */
 
 /******************************************************************************/
 /* MESSAGE STREAM (PIPE/MESSAGE QUEUE)                                        */
@@ -357,6 +384,7 @@ K_ERR kMesgQPeek(K_MESGQ *const kobj, ADDR recvPtr);
 #if (K_DEF_FUNC_MESGQ_RESET==ON)
 /**
  * \brief			Reset queue indexes and message counter.
+ * 					All tasks pending switch to READY state.
  * \param kobj		Queue address
  * \return			K_SUCCESS or K_ERR_OBJ_NULL
  */
@@ -605,6 +633,12 @@ unsigned int kGetVersion(void);
  */
 ULONG kMemCpy(ADDR destPtr, ADDR const srcPtr, ULONG size);
 
+/**
+ * \brief	Returns the lenght of a string
+ * \param s Input string
+ * \return  Lenght in bytes
+ */
+ULONG kStrLen(STRING s);
 
 /* 				*				*				*				*			  */
 
