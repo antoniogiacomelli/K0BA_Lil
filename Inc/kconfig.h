@@ -37,7 +37,6 @@
 /* include headers for HAL and compiler in kenv.h */
 /* and set this macro to 1                        */
 #define CUSTOM_ENV (0)
-
 /**/
 /*** [ System Tasks Stack Size (WORDS)] ***************************************/
 #define IDLE_STACKSIZE      	    	(64)
@@ -65,7 +64,7 @@
 
 /**/
 /*** [ Semaphores ] ***********************************************************/
-#define K_DEF_SEMA                      (ON)
+#define K_DEF_SEMA                      (OFF)
 
 #if (K_DEF_SEMA==ON)
 #define K_DEF_SEMA_ENQ  		        (K_DEF_ENQ_PRIO)
@@ -104,17 +103,18 @@
 
 #if (K_DEF_MBOX_TYPE==(EXCHANGE))
 /* Exchange */
-#define K_DEF_MBOX_POSTPEND		    	(ON)
-#define K_DEF_FUNC_MBOX_ISFULL			(ON)
-#define K_DEF_FUNC_MBOX_PEEK			(ON)
-
+#define K_DEF_FUNC_MBOX_POSTPEND    	(OFF)
+#define K_DEF_FUNC_MBOX_ISFULL			(OFF)
+#define K_DEF_FUNC_MBOX_PEEK			(OFF)
+#define K_DEF_FUNC_MBOX_RESET			(OFF)
 #endif
 
 #if (K_DEF_MBOX_TYPE==(QUEUE))
 /* Queue */
-#define K_DEF_FUNC_MBOX_PEEK		    (ON)
-#define K_DEF_FUNC_MBOX_JAM				(ON)
-#define K_DEF_FUNC_MBOX_MAILCOUNT		(ON)
+#define K_DEF_FUNC_MBOX_PEEK		    (OFF)
+#define K_DEF_FUNC_MBOX_JAM				(OFF)
+#define K_DEF_FUNC_MBOX_MAILCOUNT		(OFF)
+#define K_DEF_FUNC_MBOX_RESET			(OFF)
 #endif
 
 #endif
@@ -129,15 +129,15 @@
 #define K_DEF_MESGQ_ENQ				    (K_DEF_ENQ_PRIO)
 
 /* Optional methods */
-#define K_DEF_FUNC_MESGQ_JAM			 (ON)
-#define K_DEF_FUNC_MESGQ_PEEK			 (ON)
-#define K_DEF_FUNC_MESGQ_MESGCOUNT		 (ON)
-#define K_DEF_FUNC_MESGQ_RESET			 (ON)
+#define K_DEF_FUNC_MESGQ_JAM			 (OFF)
+#define K_DEF_FUNC_MESGQ_PEEK			 (OFF)
+#define K_DEF_FUNC_MESGQ_MESGCOUNT		 (OFF)
+#define K_DEF_FUNC_MESGQ_RESET			 (OFF)
 
 #endif /*mesgq*/
 
 /**/
 /*** [ Pump-Drop Queues ] *****************************************************/
-#define K_DEF_PDMESG                       (ON)
+#define K_DEF_PDMESG                       (OFF)
 
 #endif /* KCONFIG_H */
