@@ -345,11 +345,6 @@ K_ERR kMboxPostPend(K_MBOX *const kobj, ADDR const sendPtr,
 K_ERR kMboxInit(K_MBOX *const kobj, ADDR memPtr, ULONG maxItems)
 {
 	K_CR_AREA
-	if ((timeout))
-	{
-		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
-	}
-
 	if (kobj == NULL || memPtr == NULL || maxItems == 0)
 	{
 		KFAULT(FAULT_NULL_OBJ);
