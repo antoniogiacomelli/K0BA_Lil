@@ -371,12 +371,47 @@ K_ERR kMboxInit(K_MBOX *const kobj, ADDR memPtr, ULONG maxItems)
 	K_EXIT_CR
 	return (K_SUCCESS);
 }
+#if (K_DEF_FUNC_MBOX_RESET == ON)
+K_ERR kMboxReset(K_MBOX *const kobj)
+{
+	K_CR_AREA
+	K_ENTER_CR
+	if (kobj==NULL)
+	{
+		K_EXIT_CR
+		return (K_ERR_OBJ_NULL);
+	}
+	kobj->headIdx = 0;
+	kobj->tailIdx = 0;
+	kobj->countItems = 0;
+	kobj->init = TRUE;
+	if ((kobj->waitingQueue.size > 0))
+	{
+		for (UINT i = 0; i < kobj->waitingQueue.size; ++i)
+		{
+			K_TCB *freeTaskPtr;
+			kTCBQDeq(&kobj->waitingQueue, &freeTaskPtr);
+			kTCBQEnq(&readyQueue[freeTaskPtr->priority], freeTaskPtr);
+			freeTaskPtr->status = READY;
+		}
+	}
+	K_ERR listerr = kListInit(&kobj->waitingQueue, "qq");
+	assert(listerr == 0);
 
+	kobj->timeoutNode.nextPtr = NULL;
+	kobj->timeoutNode.timeout = 0;
+	kobj->timeoutNode.kobj = kobj;
+	kobj->timeoutNode.objectType = MAILBOX;
+
+	K_EXIT_CR
+	return (listerr);
+}
+#endif
 K_ERR kMboxPost(K_MBOX *const kobj, ADDR sendPtr, TICK timeout)
 {
 	K_CR_AREA
 
-	if ((timeout))
+	if (IS_BLOCK_ON_ISR(timeout))
 	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
@@ -459,7 +494,7 @@ K_ERR kMboxPend(K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 		KFAULT(FAULT_NULL_OBJ);
 		return (K_ERROR);
 	}
-	if ((timeout))
+	if (IS_BLOCK_ON_ISR(timeout))
 	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
@@ -569,7 +604,7 @@ K_ERR kMboxJam(K_MBOX *const kobj, ADDR sendPtr, TICK timeout)
 		KFAULT(FAULT_OBJ_NOT_INIT);
 		return (K_ERROR);
 	}
-	if ((timeout))
+	if (IS_BLOCK_ON_ISR(timeout))
 	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
@@ -606,8 +641,8 @@ K_ERR kMboxJam(K_MBOX *const kobj, ADDR sendPtr, TICK timeout)
 			}
 		} while (kobj->countItems == kobj->maxItems);
 	}
-    /* empty or wrapped ? just place. otherwise, get back */
-	kobj->headIdx = (kobj->headIdx == 0) ?	(0) : (kobj->headIdx - 1);
+	/* empty or wrapped ? just place. otherwise, get back */
+	kobj->headIdx = (kobj->headIdx == 0) ? (0) : (kobj->headIdx - 1);
 	ADDR *putAddr = (ADDR*) ((ULONG*) kobj->mailQPtr + kobj->headIdx);
 	*putAddr = sendPtr;
 	kobj->countItems++;
@@ -700,6 +735,16 @@ K_ERR kMesgQReset(K_MESGQ *const kobj)
 	kobj->mesgCnt = 0;
 	kobj->readIndex = 0;
 	kobj->writeIndex = 0;
+	if ((kobj->waitingQueue.size > 0))
+	{
+		for (UINT i = 0; i < kobj->waitingQueue.size; ++i)
+		{
+			K_TCB *freeTaskPtr;
+			kTCBQDeq(&kobj->waitingQueue, &freeTaskPtr);
+			kTCBQEnq(&readyQueue[freeTaskPtr->priority], freeTaskPtr);
+			freeTaskPtr->status = READY;
+		}
+	}
 	K_ERR err = kListInit(&kobj->waitingQueue, "waitingQueue");
 	if (err != 0)
 	{
@@ -751,7 +796,7 @@ K_ERR kMesgQSend(K_MESGQ *const kobj, ADDR const sendPtr, TICK const timeout)
 	{
 		return (K_ERROR);
 	}
-	if ((timeout))
+	if (IS_BLOCK_ON_ISR(timeout))
 	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
@@ -820,7 +865,7 @@ K_ERR kMesgQRecv(K_MESGQ *const kobj, ADDR recvPtr, TICK const timeout)
 	{
 		return (K_ERROR);
 	}
-	if ((timeout))
+	if (IS_BLOCK_ON_ISR(timeout))
 	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
@@ -893,7 +938,7 @@ K_ERR kMesgQJam(K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout)
 	{
 		return (K_ERROR);
 	}
-	if ((timeout))
+	if (IS_BLOCK_ON_ISR(timeout))
 	{
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	}
@@ -990,8 +1035,8 @@ K_ERR kMesgQGetMesgCount(K_MESGQ *const kobj, UINT *const mesgCntPtr)
  *
  **/
 
-K_ERR kPDMesgInit(K_PDMESG *const kobj, K_MEM *const memCtrlPtr, K_PDBUF *bufPool,
-		BYTE nBufs)
+K_ERR kPDMesgInit(K_PDMESG *const kobj, K_MEM *const memCtrlPtr,
+		K_PDBUF *bufPool, BYTE nBufs)
 {
 	K_CR_AREA
 	K_ENTER_CR
