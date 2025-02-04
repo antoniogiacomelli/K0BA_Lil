@@ -477,14 +477,6 @@ K_ERR kPend(VOID);
  */
 K_ERR kSignal(TID const taskID);
 
-/**
- * \brief Suspends a lower priority task.
- * 		  The task must be READY if issued by another task
- * 		  or RUNNING/READY if issued by an ISR.
- * \param taskID User-assigned task ID
- * \return K_SUCCESS or specific error
- */
-K_ERR kSuspend(TID const id);
 
 /******************************************************************************
  * EVENTS

@@ -27,21 +27,23 @@
  *******************************************************************************/
 K_ERR kPend(VOID)
 {
-
+	K_ERR err;
 	if (kIsISR())
 		KFAULT(FAULT_ISR_INVALID_PRIMITVE);
 	K_CR_AREA
 
 	K_ENTER_CR
 
-	K_ERR err = -1;
-
-	err = kTCBQEnq(&sleepingQueue, runPtr);
-
-	runPtr->status = PENDING;
-
-	K_PEND_CTXTSWTCH
-
+	if (runPtr->status == RUNNING)
+	{
+		runPtr->status = PENDING;
+		err = K_SUCCESS;
+		K_PEND_CTXTSWTCH
+	}
+	else
+	{
+		err = K_ERROR;
+	}
 	K_EXIT_CR
 
 	return (err);
@@ -56,10 +58,7 @@ K_ERR kSignal(TID const taskID)
 	PID pid = kGetTaskPID(taskID);
 	if (tcbs[pid].status == PENDING || tcbs[pid].status == SUSPENDED)
 	{
-		K_TCB *tcbGotPtr = &tcbs[pid];
-		err = kTCBQRem(&sleepingQueue, &tcbGotPtr);
-		assert(!err);
-		err = kReadyCtxtSwtch(tcbGotPtr);
+		err = kReadyCtxtSwtch(&tcbs[pid]);
 		assert(!err);
 	}
 	else
@@ -71,40 +70,6 @@ K_ERR kSignal(TID const taskID)
 	return (err);
 }
 
-K_ERR kSuspend(TID const taskID)
-{
-	K_CR_AREA
-	K_ENTER_CR
-	PID pid = kGetTaskPID(taskID);
-	if ((pid == 0) || (pid == 255))
-	{
-		K_EXIT_CR
-		return (K_ERR_INVALID_TID);
-	}
-	if (runPtr->priority > tcbs[pid].priority)
-	{
-		K_EXIT_CR
-		return (K_ERR_CANT_SUSPEND_PRIO); /*K_ERR_PRIO*/
-	}
-	else
-	{
-		if ((tcbs[pid].status == READY) || (tcbs[pid].status == RUNNING))
-		{
-			K_ERR err = kTCBQEnq(&sleepingQueue, &tcbs[pid]);
-			if (err == K_SUCCESS)
-			{
-				tcbs[pid].status = SUSPENDED;
-				K_EXIT_CR
-				return (err);
-			}
-		}
-		else
-		{
-			K_EXIT_CR
-			return (K_ERROR);
-		}
-	}
-}
 
 #if (K_DEF_SLEEPWAKE==ON)
 /******************************************************************************
