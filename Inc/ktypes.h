@@ -20,7 +20,7 @@
 typedef void VOID;
 typedef char CHAR;
 typedef unsigned char BYTE;
-typedef signed INT;	/* stack type */
+typedef signed INT; /* stack type */
 typedef unsigned UINT;
 typedef unsigned long ULONG;
 
@@ -95,27 +95,24 @@ typedef enum kErr
 	K_ERR_INVALID_TID = (int) 0xFFFF0008, /* Invalid user-assigned task IDs are 0 or 255*/
 	K_ERR_INVALID_PRIO = (int) 0xFFFF0009, /* Valid task priority range: 0-31. */
 
-
 	K_ERR_INVALID_QUEUE_SIZE = (int) 0xFFFF000A, /* Maximum message queue size is 255 items */
 	K_ERR_INVALID_MESG_SIZE = (int) 0xFFFF000B, /* Maximum message for a message queue is 255 bytes */
 	K_ERR_MESGQ_NO_BUFFER = (int) 0xFFFF0012, /* Trying to send/recv copy from a queue with
-		 unknown buffering address */
+	 unknown buffering address */
 	K_ERR_MESG_CPY = (int) 0xFFFF000C, /* Error when copying a chunk of bytes from one addr to other */
 
 	K_ERR_PDBUF_SIZE = (int) 0xFFFF000D, /* Invalid size of mesg attached to a PD Buffer */
 
-
 	K_ERR_SEM_INVALID_VAL = (int) 0xFFFF000E, /* Invalid semaphore value */
 
-	K_ERR_TASK_NOT_RUNNING = (int) 0xFFFF0010,
+	K_ERR_TASK_INVALID_STATE = (int) 0xFFFF0010,
 	K_ERR_INVALID_TSLICE = (int) 0xFFFF0011,
-
 
 	K_ERR_MBOX_INIT_MAIL = (int) 0xFFFF0013,
 	K_ERR_MUTEX_REC_LOCK = (int) 0xFFFF0014,
 	K_ERR_CANT_SUSPEND_PRIO = (int) 0xFFFF0015,
-	K_ERR_DMESG_NO_BUFFER = (int)0xFFFFF0016,
-	K_ERR_INVALID_ISR_PRIMITIVE = (int)0xFFFFF0017
+	K_ERR_DMESG_NO_BUFFER = (int) 0xFFFFF0016,
+	K_ERR_INVALID_ISR_PRIMITIVE = (int) 0xFFFFF0017
 } K_ERR;
 
 /**
@@ -204,7 +201,5 @@ typedef struct kPumpDropQueue K_PDMESG;
 typedef struct kMutex K_MUTEX;
 
 #endif
-
-
 
 #endif/*ktypes*/

@@ -88,20 +88,22 @@ K_ERR kSuspend(TID const taskID)
 	}
 	else
 	{
-		K_ERR err = kTCBQEnq(&sleepingQueue, &tcbs[pid]);
-		if (err == K_SUCCESS)
+		if ((tcbs[pid].status == READY) || (tcbs[pid].status == RUNNING))
 		{
-			tcbs[pid].status = SUSPENDED;
-			K_EXIT_CR
-			return (err);
+			K_ERR err = kTCBQEnq(&sleepingQueue, &tcbs[pid]);
+			if (err == K_SUCCESS)
+			{
+				tcbs[pid].status = SUSPENDED;
+				K_EXIT_CR
+				return (err);
+			}
 		}
 		else
 		{
 			K_EXIT_CR
-			return (err);
+			return (K_ERROR);
 		}
 	}
-
 }
 
 #if (K_DEF_SLEEPWAKE==ON)
