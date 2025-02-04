@@ -13,7 +13,6 @@
  *
  *****************************************************************************/
 
-
 /*@file klow.s */
 .syntax unified /* thumb2 */
 .text
@@ -153,7 +152,7 @@ PendSV_Handler:
     SWITCHTASK:
   //  LDR R0, =STICK_CTRL
   //  MOVS R1, #STICK_OFF
-    STR R1, [R0]
+   /  STR R1, [R0]
     BL SAVEUSRCTXT
     BL kSchSwtch
     B  RESTOREUSRCTXT
