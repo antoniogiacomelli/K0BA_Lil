@@ -5,8 +5,8 @@
  ******************************************************************************
  ******************************************************************************
  *  Module              : Inter-task Synchronisation
- *  Depends on          : Scheduler
- *  Provides to         : Message Passing, Application
+ *  Depends on          : Scheduler, Timer
+ *  Provides to         : Application
  *  Public API  	    : Yes
  *
  * 	In this unit:
@@ -20,15 +20,7 @@
 
 #define K_CODE
 
-#include "kconfig.h"
-#include "ktypes.h"
-#include "kobjs.h"
-#include "klist.h"
-#include "kmem.h"
-#include "kitc.h"
-#include "ksch.h"
-#include "ktimer.h"
-#include "kinternals.h"
+#include "kexecutive.h"
 
 /*******************************************************************************
  * DIRECT TASK PENDING/SIGNAL
@@ -272,6 +264,7 @@ K_ERR kSemaInit(K_SEMA *const kobj, INT const value)
 	K_EXIT_CR
 	return (K_SUCCESS);
 }
+
 K_ERR kSemaWait(K_SEMA *const kobj, TICK const timeout)
 {
 	if (kIsISR())
@@ -346,22 +339,7 @@ VOID kSemaSignal(K_SEMA *const kobj)
 	K_EXIT_CR
 	return;
 }
-
-INT kSemaQuery(K_SEMA *const kobj)
-{
-	if (kobj->init == FALSE)
-	{
-		KFAULT(FAULT_OBJ_NOT_INIT);
-	}
-
-	if (kobj == NULL)
-	{
-		KFAULT(FAULT_NULL_OBJ);
-	}
-	return (kobj->value);
-}
-
-#endif /*sema*/
+#endif
 
 #if (K_DEF_MUTEX == ON)
 /*******************************************************************************

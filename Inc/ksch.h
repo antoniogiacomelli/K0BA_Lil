@@ -10,9 +10,10 @@
  *****************************************************************************/
 #ifndef KSCH_H
 #define KSCH_H
+#ifdef __cplusplus
+{
+#endif
 
-#include "kconfig.h"
-#include "kinternals.h"
 
 /* shared data */
 extern K_TCB* runPtr; /* Pointer to the running TCB */

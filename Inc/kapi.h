@@ -1,15 +1,15 @@
 /******************************************************************************
  *
  * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
- * 
+ *
  ******************************************************************************/
 
 /**
  * \file     kapi.h
  * \brief    Kernel API
  * \version  0.3.1
- * \author   Antonio Giacomelli (wwww.kernel0.org)
- * 
+ * \author   Antonio Giacomelli
+ *
  *
  * \verbatim
  *  ________________________________________
@@ -39,15 +39,7 @@
 #ifndef KAPI_H
 #define KAPI_H
 
-#include "kconfig.h"
-
-#if (CUSTOM_ENV==1)
-#include "kenv.h"
-#endif
-
-#include "ktypes.h"
-#include "kobjs.h"
-#include "kversion.h"
+#include "kexecutive.h"
 
 /******************************************************************************/
 
@@ -119,9 +111,9 @@ K_ERR kTaskRestorePrio(VOID);
  *******************************************************************************/
 #if (K_DEF_SEMA==ON)
 /**
- *\brief       Initialise a semaphore
- *\param kobj  Semaphore address
- *\param value Initial value
+ *\brief      		Initialise a semaphore
+ *\param kobj  		Semaphore address
+ *\param value 		Initial value
  *\return      \see ktypes.h
  */
 
@@ -476,7 +468,7 @@ K_ERR kPDMesgDrop(K_PDMESG* const kobj, K_PDBUF* const bufPtr);
 /**
  * \brief A caller task goes to a PENDING state, waiting for a kSignal.
  */
-VOID kPend(VOID);
+K_ERR kPend(VOID);
 
 /**
  * \brief Direct Signal a task. Target task is resu

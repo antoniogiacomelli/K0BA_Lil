@@ -8,7 +8,6 @@
  * 					o Private API: List ADT
  *
  *****************************************************************************
-
  This Linked List has a sentinel (dummy node), whose address
  is fixed on initialisation. Thus, every node in the list
  has an anchored reference, making it easier to handle edge
@@ -64,20 +63,13 @@
  To remove the head, we remove the dummy's next node
  To remove the tail, we remove the dummy's previous node
  In both cases, the list adjusts itself
-  ******************************************************************************/
+ ******************************************************************************/
 
 #ifndef KLIST_H
 #define KLIST_H
-
 #ifdef __cplusplus
-
 extern "C" {
-
 #endif
-
-#include "kinternals.h"
-
-#define K_CODE
 
 
 #define K_LIST_GET_TCB_NODE(nodePtr, containerType) \

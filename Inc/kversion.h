@@ -10,7 +10,6 @@
  *                  major minor patch
  *
  *****************************************************************************/
- 
 #ifndef KVERSION_H
 #define KVERSION_H
 

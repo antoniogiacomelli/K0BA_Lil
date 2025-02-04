@@ -19,15 +19,7 @@
 
 #define K_CODE
 
-#include "kconfig.h"
-#include "kobjs.h"
-#include "ktypes.h"
-#include "ksch.h"
-#include "kitc.h"
-#include "kmem.h"
-#include "kutils.h"
-#include "kinternals.h"
-#include "ktimer.h"
+#include "kexecutive.h"
 
 K_MEM timerMem;
 K_TIMER *dTimReloadList = NULL; /* periodic timers */

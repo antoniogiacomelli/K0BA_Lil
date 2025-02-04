@@ -16,7 +16,6 @@
 /**
  * \brief C primitives
  */
-
 /*** these are immutable:                                                   */
 typedef void VOID;
 typedef char CHAR;
@@ -182,7 +181,9 @@ typedef struct kMesgQ K_MESGQ;
 #if (K_DEF_MBOX == ON)
 
 typedef struct kMailbox K_MBOX;
-
+#if (K_DEF_MBOX_TYPE==EXCHANGE)
+typedef K_MBOX K_EXCHG; /*alternatively*/
+#endif
 #endif /* mbox */
 
 #if (K_DEF_SLEEPWAKE==ON)

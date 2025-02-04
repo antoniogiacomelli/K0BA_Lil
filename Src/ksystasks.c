@@ -14,15 +14,7 @@
  *****************************************************************************/
 
 #define K_CODE
-
-#include "kenv.h"
-#include "kconfig.h"
-#include "kobjs.h"
-#include "ktypes.h"
-#include "kitc.h"
-#include "ktimer.h"
-#include "kinternals.h"
-
+#include "kexecutive.h"
 
 INT idleStack[IDLE_STACKSIZE];
 INT timerHandlerStack[TIMHANDLER_STACKSIZE];

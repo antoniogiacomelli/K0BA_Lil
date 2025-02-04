@@ -7,15 +7,12 @@
  * 					o Kernel objects definition
  *
  ******************************************************************************/
- 
 #ifndef KOBJS_H
 #define KOBJS_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "ktypes.h"
 
 
 typedef enum
@@ -38,7 +35,6 @@ typedef enum
 #endif
     NONE
 } K_OBJ_SYNCH;
-
 
 struct kListNode
 {
@@ -71,6 +67,10 @@ struct kTcb
 	TID uPid;             /* User-defined   task ID */
 	PRIO priority;        /* Task priority (0-31) 32 is invalid */
 	PRIO realPrio;        /* Real priority (for prio inheritance) */
+
+#if (K_DEF_SIGNALS == ON)
+	UINT32 signals;
+#endif
 
 #if (K_DEF_SCH_TSLICE == ON)
 	TICK timeSlice;

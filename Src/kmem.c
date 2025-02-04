@@ -14,14 +14,7 @@
  *****************************************************************************/
 
 #define K_CODE
-
-#include "kconfig.h"
-#include "kobjs.h"
-#include "ktypes.h"
-#include "kitc.h"
-#include "kerr.h"
-#include "kinternals.h"
-#include "kmem.h"
+#include "kexecutive.h"
 
 K_ERR kMemInit(K_MEM* const kobj, ADDR const memPoolPtr,
           BYTE blkSize, BYTE const numBlocks)

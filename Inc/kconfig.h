@@ -9,8 +9,8 @@
  *
  *    Number of user tasks.
  *
- * - **Lowest effective priority:**      (`K_DEF_MINPRIO`)
- *   Priorities range are from `0` to ``K_DEF_MINPRIO`.
+ * - **Lowest effective priority:**      (`K_DEF_N_MINPRIO`)
+ *   Priorities range are from `0` to ``K_DEF_N_MINPRIO`.
  *   (0 is highest effective priority)
  *
  * - **Number of timers:**     (`K_DEF_N_TIMERS`)
@@ -25,11 +25,10 @@
  *   cipline are either by priority  (`K_DEF_ENQ_PRIO`) or FIFO (`K_DEF_ENQ_FIFO`).
  *   Default/fallback value is by priority.
  *
- **********************************************************************************/
+ ******************************************************************************/
 
 #ifndef KCONFIG_H
 #define KCONFIG_H
-
 #include "kinternals.h"
 
 #define ON     (1)
@@ -38,6 +37,17 @@
 /* include headers for HAL and compiler in kenv.h */
 /* and set this macro to 1                        */
 #define CUSTOM_ENV (0)
+
+/**/
+/*** [ System Tasks Stack Size (WORDS)] ***************************************/
+/*
+ * This configuration is exposed so the system programmer might adjust
+ * the IdleTask stack size to support any hook. The Timer Handler stack size
+ * must be adjusted to support Application Timers callouts.
+ *
+ * */
+#define IDLE_STACKSIZE      	    	(64)
+#define TIMHANDLER_STACKSIZE  			(64)
 
 /**/
 /*** [ Time Quantum ] *********************************************************/
@@ -69,7 +79,7 @@
 
 /**/
 /*** [ Mutexes ] **************************************************************/
-#define K_DEF_MUTEX                     (ON)
+#define K_DEF_MUTEX                     (OFF)
 #if (K_DEF_MUTEX==ON)
 /* Queue Discipline:				 */
 #define K_DEF_MUTEX_ENQ				    (K_DEF_ENQ_PRIO)
@@ -77,23 +87,23 @@
 
 /**/
 /*** [ Sleep/Wake Events ] ****************************************************/
-#define K_DEF_SLEEPWAKE                  (ON)
+#define K_DEF_SLEEPWAKE                  (OFF)
 
 /**/
 /*** [ Mailbox ] **************************************************************/
 
-#define K_DEF_MBOX	       	             (ON)
+#define K_DEF_MBOX	       	             (OFF)
 
 #if(K_DEF_MBOX==ON)
 
-#define EXCHANGE				 		 (1)
-#define QUEUE					  		 (2)
+#define EXCHANGE				 		 (1) /* Single-mail */
+#define QUEUE					  		 (2) /* Multi-mail  */
 
-/* Multi-mail or single-mailbox */
 #define K_DEF_MBOX_TYPE				    (EXCHANGE)
 
 /* Queue discipline:   				 */
 #define K_DEF_MBOX_ENQ       	    	(K_DEF_ENQ_PRIO)
+
 
 /* Optional methods */
 
@@ -118,7 +128,7 @@
 /**/
 /*** [ Message Queue ] *******************************************************/
 
-#define K_DEF_MESGQ			      	    (ON)
+#define K_DEF_MESGQ			      	    (OFF)
 
 #if (K_DEF_MESGQ == ON)
 /* Queue Discipline				 */

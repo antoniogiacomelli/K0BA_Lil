@@ -11,12 +11,11 @@
 
 #ifndef SYS_ALIAS
 #define SYS_ALIAS
-
-#include "kenv.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "kenv.h"
 /*
  * brief This is the offset w.r.t the top of a stack frame
  * The numbers are unsigned.
@@ -56,29 +55,9 @@ extern "C" {
 #define TICK_5MS            (SystemCoreClock/2000)  /* Tick period of 5ms */
 #define TICK_1MS            (SystemCoreClock/10000) /*  Tick period of 1ms */
 
-
-/* Mapped API */
-
-typedef struct kSema SEMA;
-typedef struct kMutex LOCK;
-typedef struct kMesg MESG;
-typedef struct kEvent EVNT;
-typedef struct kList QUEUE;
-typedef struct kListNode NODE;
-typedef struct kTcb TCB;
-
-#define SLPEVNT                      kEventSleep
-#define WKEVNT                       kEventWake
-#define EVNTINIT                     kEventInit
-
-/* Mem Block Pool */
-#define BLKPOOLINIT                  kMemInit
-#define BLKALLOC 				     kMemAlloc
-#define BLKFREE  					 kMemFree
-
 /* Misc */
-#define KFAULT					 	 kErrHandler
-#define MEMCPY              	     kMemCpy
+
+#define KFAULT				kErrHandler
 
 /* inline asm */
 #define DMB								asm volatile ("dmb 0xF":::"memory");
@@ -91,9 +70,7 @@ typedef struct kTcb TCB;
 #define _K_STUP asm volatile("svc #0xAA");
 
 /*  helpers */
-/*todo: improve copy by advancing dst and src and reusing
- * as indexes for mesgq
- */
+
 #define CPY(d,s,z, r)                                 \
  do                                                   \
  {                                                    \
@@ -107,8 +84,11 @@ typedef struct kTcb TCB;
       }                                               \
   } while(0U)
 
-
+/*todo: improve copy by advancing dst and src and reusing
+ * as indexes for mesgq
+ */
 #define CPYQ(d,s,z,r) CPY(d,s,z,r)
+
 __STATIC_FORCEINLINE unsigned kIsISR()
 {
 	unsigned ipsr_value;
@@ -141,8 +121,6 @@ __STATIC_FORCEINLINE unsigned kIsISR()
 
 #define K_TICK_EN  SysTick->CTRL |= 0xFFFFFFFF;
 #define K_TICK_DIS SysTick->CTRL &= 0xFFFFFFFE;
-#define STRINGIFY(x) #x
-#define TOSTRING(x) STRINGIFY(x)
 #define IS_INIT(obj) (obj)->init) ? (1) : (0)
 #define IS_VALID_TID(id) ((id == (IDLETASK_ID)) || (id == (TIMHANDLER_ID))) ? (0) : (1)
 #define IS_BLOCK_ON_ISR(timeout) ((kIsISR() && (timeout > 0)) ? (1) : (0))

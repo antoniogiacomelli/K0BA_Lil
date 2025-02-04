@@ -2,7 +2,6 @@
 #define KMEM_H
 
 #ifdef __cplusplus
-
 extern "C" {
 #endif
 
@@ -11,9 +10,7 @@ ADDR kMemAlloc(K_MEM* const);
 K_ERR kMemFree(K_MEM* const, ADDR const);
 
 #ifdef __cplusplus
-
 }
-
 #endif
 
 #endif

@@ -19,12 +19,7 @@
 
 #define K_CODE
 
-#include "kversion.h"
-#include "kitc.h"
-#include "ksystasks.h"
-#include "ktimer.h"
-#include "kinternals.h"
-#include "ksch.h"
+#include "kexecutive.h"
 
 /*****************************************************************************/
 

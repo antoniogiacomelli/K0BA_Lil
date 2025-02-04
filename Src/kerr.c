@@ -13,13 +13,7 @@
  *
  ******************************************************************************/
 
-#include "kconfig.h"
-#include "kenv.h"
-#include "ktypes.h"
-#include "kobjs.h"
-#include "kversion.h"
-#include "kerr.h"
-
+#include "kexecutive.h"
 
 /*** Compile time errors */
 

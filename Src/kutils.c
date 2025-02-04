@@ -14,12 +14,7 @@
 *****************************************************************************/
 
 #define K_CODE
-
-#include "kconfig.h"
-#include "kenv.h"
-#include "kobjs.h"
-#include "ktypes.h"
-#include "kitc.h"
+#include "kexecutive.h"
 
 
 ULONG kStrLen(STRING s)
