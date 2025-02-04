@@ -150,9 +150,6 @@ SysTick_Handler:
 PendSV_Handler:
     CPSID I
     SWITCHTASK:
-  //  LDR R0, =STICK_CTRL
-  //  MOVS R1, #STICK_OFF
-   /  STR R1, [R0]
     BL SAVEUSRCTXT
     BL kSchSwtch
     B  RESTOREUSRCTXT
@@ -217,9 +214,6 @@ RESTOREUSRCTXT:
     LDMIA R2!, {R4-R11}
     MSR PSP, R2
     MOV LR, #0xFFFFFFFD
-  //  LDR R0, =STICK_CTRL
-  //  MOVS R1, #STICK_ON
-  //  STR R1, [R0]
     DSB
     CPSIE I
     ISB
