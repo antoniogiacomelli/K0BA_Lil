@@ -1608,81 +1608,19 @@ consumer_task()
 <div class="paragraph data-line-770">
 <p>As on VER0.3.1 the decision is not to provide event groups as another abstraction. The ways to leverage multicondition synchronisation are too many, there is no 'enough' abstraction. The current mechanisms when combined can provide multicondition synchronisation in the form of Monitors, Condition Variables, Event Groups and Flags, etc., as demonstrated on the usage patterns at the end of this document.</p>
 </div>
-<div class="exampleblock data-line-772">
-<div class="content">
-<div class="paragraph data-line-773">
-<p><strong>Condition Variables</strong></p>
-</div>
-<div class="paragraph data-line-775">
-<p>A condition variable is the simplest means of constructing a <em>Monitor</em>. A Monitor is often regarded as a high-level synchronisation mechanism - it is a program region where a single task can be active to manipulate shared data.</p>
-</div>
-<div class="paragraph data-line-777">
-<p>After entering - and locking - the monitor, a task can wait for a condition to be true before proceeding. In this case, it will suspend itself and is enqueued on the <em>Condition Variable</em> queue. Before, it unlocks the mutex. Several tasks might enter the monitor just to suspend themselves waiting for the condition.</p>
-</div>
-<div class="paragraph data-line-779">
-<p>Eventually, a task enters the monitor to find the condition is true. Thus, it can either release a single or all tasks (a signal broadcast) waiting in the monitor. Anyway, only a task can be active within the monitor. For a simple signal, an approach is making the <em>active</em> task that signals immediately leave the monitor. Every released task will be active, signal and leave.
-(For a broadcast, see the usage examples at end of this document.)</p>
-</div>
-<div class="paragraph data-line-782">
-<p>The snippet below uses the K0 primitives <code>K_EVENT</code> and <code>K_MUTEX</code> to implement a Condition Variable and employed on a Monitor routine using <code>signal()</code>.</p>
-</div>
-<div class="listingblock data-line-784">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">K_EVENT event; /* event associated to a condition */
-K_MUTEX	lock;  /* monitor lock */
-
-/* application API for a Condition Variable */
-
-VOID CondWait(K_EVENT* eventPtr, K_MUTEX* lockPtr)
-{
-    /* unlock and sleep */
-	kMutexUnlock(lockPtr);
-	kEventSleep(eventPtr, K_WAIT_FOREVER);
-	/* wakes here and lock */
-	kMutexLock(lockPtr, K_WAIT_FOREVER);
-}
-
-VOID CondSignal(K_EVENT* eventPtr)
-{
-	kEventSignal(&amp;eventPtr);
-}
-
-/* Monitor function */
-VOID MonitorSynch(K_MUTEX *lockPtr) /* tasks call this function to cooperate */
-{
-    	kMutexLock(lockPtr, K_WAIT_FOREVER);
-    	/* task is in the monitor */
-		while (!empty) /* needs to check for the condition
-		 	 	 	 	  before and after waking */
-		{
-
-			kCondWait(&amp;event, lockPtr);
-		/* mutex locked  after waking */
-		}
-		/* active region */
-		workInTheMonitor();
-		CondSignal(&amp;event);
-		/* unlock before leaving */
-		kMutexUnlock(lockPtr);
-
-}</code></pre>
 </div>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1 data-line-827">
+<div class="sect1 data-line-772">
 <h2 id="mailboxes">6. Mailboxes</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-829">
+<div class="paragraph data-line-774">
 <p>While in GPOS jargon mailboxes are queues of messages - as a distinction from pipes (that are stream buffers) - in embedded system software, often mailboxes are said to have a capacity of a a single item, and more recently you will not find it as a distinct mechanism - you use a 1-item queue.</p>
 </div>
-<div class="paragraph data-line-831">
+<div class="paragraph data-line-776">
 <p>In K0BA, a <em>Mailbox</em> is a shared memory protocol. The kernel can be configured to have one type of <em>mailbox</em>: single-item, an <em>Exchange</em>; <em>or</em> multi-item, a <em>Queue</em>.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch data-line-834">
+<table class="tableblock frame-all grid-all stretch data-line-779">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1703,7 +1641,7 @@ VOID MonitorSynch(K_MUTEX *lockPtr) /* tasks call this function to cooperate */
 </tr>
 </tbody>
 </table>
-<table class="tableblock frame-all grid-all stretch data-line-842">
+<table class="tableblock frame-all grid-all stretch data-line-787">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1736,76 +1674,76 @@ VOID MonitorSynch(K_MUTEX *lockPtr) /* tasks call this function to cooperate */
 </tr>
 </tbody>
 </table>
-<div class="paragraph data-line-853">
+<div class="paragraph data-line-798">
 <p>The basic primitives for Mailboxes are <code>post()</code> and <code>pend()</code>.</p>
 </div>
-<div class="paragraph data-line-855">
+<div class="paragraph data-line-800">
 <p>An <em>Exchange</em> will be <code>EMPTY</code> when the current mail address is <code>NULL</code>; otherwhise it is <code>FULL</code>.
 A <em>Queue</em> keeps track of the number of items to switch to <code>FULL</code> or <code>EMPTY</code>.</p>
 </div>
-<div class="admonitionblock tip data-line-859">
+<div class="admonitionblock tip data-line-804">
 <table>
 <tr>
 <td class="icon">
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<div class="paragraph data-line-860">
+<div class="paragraph data-line-805">
 <p>Exchanges are to Queues as binary semaphores are to counter semaphores. Indeed, some RTOSes implement semaphores using mailboxes.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph data-line-863">
+<div class="paragraph data-line-808">
 <p>For any Mailbox the following is true:</p>
 </div>
-<div class="olist arabic data-line-865">
+<div class="olist arabic data-line-810">
 <ol class="arabic">
-<li class="data-line-865">
+<li class="data-line-810">
 <p>The mail concrete type is application-defined and sender and receiver must agree on its implementation.</p>
 </li>
-<li class="data-line-867">
+<li class="data-line-812">
 <p>When a producer <code>post()</code> to a <code>FULL</code> mailbox, it (optionally) blocks and is enqueued on the Mailbox waiting queue. The associated task will switch to state <code>SENDING</code>.</p>
 </li>
-<li class="data-line-869">
+<li class="data-line-814">
 <p>Likewise, a consumer (optionally) blocks when issuing a <code>pend()</code> on an empty Mailbox. Task status switches to <code>RECEIVING</code> and it is enqueued on the mailbox waiting queue.</p>
 </li>
-<li class="data-line-871">
+<li class="data-line-816">
 <p>The waiting queue for a Mailbox, has a discipline that can either be priority or FIFO. Default is by priority, to be coherent with the scheduler.</p>
 </li>
 </ol>
 </div>
-<div class="admonitionblock note data-line-874">
+<div class="admonitionblock note data-line-819">
 <table>
 <tr>
 <td class="icon">
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="paragraph data-line-875">
+<div class="paragraph data-line-820">
 <p>Enqueuing pointers is error prone - while a single-item mailbox makes it easier, for queues a safe approach is to use an allocator: pair <code>post()</code> with <code>alloc()</code> and <code>pend()</code> with <code>free()</code>.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph data-line-878">
+<div class="paragraph data-line-823">
 <p>Both Queues and Exchanges have a <code>peek()</code> primitive to retrieve the item on the head (or, the only item for Exchanges) <em>without extracting</em> it - and for queues, there is the <code>jam()</code> primitive to place an item on the head - as an urgent data.</p>
 </div>
-<div class="paragraph data-line-880">
+<div class="paragraph data-line-825">
 <p>For <em>Exchanges</em> there an optional primitive <code>postpend()</code> - to post a message and wait for an answer on an indicated storage, making it straight for synchronous command-response (or <em>"extended rendezvous"</em>).</p>
 </div>
-<div class="paragraph data-line-882">
+<div class="paragraph data-line-827">
 <p><em>Exchanges</em> are reasonably faster than 1-item queues and half of the size. Choosing to have Mailboxes either as <em>Exchanges</em> or as <em>Queues</em> depends on the application demand. <em>Exchanges</em> are meant to be used as a "data-as-signal" mechanism. Queues are very flexible and a usage variation is in the snippet below. When data is needed to be transmited so it decouples sender and receiver on both time and data-scope, the <em>Message Queues</em> that will be presented below can be more convenient.</p>
 </div>
-<div class="exampleblock data-line-884">
+<div class="exampleblock data-line-829">
 <div class="content">
-<div class="paragraph data-line-885">
+<div class="paragraph data-line-830">
 <p>The snippet below shows a Mailbox Queue used for message passing, using the allocator.
 Note the receiver does not copy the message to its address, the scope of the message is managed by allocating a different address for every <code>post()</code>. When there are no more buffers the sender yields. The receiver role is to deallocated after a <code>pend()</code>. This guarantees the message scope.</p>
 </div>
-<div class="listingblock data-line-888">
+<div class="listingblock data-line-833">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">struct mesg
 {
@@ -1874,7 +1812,7 @@ VOID Task2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-957">
+<div class="imageblock data-line-902">
 <div class="content">
 <img src="images/images/mboxqueue.png" alt="mboxqueue">
 </div>
@@ -1883,10 +1821,10 @@ VOID Task2(VOID)
 </div>
 </div>
 </div>
-<div class="sect1 data-line-963">
+<div class="sect1 data-line-908">
 <h2 id="message_queue_stream">7. Message Queue (Stream)</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch data-line-965">
+<table class="tableblock frame-all grid-all stretch data-line-910">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1919,32 +1857,32 @@ VOID Task2(VOID)
 </tr>
 </tbody>
 </table>
-<div class="paragraph data-line-977">
+<div class="paragraph data-line-922">
 <p>The classic Message Queue on UNIX SVR4 is defined as the 'head of a linked-list of messages'. Some RTOSes implement Message Queues using linked-lists, and in these cases might exist a central pool of buffers. In K0 it was like this until recently.</p>
 </div>
-<div class="paragraph data-line-979">
+<div class="paragraph data-line-924">
 <p>On <code>VER0.3.1</code> K0 Message Queues are a byte-stream mechanism and there is no central pool of buffers on the kernel anymore. This design avoids the overhead of a list, is faster and creates less contention by not having a shared pool.  For each Message Queue the user provides a buffer address with enough capacity (number of messages <em>x</em> message size) that is handled as being circular.</p>
 </div>
-<div class="paragraph data-line-981">
+<div class="paragraph data-line-926">
 <p>Thus, it resembles classic (named) Pipes. The difference is that as messages have a format (application defined), they have a fixed-size. Pipes, on the other hand, transmit and receive any number of bytes on each operation.</p>
 </div>
-<div class="paragraph data-line-983">
+<div class="paragraph data-line-928">
 <p>The message size associated to a Message Queue instance is defined on its initialisation.  On a transmission a <em>deep copy</em>  of a message from the sender storage to the queue takes place; on a reception, from the queue to the receiver storage.</p>
 </div>
-<div class="paragraph data-line-985">
+<div class="paragraph data-line-930">
 <p>The important primitives for Message Queues are <code>send()</code>, <code>recv()</code>, <code>jam()</code> and <code>peek()</code>.</p>
 </div>
-<div class="paragraph data-line-987">
+<div class="paragraph data-line-932">
 <p>Message Queues are ~ 3 to 4x slower than Mailbox Queues; yet they are safer.</p>
 </div>
-<div class="admonitionblock note data-line-990">
+<div class="admonitionblock note data-line-935">
 <table>
 <tr>
 <td class="icon">
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="paragraph data-line-991">
+<div class="paragraph data-line-936">
 <p>You can transmit pointers through Message Queues - as 4-byte messages. But complex structures more often than not will be incomplete with  shallow copies (casting back an address to a concrete pointer type).</p>
 </div>
 </td>
@@ -1953,10 +1891,10 @@ VOID Task2(VOID)
 </div>
 </div>
 </div>
-<div class="sect1 data-line-995">
+<div class="sect1 data-line-940">
 <h2 id="pump_drop_buffers">8. Pump-Drop Buffers</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch data-line-998">
+<table class="tableblock frame-all grid-all stretch data-line-943">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1974,7 +1912,7 @@ VOID Task2(VOID)
 </tr>
 </tbody>
 </table>
-<table class="tableblock frame-all grid-all stretch data-line-1005">
+<table class="tableblock frame-all grid-all stretch data-line-950">
 <colgroup>
 <col style="width: 100%;">
 </colgroup>
@@ -1995,73 +1933,73 @@ VOID Task2(VOID)
 </tr>
 </tbody>
 </table>
-<div class="paragraph data-line-1012">
+<div class="paragraph data-line-957">
 <p>Between a message that does not arrive, and one that arrives with information that is not useful, there is no practical difference. But if a message arrives with information that will deceive your control loop to perform a wrong action - this is the worse. This is why <em>Pump-Drop Buffers</em> are a feature in K0BA.</p>
 </div>
-<div class="paragraph data-line-1014">
+<div class="paragraph data-line-959">
 <p>Pump-Drop buffering resembles double buffering: buffers switch back and forth as write-only and read-only. It is an asynchronous method meant to be used when message queues do not fit: when the reader needs the most recent data and is up to afford loosing some data (producer is faster), or reading the same (producer is slower). It is a <em>one-to-many</em> channel associated to an allocator. It is essentialy the mechanism proposed on the HARTIK kernel.</p>
 </div>
-<div class="paragraph data-line-1016">
+<div class="paragraph data-line-961">
 <p>Primitives for Pump-Drop Messages are:</p>
 </div>
-<div class="ulist data-line-1018">
+<div class="ulist data-line-963">
 <ul>
-<li class="data-line-1018">
+<li class="data-line-963">
 <p>For writer: <code>reserve()</code> and <code>pump()</code>.</p>
 </li>
-<li class="data-line-1020">
+<li class="data-line-965">
 <p>For readers: <code>fetch()</code>  and <code>drop()</code>.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph data-line-1022">
+<div class="paragraph data-line-967">
 <p>The semantics is as follows - remember it is one writer to many readers:</p>
 </div>
-<div class="olist arabic data-line-1024">
+<div class="olist arabic data-line-969">
 <ol class="arabic">
-<li class="data-line-1024">
+<li class="data-line-969">
 <p>When the producer needs to write a new message, first it reserves a PD-buffer. This might already be allocated - if it is allocated but has readers, a new PD-buffer is allocated, to ensure data consistency.</p>
 </li>
-<li class="data-line-1026">
+<li class="data-line-971">
 <p>Writer now appends a message to be sent (application-dependent) and pump the buffer.</p>
 </li>
-<li class="data-line-1028">
+<li class="data-line-973">
 <p>After pumped, the PD buffer is marked as the current buffer. From now on, the former pumped PDB cannot be fetched and will eventually drop to 0 readers.</p>
 </li>
-<li class="data-line-1030">
+<li class="data-line-975">
 <p>A reader first 'fetches' a PDB. A non-null return for a fetch will increase the readers count on the PDB.</p>
 </li>
-<li class="data-line-1032">
+<li class="data-line-977">
 <p>After 'having' the message, a reader 'drops the PD-buffer': the kernel checks if it was the last reader and it is not the current PDB - if these two conditions are met, the buffer is deallocated. (checking it is NOT the current PDB guarantees there is already a new PDB in the circuit so readers won’t starve).</p>
 </li>
 </ol>
 </div>
-<div class="admonitionblock tip data-line-1035">
+<div class="admonitionblock tip data-line-980">
 <table>
 <tr>
 <td class="icon">
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<div class="paragraph data-line-1036">
+<div class="paragraph data-line-981">
 <p>This mechanism guarantees the information is always updated, but no message is corrupted. The ideal pool size, thus, is simply the number of tasks + 1.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph data-line-1039">
+<div class="paragraph data-line-984">
 <p>Note the message passed is again an address. The receiver can copy the message to local a buffer, since a PD-buffer is never deallocated while in use and nev
 er fetched if there is a new buffer.</p>
 </div>
-<div class="admonitionblock tip data-line-1043">
+<div class="admonitionblock tip data-line-988">
 <table>
 <tr>
 <td class="icon">
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<div class="paragraph data-line-1044">
+<div class="paragraph data-line-989">
 <p>It is a good practice to keep message passing on a one-to-one fashion as much as possible. While <em>K0</em> will not provide abstractions for <em>Ports</em>, if desiring a finer control on who can access a public message resource, the programmer can create simple methods wrapping send/receive primitives to enforce a unique task can receive from it (the resource is then a task&#8217;s Port).</p>
 </div>
 </td>
@@ -2071,17 +2009,17 @@ er fetched if there is a new buffer.</p>
 <hr>
 </div>
 </div>
-<h1 id="usage_patterns" class="sect0 data-line-1049"><strong>Usage Patterns</strong></h1>
-<div class="paragraph data-line-1051">
+<h1 id="usage_patterns" class="sect0 data-line-994"><strong>Usage Patterns</strong></h1>
+<div class="paragraph data-line-996">
 <p>In this section some simple usage patterns are being attached. The board used to run these snippets is a Nucleo-F103RB (ARM Cortex-M3 based).</p>
 </div>
-<div class="sect1 data-line-1053">
+<div class="sect1 data-line-998">
 <h2 id="monitor_0_barrier">1. Monitor #0 (Barrier)</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1055">
+<div class="paragraph data-line-1000">
 <p>Usage: resource access/tasks coordination.</p>
 </div>
-<div class="listingblock data-line-1057">
+<div class="listingblock data-line-1002">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 
@@ -2160,20 +2098,20 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1137">
+<div class="imageblock data-line-1082">
 <div class="content">
 <img src="images/images/syncbarr.png" alt="syncbarr">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1140">
+<div class="sect1 data-line-1085">
 <h2 id="monitor_1_turnstile">2. Monitor #1 (Turnstile)</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1142">
+<div class="paragraph data-line-1087">
 <p>In this variation we use mailboxes for turnstile. Also the task that wakes up all others will use the resource within the monitor (be active).</p>
 </div>
-<div class="listingblock data-line-1144">
+<div class="listingblock data-line-1089">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">K_EVENT syncEvent; /* state event				    */
 UINT syncCounter; /* state representation        */
@@ -2247,18 +2185,18 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1218">
+<div class="paragraph data-line-1163">
 <p><span class="image"><img src="images/images/mboxturnstiles.png" alt="mboxturnstiles"></span></p>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1220">
+<div class="sect1 data-line-1165">
 <h2 id="multi_condition_notification_0">3. Multi-condition Notification #0</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1222">
+<div class="paragraph data-line-1167">
 <p>Usage: coordinate a notified task action on a combination of events.</p>
 </div>
-<div class="listingblock data-line-1224">
+<div class="listingblock data-line-1169">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/* @file application.c */
 
@@ -2366,21 +2304,21 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1330">
+<div class="paragraph data-line-1275">
 <p><span class="image"><img src="images/images/mboxflags.png" alt="mboxflags"></span></p>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1332">
+<div class="sect1 data-line-1277">
 <h2 id="multi_condition_notification_1">4. Multi-condition Notification #1</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1333">
+<div class="paragraph data-line-1278">
 <p>Usage: multi-condition broadcast, notification, observer pattern.</p>
 </div>
-<div class="paragraph data-line-1335">
+<div class="paragraph data-line-1280">
 <p>By a rather simple combination of the provided services, Event Flags are constructed, handling pretty much everything that could had been shipped as another kernel service.</p>
 </div>
-<div class="listingblock data-line-1337">
+<div class="listingblock data-line-1282">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 #include &lt;stdlib.h&gt;
@@ -2492,20 +2430,20 @@ VOID Task4(VOID) /* just want flag 3*/
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1448">
+<div class="imageblock data-line-1393">
 <div class="content">
 <img src="images/images/eventflags.png" alt="eventflags">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1450">
+<div class="sect1 data-line-1395">
 <h2 id="extended_rendez_vous_0">5. Extended rendez-vous #0</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1451">
+<div class="paragraph data-line-1396">
 <p>Usage: Many-to-one command-response.</p>
 </div>
-<div class="listingblock data-line-1453">
+<div class="listingblock data-line-1398">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 
@@ -2632,20 +2570,20 @@ VOID Client2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1579">
+<div class="imageblock data-line-1524">
 <div class="content">
 <img src="images/images/multiclient.png" alt="multiclient">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1581">
+<div class="sect1 data-line-1526">
 <h2 id="extended_rendez_vous_1">6. Extended rendez-vous #1</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1582">
+<div class="paragraph data-line-1527">
 <p>Usage: client-server communication.</p>
 </div>
-<div class="listingblock data-line-1584">
+<div class="listingblock data-line-1529">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/* our server performs arithmetic operations. very useful... */
 
@@ -2731,20 +2669,20 @@ VOID Task2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1670">
+<div class="imageblock data-line-1615">
 <div class="content">
 <img src="images/images/sendrecv.png" alt="sendrecv">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1672">
+<div class="sect1 data-line-1617">
 <h2 id="queueing_pattern_0">7. Queueing Pattern #0</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1673">
+<div class="paragraph data-line-1618">
 <p>Usage: Asynch (like) comm, serialising access, logging, monitoring.</p>
 </div>
-<div class="listingblock data-line-1675">
+<div class="listingblock data-line-1620">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 #include &lt;stdlib.h&gt;
@@ -2839,13 +2777,13 @@ VOID SensorLogging(VOID)
 /* why enqueue and not log when reading? to not loose track, events are buffered and log happens on another task */</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1770">
+<div class="imageblock data-line-1715">
 <div class="content">
 <img src="images/images/queuing.png" alt="queuing">
 </div>
 </div>
 <hr>
-<div class="imageblock text-center data-line-1775">
+<div class="imageblock text-center data-line-1720">
 <div class="content">
 <img src="images/images/mascott.png" alt="mascott" width="105">
 </div>
