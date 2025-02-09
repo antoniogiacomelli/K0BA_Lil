@@ -70,6 +70,13 @@
 #define K_DEF_N_TIMERS                  (K_DEF_N_USRTASKS+1)
 
 /**/
+/*** [ Direct Signal ] ********************************************************/
+/* Track lost signals in Task Control Block */
+#define K_DEF_SIGNAL_TRACK_LOST         (OFF)
+
+/* Register last task that signalled in Task Control Block */
+#define K_DEF_SIGNAL_TRACK_SIGNALLERS	(OFF)
+/**/
 /*** [ Semaphores ] ***********************************************************/
 #define K_DEF_SEMA                      (OFF)
 
@@ -79,7 +86,9 @@
 
 /**/
 /*** [ Mutexes ] **************************************************************/
-#define K_DEF_MUTEX                     (OFF)
+#define K_DEF_MUTEX                     (ON)
+/* Priority Inheritance */
+#define K_DEF_MUTEX_PRIO_INH			(ON)
 #if (K_DEF_MUTEX==ON)
 /* Queue Discipline:				 */
 #define K_DEF_MUTEX_ENQ				    (K_DEF_ENQ_PRIO)
@@ -87,63 +96,65 @@
 
 /**/
 /*** [ Sleep/Wake Events ] ****************************************************/
-#define K_DEF_SLEEPWAKE                  (OFF)
+#define K_DEF_SLEEPWAKE                  (ON)
 
 /**/
 /*** [ Mailbox ] **************************************************************/
 
-#define K_DEF_MBOX	       	             (OFF)
+#define K_DEF_MBOX	       	             (ON)
 
 #if(K_DEF_MBOX==ON)
-
-#define EXCHANGE				 		 (1) /* Single-mail */
-#define QUEUE					  		 (2) /* Multi-mail  */
-
-#define K_DEF_MBOX_TYPE				    (EXCHANGE)
 
 /* Queue discipline:   				 */
 #define K_DEF_MBOX_ENQ       	    	(K_DEF_ENQ_PRIO)
 
-
-/* Optional methods */
-
-#if (K_DEF_MBOX_TYPE==(EXCHANGE))
-/* Exchange */
-#define K_DEF_FUNC_MBOX_POSTPEND    	(OFF)
-#define K_DEF_FUNC_MBOX_ISFULL			(OFF)
-#define K_DEF_FUNC_MBOX_PEEK			(OFF)
-#define K_DEF_FUNC_MBOX_RESET			(OFF)
-#endif
-
-#if (K_DEF_MBOX_TYPE==(QUEUE))
-/* Queue */
-#define K_DEF_FUNC_MBOX_PEEK		    (OFF)
-#define K_DEF_FUNC_MBOX_JAM				(OFF)
-#define K_DEF_FUNC_MBOX_MAILCOUNT		(OFF)
-#define K_DEF_FUNC_MBOX_RESET			(OFF)
-#endif
+/* Optional Methdos*/
+#define K_DEF_FUNC_MBOX_POSTPEND    	(ON)
+#define K_DEF_FUNC_MBOX_ISFULL			(ON)
+#define K_DEF_FUNC_MBOX_PEEK			(ON)
+#define K_DEF_FUNC_MBOX_POSTOVW			(ON)
 
 #endif
 
 /**/
+/*** [ Multimailbox ] *********************************************************/
+
+#define K_DEF_MMBOX						(OFF)
+
+#if(K_DEF_MMBOX==ON)
+
+/* Queue discipline:   				 */
+#define K_DEF_MMBOX_ENQ       	    	(K_DEF_ENQ_PRIO)
+
+/* Optional Methdos*/
+#define K_DEF_FUNC_MMBOX_ISFULL			(ON)
+#define K_DEF_FUNC_MMBOX_PEEK			(ON)
+#define K_DEF_FUNC_MMBOX_MAILCOUNT		(ON)
+#define K_DEF_FUNC_MMBOX_JAM			(ON)
+#endif
+
+
+
+/**/
 /*** [ Message Queue ] *******************************************************/
 
-#define K_DEF_MESGQ			      	    (OFF)
+#define K_DEF_MESGQ			      	    (ON)
 
 #if (K_DEF_MESGQ == ON)
 /* Queue Discipline				 */
 #define K_DEF_MESGQ_ENQ				    (K_DEF_ENQ_PRIO)
 
 /* Optional methods */
-#define K_DEF_FUNC_MESGQ_JAM			 (OFF)
-#define K_DEF_FUNC_MESGQ_PEEK			 (OFF)
-#define K_DEF_FUNC_MESGQ_MESGCOUNT		 (OFF)
-#define K_DEF_FUNC_MESGQ_RESET			 (OFF)
+#define K_DEF_FUNC_MESGQ_JAM			 (ON)
+#define K_DEF_FUNC_MESGQ_PEEK			 (ON)
+#define K_DEF_FUNC_MESGQ_MESGCOUNT		 (ON)
+#define K_DEF_FUNC_MESGQ_RESET			 (ON)
 
 #endif /*mesgq*/
 
 /**/
 /*** [ Pump-Drop Queues ] *****************************************************/
 #define K_DEF_PDMESG                       (OFF)
+
 
 #endif /* KCONFIG_H */

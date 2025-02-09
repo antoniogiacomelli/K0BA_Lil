@@ -2,8 +2,8 @@
 #define K_TIMER_H
 /* Timer Reload / Oneshot optionss */
 
-#define RELOAD      1
-#define ONESHOT     0
+#define K_RELOAD      1
+#define K_ONESHOT     0
 
 extern K_TIMER *dTimReloadList; /* periodic timers */
 extern K_TIMER *dTimOneShotList; /* one-shot timers */

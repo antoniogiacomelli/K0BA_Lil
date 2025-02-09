@@ -23,7 +23,7 @@
 #include "kexecutive.h"
 
 /*******************************************************************************
- * DIRECT TASK PENDING/SIGNAL
+ * DIRECT TASK SIGNAL
  *******************************************************************************/
 K_ERR kPend(VOID)
 {
@@ -44,28 +44,34 @@ K_ERR kPend(VOID)
 	{
 		err = K_ERROR;
 	}
-	K_EXIT_CR
 
+	K_EXIT_CR
 	return (err);
 }
 
-K_ERR kSignal(TID const taskID)
+K_ERR kSignal(K_TASK_HANDLE const taskHandle)
 {
 
 	K_ERR err = -1;
+	if ((taskHandle==NULL) || (taskHandle->pid == runPtr->pid))
+		return (err);
 	K_CR_AREA
 	K_ENTER_CR
-	PID pid = kGetTaskPID(taskID);
-	if (tcbs[pid].status == PENDING || tcbs[pid].status == SUSPENDED)
+	PID pid = taskHandle->pid;
+	if (tcbs[pid].status == PENDING)
 	{
 		err = kReadyCtxtSwtch(&tcbs[pid]);
-		assert(!err);
+		kassert(!err);
 	}
+#if (K_DEF_SIGNAL_TRACK_LOST==(ON))
 	else
 	{
 		tcbs[pid].lostSignals += 1;
 	}
+#endif
+#if (K_DEF_SIGNAL_TRACK_SIGNALLERS==(ON))
 	tcbs[pid].signalledBy = runPtr->uPid;
+#endif
 	K_EXIT_CR
 	return (err);
 }
@@ -85,9 +91,8 @@ K_ERR kEventInit(K_EVENT *const kobj)
 	K_CR_AREA
 	K_ENTER_CR
 	kobj->eventID = (UINT) kobj;
-	assert(!kTCBQInit(&(kobj->waitingQueue), "eventQ"));
-	kobj->init = TRUE
-	;
+	kassert(!kTCBQInit(&(kobj->waitingQueue), "eventQ"));
+	kobj->init = TRUE;
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
 	kobj->timeoutNode.kobj = kobj;
@@ -156,7 +161,7 @@ VOID kEventWake(K_EVENT *kobj)
 		{
 			K_TCB *nextTCBPtr;
 			kTCBQDeq(&kobj->waitingQueue, &nextTCBPtr);
-			assert(!kReadyCtxtSwtch(nextTCBPtr));
+			kassert(!kReadyCtxtSwtch(nextTCBPtr));
 			nextTCBPtr->pendingEv = NULL;
 		}
 	}
@@ -182,7 +187,7 @@ VOID kEventSignal(K_EVENT *kobj)
 
 	K_TCB *nextTCBPtr;
 	kTCBQDeq(&kobj->waitingQueue, &nextTCBPtr);
-	assert(!kReadyCtxtSwtch(nextTCBPtr));
+	kassert(!kReadyCtxtSwtch(nextTCBPtr));
 	nextTCBPtr->pendingEv = NULL;
 
 	K_EXIT_CR
@@ -298,8 +303,8 @@ VOID kSemaSignal(K_SEMA *const kobj)
 	if ((kobj->value) <= 0)
 	{
 		K_ERR err = kTCBQDeq(&(kobj->waitingQueue), &nextTCBPtr);
-		assert(err == 0);
-		assert(nextTCBPtr != NULL);
+		kassert(err == 0);
+		kassert(nextTCBPtr != NULL);
 		nextTCBPtr->pendingSema = NULL;
 		err = kReadyCtxtSwtch(nextTCBPtr);
 	}
@@ -340,7 +345,7 @@ K_ERR kMutexLock(K_MUTEX *const kobj, TICK timeout)
 	K_ENTER_CR
 	if (kobj->init == FALSE)
 	{
-		assert(0);
+		kassert(0);
 	}
 	if (kobj == NULL)
 	{
@@ -365,6 +370,7 @@ K_ERR kMutexLock(K_MUTEX *const kobj, TICK timeout)
 			K_EXIT_CR
 			return (K_ERR_MUTEX_LOCKED);
 		}
+#if(K_DEF_MUTEX_PRIO_INH==(ON))
 		if (kobj->ownerPtr->priority > runPtr->priority)
 		{
 			/* mutex owner has lower priority than the tried-to-lock-task
@@ -374,6 +380,7 @@ K_ERR kMutexLock(K_MUTEX *const kobj, TICK timeout)
 
 			kobj->ownerPtr->priority = runPtr->priority;
 		}
+#endif
 #if(K_DEF_MUTEX_ENQ==K_DEF_ENQ_FIFO)
 		kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
@@ -422,7 +429,7 @@ VOID kMutexUnlock(K_MUTEX *const kobj)
 	}
 	if (kobj->init == FALSE)
 	{
-		assert(0);
+		kassert(0);
 	}
 	if ((kobj->lock == FALSE))
 	{
@@ -430,7 +437,7 @@ VOID kMutexUnlock(K_MUTEX *const kobj)
 	}
 	if (kobj->ownerPtr != runPtr)
 	{
-		assert(FAULT_UNLOCK_OWNED_MUTEX);
+		kassert(FAULT_UNLOCK_OWNED_MUTEX);
 		K_EXIT_CR
 		return;
 	}
@@ -438,7 +445,9 @@ VOID kMutexUnlock(K_MUTEX *const kobj)
 	if (kobj->waitingQueue.size == 0)
 	{
 		kobj->lock = FALSE;
+#if (K_DEF_MUTEX_PRIO_INH==(ON))
 		kobj->ownerPtr->priority = kobj->ownerPtr->realPrio;
+#endif
 		kobj->ownerPtr->pendingMutx = NULL;
 		tcbPtr = kobj->ownerPtr;
 		kobj->ownerPtr = NULL;

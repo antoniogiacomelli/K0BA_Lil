@@ -21,6 +21,9 @@ typedef enum
 #if (K_DEF_MBOX==ON)
     MAILBOX,
 #endif
+#if (K_DEF_MMBOX==ON)
+    MMBOX,
+#endif
 #if (K_DEF_SEMA==ON)
     SEMAPHORE,
 #endif
@@ -68,49 +71,42 @@ struct kTcb
 	PRIO priority;        /* Task priority (0-31) 32 is invalid */
 	PRIO realPrio;        /* Real priority (for prio inheritance) */
 
-#if (K_DEF_SIGNALS == ON)
-	UINT32 signals;
+#if (K_DEF_SIGNAL_TRACK_LOST==(ON))
+	UINT lostSignals;
+#endif
+
+#if (K_DEF_SIGNAL_TRACK_SIGNALLERS==(ON))
+    TID    signalledBy;
 #endif
 
 #if (K_DEF_SCH_TSLICE == ON)
 	TICK timeSlice;
 	TICK timeLeft;
 #endif
-
     TICK busyWaitTime;
-
 #if (K_DEF_SCH_TSLICE==OFF)
 	TICK   lastWakeTime;
 #endif
-
 /* Resources */
-
 #if (K_DEF_SEMA == ON)
     K_SEMA* pendingSema;
 #endif
-
 #if (K_DEF_MUTEX==ON)
 	K_MUTEX* pendingMutx;
 #endif
 #if (K_DEF_SLEEPWAKE==ON)
 	K_EVENT* pendingEv;
 #endif
-
 #if (K_DEF_MBOX==ON)
 	K_MBOX* pendingMbox;
 #endif
 	K_TIMER* pendingTmr;
-
-/* Monitoring */
-
 	BOOL   runToCompl;
     BOOL   yield;
     BOOL   timeOut;
-	UINT lostSignals;
-    TID    signalledBy;
+/* Monitoring */
 	UINT nPreempted;
 	PID    preemptedBy;
-
 	struct kListNode tcbNode;
 } __attribute__((aligned));
 
@@ -186,8 +182,6 @@ struct kMemBlock
 
 
 #if (K_DEF_MBOX==ON)
-
-#if (K_DEF_MBOX_TYPE==(EXCHANGE))
 /* Mailbox (single capcacity)*/
 struct kMailbox
 {
@@ -197,10 +191,10 @@ struct kMailbox
     K_TIMEOUT_NODE timeoutNode;
 
 } __attribute__((aligned(4)));
+#endif
 
-#elif (K_DEF_MBOX_TYPE==(QUEUE))
-/* Mailbox (multi capacity) */
-struct kMailbox
+#if (K_DEF_MMBOX==ON)
+struct kMultibox
 {
     BOOL init;
     ADDR mailQPtr;
@@ -211,9 +205,6 @@ struct kMailbox
     struct kList waitingQueue;
     K_TIMEOUT_NODE timeoutNode;
 } __attribute__((aligned(4)));
-
-#endif
-
 #endif
 
 #if ((K_DEF_MESGQ==ON))

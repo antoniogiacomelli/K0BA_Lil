@@ -14,8 +14,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+#include "kconfig.h"
 #include "kenv.h"
+
+
 /*
  * brief This is the offset w.r.t the top of a stack frame
  * The numbers are unsigned.
@@ -38,12 +40,13 @@ extern "C" {
 #define R5_OFFSET   15 /* R5 Register offset */
 #define R4_OFFSET   16 /* R4 Register offset */
 
+#define K_WAIT_FOREVER      (0xFFFFFFFF)
+#define K_NO_WAIT			(0)
+
 #define TIMHANDLER_ID        		255
 #define IDLETASK_ID           		0
-
-#define MSGBUFF_SIZE sizeof(K_MESG)
-#define TIMER_SIZE   sizeof(K_TIMER)
-
+#define DEADCODE 				   (0)
+#define TIMER_SIZE  			    sizeof(K_TIMER)
 #define N_SYSTASKS          2 /*idle task + tim handler*/
 
 /*** Config values */
@@ -89,7 +92,7 @@ extern "C" {
  */
 #define CPYQ(d,s,z,r) CPY(d,s,z,r)
 
-__STATIC_FORCEINLINE unsigned kIsISR()
+__STATIC_FORCEINLINE unsigned kIsISR(void)
 {
 	unsigned ipsr_value;
 	asm("MRS %0, IPSR" : "=r"(ipsr_value));
@@ -124,11 +127,12 @@ __STATIC_FORCEINLINE unsigned kIsISR()
 #define IS_INIT(obj) (obj)->init) ? (1) : (0)
 #define IS_VALID_TID(id) ((id == (IDLETASK_ID)) || (id == (TIMHANDLER_ID))) ? (0) : (1)
 #define IS_BLOCK_ON_ISR(timeout) ((kIsISR() && (timeout > 0)) ? (1) : (0))
-#define RELOAD      		1
-#define ONESHOT    		    0
-#define K_WAIT_FOREVER      (0xFFFFFFFF)
-#define K_NO_WAIT			(0)
-#define DEADCODE (0)
+
+#ifdef NDEBUG
+#define kassert(x) ((void)0)
+#else
+#define kassert(x) ((x) ? (void)0 : KFAULT(0))
+#endif
 
 #ifdef __cplusplus
 }

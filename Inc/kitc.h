@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 K_ERR kPend(VOID);
-K_ERR kSignal(TID const);
+K_ERR kSignal(K_TASK_HANDLE const);
 
 #ifdef __cplusplus
 }

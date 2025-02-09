@@ -106,8 +106,8 @@ __attribute__((always_inline)) static inline K_ERR kListInit(K_LIST* const kobj,
     return (K_SUCCESS);
 }
 __attribute__((always_inline))    static inline K_ERR kListInsertAfter(
-        K_LIST* const kobj, K_LISTNODE* const refNodePtr,
-        K_LISTNODE* const newNodePtr)
+        K_LIST* const kobj, K_NODE* const refNodePtr,
+        K_NODE* const newNodePtr)
 {
     if (kobj == NULL || newNodePtr == NULL || refNodePtr == NULL)
     {
@@ -123,7 +123,7 @@ __attribute__((always_inline))    static inline K_ERR kListInsertAfter(
     return (K_SUCCESS);
 }
 __attribute__((always_inline))    static inline K_ERR kListRemove(K_LIST* const kobj,
-        K_LISTNODE* const remNodePtr)
+        K_NODE* const remNodePtr)
 {
     if (kobj == NULL || remNodePtr == NULL)
     {
@@ -140,7 +140,7 @@ __attribute__((always_inline))    static inline K_ERR kListRemove(K_LIST* const 
 }
 
 __attribute__((always_inline))    static inline K_ERR kListRemoveHead(
-        K_LIST* const kobj, K_LISTNODE** const remNodePPtr)
+        K_LIST* const kobj, K_NODE** const remNodePPtr)
 {
 
     if (kobj->size == 0)
@@ -148,7 +148,7 @@ __attribute__((always_inline))    static inline K_ERR kListRemoveHead(
         return (K_ERR_LIST_EMPTY);
     }
 
-    K_LISTNODE* currHeadPtr = kobj->listDummy.nextPtr;
+    K_NODE* currHeadPtr = kobj->listDummy.nextPtr;
     *remNodePPtr = currHeadPtr;
     KLISTNODEDEL(currHeadPtr);
     kobj->size -= 1U;
@@ -156,13 +156,13 @@ __attribute__((always_inline))    static inline K_ERR kListRemoveHead(
     return (K_SUCCESS);
 }
 __attribute__((always_inline))    static inline K_ERR kListAddTail(
-        K_LIST* const kobj, K_LISTNODE* const newNodePtr)
+        K_LIST* const kobj, K_NODE* const newNodePtr)
 {
     return (kListInsertAfter(kobj, kobj->listDummy.prevPtr, newNodePtr));
 }
 
 __attribute__((always_inline))    static inline K_ERR kListAddHead(
-        K_LIST* const kobj, K_LISTNODE* const newNodePtr)
+        K_LIST* const kobj, K_NODE* const newNodePtr)
 {
 
     return (kListInsertAfter(kobj, &kobj->listDummy, newNodePtr));
@@ -170,14 +170,14 @@ __attribute__((always_inline))    static inline K_ERR kListAddHead(
 
 __attribute__((always_inline))
 
-static inline K_ERR kListRemoveTail(K_LIST* const kobj, K_LISTNODE** remNodePPtr)
+static inline K_ERR kListRemoveTail(K_LIST* const kobj, K_NODE** remNodePPtr)
 {
     if (kobj->size == 0)
     {
         return (K_ERR_LIST_EMPTY);
     }
 
-    K_LISTNODE* currTailPtr = kobj->listDummy.prevPtr;
+    K_NODE* currTailPtr = kobj->listDummy.prevPtr;
     if (currTailPtr != NULL)
     {
         *remNodePPtr = currTailPtr;

@@ -23,26 +23,24 @@ typedef unsigned char BYTE;
 typedef signed INT; /* stack type */
 typedef unsigned UINT;
 typedef unsigned long ULONG;
+typedef void *ADDR; /* Generic address type 		*/
 
 /*** if you dont provide a stdbool                                          */
 #if !defined(bool)
-typedef unsigned int BOOL
-#define false (unsigned int)0U;
-#define true  (unsigned int)1U;
+typedef unsigned BOOL;
+#define FALSE (unsigned)0
+#define TRUE  (unsigned)1
 #define bool
-#endif
+#else
 typedef _Bool BOOL;
 #define TRUE			true
 #define FALSE			false
+#endif
 
-/**
- * \brief Primitve aliases
- */
-/*** User-defined Task ID range: 0-255.                         */
-/*** Priority range: 0-31 - tasks can have the same priority    */
-typedef void *ADDR; /* Generic address type 		*/
 typedef char *STRING; /*Pointer to string of chars */
 
+/*** User-defined Task ID range: 0-255.                         */
+/*** Priority range: 0-31 - tasks can have the same priority    */
 typedef unsigned char PID; /* System defined Task ID type */
 typedef unsigned char TID; /* User defined Task ID */
 typedef unsigned char PRIO; /* Task priority type */
@@ -52,6 +50,11 @@ typedef unsigned TICK; /* Tick count type */
 typedef void (*TASKENTRY)(void); /* Task entry function pointer */
 typedef void (*CALLOUT)(void*); /* Callout (timers)             */
 typedef void (*CBK)(void*); /* Generic Call Back             */
+
+typedef enum
+{
+	OR, AND
+}K_OR_AND;
 
 /**
  *\brief Return values
@@ -112,7 +115,8 @@ typedef enum kErr
 	K_ERR_MUTEX_REC_LOCK = (int) 0xFFFF0014,
 	K_ERR_CANT_SUSPEND_PRIO = (int) 0xFFFF0015,
 	K_ERR_DMESG_NO_BUFFER = (int) 0xFFFFF0016,
-	K_ERR_INVALID_ISR_PRIMITIVE = (int) 0xFFFFF0017
+	K_ERR_INVALID_ISR_PRIMITIVE = (int) 0xFFFFF0017,
+	K_ERR_INVALID_ARG			= (int) 0xFFFFF0018
 } K_ERR;
 
 /**
@@ -161,9 +165,9 @@ typedef struct kTcb K_TCB;
 typedef struct kTimer K_TIMER;
 typedef struct kMemBlock K_MEM;
 typedef struct kList K_LIST;
-typedef struct kListNode K_LISTNODE;
+typedef struct kListNode K_NODE;
 typedef K_LIST K_TCBQ;
-
+typedef struct kTcb* K_TASK_HANDLE;
 #if (K_DEF_SEMA == ON)
 
 typedef struct kSema K_SEMA;
@@ -178,10 +182,12 @@ typedef struct kMesgQ K_MESGQ;
 #if (K_DEF_MBOX == ON)
 
 typedef struct kMailbox K_MBOX;
-#if (K_DEF_MBOX_TYPE==EXCHANGE)
-typedef K_MBOX K_EXCHG; /*alternatively*/
-#endif
+
 #endif /* mbox */
+
+#if (K_DEF_MMBOX==ON)
+typedef struct kMultibox K_MMBOX;
+#endif
 
 #if (K_DEF_SLEEPWAKE==ON)
 

@@ -10,28 +10,11 @@
  * \version  0.3.1
  * \author   Antonio Giacomelli
  *
- *
- * \verbatim
- *  ________________________________________
- * |                                        |--
- * | [TASK1][TASK2]  ....         [TASKN]   | application.c
- * |----------------------------------------|--
- * |                 API                    |
- * |----------------------------------------|--
- * |                                        |
- * |             K0BA KERNEL                | k*.h k*.c
- * |________________________________________|--
- * |                                        |
- * |        BOARD SUPPORT PACKAGE           |
- * |________________________________________|
- * |                                        |
- * |                CMIS HAL                |
- * |________________________________________|--
- *
  * This is the kernel API to be included within any application
  * development. It provides methods to access the kernel services.
  *
  * By default, it is placed in "application.h"
+ * For detailed return values \see ktypes.h.
  *
  *
  **/
@@ -45,6 +28,11 @@
 
 /**
  * \brief 			   Create a new task.
+ *
+ * \param taskHandle   Handle object for the task. This is used for methods
+ *                     that act direct on a task. Optionally can be left as
+ *                     NULL if not needed.
+ *
  * \param taskFuncPtr  Pointer to the task entry function.
  *
  * \param taskName     Task name. Keep it as much as 8 Bytes.
@@ -69,7 +57,9 @@
  * \return K_SUCCESS on success, K_ERROR on failure
  */
 K_ERR kCreateTask
-		(TASKENTRY const taskFuncPtr,
+		(
+		K_TASK_HANDLE	taskHandle,
+		TASKENTRY const taskFuncPtr,
 		STRING taskName,
 		TID const taskID,
         INT* const stackAddrPtr,
@@ -114,7 +104,7 @@ K_ERR kTaskRestorePrio(VOID);
  *\brief      		Initialise a semaphore
  *\param kobj  		Semaphore address
  *\param value 		Initial value
- *\return      \see ktypes.h
+ *\return      \K_SUCCESS or specific error
  */
 
 K_ERR kSemaInit(K_SEMA* const kobj, INT const value);
@@ -156,7 +146,7 @@ K_ERR kMutexInit(K_MUTEX* const kobj);
  *\brief Lock 		a mutex
  *\param kobj 		mutex address
  *\param timeout	Maximum suspension time
- *\return K_SUCCESS or a specific error \see ktypes.h
+ *\return K_SUCCESS or a specific error \K_SUCCESS or specific error
  */
 K_ERR kMutexLock(K_MUTEX* const kobj, TICK timeout);
 
@@ -174,55 +164,10 @@ K_ERR kMutexQuery(K_MUTEX* const kobj);
 #endif
 
 /*******************************************************************************
- * MAILBOX
+ * MAILBOX (SINGLE-ITEM MAILBOX, EXCHANGE)
  *******************************************************************************/
 #if (K_DEF_MBOX == ON)
 
-/**
- * \brief 				Send a message to mailbox.
- * \param kobj			Mailbox address.
- * \param sendPtr		Message address.
- * \param timeout		Suspension timeout.
- * \return				K_SUCCESS or specific error.
- */
-K_ERR kMboxPost(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
-/**
- * \brief               Receive from a mailbox. Block if empty.
- *
- * \param kobj          Mailbox address.
- * \param recvPPtr      Address that will store the message address (pointer-to-pointer).
- * \param timeout		Suspension time-out
- * \return				K_SUCCESS or specific error.
- */
-K_ERR kMboxPend(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
-
-
-#if (K_DEF_FUNC_MBOX_RESET==ON)
-
-/**
- * \brief			Reset mailbox to initial state.
- * 					All tasks pending switch to READY state.
- * \param kobj		Mailbox address
- * \return			K_SUCCESS or K_ERR_OBJ_NULL
- */
-K_ERR kMboxReset(K_MESGQ* kobj);
-
-#endif
-
-#if (K_DEF_FUNC_MBOX_PEEK==ON)
-
-/**
- * \brief 			   Reads the message on head of queue
- * 					   without extracting it.
- * \param kobj		   Mailbox address.
- * \param peekPPtr	   Pointer to receive address.
- * \return			   K_SUCCESS or specific error.
- */
-K_ERR kMboxPeek(K_MBOX *const kobj, ADDR *peekPPtr);
-
-#endif
-
-#if (K_DEF_MBOX_TYPE==EXCHANGE)
 /**
  * \brief               Initialises an indirect single mailbox.
  *
@@ -240,6 +185,43 @@ K_ERR kMboxInit(K_MBOX *const kobj, ADDR initMail);
  * \param timeout		Suspension time-out
  * \return              K_SUCCESS or specific error.
  */
+K_ERR kMboxPost(K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
+
+/**
+ * \brief               Receive from a mailbox. Block if empty.
+ *
+ * \param kobj          Mailbox address.
+ * \param recvPPtr      Address that will store the message address (pointer-to-pointer).
+ * \param timeout		Suspension time-out
+ * \return				K_SUCCESS or specific error.
+ */
+K_ERR kMboxPend(K_MBOX *const kobj, ADDR* recvPPtr, TICK timeout);
+
+
+#if (K_DEF_FUNC_MBOX_POSTOVW==(ON))
+
+/**
+ * \brief			Post to a mailbox even if it is full, overwriting the
+ *                  the current mail.
+ * \param kobj		Mailbox address.
+ * \param sendPtr   Mail address.
+ * \return          K_SUCCESS or specific error
+ */
+K_ERR kMboxPostOvw(K_MBOX *const kobj, ADDR const sendPtr);
+
+#endif
+
+#if (K_DEF_FUNC_MBOX_PEEK==ON)
+
+/**
+ * \brief 			   Reads the mail without extracting it.
+ * \param kobj		   Mailbox address.
+ * \param peekPPtr	   Pointer to receive address.
+ * \return			   K_SUCCESS or specific error.
+ */
+K_ERR kMboxPeek(K_MBOX *const kobj, ADDR *peekPPtr);
+
+#endif
 
 #if (K_DEF_FUNC_MBOX_POSTPEND==ON)
 
@@ -248,12 +230,11 @@ K_ERR kMboxInit(K_MBOX *const kobj, ADDR initMail);
  * \param kobj          Mailbox address.
  * \param sendPtr		Address of sending message.
  * \param recvPPtr      Address to store the response. (can be &sendPtr)
-  * \param timeout		Suspension time-out
+ * \param timeout		Suspension time-out
  * \return				K_SUCCESS or specific error.
  */
 K_ERR kMboxPostPend(K_MBOX *const kobj, ADDR const sendPtr, ADDR* const recvPPtr,
 		TICK timeout);
-
 #endif
 
 #if (K_DEF_FUNC_MBOX_ISFULL==ON)
@@ -265,45 +246,76 @@ BOOL kMboxIsFull(K_MBOX *const kobj);
 
 #endif
 
-#endif /* EXCHANGE */
-
-#if (K_DEF_MBOX_TYPE==QUEUE)
-
-/**
- * \brief				Initialises an indirect multi-item mailbox.
- * \param kobj			Mailbox address.
- * \param memPPtr		Pointer-to-pointer to the mailbox memory.
- * \param maxItems		Maximum number of items.
- * \return
- */
-K_ERR kMboxInit(K_MBOX *const kobj, ADDR *memPPtr, ULONG maxItems);
-
-#if (K_DEF_FUNC_MBOX_MAILCOUNT==ON)
-
-/**
- * \brief   Get the number of mails on a mailbox.
- * \return  Number of mails.
- */
-ULONG kMboxMailCount(K_MBOX *const kobj);
-
-#endif
-
-#if (K_DEF_FUNC_MBOX_MAILCOUNT==ON)
-/**
- * \brief			  Get the number of mails within a queue
- * \param kobj
- * \return
- */
-ULONG kMboxMailCount(K_MBOX *const kobj);
-
-#endif
-
-#endif /* QUEUE */
-
 #endif /* MBOX  */
+/*******************************************************************************
+ * MULTIMAILBOX (MULTIBOX, QUEUE)
+ ******************************************************************************/
+#if (K_DEF_MMBOX == ON)
+
+/**
+ * \brief			 Initialises a multibox.
+ * \param kobj		 Multibox address
+ * \param memPtr     Pointer to the buffer that will store mail addresses
+ * \param maxItems   Maximum number of mails.
+ * \return           K_SUCCESS or specific error.
+ */
+K_ERR kMMBoxInit(K_MMBOX *const kobj, ADDR memPtr, ULONG maxItems);
+/**
+ * \brief               Send to a multilbox. Task blocks when full.
+ * \param kobj          Multibox address.
+ * \param sendPtr       Mail address.
+ * \param timeout		Suspension time-out
+ * \return              K_SUCCESS or specific error.
+ */
+K_ERR kMMboxPost(K_MMBOX *const kobj, ADDR const sendPtr, TICK timeout);
+
+/**
+ * \brief               Receive from a multibox. Block if empty.
+ *
+ * \param kobj          Multibox address.
+ * \param recvPPtr      Address that will store the message address
+ * 					  (pointer-to-pointer).
+ * \param timeout		Suspension time-out
+ * \return				K_SUCCESS or specific error.
+ */
+K_ERR kMMboxPend(K_MMBOX *const kobj, ADDR* recvPPtr, TICK timeout);
+
+#if (K_DEF_FUNC_MMBOX_PEEK==ON)
+
+/**
+ * \brief 			   Reads the head's mail without extracting it.
+ * \param kobj		   Multibox address.
+ * \param peekPPtr	   Pointer to receive address.
+ * \return			   K_SUCCESS or specific error.
+ */
+K_ERR kMMboxPeek(K_MMBOX *const kobj, ADDR *peekPPtr);
+
+#endif
+
+#if (K_DEF_FUNC_MMBOX_ISFULL==ON)
+/**
+ * \brief   		Check if a multibox is full.
+ * \param kobj		Multibox address.
+ * \return  		TRUE or FALSE.
+ */
+BOOL kMMboxIsFull(K_MMBOX *const kobj);
+
+#endif
+
+#if (K_DEF_FUNC_MMBOX_MAILCOUNT==ON)
+/**
+ * \brief			Gets the current number of mails within a multibox.
+ * \param kobj      Multibox address.
+ * \return			Number of mails.
+ */
+ULONG kMMBoxMailCount(K_MMBOX *const kobj);
+
+#endif
+
+#endif /* MMBOX  */
 
 /******************************************************************************/
-/* MESSAGE STREAM (PIPE/MESSAGE QUEUE)                                        */
+/* MESSAGE QUEUE (STREAM)                                        */
 /******************************************************************************/
 #if (K_DEF_MESGQ == ON)
 /**
@@ -373,17 +385,6 @@ K_ERR kMesgQPeek(K_MESGQ *const kobj, ADDR recvPtr);
 
 #endif
 
-#if (K_DEF_FUNC_MESGQ_RESET==ON)
-/**
- * \brief			Reset queue indexes and message counter.
- * 					All tasks pending switch to READY state.
- * \param kobj		Queue address
- * \return			K_SUCCESS or K_ERR_OBJ_NULL
- */
-K_ERR kMesgQReset(K_MESGQ* kobj);
-
-#endif
-
 #endif /*K_DEF_MESGQ*/
 
 /*******************************************************************************
@@ -399,7 +400,7 @@ K_ERR kMesgQReset(K_MESGQ* kobj);
  * \param memCtrlPtr	Pointer to the memory allocator control block
  * \param bufPool  		Pool of PD Buffers, statically allocated.
  * \param nBufs    		Number of buffers for this queue.
- * \return         see ktypes.h
+ * \return         K_SUCCESS or specific error
  */
 K_ERR kPDMesgInit(K_PDMESG* const kobj, K_MEM* const memCtrlPtr, K_PDBUF* const bufPool, BYTE const nBufs);
 
@@ -407,11 +408,9 @@ K_ERR kPDMesgInit(K_PDMESG* const kobj, K_MEM* const memCtrlPtr, K_PDBUF* const 
  * \brief          Reserves a pump-drop buffer before writing on it.
  *
  * \param kobj     Queue address.
- * \return         see ktypes.h
+ * \return         K_SUCCESS or specific error
  */
 K_PDBUF* kPDMesgReserve(K_PDMESG* const kobj);
-
-
 /**
  * \brief           Writes into a PD buffer the source address and the size
  *                  of a data message.
@@ -419,7 +418,7 @@ K_PDBUF* kPDMesgReserve(K_PDMESG* const kobj);
  * \param bufPtr    Buffer address.
  * \param srcPtr    Message address.
  * \param dataSize  Message size.
- * \return
+ * \return			K_SUCCESS or specific error.
  */
 K_ERR kPDBufWrite(K_PDBUF* bufPtr, ADDR srcPtr, ULONG dataSize);
 
@@ -444,7 +443,7 @@ K_PDBUF* kPDMesgFetch(K_PDMESG* const kobj);
  *
  * \param bufPtr   Address of the PD buffer.
  * \param destPtr  Address that will store the message.
- * \return         see ktypes.h
+ * \return         K_SUCCESS or specific error
  */
 K_ERR kPDBufRead(K_PDBUF* const bufPtr, ADDR destPtr);
 
@@ -455,7 +454,7 @@ K_ERR kPDBufRead(K_PDBUF* const bufPtr, ADDR destPtr);
  *                in the queue, it will be reused.
  *
  * \param kobj    Queue address;
- * \return        see ktypes.h
+ * \return        K_SUCCESS or specific error
  */
 K_ERR kPDMesgDrop(K_PDMESG* const kobj, K_PDBUF* const bufPtr);
 
@@ -475,7 +474,7 @@ K_ERR kPend(VOID);
  *        med.
  * \param taskID The ID of the task to signal
  */
-K_ERR kSignal(TID const taskID);
+K_ERR kSignal(K_TASK_HANDLE const taskHandle);
 
 
 /******************************************************************************
@@ -637,6 +636,7 @@ extern K_TCB* runPtr;
 #define K_RUNNING_TID (runPtr->uPid)
 #define K_RUNNING_PID (runPtr->pid)
 #define K_RUNNING_PRIO (runPtr->priority)
+
 
 
 /*[EOF]*/

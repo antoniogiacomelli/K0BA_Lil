@@ -30,11 +30,6 @@
 #error "Missing K0BA version"
 #endif
 
-#if (!defined(_STDDEF_H) && !defined(_STDDEF_H_) && !defined(_ANSI_STDDEF_H) \
-     && !defined(__STDDEF_H__))
-#error "You need a compiler with stddef.h library."
-#endif
-
 #if (K_DEF_MIN_PRIO > 31)
 #	error "Invalid minimal effective priority. (Max numerical value: 31)"
 #endif

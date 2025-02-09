@@ -14,6 +14,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+extern K_TASK_HANDLE timTaskHandle;
+extern K_TASK_HANDLE idleTaskHandle;
+
 void IdleTask(void);
 void TimerHandlerTask(void);
 BOOL kTimerHandler(void);

@@ -68,7 +68,7 @@ K_ERR kTimerInit(STRING timerName, TICK ticks, CALLOUT funPtr, ADDR argsPtr,
 	K_ENTER_CR
 	if (reload == TRUE)
 	{
-		assert(
+		kassert(
 				kTimerListAdd_(&dTimReloadList, timerName, ticks, funPtr,
 						argsPtr, reload) == (K_SUCCESS));
 		K_EXIT_CR
@@ -76,7 +76,7 @@ K_ERR kTimerInit(STRING timerName, TICK ticks, CALLOUT funPtr, ADDR argsPtr,
 	}
 	else
 	{
-		assert(
+		kassert(
 				kTimerListAdd_(&dTimOneShotList, timerName, ticks, funPtr,
 						argsPtr, reload) == (K_SUCCESS));
 		K_EXIT_CR
@@ -190,7 +190,7 @@ void kSleep(TICK ticks)
 {
 	if (runPtr->status != RUNNING)
 	{
-		assert(FAULT_TASK_INVALID_STATE);
+		kassert(FAULT_TASK_INVALID_STATE);
 	}
 
 	K_CR_AREA
@@ -199,7 +199,7 @@ void kSleep(TICK ticks)
 
 	if (!kTimerListAdd_(&dTimSleepList, "SleepTimer", ticks, NULL,
 			(K_TCB*) runPtr,
-			ONESHOT))
+			K_ONESHOT))
 	{
 
 		if (!kTCBQEnq(&sleepingQueue, runPtr))
@@ -253,7 +253,7 @@ VOID kSleepUntil(TICK const period)
 	{
 		if (!kTimerListAdd_(&dTimSleepList, "SleepTimer", period, NULL,
 				(K_TCB*) runPtr,
-				ONESHOT))
+				K_ONESHOT))
 		{
 
 			if (!kTCBQEnq(&sleepingQueue, runPtr))
@@ -268,11 +268,7 @@ VOID kSleepUntil(TICK const period)
 	}
 	/* Update the last wake time */
 	runPtr->lastWakeTime = nextWakeTime;
-
 	K_EXIT_CR
-	;
-
-
 }
 
 /******************************************************************************/
@@ -305,6 +301,25 @@ VOID kRemoveTaskFromMbox(ADDR kobj)
 	{
 		K_TCB *taskPtr;
 		kTCBQDeq(&mboxPtr->waitingQueue, &taskPtr);
+		taskPtr->timeOut = TRUE;
+		if (!kTCBQEnq(&readyQueue[taskPtr->priority], taskPtr))
+		{
+			taskPtr->status = READY;
+		}
+	}
+}
+#endif
+
+#if (K_DEF_MMBOX==ON)
+
+VOID kRemoveTaskFromMMbox(ADDR kobj)
+{
+	K_MMBOX *mmboxPtr = (K_MMBOX*) kobj;
+
+	if (mmboxPtr->waitingQueue.size > 0)
+	{
+		K_TCB *taskPtr;
+		kTCBQDeq(&mmboxPtr->waitingQueue, &taskPtr);
 		taskPtr->timeOut = TRUE;
 		if (!kTCBQEnq(&readyQueue[taskPtr->priority], taskPtr))
 		{
@@ -427,6 +442,14 @@ BOOL kHandleTimeoutList(void)
 				kRemoveTaskFromMbox(node->kobj);
 				break;
 #endif
+
+#if (K_DEF_MMBOX==ON)
+
+			case MMBOX:
+				kRemoveTaskFromMMbox(node->kobj);
+				break;
+#endif
+
 #if (K_DEF_SEMA==ON)
 
 			case SEMAPHORE:
