@@ -1786,7 +1786,7 @@ VOID RecvrTask(VOID)
   UINT idx=0;
   while(1)
   {
-    kMMBoxPend(&amp;mmbox, (ADDR)&amp;rcvd[idx], K_WAIT_FOREVER);
+    kMMBoxPend(&amp;mmbox, (ADDR*)&amp;rcvd[idx], K_WAIT_FOREVER);
     /* suspend empty */
     idx += 1;
     idx %= 8;
@@ -1864,7 +1864,7 @@ VOID Task2(VOID)
 	struct mesg *recvPtr = NULL;
 	while (1)
 	{
-		kMMboxPend(&amp;mmbox, (ADDR) &amp;recvPtr, K_WAIT_FOREVER); /* will block when empty */
+		kMMboxPend(&amp;mmbox, (ADDR*) &amp;recvPtr, K_WAIT_FOREVER); /* will block when empty */
 		kprintf("Received: %s \n\r", recvPtr-&gt;mesg);
 		kBusyDelay(2); /* pretend working */
 		kMemFree(&amp;mem, (ADDR) recvPtr); /* free memory */
@@ -2064,11 +2064,8 @@ A lean and modular kernel will provide more controlability and observability tha
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#include "application.h"
 
-UINT    mail;
-K_TASK_HANDLE task1Handle; /* these are initialised when creating tasks */
-K_TASK_HANDLE task2Handle;
-
-
+UINT        mail=0U;
+K_MUTEX     lock;
 VOID kApplicationInit(VOID)
 {
     kMutexInit(&amp;lock);
@@ -2083,7 +2080,9 @@ VOID Task1(VOID)
     while(1)
     {
        /* post to mailbox and waits for reception */
-       mail = mailToSend; /* a mutex lock might be needed */
+       kMutexLock(&amp;lock, K_WAIT_FOREVER);
+       mail = mailToSend;
+       kMutexUnlock(&amp;lock);
        kTaskSignal(&amp;task2Handle); /* notify it is posted */
        kTaskPend(K_WAIT_FOREVER); /* wait for recv notification */
        /* update mail */
@@ -2098,22 +2097,26 @@ VOID Task2(VOID)
     while(1)
     {
         kTaskPend(K_WAIT_FOREVER); /* wait for post */
+        kMutexLock(&amp;lock, K_WAIT_FOREVER);
         recvMail = mail;
+        kMutexUnlock(&amp;lock);
         kTaskSignal(&amp;task1Handle); /* notify reception */
 
     }
-}</code></pre>
+}
+
+/* need a mutex? not in this case - in theory - assuming no other tasks will poke 'mail' (because 32-bit data, bi-lateral synch). IRL: yes. */</code></pre>
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1096">
+<div class="sect1 data-line-1100">
 <h2 id="extended_rendezvous_1">2. Extended rendezvous #1</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1097">
+<div class="paragraph data-line-1101">
 <p>Usage: Many-to-one command-response.</p>
 </div>
-<div class="listingblock data-line-1099">
+<div class="listingblock data-line-1103">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 
@@ -2240,21 +2243,21 @@ VOID Client2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1225">
+<div class="imageblock data-line-1229">
 <div class="content">
 <img src="images/images/multiclient.png" alt="multiclient">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1227">
+<div class="sect1 data-line-1231">
 <h2 id="extended_rendezvous_2">3. Extended rendezvous #2</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1228">
+<div class="paragraph data-line-1232">
 <p>This snippet uses the mailbox <code>kMboxPostPend()</code> method.
 Usage: client-server communication.</p>
 </div>
-<div class="listingblock data-line-1231">
+<div class="listingblock data-line-1235">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 
@@ -2346,20 +2349,20 @@ VOID Task2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1323">
+<div class="imageblock data-line-1327">
 <div class="content">
 <img src="images/images/sendrecv.png" alt="sendrecv">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1325">
+<div class="sect1 data-line-1329">
 <h2 id="queueing_pattern_0">4. Queueing Pattern #0</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1326">
+<div class="paragraph data-line-1330">
 <p>Usage: Asynch (like) comm, serialising access, logging, monitoring.</p>
 </div>
-<div class="listingblock data-line-1328">
+<div class="listingblock data-line-1332">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 #include &lt;stdlib.h&gt;
@@ -2454,20 +2457,20 @@ VOID SensorLogging(VOID)
 /* why enqueue and not log when reading? to not loose track, events are buffered and log happens on another task */</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1423">
+<div class="imageblock data-line-1427">
 <div class="content">
 <img src="images/images/queuing.png" alt="queuing">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1426">
+<div class="sect1 data-line-1430">
 <h2 id="monitor_0_barrier">5. Monitor #0 (Barrier)</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1428">
+<div class="paragraph data-line-1432">
 <p>Usage: resource access/tasks coordination.</p>
 </div>
-<div class="listingblock data-line-1430">
+<div class="listingblock data-line-1434">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 
@@ -2546,20 +2549,20 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1510">
+<div class="imageblock data-line-1514">
 <div class="content">
 <img src="images/images/syncbarr.png" alt="syncbarr">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1513">
+<div class="sect1 data-line-1517">
 <h2 id="monitor_1_turnstile">6. Monitor #1 (Turnstile)</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1515">
+<div class="paragraph data-line-1519">
 <p>In this variation we use mailboxes for turnstile. Also the task that wakes up all others will use the resource within the monitor (be active).</p>
 </div>
-<div class="listingblock data-line-1517">
+<div class="listingblock data-line-1521">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">K_EVENT syncEvent; /* state event				    */
 UINT syncCounter; /* state representation        */
@@ -2633,18 +2636,18 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1591">
+<div class="paragraph data-line-1595">
 <p><span class="image"><img src="images/images/mboxturnstiles.png" alt="mboxturnstiles"></span></p>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1593">
+<div class="sect1 data-line-1597">
 <h2 id="multi_condition_notification_0">7. Multi-condition Notification #0</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1595">
+<div class="paragraph data-line-1599">
 <p>Usage: coordinate a notified task action on a combination of events.</p>
 </div>
-<div class="listingblock data-line-1597">
+<div class="listingblock data-line-1601">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/* @file application.c */
 
@@ -2722,7 +2725,7 @@ VOID NotifiedTask(VOID)
 	UINT rcvdFlags = 0;
 	while (1)
 	{
-		K_ERR err = kMboxPend(&amp;mbox, (ADDR) &amp;rcvdFlag, K_WAIT_FOREVER);
+		K_ERR err = kMboxPend(&amp;mbox, (ADDR*) &amp;rcvdFlag, K_WAIT_FOREVER);
 		if (err == 0)
 		{
 			rcvdFlags |= *rcvdFlag;
@@ -2741,21 +2744,21 @@ VOID NotifiedTask(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1694">
+<div class="paragraph data-line-1698">
 <p><span class="image"><img src="images/images/mboxflags.png" alt="mboxflags"></span></p>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1696">
+<div class="sect1 data-line-1700">
 <h2 id="multi_condition_notification_1">8. Multi-condition Notification #1</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1697">
+<div class="paragraph data-line-1701">
 <p>Usage: multi-condition broadcast, notification, observer pattern.</p>
 </div>
-<div class="paragraph data-line-1699">
+<div class="paragraph data-line-1703">
 <p>By a rather simple combination of the provided services, Event Flags are constructed, handling pretty much everything that could had been shipped as another kernel service.</p>
 </div>
-<div class="listingblock data-line-1701">
+<div class="listingblock data-line-1705">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 #include &lt;stdlib.h&gt;
@@ -2866,13 +2869,13 @@ VOID Task4(VOID) /* just want flag 3*/
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1812">
+<div class="imageblock data-line-1816">
 <div class="content">
 <img src="images/images/eventflags.png" alt="eventflags">
 </div>
 </div>
 <hr>
-<div class="imageblock text-center data-line-1817">
+<div class="imageblock text-center data-line-1821">
 <div class="content">
 <img src="images/images/mascott.png" alt="mascott" width="105">
 </div>
