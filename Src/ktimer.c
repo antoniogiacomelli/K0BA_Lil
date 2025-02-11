@@ -1,21 +1,21 @@
 /******************************************************************************
- *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
- *
- ******************************************************************************
- ******************************************************************************
- * 	Module           : Application Timers
- * 	Depends on       : Scheduler, Inter-task Synchronisation
- *  Public API 		 : Yes
- * 	In this unit:
- * 			o Timer Pool Management
- *			o Timer Delta List
- *			o Timer Handler
- *			o Sleep delay
- *			o Busy-wait delay
- *			o Time-out for blocking mechanisms
- *
- *****************************************************************************/
+*
+* [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
+*
+******************************************************************************
+******************************************************************************
+* 	Module           : Application Timers
+* 	Depends on       : Scheduler, Inter-task Synchronisation
+*   Public API 		 : Yes
+* 	In this unit:
+* 			o Timer Pool Management
+*			o Timer Delta List
+*			o Timer Handler
+*			o Sleep delay
+*			o Busy-wait delay
+*			o Time-out for blocking mechanisms
+*
+*****************************************************************************/
 
 #define K_CODE
 
@@ -275,21 +275,29 @@ VOID kSleepUntil( TICK const period)
 /* BLOCKING TIME-OUT HANDLING												  */
 /******************************************************************************/
 
-/* Add a kernel object to the timeout list */
+/* timeout list ordered by timeout value */
 VOID kTimeOut( K_TIMEOUT_NODE *timeOutNode, TICK timeout)
 {
 	if (timeout == 0)
 		return;
 	timeOutNode->timeout = timeout;
-
-	/* Add the timeout node to the head of the timeout list */
-	if (timeOutNode != timeOutListHeadPtr)
+	if (timeOutListHeadPtr == NULL
+			|| timeOutNode->timeout < timeOutListHeadPtr->timeout)
 	{
 		timeOutNode->nextPtr = timeOutListHeadPtr;
 		timeOutListHeadPtr = timeOutNode;
-
+		return;
 	}
+	K_TIMEOUT_NODE *currPtr = timeOutListHeadPtr;
+	while (currPtr->nextPtr != NULL
+			&& currPtr->nextPtr->timeout <= timeOutNode->timeout)
+	{
+		currPtr = currPtr->nextPtr;
+	}
+	timeOutNode->nextPtr = currPtr->nextPtr;
+	currPtr->nextPtr = timeOutNode;
 }
+
 /* Handler traverses the list and process each object accordinly */
 
 #if (K_DEF_TASK_SIGNAL_BIN_SEMA==ON)
@@ -427,7 +435,7 @@ VOID kRemoveTaskFromEvent( ADDR kobj)
 }
 #endif
 
-BOOL kHandleTimeoutList( void)
+BOOL kHandleTimeoutList( VOID)
 {
 	K_TIMEOUT_NODE **currentPtr = &timeOutListHeadPtr;
 	BOOL ret = FALSE;
