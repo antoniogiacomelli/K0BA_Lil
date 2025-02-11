@@ -140,13 +140,14 @@ typedef enum kFault
 	FAULT_MEM_FREE = 0x0D,
 	FAULT_OBJ_NOT_INIT = 0x0E,
 	FAULT_MEM_CPY = 0x0F,
-	FAULT_INVALID_TASK_PRIO = 0x1F,
-	FAULT_INVALID_TASK_ID = 0x2F,
+	FAULT_TASK_INVALID_PRIO = 0x1F,
+	FAULT_TASK_INVALID_ID = 0x2F,
 	FAULT_OBJ_INIT = 0x3F,
 	FAULT_SYSMESG_N_EXCEEDED = 0x4F,
 	FAULT_UNLOCK_OWNED_MUTEX = 0x5F,
 	FAULT_ISR_INVALID_PRIMITVE = 0x6F,
 	FAULT_TASK_INVALID_STATE = 0x7F,
+	FAULT_TASK_INVALID_TSLICE = 0x7F8,
 	FAULT_INVALID_SVC = 0xFF
 } K_FAULT;
 
@@ -161,13 +162,14 @@ typedef enum kTaskStatus
 
 } K_TASK_STATUS;
 
+typedef struct kTimeoutNode K_TIMEOUT_NODE;
 typedef struct kTcb K_TCB;
 typedef struct kTimer K_TIMER;
 typedef struct kMemBlock K_MEM;
 typedef struct kList K_LIST;
 typedef struct kListNode K_NODE;
 typedef K_LIST K_TCBQ;
-typedef struct kTcb* K_TASK_HANDLE;
+typedef struct kTaskHandle K_TASK_HANDLE;
 #if (K_DEF_SEMA == ON)
 
 typedef struct kSema K_SEMA;

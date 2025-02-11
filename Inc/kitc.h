@@ -17,8 +17,13 @@
 extern "C" {
 #endif
 
-K_ERR kPend(VOID);
-K_ERR kSignal(K_TASK_HANDLE const);
+#if (K_DEF_TASK_SIGNAL_BIN_SEMA==ON)
+K_ERR kTaskPend(TICK);
+K_ERR kTaskSignal(K_TASK_HANDLE* const);
+#else
+K_ERR kTaskPend(VOID);
+K_ERR kTaskSignal(K_TASK_HANDLE* const);
+#endif
 
 #ifdef __cplusplus
 }

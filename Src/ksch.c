@@ -26,10 +26,11 @@
 /* scheduler globals */
 K_TCBQ readyQueue[K_DEF_MIN_PRIO + 2];
 K_TCBQ sleepingQueue;
+K_TCBQ dirSignalTimeoutQueue;
 K_TCB *runPtr;
 K_TCB tcbs[NTHREADS];
-K_TASK_HANDLE timTaskHandle  = &tcbs[TIMHANDLER_ID];
-K_TASK_HANDLE idleTaskHandle = &tcbs[IDLETASK_ID];
+K_TASK_HANDLE timTaskHandle;
+K_TASK_HANDLE idleTaskHandle;
 struct kRunTime runTime;
 /* local globals  */
 static PRIO highestPrio = 0;
@@ -40,7 +41,7 @@ static volatile UINT readyQBitMask;
 static volatile UINT readyQRightMask;
 static volatile UINT version;
 /* fwded private helpers */
-static inline VOID kReadyRunningTask_(VOID);
+static inline VOID kReadyRunningTask_( VOID);
 static inline PRIO kCalcNextTaskPrio_();
 #if (K_DEF_SCH_TSLICE == ON)
 static inline BOOL kDecTimeSlice_(VOID);
@@ -50,7 +51,7 @@ static inline BOOL kDecTimeSlice_(VOID);
  * YIELD
  *******************************************************************************/
 
-VOID kYield(VOID) /*  <- USE THIS =) */
+VOID kYield( VOID) /*  <- USE THIS =) */
 {
 	ISB
 	asm volatile("svc #0xC5");
@@ -60,25 +61,25 @@ VOID kYield(VOID) /*  <- USE THIS =) */
  TASK QUEUE MANAGEMENT
  *******************************************************************************/
 
-K_ERR kTCBQInit(K_TCBQ *const kobj, STRING listName)
+K_ERR kTCBQInit( K_TCBQ *const kobj, STRING listName)
 {
-	if (IS_NULL_PTR(kobj))
+	if (IS_NULL_PTR( kobj))
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		kErrHandler( FAULT_NULL_OBJ);
 		return (K_ERR_OBJ_NULL);
 	}
-	return (kListInit(kobj, listName));
+	return (kListInit( kobj, listName));
 }
 
-K_ERR kTCBQEnq(K_TCBQ *const kobj, K_TCB *const tcbPtr)
+K_ERR kTCBQEnq( K_TCBQ *const kobj, K_TCB *const tcbPtr)
 {
 	K_CR_AREA
 	K_ENTER_CR
 	if (kobj == NULL || tcbPtr == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		kErrHandler( FAULT_NULL_OBJ);
 	}
-	K_ERR err = kListAddTail(kobj, &(tcbPtr->tcbNode));
+	K_ERR err = kListAddTail( kobj, &(tcbPtr->tcbNode));
 	if (err == 0)
 	{
 		if (kobj == &readyQueue[tcbPtr->priority])
@@ -88,24 +89,24 @@ K_ERR kTCBQEnq(K_TCBQ *const kobj, K_TCB *const tcbPtr)
 	return (err);
 }
 
-K_ERR kTCBQDeq(K_TCBQ *const kobj, K_TCB **const tcbPPtr)
+K_ERR kTCBQDeq( K_TCBQ *const kobj, K_TCB **const tcbPPtr)
 {
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		kErrHandler( FAULT_NULL_OBJ);
 	}
 	K_NODE *dequeuedNodePtr = NULL;
-	K_ERR err = kListRemoveHead(kobj, &dequeuedNodePtr);
+	K_ERR err = kListRemoveHead( kobj, &dequeuedNodePtr);
 
 	if (err != K_SUCCESS)
 	{
-		kErrHandler(FAULT_LIST);
+		kErrHandler( FAULT_LIST);
 	}
-	*tcbPPtr = K_LIST_GET_TCB_NODE(dequeuedNodePtr, K_TCB);
+	*tcbPPtr = K_LIST_GET_TCB_NODE( dequeuedNodePtr, K_TCB);
 
 	if (*tcbPPtr == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		kErrHandler( FAULT_NULL_OBJ);
 		return (K_ERR_OBJ_NULL);
 	}
 	K_TCB *tcbPtr_ = *tcbPPtr;
@@ -115,54 +116,54 @@ K_ERR kTCBQDeq(K_TCBQ *const kobj, K_TCB **const tcbPPtr)
 	return (K_SUCCESS);
 }
 
-K_ERR kTCBQRem(K_TCBQ *const kobj, K_TCB **const tcbPPtr)
+K_ERR kTCBQRem( K_TCBQ *const kobj, K_TCB **const tcbPPtr)
 {
 	if (kobj == NULL || tcbPPtr == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		kErrHandler( FAULT_NULL_OBJ);
 	}
 	K_NODE *dequeuedNodePtr = &((*tcbPPtr)->tcbNode);
-	K_ERR err = kListRemove(kobj, dequeuedNodePtr);
+	K_ERR err = kListRemove( kobj, dequeuedNodePtr);
 	if (err != K_SUCCESS)
 	{
-		kErrHandler(FAULT_LIST);
+		kErrHandler( FAULT_LIST);
 		return (err);
 	}
-	*tcbPPtr = K_LIST_GET_TCB_NODE(dequeuedNodePtr, K_TCB);
+	*tcbPPtr = K_LIST_GET_TCB_NODE( dequeuedNodePtr, K_TCB);
 	if (*tcbPPtr == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		kErrHandler( FAULT_NULL_OBJ);
 	}
 	return (K_SUCCESS);
 }
 
-K_TCB* kTCBQPeek(K_TCBQ *const kobj)
+K_TCB* kTCBQPeek( K_TCBQ *const kobj)
 {
 	if (kobj == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		kErrHandler( FAULT_NULL_OBJ);
 	}
 	K_NODE *nodePtr = kobj->listDummy.nextPtr;
-	return K_GET_CONTAINER_ADDR(nodePtr, K_TCB, tcbNode);
+	return K_GET_CONTAINER_ADDR( nodePtr, K_TCB, tcbNode);
 }
 
-K_ERR kTCBQEnqByPrio(K_TCBQ *const kobj, K_TCB *const tcbPtr)
+K_ERR kTCBQEnqByPrio( K_TCBQ *const kobj, K_TCB *const tcbPtr)
 {
 	K_ERR err;
 	if (kobj == NULL || tcbPtr == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		kErrHandler( FAULT_NULL_OBJ);
 	}
 	if (kobj->size == 0)
 	{
 		/* enq on tail */
-		err = kTCBQEnq(kobj, tcbPtr);
+		err = kTCBQEnq( kobj, tcbPtr);
 		return (err);
 	}
 	/* start on the tail and traverse with >= cond,    */
 	/*  so we use a single insertafter.                */
 	K_NODE *currNodePtr = kobj->listDummy.prevPtr;
-	K_TCB *currTcbPtr = K_LIST_GET_TCB_NODE(currNodePtr, K_TCB);
+	K_TCB *currTcbPtr = K_LIST_GET_TCB_NODE( currNodePtr, K_TCB);
 	while (currTcbPtr->priority >= tcbPtr->priority)
 	{
 		currNodePtr = currNodePtr->nextPtr;
@@ -171,32 +172,32 @@ K_ERR kTCBQEnqByPrio(K_TCBQ *const kobj, K_TCB *const tcbPtr)
 		{
 			break;
 		}
-		currTcbPtr = K_LIST_GET_TCB_NODE(currNodePtr, K_TCB);
+		currTcbPtr = K_LIST_GET_TCB_NODE( currNodePtr, K_TCB);
 	}
-	err = kListInsertAfter(kobj, currNodePtr, &(tcbPtr->tcbNode));
-	kassert(err == 0);
+	err = kListInsertAfter( kobj, currNodePtr, &(tcbPtr->tcbNode));
+	kassert( err == 0);
 	return (err);
 }
 
 #define INSTANT_PREEMPT_LOWER_PRIO
 /* this function enq ready and pend ctxt swtch if ready > running */
-K_ERR kReadyCtxtSwtch(K_TCB *const tcbPtr)
+K_ERR kReadyCtxtSwtch( K_TCB *const tcbPtr)
 {
 	K_CR_AREA
 	K_ENTER_CR
-	if (IS_NULL_PTR(tcbPtr))
+	if (IS_NULL_PTR( tcbPtr))
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		kErrHandler( FAULT_NULL_OBJ);
 		K_EXIT_CR
 		return (K_ERR_OBJ_NULL);
 	}
-	if (kTCBQEnq(&readyQueue[tcbPtr->priority], tcbPtr) == K_SUCCESS)
+	if (kTCBQEnq( &readyQueue[tcbPtr->priority], tcbPtr) == K_SUCCESS)
 	{
 		tcbPtr->status = READY;
 #ifdef INSTANT_PREEMPT_LOWER_PRIO
-		if (READY_HIGHER_PRIO(tcbPtr))
+		if (READY_HIGHER_PRIO( tcbPtr))
 		{
-			kassert(!kTCBQEnq(&readyQueue[runPtr->priority], runPtr));
+			kassert( !kTCBQEnq( &readyQueue[runPtr->priority], runPtr));
 			runPtr->status = READY;
 			K_PEND_CTXTSWTCH
 		}
@@ -208,11 +209,11 @@ K_ERR kReadyCtxtSwtch(K_TCB *const tcbPtr)
 	return (K_ERROR);
 }
 
-K_ERR kReadyQDeq(K_TCB **const tcbPPtr, PRIO priority)
+K_ERR kReadyQDeq( K_TCB **const tcbPPtr, PRIO priority)
 {
 
-	K_ERR err = kTCBQDeq(&readyQueue[priority], tcbPPtr);
-	kassert(err == 0);
+	K_ERR err = kTCBQDeq( &readyQueue[priority], tcbPPtr);
+	kassert( err == 0);
 	return (err);
 }
 
@@ -222,14 +223,14 @@ K_ERR kReadyQDeq(K_TCB **const tcbPPtr, PRIO priority)
 static PID pPid = 0; /** system pid for each task 	*/
 
 /* fwded private prototypes */
-static K_ERR kInitStack_(INT *const stackAddrPtr, UINT const stackSize,
+static K_ERR kInitStack_( INT *const stackAddrPtr, UINT const stackSize,
 		TASKENTRY const taskFuncPtr); /* init stacks */
 
-static K_ERR kInitTcb_(TASKENTRY const taskFuncPtr, INT *const stackAddrPtr,
+static K_ERR kInitTcb_( TASKENTRY const taskFuncPtr, INT *const stackAddrPtr,
 		UINT const stackSize);
 /**/
 
-static K_ERR kInitStack_(INT *const stackAddrPtr, UINT const stackSize,
+static K_ERR kInitStack_( INT *const stackAddrPtr, UINT const stackSize,
 		TASKENTRY const taskFuncPtr)
 {
 	if (stackAddrPtr == NULL || stackSize == 0 || taskFuncPtr == NULL)
@@ -261,10 +262,10 @@ static K_ERR kInitStack_(INT *const stackAddrPtr, UINT const stackSize,
 	return (K_SUCCESS);
 }
 
-static K_ERR kInitTcb_(TASKENTRY const taskFuncPtr, INT *const stackAddrPtr,
+static K_ERR kInitTcb_( TASKENTRY const taskFuncPtr, INT *const stackAddrPtr,
 		UINT const stackSize)
 {
-	if (kInitStack_(stackAddrPtr, stackSize, taskFuncPtr) == K_SUCCESS)
+	if (kInitStack_( stackAddrPtr, stackSize, taskFuncPtr) == K_SUCCESS)
 	{
 		tcbs[pPid].stackAddrPtr = stackAddrPtr;
 		tcbs[pPid].sp = &stackAddrPtr[stackSize - R4_OFFSET];
@@ -277,8 +278,9 @@ static K_ERR kInitTcb_(TASKENTRY const taskFuncPtr, INT *const stackAddrPtr,
 	return (K_ERROR);
 }
 
-K_ERR kCreateTask(K_TASK_HANDLE taskHandle, TASKENTRY const taskFuncPtr, STRING taskName, TID const id,
-		INT *const stackAddrPtr, UINT const stackSize,
+K_ERR kCreateTask( K_TASK_HANDLE *taskHandlePtr, TASKENTRY const taskFuncPtr,
+		STRING taskName, TID const id, INT *const stackAddrPtr,
+		UINT const stackSize,
 #if(K_DEF_SCH_TSLICE==ON)
         TICK const timeSlice,
 #endif
@@ -286,17 +288,19 @@ K_ERR kCreateTask(K_TASK_HANDLE taskHandle, TASKENTRY const taskFuncPtr, STRING 
 {
 	if (id == TIMHANDLER_ID || id == IDLETASK_ID)
 	{
-		kErrHandler(FAULT_INVALID_TASK_ID);
+		kErrHandler( FAULT_TASK_INVALID_ID);
 	}
 	/* if private PID is 0, system tasks hasn't been started yet */
 	if (pPid == 0)
 	{
 
 		/* initialise IDLE TASK */
-		kassert(kInitTcb_(IdleTask, idleStack, IDLE_STACKSIZE) == K_SUCCESS);
+		kassert( kInitTcb_(IdleTask, idleStack, IDLE_STACKSIZE) == K_SUCCESS);
 
 		tcbs[pPid].priority = idleTaskPrio;
+#if ( (K_DEF_FUNC_DYNAMIC_PRIO==ON) || (K_DEF_MUTEX_PRIO_INH==ON) )
 		tcbs[pPid].realPrio = idleTaskPrio;
+#endif
 		tcbs[pPid].taskName = "IdleTask";
 		tcbs[pPid].uPid = IDLETASK_ID;
 		tcbs[pPid].runToCompl = FALSE;
@@ -304,6 +308,8 @@ K_ERR kCreateTask(K_TASK_HANDLE taskHandle, TASKENTRY const taskFuncPtr, STRING 
 
         tcbs[pPid].timeSlice = 0;
 #endif
+		idleTaskHandle.handle = &tcbs[pPid];
+		tcbs[pPid].taskHandlePtr = &idleTaskHandle;
 		pPid += 1;
 
 		/* initialise TIMER HANDLER TASK */
@@ -311,7 +317,9 @@ K_ERR kCreateTask(K_TASK_HANDLE taskHandle, TASKENTRY const taskFuncPtr, STRING 
 				kInitTcb_(TimerHandlerTask, timerHandlerStack, TIMHANDLER_STACKSIZE) == K_SUCCESS);
 
 		tcbs[pPid].priority = 0;
+#if ( (K_DEF_FUNC_DYNAMIC_PRIO==ON) || (K_DEF_MUTEX_PRIO_INH==ON) )
 		tcbs[pPid].realPrio = 0;
+#endif
 		tcbs[pPid].taskName = "TimHandlerTask";
 		tcbs[pPid].uPid = TIMHANDLER_ID;
 		tcbs[pPid].runToCompl = TRUE;
@@ -319,26 +327,22 @@ K_ERR kCreateTask(K_TASK_HANDLE taskHandle, TASKENTRY const taskFuncPtr, STRING 
 
         tcbs[pPid].timeSlice = 0;
 #endif
-
+		timTaskHandle.handle = &tcbs[pPid];
+		tcbs[pPid].taskHandlePtr = &timTaskHandle;
 		pPid += 1;
 
 	}
 	/* initialise user tasks */
-	if (kInitTcb_(taskFuncPtr, stackAddrPtr, stackSize) == K_SUCCESS)
+	if (kInitTcb_( taskFuncPtr, stackAddrPtr, stackSize) == K_SUCCESS)
 	{
-#if(K_DEF_SCH_TSLICE==ON)
-        {
-            kassert(timeSlice>0);
-            return (K_ERR_INVALID_TSLICE);
-        }
-#endif
 		if (priority > idleTaskPrio)
 		{
-			kassert(FAULT_INVALID_TASK_PRIO);
+			kErrHandler( FAULT_TASK_INVALID_PRIO);
 		}
-
 		tcbs[pPid].priority = priority;
+#if ( (K_DEF_FUNC_DYNAMIC_PRIO==ON) || (K_DEF_MUTEX_PRIO_INH==ON) )
 		tcbs[pPid].realPrio = priority;
+#endif
 		tcbs[pPid].taskName = taskName;
 		tcbs[pPid].lastWakeTime = 0;
 #if(K_DEF_SCH_TSLICE==ON)
@@ -346,13 +350,16 @@ K_ERR kCreateTask(K_TASK_HANDLE taskHandle, TASKENTRY const taskFuncPtr, STRING 
         tcbs[pPid].timeSlice = timeSlice;
         tcbs[pPid].timeLeft  = timeSlice;
 #endif
+#if (K_DEF_TASK_SIGNAL_BIN_SEMA==(ON))
+		tcbs[pPid].signalled = FALSE;
+#endif
 		tcbs[pPid].uPid = id;
 		tcbs[pPid].runToCompl = runToCompl;
-		if (taskHandle != NULL)
+		if (taskHandlePtr != NULL)
 		{
-			taskHandle = &tcbs[pPid];
+			taskHandlePtr->handle = &tcbs[pPid];
+			tcbs[pPid].taskHandlePtr = taskHandlePtr;
 		}
-
 		pPid += 1;
 		return (K_SUCCESS);
 	}
@@ -363,7 +370,7 @@ K_ERR kCreateTask(K_TASK_HANDLE taskHandle, TASKENTRY const taskFuncPtr, STRING 
  * CRITICAL REGIONS
  *******************************************************************************/
 
-UINT kEnterCR(VOID)
+UINT kEnterCR( VOID)
 {
 	asm volatile("DSB");
 
@@ -382,10 +389,10 @@ UINT kEnterCR(VOID)
 	return (crState);
 }
 
-VOID kExitCR(UINT crState)
+VOID kExitCR( UINT crState)
 {
 	asm volatile("DSB");
-	__set_PRIMASK(crState);
+	__set_PRIMASK( crState);
 	asm volatile ("ISB");
 
 }
@@ -394,7 +401,7 @@ VOID kExitCR(UINT crState)
  HELPERS
  ******************************************************************************/
 /*TODO: improve naive search*/
-PID kGetTaskPID(TID const taskID)
+PID kGetTaskPID( TID const taskID)
 {
 	PID pid = 0;
 	for (pid = 0; pid < NTHREADS; pid++)
@@ -405,12 +412,13 @@ PID kGetTaskPID(TID const taskID)
 	return (pid);
 }
 
-PRIO kGetTaskPrio(TID const taskID)
+PRIO kGetTaskPrio( TID const taskID)
 {
-	PID pid = kGetTaskPID(taskID);
+	PID pid = kGetTaskPID( taskID);
 	return (tcbs[pid].priority);
 }
 
+#if (K_DEF_FUNC_DYNAMIC_PRIO==(ON))
 K_ERR kTaskChangePrio(PRIO newPrio)
 {
 	if (kIsISR())
@@ -432,34 +440,35 @@ K_ERR kTaskRestorePrio(VOID)
 	K_EXIT_CR
 	return (K_SUCCESS);
 }
+#endif
 
 /******************************************************************************
  * KERNEL INITIALISATION
  *******************************************************************************/
 
-static VOID kInitRunTime_(VOID)
+static VOID kInitRunTime_( VOID)
 {
 	runTime.globalTick = 0;
 	runTime.nWraps = 0;
 }
-static K_ERR kInitQueues_(VOID)
+static K_ERR kInitQueues_( VOID)
 {
 	K_ERR err = 0;
 	for (PRIO prio = 0; prio < NPRIO + 1; prio++)
 	{
-		err |= kTCBQInit(&readyQueue[prio], "ReadyQ");
+		err |= kTCBQInit( &readyQueue[prio], "ReadyQ");
 	}
-	err |= kTCBQInit(&sleepingQueue, "SleepQ");
-	kassert(err == 0);
+	err |= kTCBQInit( &sleepingQueue, "SleepQ");
+	kassert( err == 0);
 	return (err);
 }
 
-VOID kInit(VOID)
+VOID kInit( VOID)
 {
 
 	version = kGetVersion();
 	if (version != K_VALID_VERSION)
-		kErrHandler(FAULT_KERNEL_VERSION);
+		kErrHandler( FAULT_KERNEL_VERSION);
 	kInitQueues_();
 	kInitRunTime_();
 	highestPrio = tcbs[0].priority;
@@ -473,12 +482,12 @@ VOID kInit(VOID)
 
 	for (UINT i = 0; i < NTHREADS; i++)
 	{
-		kTCBQEnq(&readyQueue[tcbs[i].priority], &tcbs[i]);
+		kTCBQEnq( &readyQueue[tcbs[i].priority], &tcbs[i]);
 	}
 
-	kReadyQDeq(&runPtr, highestPrio);
-	kassert(runPtr->status == READY);
-	kassert(tcbs[IDLETASK_ID].priority == lowestPrio+1);
+	kReadyQDeq( &runPtr, highestPrio);
+	kassert( runPtr->status == READY);
+	kassert( tcbs[IDLETASK_ID].priority == lowestPrio+1);
 	kApplicationInit();
 	__enable_irq();
 
@@ -489,12 +498,12 @@ VOID kInit(VOID)
 /*******************************************************************************
  *  TICK MANAGEMENT
  *******************************************************************************/
-static inline VOID kReadyRunningTask_(VOID)
+static inline VOID kReadyRunningTask_( VOID)
 {
 	if (runPtr->status == RUNNING)
 	{
 		kassert(
-				(kTCBQEnq(&readyQueue[runPtr->priority], runPtr) == (K_SUCCESS)));
+				(kTCBQEnq( &readyQueue[runPtr->priority], runPtr) == (K_SUCCESS)));
 		runPtr->status = READY;
 	}
 }
@@ -520,7 +529,7 @@ static BOOL kDecTimeSlice_(VOID)
     return (FALSE);
 }
 #endif
-static BOOL kSleepHandle_(VOID)
+static BOOL kSleepHandle_( VOID)
 {
 	K_CR_AREA
 
@@ -538,16 +547,16 @@ static BOOL kSleepHandle_(VOID)
 			K_TCB *tcbToWakePtr = NULL;
 			tcbToWakePtr = (K_TCB*) (dTimSleepList->argsPtr);
 			if (tcbToWakePtr->status == SLEEPING)
-				kassert(tcbToWakePtr != NULL);
-			kassert(!kTCBQRem(&sleepingQueue, &tcbToWakePtr));
-			kassert(tcbToWakePtr != NULL);
-			kTCBQEnq(&readyQueue[tcbToWakePtr->priority], tcbToWakePtr);
+				kassert( tcbToWakePtr != NULL);
+			kassert( !kTCBQRem( &sleepingQueue, &tcbToWakePtr));
+			kassert( tcbToWakePtr != NULL);
+			kTCBQEnq( &readyQueue[tcbToWakePtr->priority], tcbToWakePtr);
 			tcbToWakePtr->status = READY;
 			tcbToWakePtr->pendingTmr = NULL;
-			kTimerPut(expTimerPtr);
+			kTimerPut( expTimerPtr);
 			dTimSleepList = dTimSleepList->nextPtr;
 			K_EXIT_CR
-			return (TRUE);
+			return (TRUE );
 		}
 	}
 
@@ -557,7 +566,7 @@ static BOOL kSleepHandle_(VOID)
 
 }
 
-BOOL kTickHandler(VOID)
+BOOL kTickHandler( VOID)
 {
 	/* return is short-circuit to !runToCompl & */
 	BOOL runToCompl = FALSE;
@@ -599,7 +608,7 @@ BOOL kTickHandler(VOID)
 	{
 		if (dTimOneShotList || dTimReloadList)
 		{
-			kSignal(timTaskHandle); /* ready the TIMHANDLER */
+			kTaskSignal( &timTaskHandle); /* ready the TIMHANDLER */
 			kReadyRunningTask_();
 		}
 	}
@@ -628,7 +637,7 @@ BOOL kTickHandler(VOID)
 #endif
 	ret = ((!runToCompl)
 			& ((runPtr->status == READY) | readySleepTask | timeOutTask
-					| (runPtr->yield == TRUE)));
+					| (runPtr->yield == TRUE )));
 
 	return (ret);
 }
@@ -643,13 +652,13 @@ static inline PRIO kCalcNextTaskPrio_()
 		return (idleTaskPrio);
 	}
 	readyQRightMask = readyQBitMask & -readyQBitMask;
-	PRIO prio = (PRIO) (__getReadyPrio(readyQRightMask));
+	PRIO prio = (PRIO) (__getReadyPrio( readyQRightMask));
 
 	return (prio);
 	/* return __builtin_ctz(readyQRightMask); */
 }
 
-VOID kSchSwtch(VOID)
+VOID kSchSwtch( VOID)
 {
 	K_TCB *nextRunPtr = NULL;
 	K_TCB *prevRunPtr = runPtr;
@@ -658,10 +667,10 @@ VOID kSchSwtch(VOID)
 		kReadyRunningTask_();
 	}
 	nextTaskPrio = kCalcNextTaskPrio_(); /* get the next task priority */
-	kTCBQDeq(&readyQueue[nextTaskPrio], &nextRunPtr);
+	kTCBQDeq( &readyQueue[nextTaskPrio], &nextRunPtr);
 	if (nextRunPtr == NULL)
 	{
-		kErrHandler(FAULT_NULL_OBJ);
+		kErrHandler( FAULT_NULL_OBJ);
 	}
 	runPtr = nextRunPtr;
 	if (nextRunPtr->pid != prevRunPtr->pid)

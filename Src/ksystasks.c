@@ -19,9 +19,9 @@
 INT idleStack[IDLE_STACKSIZE];
 INT timerHandlerStack[TIMHANDLER_STACKSIZE];
 
-void IdleTask(void) /*SAD: on a well designed system this fella runs for
-                      >30% of the time. still, they call it ''idle''.
-                      where are the unions? */
+VOID IdleTask( VOID) /*SAD: on a well designed system this fella runs for
+ >30% of the time. still, they call it ''idle''.
+ where are the unions? */
 {
 
 	while (1)
@@ -32,7 +32,7 @@ void IdleTask(void) /*SAD: on a well designed system this fella runs for
 	}
 }
 
-void TimerHandlerTask(void)
+VOID TimerHandlerTask( VOID)
 {
 
 	while (1)
@@ -46,6 +46,10 @@ void TimerHandlerTask(void)
 				K_PEND_CTXTSWTCH
 		}
 		K_EXIT_CR
-		kPend();
+#if (K_DEF_TASK_SIGNAL_BIN_SEMA==ON)
+		kTaskPend( K_WAIT_FOREVER);
+#else
+		kTaskPend();
+#endif
 	}
 }

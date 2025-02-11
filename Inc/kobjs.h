@@ -14,35 +14,44 @@
 extern "C" {
 #endif
 
-
 typedef enum
 {
 
 #if (K_DEF_MBOX==ON)
-    MAILBOX,
+	MAILBOX,
 #endif
 #if (K_DEF_MMBOX==ON)
-    MMBOX,
+	MMBOX,
 #endif
 #if (K_DEF_SEMA==ON)
-    SEMAPHORE,
+	SEMAPHORE,
 #endif
 #if (K_DEF_MUTEX==ON)
-    MUTEX,
+	MUTEX,
 #endif
 #if (K_DEF_MESGQ==ON)
-    MESGQ,
+	MESGQ,
 #endif
 #if(K_DEF_SLEEPWAKE==ON)
 	EVENT,
 #endif
-    NONE
-} K_OBJ_SYNCH;
+	TASK_HANDLE, NONE
+} K_OBJ_TYPE;
+
+
+struct kTimeoutNode
+{
+	struct kTimeoutNode *nextPtr;
+	TICK timeout;
+	ADDR kobj;
+	K_OBJ_TYPE objectType;
+};
+
 
 struct kListNode
 {
-	struct kListNode* nextPtr;
-	struct kListNode* prevPtr;
+	struct kListNode *nextPtr;
+	struct kListNode *prevPtr;
 };
 
 struct kList
@@ -53,63 +62,59 @@ struct kList
 	BOOL init;
 };
 
-
 struct kTcb
 {
-/* Don't change */
+	/* Don't change */
 
-	INT* sp;
+	INT *sp;
 	K_TASK_STATUS status;
 	UINT runCnt;
 
-/**/
+	/**/
 	STRING taskName;
-	INT* stackAddrPtr;
+	INT *stackAddrPtr;
 	UINT stackSize;
-	PID pid;              /* System-defined task ID */
-	TID uPid;             /* User-defined   task ID */
-	PRIO priority;        /* Task priority (0-31) 32 is invalid */
-	PRIO realPrio;        /* Real priority (for prio inheritance) */
-
-#if (K_DEF_SIGNAL_TRACK_LOST==(ON))
-	UINT lostSignals;
+	PID pid; /* System-defined task ID */
+	TID uPid; /* User-defined   task ID */
+	PRIO priority; /* Task priority (0-31) 32 is invalid */
+#if ( (K_DEF_FUNC_DYNAMIC_PRIO==ON) || (K_DEF_MUTEX_PRIO_INH==ON) )
+	PRIO realPrio; /* Real priority  */
 #endif
-
-#if (K_DEF_SIGNAL_TRACK_SIGNALLERS==(ON))
-    TID    signalledBy;
+#if ((K_DEF_TASK_SIGNAL_BIN_SEMA==(ON)))
+	BOOL signalled;
+	struct kTimeoutNode timeoutNode;
 #endif
-
+	struct kTaskHandle *taskHandlePtr; /* K_TASK_HANDLE is a pointer to struct */
 #if (K_DEF_SCH_TSLICE == ON)
 	TICK timeSlice;
 	TICK timeLeft;
 #endif
-    TICK busyWaitTime;
+	TICK busyWaitTime;
 #if (K_DEF_SCH_TSLICE==OFF)
-	TICK   lastWakeTime;
+	TICK lastWakeTime;
 #endif
-/* Resources */
+	/* Resources */
 #if (K_DEF_SEMA == ON)
-    K_SEMA* pendingSema;
+	K_SEMA *pendingSema;
 #endif
 #if (K_DEF_MUTEX==ON)
-	K_MUTEX* pendingMutx;
+	K_MUTEX *pendingMutx;
 #endif
 #if (K_DEF_SLEEPWAKE==ON)
-	K_EVENT* pendingEv;
+	K_EVENT *pendingEv;
 #endif
 #if (K_DEF_MBOX==ON)
-	K_MBOX* pendingMbox;
+	K_MBOX *pendingMbox;
 #endif
-	K_TIMER* pendingTmr;
-	BOOL   runToCompl;
-    BOOL   yield;
-    BOOL   timeOut;
-/* Monitoring */
+	K_TIMER *pendingTmr;
+	BOOL runToCompl;
+	BOOL yield;
+	BOOL timeOut;
+	/* Monitoring */
 	UINT nPreempted;
-	PID    preemptedBy;
+	PID preemptedBy;
 	struct kListNode tcbNode;
 } __attribute__((aligned));
-
 
 struct kRunTime
 {
@@ -118,14 +123,6 @@ struct kRunTime
 };
 extern struct kRunTime runTime;
 
-typedef struct kTimeoutNode
-{
-    struct kTimeoutNode *nextPtr;
-    TICK timeout;
-    ADDR kobj;
-    K_OBJ_SYNCH objectType;
-} K_TIMEOUT_NODE;
-
 
 #if (K_DEF_SEMA==ON)
 
@@ -133,7 +130,7 @@ struct kSema
 {
 	BOOL init;
 	INT value;
-	struct kTcb* owner;
+	struct kTcb *owner;
 	struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;
 };
@@ -146,7 +143,7 @@ struct kMutex
 {
 	struct kList waitingQueue;
 	BOOL lock;
-	struct kTcb* ownerPtr;
+	struct kTcb *ownerPtr;
 	BOOL init;
 	K_TIMEOUT_NODE timeoutNode;
 };
@@ -158,7 +155,6 @@ struct kEvent
 {
 	struct kList waitingQueue;
 	BOOL init;
-	UINT eventID;
 	K_TIMEOUT_NODE timeoutNode;
 
 };
@@ -169,8 +165,8 @@ struct kEvent
 /* Fixed-size pool memory control block (BLOCK POOL) */
 struct kMemBlock
 {
-	BYTE* freeListPtr;
-	BYTE* poolPtr;
+	BYTE *freeListPtr;
+	BYTE *poolPtr;
 	BYTE blkSize;
 	BYTE nMaxBlocks;
 	BYTE nFreeBlocks;
@@ -180,15 +176,14 @@ struct kMemBlock
 	BOOL init;
 };
 
-
 #if (K_DEF_MBOX==ON)
 /* Mailbox (single capcacity)*/
 struct kMailbox
 {
-    BOOL   init;
-    ADDR   mailPtr;
-    struct kList waitingQueue;
-    K_TIMEOUT_NODE timeoutNode;
+	BOOL init;
+	ADDR mailPtr;
+	struct kList waitingQueue;
+	K_TIMEOUT_NODE timeoutNode;
 
 } __attribute__((aligned(4)));
 #endif
@@ -196,14 +191,14 @@ struct kMailbox
 #if (K_DEF_MMBOX==ON)
 struct kMultibox
 {
-    BOOL init;
-    ADDR mailQPtr;
-    UINT headIdx;
-    UINT tailIdx;
-    ULONG maxItems;
-    ULONG countItems;
-    struct kList waitingQueue;
-    K_TIMEOUT_NODE timeoutNode;
+	BOOL init;
+	ADDR mailQPtr;
+	UINT headIdx;
+	UINT tailIdx;
+	ULONG maxItems;
+	ULONG countItems;
+	struct kList waitingQueue;
+	K_TIMEOUT_NODE timeoutNode;
 } __attribute__((aligned(4)));
 #endif
 
@@ -212,14 +207,14 @@ struct kMultibox
 /* Message Queue (Stre*/
 struct kMesgQ
 {
-    BOOL init;
-    ULONG mesgSize;
-    ULONG maxMesg;
-    ULONG mesgCnt;
-    ADDR buffer;
-    ULONG  readIndex;
-    ULONG  writeIndex;
-    struct kList waitingQueue;
+	BOOL init;
+	ULONG mesgSize;
+	ULONG maxMesg;
+	ULONG mesgCnt;
+	ADDR buffer;
+	ULONG readIndex;
+	ULONG writeIndex;
+	struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;
 } __attribute__((aligned(4)));
 
@@ -230,16 +225,16 @@ struct kMesgQ
 struct kPumpDropBuf
 {
 
-     ADDR   dataPtr;
-     ULONG   dataSize;                /* mesg size in this buf */
-     UINT nUsers;                  /* number of tasks using */
+	ADDR dataPtr;
+	ULONG dataSize; /* mesg size in this buf */
+	UINT nUsers; /* number of tasks using */
 };
 struct kPumpDropQueue
 {
-    struct kMemBlock*       memCtrlPtr;    /* associated allocator */
-    struct kPumpDropBuf*    currBufPtr;    /* current buffer   */
-    UINT failReserve;
-    BOOL                    init;
+	struct kMemBlock *memCtrlPtr; /* associated allocator */
+	struct kPumpDropBuf *currBufPtr; /* current buffer   */
+	UINT failReserve;
+	BOOL init;
 };
 
 #endif
@@ -253,10 +248,15 @@ struct kTimer
 	CALLOUT funPtr;
 	ADDR argsPtr;
 	TID taskID;
-	K_TIMER* nextPtr;
+	K_TIMER *nextPtr;
 	BOOL init;
 } __attribute__((aligned));
 
+struct kTaskHandle
+{
+	struct kTcb *handle;
+	struct kTimeoutNode timeoutNode;
+};
 
 /*[EOF]*/
 #ifdef __cplusplus
