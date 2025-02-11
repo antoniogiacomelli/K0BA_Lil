@@ -374,7 +374,7 @@ K_ERR kMboxPostPend( K_MBOX *const kobj, ADDR const sendPtr,
  * MULTIBOX (MAIL QUEUE)
  ******************************************************************************/
 #if (K_DEF_MMBOX==(ON))
-K_ERR kMMBoxInit( K_MMBOX *const kobj, ADDR memPtr, ULONG maxItems)
+K_ERR kMmboxInit( K_MMBOX *const kobj, ADDR memPtr, ULONG maxItems)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -404,7 +404,7 @@ K_ERR kMMBoxInit( K_MMBOX *const kobj, ADDR memPtr, ULONG maxItems)
 	return (K_SUCCESS);
 }
 
-K_ERR kMMBoxPost( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
+K_ERR kMmboxPost( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -481,7 +481,7 @@ K_ERR kMMBoxPost( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
 	return (K_SUCCESS);
 }
 
-K_ERR kMMBoxPend( K_MMBOX *const kobj, ADDR *recvPPtr, TICK timeout)
+K_ERR kMmboxPend( K_MMBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -561,7 +561,7 @@ K_ERR kMMBoxPend( K_MMBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 	return (K_SUCCESS);
 }
 #if (K_DEF_FUNC_MMBOX_PEEK==ON)
-K_ERR kMMBoxPeek( K_MMBOX *const kobj, ADDR *peekPPtr)
+K_ERR kMmboxPeek( K_MMBOX *const kobj, ADDR *peekPPtr)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -591,7 +591,7 @@ K_ERR kMMBoxPeek( K_MMBOX *const kobj, ADDR *peekPPtr)
 #endif
 
 #if (K_DEF_FUNC_MMBOX_JAM==ON)
-K_ERR kMMBoxJam( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
+K_ERR kMmboxJam( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -671,14 +671,14 @@ K_ERR kMMBoxJam( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
 
 #if (K_DEF_FUNC_MMBOX_MAILCOUNT==ON)
 
-ULONG kMMBoxMailCount( K_MMBOX *const kobj)
+ULONG kMmboxMailCount( K_MMBOX *const kobj)
 {
 	return (kobj->countItems);
 }
 #endif
 
 #if (K_DEF_FUNC_MMBOX_ISFULL==ON)
-BOOL kMMBoxIsFull( K_MMBOX *const kobj)
+BOOL kMmboxIsFull( K_MMBOX *const kobj)
 {
 	return (kobj->countItems == kobj->maxItems);
 }

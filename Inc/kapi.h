@@ -253,7 +253,7 @@ BOOL kMboxIsFull( K_MBOX *const kobj);
  * \param maxItems   Maximum number of mails.
  * \return           K_SUCCESS or specific error.
  */
-K_ERR kMMBoxInit( K_MMBOX *const kobj, ADDR memPtr, ULONG maxItems);
+K_ERR kMmboxInit( K_MMBOX *const kobj, ADDR memPtr, ULONG maxItems);
 /**
  * \brief               Send to a multilbox. Task blocks when full.
  * \param kobj          Multibox address.
@@ -261,7 +261,7 @@ K_ERR kMMBoxInit( K_MMBOX *const kobj, ADDR memPtr, ULONG maxItems);
  * \param timeout		Suspension time-out
  * \return              K_SUCCESS or specific error.
  */
-K_ERR kMMboxPost( K_MMBOX *const kobj, ADDR const sendPtr, TICK timeout);
+K_ERR kMmboxPost( K_MMBOX *const kobj, ADDR const sendPtr, TICK timeout);
 
 /**
  * \brief               Receive from a multibox. Block if empty.
@@ -272,7 +272,7 @@ K_ERR kMMboxPost( K_MMBOX *const kobj, ADDR const sendPtr, TICK timeout);
  * \param timeout		Suspension time-out
  * \return				K_SUCCESS or specific error.
  */
-K_ERR kMMboxPend( K_MMBOX *const kobj, ADDR *recvPPtr, TICK timeout);
+K_ERR kMmboxPend( K_MMBOX *const kobj, ADDR *recvPPtr, TICK timeout);
 
 #if (K_DEF_FUNC_MMBOX_PEEK==ON)
 
@@ -282,7 +282,7 @@ K_ERR kMMboxPend( K_MMBOX *const kobj, ADDR *recvPPtr, TICK timeout);
  * \param peekPPtr	   Pointer to receive address.
  * \return			   K_SUCCESS or specific error.
  */
-K_ERR kMMboxPeek( K_MMBOX *const kobj, ADDR *peekPPtr);
+K_ERR kMmboxPeek( K_MMBOX *const kobj, ADDR *peekPPtr);
 
 #endif
 
@@ -292,7 +292,7 @@ K_ERR kMMboxPeek( K_MMBOX *const kobj, ADDR *peekPPtr);
  * \param kobj		Multibox address.
  * \return  		TRUE or FALSE.
  */
-BOOL kMMboxIsFull( K_MMBOX *const kobj);
+BOOL kMmboxIsFull( K_MMBOX *const kobj);
 
 #endif
 
@@ -302,7 +302,7 @@ BOOL kMMboxIsFull( K_MMBOX *const kobj);
  * \param kobj      Multibox address.
  * \return			Number of mails.
  */
-ULONG kMMBoxMailCount( K_MMBOX *const kobj);
+ULONG kMmboxMailCount( K_MMBOX *const kobj);
 
 #endif
 
