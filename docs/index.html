@@ -447,8 +447,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel0">
 <li><a href="#the_kernel_on_a_glance"><strong>The kernel on a glance</strong></a>
 <ul class="sectlevel1">
-<li><a href="#the_design_approach">1. The design approach</a></li>
-<li><a href="#a_real_time_executive">2. A real-time executive</a></li>
+<li><a href="#the_design_approach">1. <strong>The design approach</strong></a></li>
+<li><a href="#a_real_time_executive">2. <strong>A Real-Time <em>Executive</em></strong></a></li>
 </ul>
 </li>
 <li><a href="#core_mechanisms"><strong><em>Core Mechanisms</em></strong></a>
@@ -461,13 +461,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#common_scheduling_pitfalls">1.4. Common scheduling pitfalls</a></li>
 </ul>
 </li>
-<li><a href="#timers">2. Timers</a>
+<li><a href="#timers">2. <strong>Timers</strong></a>
 <ul class="sectlevel2">
 <li><a href="#task_delays">2.1. Task Delays</a></li>
 <li><a href="#application_timers">2.2. Application Timers</a></li>
 </ul>
 </li>
-<li><a href="#memory_allocator">3. Memory Allocator</a>
+<li><a href="#memory_allocator">3. <strong>Memory Allocator</strong></a>
 <ul class="sectlevel2">
 <li><a href="#memory_allocator_determinism">3.1. Memory Allocator Determinism</a></li>
 </ul>
@@ -476,14 +476,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#inter_task_communication_itc"><strong><em>Inter-task communication (ITC)</em></strong></a>
 <ul class="sectlevel1">
-<li><a href="#events">1. Events</a></li>
-<li><a href="#counter_semaphores">2. Counter Semaphores</a></li>
-<li><a href="#mutex">3. Mutex</a>
+<li><a href="#events_sleepwake">1. <strong>Events (Sleep/Wake)</strong></a></li>
+<li><a href="#counter_semaphores">2. <strong>Counter Semaphores</strong></a></li>
+<li><a href="#mutex">3. <strong>Mutex</strong></a>
 <ul class="sectlevel2">
 <li><a href="#priority_inversion">3.1. Priority Inversion</a></li>
 </ul>
 </li>
-<li><a href="#direct_signals">4. Direct Signals</a>
+<li><a href="#direct_signals">4. <strong>Direct Signals</strong></a>
 <ul class="sectlevel2">
 <li><a href="#event_signal_mode">4.1. Event Signal Mode</a></li>
 <li><a href="#private_binary_semaphore_mode">4.2. Private Binary Semaphore Mode</a></li>
@@ -496,16 +496,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#multi_condition_synchronisation">5.3. Multi-condition synchronisation</a></li>
 </ul>
 </li>
-<li><a href="#mailbox_exchange">6. Mailbox (Exchange)</a></li>
-<li><a href="#multimailbox_mail_queue">7. Multimailbox (Mail Queue)</a></li>
-<li><a href="#message_queue_stream">8. Message Queue (Stream)</a></li>
-<li><a href="#pump_drop_buffers">9. Pump-Drop Buffers</a></li>
+<li><a href="#mailbox_exchange">6. <strong>Mailbox</strong> (Exchange)</a></li>
+<li><a href="#multimailbox_mail_queue">7. <strong>Multimailbox</strong> (Mail Queue)</a></li>
+<li><a href="#message_queue_stream">8. <strong>Message Queue</strong> (Stream)</a></li>
+<li><a href="#pump_drop_buffers">9. <strong>Pump-Drop Buffers</strong></a></li>
 </ul>
 </li>
 <li><a href="#usage_patterns"><strong>Usage Patterns</strong></a>
 <ul class="sectlevel1">
-<li><a href="#minimal_synchronous_exchange">1. Minimal synchronous exchange</a></li>
-<li><a href="#extended_rendezvous_1">2. Extended rendezvous #1</a></li>
+<li><a href="#minimal_synchronous_exchange">1. <em>Minimal Synchronous Exchange</em></a></li>
+<li><a href="#extended_rendezvous_1">2. <em>Extended rendezvous #1</em></a></li>
 <li><a href="#extended_rendezvous_2">3. Extended rendezvous #2</a></li>
 <li><a href="#queueing_pattern_0">4. Queueing Pattern #0</a></li>
 <li><a href="#monitor_0_barrier">5. Monitor #0 (Barrier)</a></li>
@@ -536,10 +536,10 @@ This document is a high-level system description. Except for code snippets, feat
 </div>
 <h1 id="the_kernel_on_a_glance" class="sect0 data-line-16"><strong>The kernel on a glance</strong></h1>
 <div class="sect1 data-line-18">
-<h2 id="the_design_approach">1. The design approach</h2>
+<h2 id="the_design_approach">1. <strong>The design approach</strong></h2>
 <div class="sectionbody">
 <div class="paragraph data-line-20">
-<p>Real-Time Kernel “0” aims to showcase the idea that embedded system programming—more than any other type of systems programming—does not benefit from an application framework approach. In embedded systems, maintaining complete control is essential to ensure efficiency, reliability, and predictable behavior.</p>
+<p><em>K<strong>0</strong></em> aims to showcase the idea that embedded system programming—more than any other type of systems programming—does not benefit from an application framework approach. In embedded systems, maintaining complete control is essential to ensure efficiency, reliability, and predictable behavior.</p>
 </div>
 <div class="paragraph data-line-22">
 <p>A balanced set of simple primitives, when composed to build more complex functionality, provides greater controllability and observability than any opaque, complex feature. This is a timeless lesson from UNIX—one that modern RTOSes seem to have forgotten, despite its even greater relevance in the embedded realm.</p>
@@ -547,7 +547,7 @@ This document is a high-level system description. Except for code snippets, feat
 </div>
 </div>
 <div class="sect1 data-line-25">
-<h2 id="a_real_time_executive">2. A real-time executive</h2>
+<h2 id="a_real_time_executive">2. <strong>A Real-Time <em>Executive</em></strong></h2>
 <div class="sectionbody">
 <div class="paragraph data-line-27">
 <p>If no more details are to be provided the kernel has a top and a bottom layer - on the top, the <em>Executive</em>  manages the resources needed by the application; on the bottom, the <em>Low-level Scheduler</em> works as a software extension of the CPU.</p>
@@ -1115,7 +1115,7 @@ VOID Task5(VOID)
 </div>
 </div>
 <div class="sect1 data-line-462">
-<h2 id="timers">2. Timers</h2>
+<h2 id="timers">2. <strong>Timers</strong></h2>
 <div class="sectionbody">
 <div class="sect2 data-line-464">
 <h3 id="task_delays">2.1. Task Delays</h3>
@@ -1188,7 +1188,7 @@ VOID Task5(VOID)
 </div>
 </div>
 <div class="sect1 data-line-499">
-<h2 id="memory_allocator">3. Memory Allocator</h2>
+<h2 id="memory_allocator">3. <strong>Memory Allocator</strong></h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch data-line-503">
 <colgroup>
@@ -1373,7 +1373,7 @@ Except for Direct Signals that cannot be disabled, all other synchronisation com
 <p>These mechanisms are highly modular and do not depend on synchronisation primitives.</p>
 </div>
 <div class="sect1 data-line-627">
-<h2 id="events">1. Events</h2>
+<h2 id="events_sleepwake">1. <strong>Events (Sleep/Wake)</strong></h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch data-line-630">
 <colgroup>
@@ -1414,7 +1414,7 @@ Except for Direct Signals that cannot be disabled, all other synchronisation com
 </div>
 </div>
 <div class="sect1 data-line-648">
-<h2 id="counter_semaphores">2. Counter Semaphores</h2>
+<h2 id="counter_semaphores">2. <strong>Counter Semaphores</strong></h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch data-line-650">
 <colgroup>
@@ -1455,7 +1455,7 @@ Except for Direct Signals that cannot be disabled, all other synchronisation com
 </div>
 </div>
 <div class="sect1 data-line-670">
-<h2 id="mutex">3. Mutex</h2>
+<h2 id="mutex">3. <strong>Mutex</strong></h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch data-line-672">
 <colgroup>
@@ -1519,7 +1519,7 @@ Except for Direct Signals that cannot be disabled, all other synchronisation com
 </div>
 </div>
 <div class="sect1 data-line-700">
-<h2 id="direct_signals">4. Direct Signals</h2>
+<h2 id="direct_signals">4. <strong>Direct Signals</strong></h2>
 <div class="sectionbody">
 <div class="paragraph data-line-702">
 <p>Direct Signals are the simplest signalling mechanism in K0. Its a core mechanism and cannot be disabled. But it can be configured to work in 2 different modes: simple <em>event signal</em> or private <em>binary semaphore</em>.</p>
@@ -1643,7 +1643,7 @@ consumer_task()
 </div>
 </div>
 <div class="sect1 data-line-797">
-<h2 id="mailbox_exchange">6. Mailbox (Exchange)</h2>
+<h2 id="mailbox_exchange">6. <strong>Mailbox</strong> (Exchange)</h2>
 <div class="sectionbody">
 <div class="paragraph data-line-799">
 <p>While in GPOS jargon mailboxes are queues of messages - as a distinction from pipes (that are stream buffers) - in embedded system software, often mailboxes are said to have a capacity of a a single item, and more recently you will not find it as a distinct mechanism - you use a 1-item queue. Another term for single-item mailboxes is <em>Exchange</em>.</p>
@@ -1699,7 +1699,7 @@ consumer_task()
 </div>
 </div>
 <div class="sect1 data-line-827">
-<h2 id="multimailbox_mail_queue">7. Multimailbox (Mail Queue)</h2>
+<h2 id="multimailbox_mail_queue">7. <strong>Multimailbox</strong> (Mail Queue)</h2>
 <div class="sectionbody">
 <div class="paragraph data-line-829">
 <p>Sometimes it is desirable to have a mailbox able to hold multiple mails - i.e., multiple references. A multimailbox can be seen as a ring buffer of N mailboxes - therefore, a ring buffer which slots are pointer-sized messages (4-byte for ARMv7M). It is full when all N positions are taken. Multiboxes are very flexible.</p>
@@ -1776,7 +1776,7 @@ consumer_task()
   {
     ADDR sendPtr = (ADDR)mesg;
     mesg = mesg+1; /* no changes in the mesg that will be sent */
-    kMMBoxPost(&amp;mmbox, sendPtr, K_WAIT_FOREVER);
+    kMmboxPost(&amp;mmbox, sendPtr, K_WAIT_FOREVER);
     /* suspend full */
   }
 
@@ -1789,7 +1789,7 @@ VOID RecvrTask(VOID)
   UINT idx=0;
   while(1)
   {
-    kMMBoxPend(&amp;mmbox, (ADDR*)&amp;rcvd[idx], K_WAIT_FOREVER);
+    kMmboxPend(&amp;mmbox, (ADDR*)&amp;rcvd[idx], K_WAIT_FOREVER);
     /* suspend empty */
     idx += 1;
     idx %= 8;
@@ -1833,7 +1833,7 @@ VOID kApplicationInit(VOID)
 	/* init allocator */
 	kMemInit(&amp;mem, (ADDR) mesgPool, MESG_SIZE, N_MESG);
 	/* init mailbox */
-	kMMboxInit(&amp;mmbox, (ADDR) buf, 8);
+	kMmboxInit(&amp;mmbox, (ADDR) buf, 8);
 }
 VOID Task1(VOID)
 {
@@ -1851,7 +1851,7 @@ VOID Task1(VOID)
 			ULONG r = kMemCpy(sendPtr-&gt;mesg, messages[i], mesgLen);
 			kassert(r &gt; 0);
 			kprintf("Sending: %s \n\r", sendPtr-&gt;mesg);
-			kMMboxPost(&amp;mmbox, sendPtr, K_WAIT_FOREVER);
+			kMmboxPost(&amp;mmbox, sendPtr, K_WAIT_FOREVER);
 			i += 1;
 			i %= 8;
 		}
@@ -1867,7 +1867,7 @@ VOID Task2(VOID)
 	struct mesg *recvPtr = NULL;
 	while (1)
 	{
-		kMMboxPend(&amp;mmbox, (ADDR*) &amp;recvPtr, K_WAIT_FOREVER); /* will block when empty */
+		kMmboxPend(&amp;mmbox, (ADDR*) &amp;recvPtr, K_WAIT_FOREVER); /* will block when empty */
 		kprintf("Received: %s \n\r", recvPtr-&gt;mesg);
 		kBusyDelay(2); /* pretend working */
 		kMemFree(&amp;mem, (ADDR) recvPtr); /* free memory */
@@ -1891,7 +1891,7 @@ VOID Task2(VOID)
 </div>
 </div>
 <div class="sect1 data-line-973">
-<h2 id="message_queue_stream">8. Message Queue (Stream)</h2>
+<h2 id="message_queue_stream">8. <strong>Message Queue</strong> (Stream)</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch data-line-975">
 <colgroup>
@@ -1947,7 +1947,7 @@ VOID Task2(VOID)
 </div>
 </div>
 <div class="sect1 data-line-998">
-<h2 id="pump_drop_buffers">9. Pump-Drop Buffers</h2>
+<h2 id="pump_drop_buffers">9. <strong>Pump-Drop Buffers</strong></h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch data-line-1001">
 <colgroup>
@@ -2058,20 +2058,26 @@ er fetched if there is a new buffer.</p>
 A lean and modular kernel will provide more controlability and observability than opaque features.</p>
 </div>
 <div class="sect1 data-line-1054">
-<h2 id="minimal_synchronous_exchange">1. Minimal synchronous exchange</h2>
+<h2 id="minimal_synchronous_exchange">1. <em>Minimal Synchronous Exchange</em></h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1055">
-<p>Simple mailbox using private binary semaphores for fully synchronous communication.</p>
+<div class="paragraph data-line-1056">
+<p>All below are variations of the producer-consumer pattern.</p>
 </div>
-<div class="listingblock data-line-1057">
+<div class="ulist data-line-1059">
+<ul>
+<li class="data-line-1059">
+<p><em>Using private binary semaphores</em>:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock data-line-1061">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#include "application.h"
 
 UINT        mail=0U;
-K_MUTEX     lock;
+
 VOID kApplicationInit(VOID)
 {
-    kMutexInit(&amp;lock);
 }
 
 /* if Task1 has equal or higher priority than 2, it will pend and 2 runs */
@@ -2079,17 +2085,12 @@ VOID kApplicationInit(VOID)
 /* importantly, both eventually pend */
 VOID Task1(VOID)
 {
-    UINT mailToSend = 0xBADC0FFE;
-    while(1)
     {
        /* post to mailbox and waits for reception */
-       kMutexLock(&amp;lock, K_WAIT_FOREVER);
-       mail = mailToSend;
-       kMutexUnlock(&amp;lock);
+       mail = getSomeData;
        kTaskSignal(&amp;task2Handle); /* notify it is posted */
        kTaskPend(K_WAIT_FOREVER); /* wait for recv notification */
-       /* update mail */
-       mailToSend %= 7U;
+
     }
 }
 
@@ -2100,9 +2101,7 @@ VOID Task2(VOID)
     while(1)
     {
         kTaskPend(K_WAIT_FOREVER); /* wait for post */
-        kMutexLock(&amp;lock, K_WAIT_FOREVER);
         recvMail = mail;
-        kMutexUnlock(&amp;lock);
         kTaskSignal(&amp;task1Handle); /* notify reception */
 
     }
@@ -2111,15 +2110,113 @@ VOID Task2(VOID)
 /* need a mutex? not in this case - in theory - assuming no other tasks will poke 'mail' (because 32-bit data, bi-lateral synch). IRL: yes. */</code></pre>
 </div>
 </div>
+<div class="ulist data-line-1101">
+<ul>
+<li class="data-line-1101">
+<p><em>Using condition variables:</em></p>
+</li>
+</ul>
+</div>
+<div class="listingblock data-line-1103">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">#include "application.h"
+
+UINT*       mailPtr = NULL;
+K_EVENT     empty;
+K_EVENT     full;
+K_MUTEX     lockMail;
+
+VOID PostMail(UINT mail)
+{
+     kMutexLock(&amp;lockMail, K_WAIT_FOREVER);
+     if (mailPtr != NULL) /* condition */
+     {
+        /*atomic unlock and sleep*/
+         kDisableIRQ();
+         kMutexUnlock(&amp;lockMail);
+         kSleep(&amp;empty);
+         kEnableIRQ();
+         /* wake and lock */
+         kMutexLock(&amp;lockMail, K_WAIT_FOREVER);
+     }
+     /* deposit mail, signal and unlock */
+     *mailPtr = mail;
+      kDisableIRQ();
+      kEventSignal(&amp;full);
+      kMutexUnlock(&amp;lockMail);
+      kEnableIRQ();
+      return;
+}
+
+VOID PendMail(UINT recv)
+{
+     kMutexLock(&amp;lockMail, K_WAIT_FOREVER);
+     if (mailPtr == NULL)
+     {
+         kDisableIRQ();
+         kMutexUnlock(&amp;lockMail);
+         kSleep(&amp;full);
+         kEnableIRQ();
+         kMutexLock(&amp;lockMail, K_WAIT_FOREVER);
+     }
+     /* extract mail, signal and unlock */
+      recv = *mailPtr;
+      mailPtr = NULL;
+      kDisableIRQ();
+      kEventSignal(&amp;empty);
+      kMutexUnlock(&amp;lockMail);
+      kEnableIRQ();
+      return;
+}</code></pre>
 </div>
 </div>
-<div class="sect1 data-line-1105">
-<h2 id="extended_rendezvous_1">2. Extended rendezvous #1</h2>
+<div class="ulist data-line-1156">
+<ul>
+<li class="data-line-1156">
+<p><em>Using semaphores</em>:</p>
+</li>
+</ul>
+</div>
+<div class="paragraph data-line-1158">
+<p>Semaphores can test and signal/wait:</p>
+</div>
+<div class="listingblock data-line-1161">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">K_SEMA  full;
+K_SEMA  empty;
+K_MUTEX lock;
+
+UINT mailbox=0;
+
+VOID PostMail(UINT send)
+{
+    kSemaWait(&amp;empty, K_WAIT_FOREVER);
+    kMutexLock(&amp;lock, K_WAIT_FOREVER);
+    mailbox=send;
+    kMutexUnlock(&amp;lock);
+    kSemaSignal(&amp;full);
+}
+
+
+VOID PendMail(UINT recv)
+{
+    kSemaWait(&amp;full, K_WAIT_FOREVER);
+    kMutexLock(&amp;lock, K_WAIT_FOREVER);
+    recv=mailbox;
+    kMutexUnlock(&amp;lock);
+    kSemaSignal(&amp;empty);
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1 data-line-1190">
+<h2 id="extended_rendezvous_1">2. <em>Extended rendezvous #1</em></h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1106">
+<div class="paragraph data-line-1191">
 <p>Usage: Many-to-one command-response.</p>
 </div>
-<div class="listingblock data-line-1108">
+<div class="listingblock data-line-1193">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 
@@ -2246,21 +2343,21 @@ VOID Client2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1234">
+<div class="imageblock data-line-1319">
 <div class="content">
 <img src="images/images/multiclient.png" alt="multiclient">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1236">
+<div class="sect1 data-line-1321">
 <h2 id="extended_rendezvous_2">3. Extended rendezvous #2</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1237">
+<div class="paragraph data-line-1322">
 <p>This snippet uses the mailbox <code>kMboxPostPend()</code> method.
 Usage: client-server communication.</p>
 </div>
-<div class="listingblock data-line-1240">
+<div class="listingblock data-line-1325">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 
@@ -2352,20 +2449,20 @@ VOID Task2(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1332">
+<div class="imageblock data-line-1417">
 <div class="content">
 <img src="images/images/sendrecv.png" alt="sendrecv">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1334">
+<div class="sect1 data-line-1419">
 <h2 id="queueing_pattern_0">4. Queueing Pattern #0</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1335">
+<div class="paragraph data-line-1420">
 <p>Usage: Asynch (like) comm, serialising access, logging, monitoring.</p>
 </div>
-<div class="listingblock data-line-1337">
+<div class="listingblock data-line-1422">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 #include &lt;stdlib.h&gt;
@@ -2460,20 +2557,20 @@ VOID SensorLogging(VOID)
 /* why enqueue and not log when reading? to not loose track, events are buffered and log happens on another task */</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1432">
+<div class="imageblock data-line-1517">
 <div class="content">
 <img src="images/images/queuing.png" alt="queuing">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1435">
+<div class="sect1 data-line-1520">
 <h2 id="monitor_0_barrier">5. Monitor #0 (Barrier)</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1437">
+<div class="paragraph data-line-1522">
 <p>Usage: resource access/tasks coordination.</p>
 </div>
-<div class="listingblock data-line-1439">
+<div class="listingblock data-line-1524">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 
@@ -2555,20 +2652,20 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1522">
+<div class="imageblock data-line-1607">
 <div class="content">
 <img src="images/images/syncbarr.png" alt="syncbarr">
 </div>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1525">
+<div class="sect1 data-line-1610">
 <h2 id="monitor_1_turnstile">6. Monitor #1 (Turnstile)</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1527">
+<div class="paragraph data-line-1612">
 <p>In this variation we use mailboxes for turnstile. Also the task that wakes up all others will use the resource within the monitor (be active).</p>
 </div>
-<div class="listingblock data-line-1529">
+<div class="listingblock data-line-1614">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">K_EVENT syncEvent; /* state event				    */
 UINT syncCounter; /* state representation        */
@@ -2644,18 +2741,18 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1605">
+<div class="paragraph data-line-1690">
 <p><span class="image"><img src="images/images/mboxturnstiles.png" alt="mboxturnstiles"></span></p>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1607">
+<div class="sect1 data-line-1692">
 <h2 id="multi_condition_notification_0">7. Multi-condition Notification #0</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1609">
+<div class="paragraph data-line-1694">
 <p>Usage: coordinate a notified task action on a combination of events.</p>
 </div>
-<div class="listingblock data-line-1611">
+<div class="listingblock data-line-1696">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/* @file application.c */
 
@@ -2752,25 +2849,23 @@ VOID NotifiedTask(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1708">
+<div class="paragraph data-line-1793">
 <p><span class="image"><img src="images/images/mboxflags.png" alt="mboxflags"></span></p>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1710">
+<div class="sect1 data-line-1795">
 <h2 id="multi_condition_notification_1">8. Multi-condition Notification #1</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1711">
+<div class="paragraph data-line-1796">
 <p>Usage: multi-condition broadcast, notification, observer pattern.</p>
 </div>
-<div class="paragraph data-line-1713">
+<div class="paragraph data-line-1798">
 <p>By a rather simple combination of the provided services, Event Flags are constructed, handling pretty much everything that could had been shipped as another kernel service.</p>
 </div>
-<div class="listingblock data-line-1715">
+<div class="listingblock data-line-1800">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
-#include &lt;stdlib.h&gt;
-#include &lt;stdio.h&gt;
 
 INT stack1[STACKSIZE];
 INT stack2[STACKSIZE];
@@ -2880,13 +2975,13 @@ VOID Task4(VOID) /* just want flag 3*/
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1829">
+<div class="imageblock data-line-1912">
 <div class="content">
 <img src="images/images/eventflags.png" alt="eventflags">
 </div>
 </div>
 <hr>
-<div class="imageblock text-center data-line-1834">
+<div class="imageblock text-center data-line-1917">
 <div class="content">
 <img src="images/images/mascott.png" alt="mascott" width="105">
 </div>
