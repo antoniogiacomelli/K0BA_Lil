@@ -2671,11 +2671,6 @@ VOID Task3(VOID)
 UINT syncCounter; /* state representation        */
 K_MBOX syncMbox;
 K_MBOX resourceMbox;
-/* keys */
-UINT mayEnter = 0xAABBCCDD;
-UINT mayAcquire = 0xBBCCDDEE;
-UINT *acqPtr;
-UINT *enterPtr;
 
 #define SYNC_CONDITION (syncCounter&gt;=3) /* needed tasks in the barrier */
 
@@ -2690,6 +2685,12 @@ VOID kApplicationInit(VOID)
 
 static VOID synch(VOID)
 {
+    /* keys */
+    UINT mayEnter = 0xAABBCCDD;
+    UINT mayAcquire = 0xBBCCDDEE;
+    UINT *acqPtr;
+    UINT *enterPtr;
+
 	kMboxPend(&amp;syncMbox, (ADDR*) &amp;enterPtr, K_WAIT_FOREVER); /*got the key*/
 	syncCounter += 1;
 	if (!(SYNC_CONDITION))
@@ -2741,18 +2742,18 @@ VOID Task3(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1690">
+<div class="paragraph data-line-1691">
 <p><span class="image"><img src="images/images/mboxturnstiles.png" alt="mboxturnstiles"></span></p>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1692">
+<div class="sect1 data-line-1693">
 <h2 id="multi_condition_notification_0">7. Multi-condition Notification #0</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1694">
+<div class="paragraph data-line-1695">
 <p>Usage: coordinate a notified task action on a combination of events.</p>
 </div>
-<div class="listingblock data-line-1696">
+<div class="listingblock data-line-1697">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/* @file application.c */
 
@@ -2849,21 +2850,21 @@ VOID NotifiedTask(VOID)
 }</code></pre>
 </div>
 </div>
-<div class="paragraph data-line-1793">
+<div class="paragraph data-line-1794">
 <p><span class="image"><img src="images/images/mboxflags.png" alt="mboxflags"></span></p>
 </div>
 </div>
 </div>
-<div class="sect1 data-line-1795">
+<div class="sect1 data-line-1796">
 <h2 id="multi_condition_notification_1">8. Multi-condition Notification #1</h2>
 <div class="sectionbody">
-<div class="paragraph data-line-1796">
+<div class="paragraph data-line-1797">
 <p>Usage: multi-condition broadcast, notification, observer pattern.</p>
 </div>
-<div class="paragraph data-line-1798">
+<div class="paragraph data-line-1799">
 <p>By a rather simple combination of the provided services, Event Flags are constructed, handling pretty much everything that could had been shipped as another kernel service.</p>
 </div>
-<div class="listingblock data-line-1800">
+<div class="listingblock data-line-1801">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">#include "application.h"
 
@@ -2975,13 +2976,13 @@ VOID Task4(VOID) /* just want flag 3*/
 }</code></pre>
 </div>
 </div>
-<div class="imageblock data-line-1912">
+<div class="imageblock data-line-1913">
 <div class="content">
 <img src="images/images/eventflags.png" alt="eventflags">
 </div>
 </div>
 <hr>
-<div class="imageblock text-center data-line-1917">
+<div class="imageblock text-center data-line-1918">
 <div class="content">
 <img src="images/images/mascott.png" alt="mascott" width="105">
 </div>
