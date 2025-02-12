@@ -1681,7 +1681,7 @@ VOID kApplicationInit( VOID)
     kMutexInit(&amp;lockMail);
 }
 
-VOID PostMail( UINT mail)
+VOID PostMail( UINT* mail)
 {
      kMutexLock(&amp;lockMail, K_WAIT_FOREVER);
      if (mailPtr != NULL) /* full? sleep until empty */
@@ -1695,7 +1695,7 @@ VOID PostMail( UINT mail)
          kMutexLock(&amp;lockMail, K_WAIT_FOREVER);
      }
      /* deposit mail, signal and unlock */
-     *mailPtr = mail;
+      mailPtr = mail;
       kDisableIRQ();
       kEventSignal(&amp;full);
       kMutexUnlock(&amp;lockMail);
