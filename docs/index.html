@@ -1681,7 +1681,7 @@ VOID kApplicationInit( VOID)
     kMutexInit(&amp;lockMail);
 }
 
-VOID PostMail( UINT* mail)
+VOID PostMail( UINT* sendPtr)
 {
      kMutexLock(&amp;lockMail, K_WAIT_FOREVER);
      if (mailPtr != NULL) /* full? sleep until empty */
@@ -1695,7 +1695,7 @@ VOID PostMail( UINT* mail)
          kMutexLock(&amp;lockMail, K_WAIT_FOREVER);
      }
      /* deposit mail, signal and unlock */
-      mailPtr = mail;
+      mailPtr = sendPtr;
       kDisableIRQ();
       kEventSignal(&amp;full);
       kMutexUnlock(&amp;lockMail);
@@ -1716,7 +1716,7 @@ VOID PendMail( UINT recv)
      }
      /* extract mail, signal and unlock */
       recv = *mailPtr;
-      mailPtr = NULL;
+      mailPtr = NULL; /* clear */
       kDisableIRQ();
       kEventSignal(&amp;empty);
       kMutexUnlock(&amp;lockMail);
@@ -1740,7 +1740,7 @@ VOID PendMail( UINT recv)
 <pre class="highlightjs highlight"><code class="language-C hljs" data-lang="C">K_SEMA  full;
 K_SEMA  empty;
 
-UINT mailbox=0;
+UINT mail=0;
 
 kApplicationInit(VOID)
 {
@@ -1751,7 +1751,7 @@ kApplicationInit(VOID)
 VOID PostMail(UINT send)
 {
     kSemaWait(&amp;empty, K_WAIT_FOREVER); /* wait it is empty*/
-    mailbox=send;
+    mail=send;
     kSemaSignal(&amp;full); /* signal it is full */
 }
 
@@ -1759,7 +1759,7 @@ VOID PostMail(UINT send)
 VOID PendMail(UINT recv)
 {
     kSemaWait(&amp;full, K_WAIT_FOREVER); /* wait is full */
-    recv=mailbox;
+    recv=mail;
     kSemaSignal(&amp;empty); /* signal it is empty */
 }</code></pre>
 </div>
