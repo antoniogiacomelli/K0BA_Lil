@@ -34,6 +34,9 @@
 #	error "Invalid minimal effective priority. (Max numerical value: 31)"
 #endif
 
+#ifndef SystemCoreClock
+# error "Define SystemCoreClock"
+#endif
 /******************************************************************************
  * ERROR HANDLING
  ******************************************************************************/
