@@ -15,3 +15,7 @@ https://antoniogiacomelli.github.io/K0BA_Lil/
 <img width="450" alt="kernel" src="https://github.com/antoniogiacomelli/K0BA_Lite/blob/master/layeredkernel.png">
 
  
+# Dependencies
+Currently the kernel _depends_ on CMSIS:
+CMSIS-GCC
+CMSIS-Core
