@@ -92,11 +92,8 @@ K_ERR kMboxPost( K_MBOX *const kobj, ADDR const sendPtr, TICK timeout)
 			K_EXIT_CR
 			return (K_ERR_TIMEOUT);
 		}
-		else
-		{
-			if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
-				kRemoveTimeoutNode( &kobj->timeoutNode);
-		}
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
 	}
 	kobj->mailPtr = sendPtr;
 	/*  full: unblock a reader, if any */
@@ -200,11 +197,13 @@ K_ERR kMboxPend( K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 		K_EXIT_CR
 		K_ENTER_CR
 		if (runPtr->timeOut)
-		{ /* timed-out */
+		{
 			runPtr->timeOut = FALSE;
 			K_EXIT_CR
 			return (K_ERR_TIMEOUT);
 		}
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
 	}
 
 	*recvPPtr = kobj->mailPtr;
@@ -324,11 +323,8 @@ K_ERR kMboxPostPend( K_MBOX *const kobj, ADDR const sendPtr,
 			K_EXIT_CR
 			return (K_ERR_TIMEOUT);
 		}
-		else
-		{
-			if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
-				kRemoveTimeoutNode( &kobj->timeoutNode);
-		}
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
 	}
 	kobj->mailPtr = sendPtr;
 	/*  full: unblock a reader, if any */
