@@ -565,8 +565,11 @@ BOOL kTickHandler( VOID)
 	}
 
 #endif
+	/* unless there is a run to completion task running, context switch
+	 * happens whenever running task is ready, a timer expired, a tslice
+	 * is due  */
 	ret = ((!runToCompl) & ((runPtr->status == READY) | timeOutTask	 \
-			| tsliceDue | (runPtr->yield == TRUE )));
+			| tsliceDue ));
 
 	return (ret);
 }
