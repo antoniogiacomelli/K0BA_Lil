@@ -20,4 +20,4 @@ https://antoniogiacomelli.github.io/K0BA_Lil/
 Currently the kernel _depends_ on CMSIS:
 
 * CMSIS-GCC
-( CMSIS-Core
+* CMSIS-Core
