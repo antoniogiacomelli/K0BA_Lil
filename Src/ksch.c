@@ -499,59 +499,13 @@ static BOOL kDecTimeSlice_(VOID)
     return (FALSE);
 }
 #endif
-#if DEADCODE
-static BOOL kSleepHandle_( VOID)
-{
-	K_CR_AREA
-
-	K_ENTER_CR
-
-	BOOL ret = FALSE;
-	if (dTimSleepList)
-	{
-		if (dTimSleepList->dTicks > 0)
-			dTimSleepList->dTicks--;
-
-		while (dTimSleepList != NULL && dTimSleepList->dTicks == 0)
-		{
-			K_TIMER *expTimerPtr = dTimSleepList;
-			K_TCB *tcbToWakePtr = NULL;
-			tcbToWakePtr = (K_TCB*) (dTimSleepList->argsPtr);
-			if (tcbToWakePtr->status == SLEEPING)
-				kassert( tcbToWakePtr != NULL);
-			kassert( !kTCBQRem( &sleepingQueue, &tcbToWakePtr));
-			kassert( tcbToWakePtr != NULL);
-			kTCBQEnq( &readyQueue[tcbToWakePtr->priority], tcbToWakePtr);
-			tcbToWakePtr->status = READY;
-			kTimerPut( expTimerPtr);
-			dTimSleepList = dTimSleepList->nextPtr;
-			K_EXIT_CR
-			return (TRUE );
-		}
-	}
-
-	K_EXIT_CR
-
-	return (ret);
-
-}
-#endif
 volatile K_TIMEOUT_NODE *timeOutListHeadPtr = NULL;
-volatile K_TIMEOUT_NODE *timeOutListHeadPtrCpy = NULL;
 volatile K_TIMEOUT_NODE *timerListHeadPtr = NULL;
-
-
-volatile K_TIMEOUT_NODE *timeOutListHeadPtr_;
-
 BOOL kTickHandler( VOID)
 {
-	timeOutListHeadPtr_ = timeOutListHeadPtr;
 	/* return is short-circuit to !runToCompl & */
 	BOOL runToCompl = FALSE;
-#if (K_DEF_SCH_TSLICE==ON)
     BOOL tsliceDue = FALSE;
-#endif
-	BOOL readySleepTask = FALSE;
 	BOOL timeOutTask = FALSE;
 	BOOL ret = FALSE;
 	runTime.globalTick += 1U;
@@ -591,7 +545,7 @@ BOOL kTickHandler( VOID)
         }
     }
 #else
-    K_TIMER* headTimPtr = (K_TIMER*)(timerListHeadPtr->kobj);
+	K_TIMER *headTimPtr = (K_TIMER*) (timerListHeadPtr->kobj);
 	if (timerListHeadPtr != NULL)
 	{
 		if (headTimPtr->phase > 0)
@@ -607,13 +561,12 @@ BOOL kTickHandler( VOID)
 	if (timerListHeadPtr != NULL && timerListHeadPtr->dtick == 0)
 	{
 		kTaskSignal( &timTaskHandle);
-		timeOutTask=TRUE;
+		timeOutTask = TRUE;
 	}
 
 #endif
-	ret = ((!runToCompl)
-			& ((runPtr->status == READY) | readySleepTask | timeOutTask
-					| (runPtr->yield == TRUE )));
+	ret = ((!runToCompl) & ((runPtr->status == READY) | timeOutTask	 \
+			| tsliceDue | (runPtr->yield == TRUE )));
 
 	return (ret);
 }
