@@ -519,6 +519,10 @@ BOOL kTickHandler( VOID)
 		runTime.nWraps += 1U;
 	}
 
+	if (runPtr->yield == TRUE)
+	{
+		kReadyRunningTask_();
+	}
 	/* handle time out and sleeping list */
 	timeOutTask = kHandleTimeoutList();
 
@@ -566,10 +570,12 @@ BOOL kTickHandler( VOID)
 
 #endif
 	/* unless there is a run to completion task running, context switch
-	 * happens whenever running task is ready, a timer expired, a tslice
-	 * is due  */
-	ret = ((!runToCompl) & ((runPtr->status == READY) | timeOutTask	 \
-			| tsliceDue ));
+	 * happens whenever running task is ready (probably yielded or tslice is due
+	 * context switching by preemption for higher priority, happens whenever a
+	 * task of higher priority than the running task switches to ready
+	 * and is unrelated to the the tick handler
+	 */
+	ret = ((!runToCompl) & ((runPtr->status == READY) | timeOutTask	));
 
 	return (ret);
 }
