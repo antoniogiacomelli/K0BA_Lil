@@ -75,25 +75,28 @@ K_ERR kMboxPost( K_MBOX *const kobj, ADDR const sendPtr, TICK timeout)
 		{
 			kTimeOut( &kobj->timeoutNode, timeout);
 		}
-		do
-		{
-			/* not-empty blocks a writer */
+
+		/* not-empty blocks a writer */
 #if(K_DEF_MBOX_ENQ==K_DEF_ENQ_FIFO)
 			kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
-			kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
+		kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 #endif
-			runPtr->status = SENDING;
-			K_PEND_CTXTSWTCH
+		runPtr->status = SENDING;
+		K_PEND_CTXTSWTCH
+		K_EXIT_CR
+		K_ENTER_CR
+		if (runPtr->timeOut)
+		{
+			runPtr->timeOut = FALSE;
 			K_EXIT_CR
-			K_ENTER_CR
-			if (runPtr->timeOut)
-			{
-				runPtr->timeOut = FALSE;
-				K_EXIT_CR
-				return (K_ERR_TIMEOUT);
-			}
-		} while (kobj->mailPtr != NULL);
+			return (K_ERR_TIMEOUT);
+		}
+		else
+		{
+			if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+				kRemoveTimeoutNode( &kobj->timeoutNode);
+		}
 	}
 	kobj->mailPtr = sendPtr;
 	/*  full: unblock a reader, if any */
@@ -186,27 +189,22 @@ K_ERR kMboxPend( K_MBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 		{
 			kTimeOut( &kobj->timeoutNode, timeout);
 		}
-		do
-		{
-#if (K_DEF_MBOX_ENQ==K_DEF_ENQ_FIFO)
 
+#if (K_DEF_MBOX_ENQ==K_DEF_ENQ_FIFO)
 			kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
-			kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
+		kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 #endif
-			runPtr->status = RECEIVING;
-			runPtr->pendingMbox = kobj;
-			K_PEND_CTXTSWTCH
+		runPtr->status = RECEIVING;
+		K_PEND_CTXTSWTCH
+		K_EXIT_CR
+		K_ENTER_CR
+		if (runPtr->timeOut)
+		{ /* timed-out */
+			runPtr->timeOut = FALSE;
 			K_EXIT_CR
-			K_ENTER_CR
-			if (runPtr->timeOut)
-			{ /* timed-out */
-				runPtr->timeOut = FALSE;
-				runPtr->pendingMbox = 0;
-				K_EXIT_CR
-				return (K_ERR_TIMEOUT);
-			}
-		} while (kobj->mailPtr == NULL);
+			return (K_ERR_TIMEOUT);
+		}
 	}
 
 	*recvPPtr = kobj->mailPtr;
@@ -309,25 +307,28 @@ K_ERR kMboxPostPend( K_MBOX *const kobj, ADDR const sendPtr,
 		{
 			kTimeOut( &kobj->timeoutNode, timeout);
 		}
-		do
-		{
-			/* not-empty blocks a writer */
+
+		/* not-empty blocks a writer */
 #if (K_DEF_MBOX_ENQ==K_DEF_ENQ_FIFO)
 			kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
-			kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
+		kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 #endif
-			runPtr->status = RECEIVING;
-			K_PEND_CTXTSWTCH
+		runPtr->status = RECEIVING;
+		K_PEND_CTXTSWTCH
+		K_EXIT_CR
+		K_ENTER_CR
+		if (runPtr->timeOut)
+		{
+			runPtr->timeOut = FALSE;
 			K_EXIT_CR
-			K_ENTER_CR
-			if (runPtr->timeOut)
-			{
-				runPtr->timeOut = FALSE;
-				K_EXIT_CR
-				return (K_ERR_TIMEOUT);
-			}
-		} while (kobj->mailPtr != NULL);
+			return (K_ERR_TIMEOUT);
+		}
+		else
+		{
+			if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+				kRemoveTimeoutNode( &kobj->timeoutNode);
+		}
 	}
 	kobj->mailPtr = sendPtr;
 	/*  full: unblock a reader, if any */
@@ -373,8 +374,8 @@ K_ERR kMboxPostPend( K_MBOX *const kobj, ADDR const sendPtr,
 /*******************************************************************************
  * MULTIBOX (MAIL QUEUE)
  ******************************************************************************/
-#if (K_DEF_MMBOX==(ON))
-K_ERR kMmboxInit( K_MMBOX *const kobj, ADDR memPtr, ULONG maxItems)
+#if (K_DEF_QUEUE==(ON))
+K_ERR kQueueInit( K_QUEUE *const kobj, ADDR memPtr, ULONG maxItems)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -398,13 +399,13 @@ K_ERR kMmboxInit( K_MMBOX *const kobj, ADDR memPtr, ULONG maxItems)
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
 	kobj->timeoutNode.kobj = kobj;
-	kobj->timeoutNode.objectType = MMBOX;
+	kobj->timeoutNode.objectType = QUEUE;
 
 	K_EXIT_CR
 	return (K_SUCCESS);
 }
 
-K_ERR kMmboxPost( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
+K_ERR kQueuePost( K_QUEUE *const kobj, ADDR sendPtr, TICK timeout)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -434,25 +435,25 @@ K_ERR kMmboxPost( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
 		{
 			kTimeOut( &kobj->timeoutNode, timeout);
 		}
-		do
-		{
-#if(K_DEF_MMBOX_ENQ==K_DEF_ENQ_FIFO)
+
+#if(K_DEF_QUEUE_ENQ==K_DEF_ENQ_FIFO)
 			kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
-			kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
+		kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 #endif
-			runPtr->status = SENDING;
-			K_PEND_CTXTSWTCH
-			K_EXIT_CR
-			K_ENTER_CR
+		runPtr->status = SENDING;
+		K_PEND_CTXTSWTCH
+		K_EXIT_CR
+		K_ENTER_CR
 
-			if (runPtr->timeOut)
-			{
-				runPtr->timeOut = FALSE;
-				K_EXIT_CR
-				return (K_ERR_TIMEOUT);
-			}
-		} while (kobj->countItems == kobj->maxItems);
+		if (runPtr->timeOut)
+		{
+			runPtr->timeOut = FALSE;
+			K_EXIT_CR
+			return (K_ERR_TIMEOUT);
+		}
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
 	}
 	/* post on tail */
 	/* cast to ULONG guarantees a 4-byte step-size for the address */
@@ -481,7 +482,7 @@ K_ERR kMmboxPost( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
 	return (K_SUCCESS);
 }
 
-K_ERR kMmboxPend( K_MMBOX *const kobj, ADDR *recvPPtr, TICK timeout)
+K_ERR kQueuePend( K_QUEUE *const kobj, ADDR *recvPPtr, TICK timeout)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -515,34 +516,30 @@ K_ERR kMmboxPend( K_MMBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 		{
 			kTimeOut( &kobj->timeoutNode, timeout);
 		}
-		do
-		{
-#if(K_DEF_MMBOX_ENQ==K_DEF_ENQ_FIFO)
+#if(K_DEF_QUEUE_ENQ==K_DEF_ENQ_FIFO)
 			kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
-			kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
+		kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 #endif
-			runPtr->status = RECEIVING;
-			K_PEND_CTXTSWTCH
+		runPtr->status = RECEIVING;
+		K_PEND_CTXTSWTCH
+		K_EXIT_CR
+		K_ENTER_CR
+		if (runPtr->timeOut)
+		{
+			runPtr->timeOut = FALSE;
 			K_EXIT_CR
-			K_ENTER_CR
-
-			if (runPtr->timeOut)
-			{
-				runPtr->timeOut = FALSE;
-				K_EXIT_CR
-				return (K_ERR_TIMEOUT);
-			}
-		} while (kobj->countItems == 0);
+			return (K_ERR_TIMEOUT);
+		}
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
 	}
-
 	/* cast to ULONG* guarantees a 4-byte step-size */
 	ADDR *headAddr = (ADDR*) ((ULONG*) kobj->mailQPtr + kobj->headIdx);
 	/* value stored on headAddr is dequeued */
 	*recvPPtr = *headAddr;
 	kobj->headIdx = (kobj->headIdx + 1) % kobj->maxItems;
 	kobj->countItems--;
-
 	if (kobj->waitingQueue.size > 0)
 	{
 		K_TCB *freeSendPtr = kTCBQPeek( &kobj->waitingQueue);
@@ -560,8 +557,9 @@ K_ERR kMmboxPend( K_MMBOX *const kobj, ADDR *recvPPtr, TICK timeout)
 	K_EXIT_CR
 	return (K_SUCCESS);
 }
-#if (K_DEF_FUNC_MMBOX_PEEK==ON)
-K_ERR kMmboxPeek( K_MMBOX *const kobj, ADDR *peekPPtr)
+
+#if (K_DEF_FUNC_QUEUE_PEEK==ON)
+K_ERR kQueuePeek( K_QUEUE *const kobj, ADDR *peekPPtr)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -590,8 +588,8 @@ K_ERR kMmboxPeek( K_MMBOX *const kobj, ADDR *peekPPtr)
 }
 #endif
 
-#if (K_DEF_FUNC_MMBOX_JAM==ON)
-K_ERR kMmboxJam( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
+#if (K_DEF_FUNC_QUEUE_JAM==ON)
+K_ERR kQueueJam( K_QUEUE *const kobj, ADDR sendPtr, TICK timeout)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -624,25 +622,24 @@ K_ERR kMmboxJam( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
 		{
 			kTimeOut( &kobj->timeoutNode, timeout);
 		}
-		do
-		{
-#if(K_DEF_MMBOX_ENQ==K_DEF_ENQ_FIFO)
+
+#if(K_DEF_QUEUE_ENQ==K_DEF_ENQ_FIFO)
 			kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
-			kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
+		kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 #endif
-			runPtr->status = SENDING;
-			K_PEND_CTXTSWTCH
+		runPtr->status = SENDING;
+		K_PEND_CTXTSWTCH
+		K_EXIT_CR
+		K_ENTER_CR
+		if (runPtr->timeOut)
+		{
+			runPtr->timeOut = FALSE;
 			K_EXIT_CR
-			K_ENTER_CR
-
-			if (runPtr->timeOut)
-			{
-				runPtr->timeOut = FALSE;
-				K_EXIT_CR
-				return (K_ERR_TIMEOUT);
-			}
-		} while (kobj->countItems == kobj->maxItems);
+			return (K_ERR_TIMEOUT);
+		}
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
 	}
 	/* empty or wrapped ? just place. otherwise, get back - to match the tail */
 	kobj->headIdx = (kobj->headIdx == 0) ? (0) : (kobj->headIdx - 1);
@@ -669,16 +666,16 @@ K_ERR kMmboxJam( K_MMBOX *const kobj, ADDR sendPtr, TICK timeout)
 }
 #endif
 
-#if (K_DEF_FUNC_MMBOX_MAILCOUNT==ON)
+#if (K_DEF_FUNC_QUEUE_MAILCOUNT==ON)
 
-ULONG kMmboxMailCount( K_MMBOX *const kobj)
+ULONG kQueueMailCount( K_QUEUE *const kobj)
 {
 	return (kobj->countItems);
 }
 #endif
 
-#if (K_DEF_FUNC_MMBOX_ISFULL==ON)
-BOOL kMmboxIsFull( K_MMBOX *const kobj)
+#if (K_DEF_FUNC_QUEUE_ISFULL==ON)
+BOOL kQueueIsFull( K_QUEUE *const kobj)
 {
 	return (kobj->countItems == kobj->maxItems);
 }
@@ -688,12 +685,12 @@ BOOL kMmboxIsFull( K_MMBOX *const kobj)
 #endif
 
 /*******************************************************************************
- * MESSAGE QUEUE (PIPE/STREAM)
+ * MESSAGE STREAM
  *******************************************************************************/
-#if(K_DEF_MESGQ==ON)
+#if(K_DEF_STREAM==ON)
 
-K_ERR kMesgQInit( K_MESGQ *const kobj, ADDR const buffer, ULONG const mesgSize,
-		ULONG const nMesg)
+K_ERR kStreamInit( K_STREAM *const kobj, ADDR const buffer,
+		ULONG const mesgSize, ULONG const nMesg)
 
 {
 	K_CR_AREA
@@ -728,14 +725,14 @@ K_ERR kMesgQInit( K_MESGQ *const kobj, ADDR const buffer, ULONG const mesgSize,
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
 	kobj->timeoutNode.kobj = kobj;
-	kobj->timeoutNode.objectType = MESGQ;
+	kobj->timeoutNode.objectType = STREAM;
 	kobj->init = 1;
 	K_EXIT_CR
 	return (K_SUCCESS);
 }
 
-#if (K_DEF_FUNC_MESGQ_PEEK==ON)
-K_ERR kMesgQPeek( K_MESGQ *const kobj, ADDR recvPtr)
+#if (K_DEF_FUNC_STREAM_PEEK==ON)
+K_ERR kStreamPeek( K_STREAM *const kobj, ADDR recvPtr)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -747,7 +744,7 @@ K_ERR kMesgQPeek( K_MESGQ *const kobj, ADDR recvPtr)
 	if (kobj->mesgCnt == 0)
 	{
 		K_EXIT_CR
-		return (K_ERR_MESGQ_EMPTY);
+		return (K_ERR_STREAM_EMPTY);
 	}
 	BYTE const *src = kobj->buffer + (kobj->readIndex * kobj->mesgSize);
 	BYTE *dest = (BYTE*) recvPtr;
@@ -764,7 +761,7 @@ K_ERR kMesgQPeek( K_MESGQ *const kobj, ADDR recvPtr)
 }
 #endif
 
-K_ERR kMesgQSend( K_MESGQ *const kobj, ADDR const sendPtr, TICK const timeout)
+K_ERR kStreamSend( K_STREAM *const kobj, ADDR const sendPtr, TICK const timeout)
 {
 	K_CR_AREA
 	if ((kobj == NULL) || (sendPtr == NULL) || (kobj->init == 0))
@@ -783,29 +780,28 @@ K_ERR kMesgQSend( K_MESGQ *const kobj, ADDR const sendPtr, TICK const timeout)
 		if (timeout == K_NO_WAIT)
 		{
 			K_EXIT_CR
-			return (K_ERR_MESGQ_FULL);
+			return (K_ERR_STREAM_FULL);
 		}
 		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
 			kTimeOut( &kobj->timeoutNode, timeout);
-		{
-#if (K_DEF_MESGQ_ENQ==K_DEF_ENQ_FIFO)
+
+#if (K_DEF_STREAM_ENQ==K_DEF_ENQ_FIFO)
 			kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
-			kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
+		kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 #endif
-			runPtr->status = SENDING;
-			K_PEND_CTXTSWTCH
+		runPtr->status = SENDING;
+		K_PEND_CTXTSWTCH
+		K_EXIT_CR
+		K_ENTER_CR
+		if (runPtr->timeOut)
+		{
+			runPtr->timeOut = FALSE;
 			K_EXIT_CR
-			K_ENTER_CR
-			if (runPtr->timeOut)
-			{
-				runPtr->timeOut = FALSE;
-				K_EXIT_CR
-				return (K_ERR_TIMEOUT);
-			}
+			return (K_ERR_TIMEOUT);
 		}
-		while (kobj->mesgCnt >= kobj->maxMesg)
-			;
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
 	}
 	BYTE *dest = kobj->buffer + (kobj->writeIndex * kobj->mesgSize);
 	BYTE const *src = (BYTE const*) sendPtr;
@@ -834,7 +830,7 @@ K_ERR kMesgQSend( K_MESGQ *const kobj, ADDR const sendPtr, TICK const timeout)
 	return (K_SUCCESS);
 }
 
-K_ERR kMesgQRecv( K_MESGQ *const kobj, ADDR recvPtr, TICK const timeout)
+K_ERR kStreamRecv( K_STREAM *const kobj, ADDR recvPtr, TICK const timeout)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -853,29 +849,29 @@ K_ERR kMesgQRecv( K_MESGQ *const kobj, ADDR recvPtr, TICK const timeout)
 		if (timeout == K_NO_WAIT)
 		{
 			K_EXIT_CR
-			return (K_ERR_MESGQ_EMPTY);
+			return (K_ERR_STREAM_EMPTY);
 		}
 
 		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
 			kTimeOut( &kobj->timeoutNode, timeout);
-		do
-		{
-#if (K_DEF_MESGQ_ENQ==K_DEF_ENQ_FIFO)
+
+#if (K_DEF_STREAM_ENQ==K_DEF_ENQ_FIFO)
 			kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
-			kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
+		kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 #endif
-			runPtr->status = RECEIVING;
-			K_PEND_CTXTSWTCH
+		runPtr->status = RECEIVING;
+		K_PEND_CTXTSWTCH
+		K_EXIT_CR
+		K_ENTER_CR
+		if (runPtr->timeOut)
+		{
+			runPtr->timeOut = FALSE;
 			K_EXIT_CR
-			K_ENTER_CR
-			if (runPtr->timeOut == TRUE)
-			{
-				runPtr->timeOut = FALSE;
-				K_EXIT_CR
-				return (K_ERR_TIMEOUT);
-			}
-		} while (kobj->mesgCnt == 0);
+			return (K_ERR_TIMEOUT);
+		}
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
 	}
 	BYTE const *src = kobj->buffer + (kobj->readIndex * kobj->mesgSize);
 	BYTE *dest = (BYTE*) recvPtr;
@@ -906,8 +902,8 @@ K_ERR kMesgQRecv( K_MESGQ *const kobj, ADDR recvPtr, TICK const timeout)
 	return (K_SUCCESS);
 }
 
-#if (K_DEF_FUNC_MESGQ_JAM == ON)
-K_ERR kMesgQJam( K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout)
+#if (K_DEF_FUNC_STREAM_JAM == ON)
+K_ERR kStreamJam( K_STREAM *const kobj, ADDR const sendPtr, TICK timeout)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -927,28 +923,27 @@ K_ERR kMesgQJam( K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout)
 		if (timeout == K_NO_WAIT)
 		{
 			K_EXIT_CR
-			return (K_ERR_MESGQ_FULL);
+			return (K_ERR_STREAM_FULL);
 		}
 		if (timeout > K_NO_WAIT && timeout < K_WAIT_FOREVER)
 			kTimeOut( &kobj->timeoutNode, timeout);
-		do
-		{
-#if (K_DEF_MESGQ_ENQ==K_DEF_ENQ_FIFO)
+#if (K_DEF_STREAM_ENQ==K_DEF_ENQ_FIFO)
 			kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
-			kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
+		kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 #endif
-			runPtr->status = SENDING;
-			K_PEND_CTXTSWTCH
+		runPtr->status = SENDING;
+		K_PEND_CTXTSWTCH
+		K_EXIT_CR
+		K_ENTER_CR
+		if (runPtr->timeOut)
+		{
+			runPtr->timeOut = FALSE;
 			K_EXIT_CR
-			K_ENTER_CR
-			if (runPtr->timeOut)
-			{
-				runPtr->timeOut = FALSE;
-				K_EXIT_CR
-				return (K_ERR_TIMEOUT);
-			}
-		} while (kobj->mesgCnt >= kobj->maxMesg);
+			return (K_ERR_TIMEOUT);
+		}
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
 	}
 	kobj->readIndex =
 			(kobj->readIndex == 0) ?
@@ -983,8 +978,8 @@ K_ERR kMesgQJam( K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout)
 }
 #endif
 
-#if (K_DEF_FUNC_MESGQ_MESGCOUNT==ON)
-K_ERR kMesgQGetMesgCount( K_MESGQ *const kobj, UINT *const mesgCntPtr)
+#if (K_DEF_FUNC_STREAM_MESGCOUNT==ON)
+K_ERR kStreamGetMesgCount( K_STREAM *const kobj, UINT *const mesgCntPtr)
 {
 	K_CR_AREA
 	if (kobj)
@@ -998,7 +993,7 @@ K_ERR kMesgQGetMesgCount( K_MESGQ *const kobj, UINT *const mesgCntPtr)
 }
 #endif
 
-#endif /*K_DEF_MESGQ*/
+#endif /*K_DEF_STREAM*/
 
 #if (K_DEF_PDMESG == ON)
 
@@ -1034,8 +1029,6 @@ K_ERR kPDMesgInit( K_PDMESG *const kobj, K_MEM *const memCtrlPtr,
 K_PDBUF* kPDMesgReserve( K_PDMESG *const kobj)
 {
 
-	if (!kobj->init)
-		KFAULT( FAULT_OBJ_INIT);
 	K_CR_AREA
 	K_ENTER_CR
 	K_PDBUF *allocPtr = NULL;
@@ -1060,7 +1053,7 @@ K_ERR kPDMesgPump( K_PDMESG *const kobj, K_PDBUF *const buffPtr)
 {
 	K_CR_AREA
 	if (!kobj->init)
-		return (K_ERR_OBJ_NULL);
+		return (K_ERR_OBJ_NOT_INIT);
 	/* first pump will skip this if */
 	K_ENTER_CR
 	if ((kobj->currBufPtr != NULL) && (kobj->currBufPtr != buffPtr)

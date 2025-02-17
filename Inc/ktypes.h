@@ -39,10 +39,8 @@ typedef _Bool BOOL;
 
 typedef char *STRING; /*Pointer to string of chars */
 
-/*** User-defined Task ID range: 0-255.                         */
 /*** Priority range: 0-31 - tasks can have the same priority    */
 typedef unsigned char PID; /* System defined Task ID type */
-typedef unsigned char TID; /* User defined Task ID */
 typedef unsigned char PRIO; /* Task priority type */
 typedef unsigned TICK; /* Tick count type */
 
@@ -76,10 +74,10 @@ typedef enum kErr
 	K_ERR_MBOX_EMPTY = 0x8,
 	K_ERR_MBOX_ISR = 0x9,
 	K_ERR_MBOX_NO_WAITERS = 0xA,
-	K_ERR_MESGQ_FULL = 0xB,
-	K_ERR_MESGQ_EMPTY = 0xC,
+	K_ERR_STREAM_FULL = 0xB,
+	K_ERR_STREAM_EMPTY = 0xC,
 	K_ERR_MUTEX_LOCKED = 0xD,
-
+	K_ERR_INVALID_PARAM	= 0xE,
 	/* FAULTY RETURN VALUES: negative */
 	K_ERROR = (int) 0xFFFFFFFF, /* (0xFFFFFFFF) Generic error placeholder */
 
@@ -94,29 +92,25 @@ typedef enum kErr
 	K_ERR_MEM_ALLOC = (int) 0xFFFF0006, /* Error allocating memory */
 
 	K_ERR_TIMER_POOL_EMPTY = (int) 0xFFFF0007,
-
-	K_ERR_INVALID_TID = (int) 0xFFFF0008, /* Invalid user-assigned task IDs are 0 or 255*/
+	K_ERR_READY_QUEUE	   = (int) 0xFFFF0008,
 	K_ERR_INVALID_PRIO = (int) 0xFFFF0009, /* Valid task priority range: 0-31. */
 
 	K_ERR_INVALID_QUEUE_SIZE = (int) 0xFFFF000A, /* Maximum message queue size is 255 items */
 	K_ERR_INVALID_MESG_SIZE = (int) 0xFFFF000B, /* Maximum message for a message queue is 255 bytes */
-	K_ERR_MESGQ_NO_BUFFER = (int) 0xFFFF0012, /* Trying to send/recv copy from a queue with
-	 unknown buffering address */
+
 	K_ERR_MESG_CPY = (int) 0xFFFF000C, /* Error when copying a chunk of bytes from one addr to other */
 
 	K_ERR_PDBUF_SIZE = (int) 0xFFFF000D, /* Invalid size of mesg attached to a PD Buffer */
 
 	K_ERR_SEM_INVALID_VAL = (int) 0xFFFF000E, /* Invalid semaphore value */
 
-	K_ERR_TASK_INVALID_STATE = (int) 0xFFFF0010,
 	K_ERR_INVALID_TSLICE = (int) 0xFFFF0011,
-
+	K_ERR_KERNEL_VERSION = (int) 0xFFFF0012,
 	K_ERR_MBOX_INIT_MAIL = (int) 0xFFFF0013,
 	K_ERR_MUTEX_REC_LOCK = (int) 0xFFFF0014,
-	K_ERR_CANT_SUSPEND_PRIO = (int) 0xFFFF0015,
-	K_ERR_DMESG_NO_BUFFER = (int) 0xFFFFF0016,
-	K_ERR_INVALID_ISR_PRIMITIVE = (int) 0xFFFFF0017,
-	K_ERR_INVALID_ARG			= (int) 0xFFFFF0018
+	K_ERR_MUTEX_NOT_OWNER = (int) 0xFFFF0015,
+	K_ERR_TASK_INVALID_ST = (int) 0xFFFF0016,
+	K_ERR_INVALID_ISR_PRIMITIVE = (int) 0xFFFFF0017
 } K_ERR;
 
 /**
@@ -124,31 +118,16 @@ typedef enum kErr
  */
 typedef enum kFault
 {
-	FAULT = 0x00,
-	FAULT_READY_QUEUE = 0x01,
-	FAULT_NULL_OBJ = 0x02,
-	FAULT_LIST = 0x03,
-	FAULT_KERNEL_VERSION = 0x04,
-	FAULT_QUEUE_ROOM = 0x05,
-	FAULT_QUEUE_MESG_CPY = 0x06,
-	FAULT_QUEUE_MEM_FREE = 0x07,
-	FAULT_QUEUE_LIST_ADD = 0x08,
-	FAULT_QUEUE_LIST_REM = 0x09,
-	FAULT_SYS_MESG_GET = 0x0A,
-	FAULT_SYS_MESG_PUT = 0x0B,
-	FAULT_MEM_ALLOC = 0x0C,
-	FAULT_MEM_FREE = 0x0D,
-	FAULT_OBJ_NOT_INIT = 0x0E,
-	FAULT_MEM_CPY = 0x0F,
-	FAULT_TASK_INVALID_PRIO = 0x1F,
-	FAULT_TASK_INVALID_ID = 0x2F,
-	FAULT_OBJ_INIT = 0x3F,
-	FAULT_SYSMESG_N_EXCEEDED = 0x4F,
-	FAULT_UNLOCK_OWNED_MUTEX = 0x5F,
-	FAULT_ISR_INVALID_PRIMITVE = 0x6F,
-	FAULT_TASK_INVALID_STATE = 0x7F,
-	FAULT_TASK_INVALID_TSLICE = 0x7F8,
-	FAULT_INVALID_SVC = 0xFF
+	FAULT = K_ERROR,
+	FAULT_READY_QUEUE = K_ERR_READY_QUEUE,
+	FAULT_NULL_OBJ =  K_ERR_OBJ_NULL,
+	FAULT_KERNEL_VERSION = K_ERR_KERNEL_VERSION,
+	FAULT_OBJ_NOT_INIT = K_ERR_OBJ_NOT_INIT,
+	FAULT_TASK_INVALID_PRIO = K_ERR_INVALID_PRIO,
+	FAULT_UNLOCK_OWNED_MUTEX = K_ERR_MUTEX_NOT_OWNER,
+	FAULT_ISR_INVALID_PRIMITVE = K_ERR_INVALID_ISR_PRIMITIVE,
+	FAULT_TASK_INVALID_STATE = K_ERR_TASK_INVALID_ST,
+	FAULT_TASK_INVALID_TSLICE = K_ERR_INVALID_TSLICE
 } K_FAULT;
 
 /**
@@ -169,15 +148,15 @@ typedef struct kMemBlock K_MEM;
 typedef struct kList K_LIST;
 typedef struct kListNode K_NODE;
 typedef K_LIST K_TCBQ;
-typedef struct kTaskHandle K_TASK_HANDLE;
+typedef struct kTask K_TASK;
 #if (K_DEF_SEMA == ON)
 
 typedef struct kSema K_SEMA;
 #endif /*sema */
 
-#if (K_DEF_MESGQ == ON)
+#if (K_DEF_STREAM == ON)
 
-typedef struct kMesgQ K_MESGQ;
+typedef struct kStream K_STREAM;
 
 #endif /*mesgq*/
 
@@ -187,8 +166,8 @@ typedef struct kMailbox K_MBOX;
 
 #endif /* mbox */
 
-#if (K_DEF_MMBOX==ON)
-typedef struct kMultibox K_MMBOX;
+#if (K_DEF_QUEUE==ON)
+typedef struct kQ K_QUEUE;
 #endif
 
 #if (K_DEF_SLEEPWAKE==ON)

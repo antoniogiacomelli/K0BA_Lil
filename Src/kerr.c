@@ -34,18 +34,13 @@
 #	error "Invalid minimal effective priority. (Max numerical value: 31)"
 #endif
 
-#if (K_DEF_N_TIMERS < K_DEF_N_USRTASKS+1)
-#	error "Invalid number of application timers. Minimal is the number of user tasks + 1"
-#endif
-
-
 /******************************************************************************
  * ERROR HANDLING
  ******************************************************************************/
 volatile K_FAULT faultID = 0;
 
 /*police line do not cross*/
-void kErrHandler(K_FAULT fault) /* generic error handler */
+void kErrHandler( K_FAULT fault) /* generic error handler */
 {
     /*TODO: before using   */
     /*#ifdef NDEBUG, guarantee these faults are returning correctly  */

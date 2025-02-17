@@ -20,8 +20,8 @@ typedef enum
 #if (K_DEF_MBOX==ON)
 	MAILBOX,
 #endif
-#if (K_DEF_MMBOX==ON)
-	MMBOX,
+#if (K_DEF_QUEUE==ON)
+	QUEUE,
 #endif
 #if (K_DEF_SEMA==ON)
 	SEMAPHORE,
@@ -29,23 +29,38 @@ typedef enum
 #if (K_DEF_MUTEX==ON)
 	MUTEX,
 #endif
-#if (K_DEF_MESGQ==ON)
-	MESGQ,
+#if (K_DEF_STREAM==ON)
+	STREAM,
 #endif
 #if(K_DEF_SLEEPWAKE==ON)
 	EVENT,
 #endif
-	TASK_HANDLE, NONE
+#if(K_DEF_CALLOUT_TIMER==ON)
+	TIMER,
+#endif
+	TASK_HANDLE,
+	NONE
 } K_OBJ_TYPE;
 
 
 struct kTimeoutNode
 {
 	struct kTimeoutNode *nextPtr;
+	struct kTimeoutNode *prevPtr;
 	TICK timeout;
+	TICK dtick;
 	ADDR kobj;
 	K_OBJ_TYPE objectType;
 };
+
+struct kTimer
+{
+	BOOL reload;
+	TICK phase;
+	CALLOUT funPtr;
+	ADDR argsPtr;
+	struct kTimeoutNode timeoutNode;
+} __attribute__((aligned));
 
 
 struct kListNode
@@ -75,16 +90,12 @@ struct kTcb
 	INT *stackAddrPtr;
 	UINT stackSize;
 	PID pid; /* System-defined task ID */
-	TID uPid; /* User-defined   task ID */
 	PRIO priority; /* Task priority (0-31) 32 is invalid */
+	struct kTask *taskHandlePtr;
 #if ( (K_DEF_FUNC_DYNAMIC_PRIO==ON) || (K_DEF_MUTEX_PRIO_INH==ON) )
 	PRIO realPrio; /* Real priority  */
 #endif
-#if ((K_DEF_TASK_SIGNAL_BIN_SEMA==(ON)))
-	BOOL signalled;
-	struct kTimeoutNode timeoutNode;
-#endif
-	struct kTaskHandle *taskHandlePtr; /* K_TASK_HANDLE is a pointer to struct */
+	BOOL signalled; /* private binary semaphore */
 #if (K_DEF_SCH_TSLICE == ON)
 	TICK timeSlice;
 	TICK timeLeft;
@@ -93,20 +104,6 @@ struct kTcb
 #if (K_DEF_SCH_TSLICE==OFF)
 	TICK lastWakeTime;
 #endif
-	/* Resources */
-#if (K_DEF_SEMA == ON)
-	K_SEMA *pendingSema;
-#endif
-#if (K_DEF_MUTEX==ON)
-	K_MUTEX *pendingMutx;
-#endif
-#if (K_DEF_SLEEPWAKE==ON)
-	K_EVENT *pendingEv;
-#endif
-#if (K_DEF_MBOX==ON)
-	K_MBOX *pendingMbox;
-#endif
-	K_TIMER *pendingTmr;
 	BOOL runToCompl;
 	BOOL yield;
 	BOOL timeOut;
@@ -188,8 +185,8 @@ struct kMailbox
 } __attribute__((aligned(4)));
 #endif
 
-#if (K_DEF_MMBOX==ON)
-struct kMultibox
+#if (K_DEF_QUEUE==ON)
+struct kQ
 {
 	BOOL init;
 	ADDR mailQPtr;
@@ -202,10 +199,10 @@ struct kMultibox
 } __attribute__((aligned(4)));
 #endif
 
-#if ((K_DEF_MESGQ==ON))
+#if ((K_DEF_STREAM==ON))
 
-/* Message Queue (Stre*/
-struct kMesgQ
+/* Message Stream */
+struct kStream
 {
 	BOOL init;
 	ULONG mesgSize;
@@ -239,22 +236,10 @@ struct kPumpDropQueue
 
 #endif
 
-struct kTimer
-{
-	STRING timerName;
-	TICK dTicks;
-	TICK ticks;
-	BOOL reload;
-	CALLOUT funPtr;
-	ADDR argsPtr;
-	TID taskID;
-	K_TIMER *nextPtr;
-	BOOL init;
-} __attribute__((aligned));
 
-struct kTaskHandle
+struct kTask
 {
-	struct kTcb *handle;
+	struct kTcb *tcbPtr;
 	struct kTimeoutNode timeoutNode;
 };
 

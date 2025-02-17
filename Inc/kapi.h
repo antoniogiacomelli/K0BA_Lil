@@ -1,9 +1,8 @@
 /******************************************************************************
- *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
- *
- ******************************************************************************/
-
+*
+* [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
+*
+******************************************************************************/
 /**
  * \file     kapi.h
  * \brief    Kernel API
@@ -25,20 +24,15 @@
 #include "kexecutive.h"
 
 /******************************************************************************/
-
 /**
  * \brief 			   Create a new task.
  *
- * \param taskHandle   Handle object for the task. This is used for methods
- *                     that act direct on a task. Optionally can be left as
- *                     NULL if not needed.
+ * \param taskHandle   Handle object for the task.
  *
  * \param taskFuncPtr  Pointer to the task entry function.
  *
  * \param taskName     Task name. Keep it as much as 8 Bytes.
  *
- * \param id           user-defined Task ID - valid range: 1-254
- *                     (0 and 255 are reserved).
  * \param stackAddrPtr Pointer to the task stack (the array variable).
  *
  * \param stackSize    Size of the task stack (in WORDS. 1WORD=4BYTES)
@@ -56,8 +50,8 @@
  *
  * \return K_SUCCESS on success, K_ERROR on failure
  */
-K_ERR kCreateTask( K_TASK_HANDLE *taskHandlePtr, TASKENTRY const taskFuncPtr,
-		STRING taskName, TID const taskID, INT *const stackAddrPtr,
+K_ERR kCreateTask( K_TASK *taskHandlePtr, TASKENTRY const taskFuncPtr,
+		STRING taskName, INT *const stackAddrPtr,
 		UINT const stackSize,
 #if(K_DEF_SCH_TSLICE==ON)
         TICK const timeSlice,
@@ -159,7 +153,7 @@ K_ERR kMutexQuery( K_MUTEX *const kobj);
 #endif
 
 /*******************************************************************************
- * MAILBOX (SINGLE-ITEM MAILBOX, EXCHANGE)
+ * MAILBOX (SINGLE-ITEM MAILBOX)
  *******************************************************************************/
 #if (K_DEF_MBOX == ON)
 
@@ -242,18 +236,18 @@ BOOL kMboxIsFull( K_MBOX *const kobj);
 
 #endif /* MBOX  */
 /*******************************************************************************
- * MULTIMAILBOX (MULTIBOX, QUEUE)
+ * QUEUE
  ******************************************************************************/
-#if (K_DEF_MMBOX == ON)
+#if (K_DEF_QUEUE == ON)
 
 /**
- * \brief			 Initialises a multibox.
+ * \brief			 Initialises a queue.
  * \param kobj		 Multibox address
  * \param memPtr     Pointer to the buffer that will store mail addresses
  * \param maxItems   Maximum number of mails.
  * \return           K_SUCCESS or specific error.
  */
-K_ERR kMmboxInit( K_MMBOX *const kobj, ADDR memPtr, ULONG maxItems);
+K_ERR kQueueInit( K_QUEUE *const kobj, ADDR memPtr, ULONG maxItems);
 /**
  * \brief               Send to a multilbox. Task blocks when full.
  * \param kobj          Multibox address.
@@ -261,10 +255,10 @@ K_ERR kMmboxInit( K_MMBOX *const kobj, ADDR memPtr, ULONG maxItems);
  * \param timeout		Suspension time-out
  * \return              K_SUCCESS or specific error.
  */
-K_ERR kMmboxPost( K_MMBOX *const kobj, ADDR const sendPtr, TICK timeout);
+K_ERR kQueuePost( K_QUEUE *const kobj, ADDR const sendPtr, TICK timeout);
 
 /**
- * \brief               Receive from a multibox. Block if empty.
+ * \brief               Receive from a queue. Block if empty.
  *
  * \param kobj          Multibox address.
  * \param recvPPtr      Address that will store the message address
@@ -272,9 +266,9 @@ K_ERR kMmboxPost( K_MMBOX *const kobj, ADDR const sendPtr, TICK timeout);
  * \param timeout		Suspension time-out
  * \return				K_SUCCESS or specific error.
  */
-K_ERR kMmboxPend( K_MMBOX *const kobj, ADDR *recvPPtr, TICK timeout);
+K_ERR kQueuePend( K_QUEUE *const kobj, ADDR *recvPPtr, TICK timeout);
 
-#if (K_DEF_FUNC_MMBOX_PEEK==ON)
+#if (K_DEF_FUNC_QUEUE_PEEK==ON)
 
 /**
  * \brief 			   Reads the head's mail without extracting it.
@@ -282,36 +276,36 @@ K_ERR kMmboxPend( K_MMBOX *const kobj, ADDR *recvPPtr, TICK timeout);
  * \param peekPPtr	   Pointer to receive address.
  * \return			   K_SUCCESS or specific error.
  */
-K_ERR kMmboxPeek( K_MMBOX *const kobj, ADDR *peekPPtr);
+K_ERR kQueuePeek( K_QUEUE *const kobj, ADDR *peekPPtr);
 
 #endif
 
-#if (K_DEF_FUNC_MMBOX_ISFULL==ON)
+#if (K_DEF_FUNC_QUEUE_ISFULL==ON)
 /**
- * \brief   		Check if a multibox is full.
+ * \brief   		Check if a queue is full.
  * \param kobj		Multibox address.
  * \return  		TRUE or FALSE.
  */
-BOOL kMmboxIsFull( K_MMBOX *const kobj);
+BOOL kQueueIsFull( K_QUEUE *const kobj);
 
 #endif
 
-#if (K_DEF_FUNC_MMBOX_MAILCOUNT==ON)
+#if (K_DEF_FUNC_QUEUE_MAILCOUNT==ON)
 /**
- * \brief			Gets the current number of mails within a multibox.
+ * \brief			Gets the current number of mails within a queue.
  * \param kobj      Multibox address.
  * \return			Number of mails.
  */
-ULONG kMmboxMailCount( K_MMBOX *const kobj);
+ULONG kQueueMailCount( K_QUEUE *const kobj);
 
 #endif
 
-#endif /* MMBOX  */
+#endif /* QUEUE  */
 
 /******************************************************************************/
-/* MESSAGE QUEUE (STREAM)                                        */
+/* STREAM (MESSAGE QUEUE)			    									  */
 /******************************************************************************/
-#if (K_DEF_MESGQ == ON)
+#if (K_DEF_STREAM == ON)
 /**
  *\brief 			Initialise a Message Queue
  *\param kobj		Queue address
@@ -321,10 +315,10 @@ ULONG kMmboxMailCount( K_MMBOX *const kobj);
  *\param maxMessage  Max number of messages
  *\return 			 K_SUCCESS or specific errors
  */
-K_ERR kMesgQInit( K_MESGQ *const kobj, ADDR buffer, ULONG messageSize,
+K_ERR kStreamInit( K_STREAM *const kobj, ADDR buffer, ULONG messageSize,
 		ULONG maxMessages);
 
-#if (K_DEF_FUNC_MESGQ_MESGCOUNT==ON)
+#if (K_DEF_FUNC_STREAM_MESGCOUNT==ON)
 
 /**
  *\brief 			Get the current number of messages within a message queue.
@@ -333,11 +327,11 @@ K_ERR kMesgQInit( K_MESGQ *const kobj, ADDR buffer, ULONG messageSize,
  *\return			K_SUCCESS or a specific error.
  */
 
-K_ERR kMesgQGetMesgCount( K_MESGQ *const kobj, UINT *const mesgCntPtr);
+K_ERR kStreamGetMesgCount( K_STREAM *const kobj, UINT *const mesgCntPtr);
 
 #endif
 
-#if (K_DEF_FUNC_MESGQ_JAM == ON)
+#if (K_DEF_FUNC_STREAM_JAM == ON)
 
 /**
  *\brief 			Sends a message to the queue front.
@@ -346,7 +340,7 @@ K_ERR kMesgQGetMesgCount( K_MESGQ *const kobj, UINT *const mesgCntPtr);
  *\param timeout	Suspension time
  *\return			K_SUCCESS or specific error
  */
-K_ERR kMesgQJam( K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout);
+K_ERR kStreamJam( K_STREAM *const kobj, ADDR const sendPtr, TICK timeout);
 
 #endif
 
@@ -356,7 +350,7 @@ K_ERR kMesgQJam( K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout);
  *\param recvPtr	Receiving address
  *\param Timeout	Suspension time
  */
-K_ERR kMesgQRecv( K_MESGQ *const kobj, ADDR recvPtr, TICK timeout);
+K_ERR kStreamRecv( K_STREAM *const kobj, ADDR recvPtr, TICK timeout);
 
 /**
  *\brief 			Send a message to a queue
@@ -364,9 +358,9 @@ K_ERR kMesgQRecv( K_MESGQ *const kobj, ADDR recvPtr, TICK timeout);
  *\param recvPtr	Message address
  *\param Timeout	Suspension time
  */
-K_ERR kMesgQSend( K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout);
+K_ERR kStreamSend( K_STREAM *const kobj, ADDR const sendPtr, TICK timeout);
 
-#if (K_DEF_FUNC_MESGQ_PEEK==ON)
+#if (K_DEF_FUNC_STREAM_PEEK==ON)
 
 /**
  *\brief 			Receive the front message of a queue
@@ -375,11 +369,11 @@ K_ERR kMesgQSend( K_MESGQ *const kobj, ADDR const sendPtr, TICK timeout);
  *\param	recvPtr		Receiving pointer address
  *\return			K_SUCCESS or error.
  */
-K_ERR kMesgQPeek( K_MESGQ *const kobj, ADDR recvPtr);
+K_ERR kStreamPeek( K_STREAM *const kobj, ADDR recvPtr);
 
 #endif
 
-#endif /*K_DEF_MESGQ*/
+#endif /*K_DEF_STREAM*/
 
 /*******************************************************************************
  * PUMP-DROP QUEUE (CYCLIC ASYNCHRONOUS BUFFERS - CABs)
@@ -456,33 +450,22 @@ K_ERR kPDMesgDrop( K_PDMESG *const kobj, K_PDBUF *const bufPtr);
 #endif
 
 /******************************************************************************
- * DIRECT TASK SIGNAL
+ * DIRECT TASK SIGNAL (PRIVATE BINARY SEMAPHORE)
  ******************************************************************************/
 /**
- * \brief A caller task goes to a PENDING state, waiting for a kSignal.
+ * \brief  Pend on a direct signal.
  * \param timeout Suspension timeout
  * \return K_SUCCESS, K_ERR_TIMEOUT or specific error.
  */
-#if (K_DEF_TASK_SIGNAL_BIN_SEMA==ON)
 
 K_ERR kTaskPend( TICK timeout);
 
-#else
 /**
- * \brief A caller task goes to a PENDING state, waiting for a kSignal.
- * \param K_SUCCESS or K_ERROR
- */
-K_ERR kTaskPend(VOID);
-
-#endif
-
-/**
- * \brief Direct Signal a task. Target task is resu
- *        med.
+ * \brief Direct Signal a task.
  * \param taskHandlePtr  Task Handle Address.
  * \param K_SUCCESS or specific error.
  */
-K_ERR kTaskSignal( K_TASK_HANDLE *const taskHandlePtr);
+K_ERR kTaskSignal( K_TASK *const taskHandlePtr);
 
 /******************************************************************************
  * EVENTS
@@ -527,19 +510,20 @@ UINT kEventQuery( K_EVENT *const kobj);
  ******************************************************************************/
 /**
  * \brief Initialises an application timer
- * \param timerName a STRING (const char*) label for the timer
- * \param ticks initial tick count
+ * \param phase Initial phase delay
+ * \param
  * \param funPtr The callback when timer expires
  * \param argsPtr Address to callback function arguments
  * \param reload TRUE for reloading after timer-out. FALSE for an one-shot
  * \return K_SUCCESS/K_ERROR
  */
-K_ERR kTimerInit( STRING timerName, TICK const ticks, CALLOUT const funPtr,
-		ADDR const argsPtr, BOOL const reload);
+K_ERR kTimerInit( K_TIMER*, TICK, TICK, CALLOUT, ADDR, BOOL);
+
 
 /**
  * \brief Busy-wait a specified delay in ticks.
- *        Task does not suspend.
+ *        Task does not suspend and can be preempted by
+ *        higher priority tasks.
  * \param delay The delay time in ticks
  */
 VOID kBusyDelay( TICK const delay);
@@ -551,11 +535,13 @@ VOID kBusyDelay( TICK const delay);
 VOID kSleep( TICK const ticks);
 
 #if (K_DEF_SCH_TSLICE==OFF)
+
 /**
  * \brief	Sleep for an absolute period of time adjusting for
  * 			eventual jitters, suitable for periodic tasks.
  */
 VOID kSleepUntil( TICK period);
+
 #endif
 /**
  * \brief Gets the current number of  ticks
@@ -598,18 +584,6 @@ K_ERR kMemFree( K_MEM *const kobj, ADDR const blockPtr);
  * MISC
  ******************************************************************************/
 /**
- *\brief Gets a task system ID
- *\param taskID user-defined ID
- *\return Task system ID
- */
-TID kGetTaskPID( TID const taskID);
-/**
- * \brief Gets a task priorirty
- * \param taskID user-defined Task ID
- */
-PRIO kGetTaskPrio( TID const taskID);
-
-/**
  * \brief Returns the kernel version.
  * \return Kernel version as an unsigned integer.
  */
@@ -639,7 +613,6 @@ ULONG kStrLen( STRING s);
 
 /* Running Task Get */
 extern K_TCB *runPtr;
-#define K_RUNNING_TID (runPtr->uPid)
 #define K_RUNNING_PID (runPtr->pid)
 #define K_RUNNING_PRIO (runPtr->priority)
 

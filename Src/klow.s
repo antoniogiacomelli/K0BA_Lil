@@ -135,14 +135,7 @@ SysTick_Handler:
     ISB
     BX LR
     SETPENDSV:             /* defer ctxt swtch                             */
-    POP {R0, LR}
-    LDR R0, =SCB_ICSR
-    LDR R1, =ISCR_SETPSV
-    STR R1, [R0]
-    DSB
-    CPSIE I
-    ISB
-    BX LR
+    B SWITCHTASK
 
 /* deferred context switching */
 .global PendSV_Handler
@@ -151,9 +144,9 @@ SysTick_Handler:
 PendSV_Handler:
     CPSID I
     SWITCHTASK:
-  //  LDR R0, =STICK_CTRL
-  //  MOVS R1, #STICK_OFF
-    STR R1, [R0]
+//    LDR R0, =STICK_CTRL
+//    MOVS R1, #STICK_OFF
+//    STR R1, [R0]
     BL SAVEUSRCTXT
     BL kSchSwtch
     B  RESTOREUSRCTXT
@@ -218,9 +211,9 @@ RESTOREUSRCTXT:
     LDMIA R2!, {R4-R11}
     MSR PSP, R2
     MOV LR, #0xFFFFFFFD
-  //  LDR R0, =STICK_CTRL
-  //  MOVS R1, #STICK_ON
-  //  STR R1, [R0]
+//    LDR R0, =STICK_CTRL
+//    MOVS R1, #STICK_ON
+//    STR R1, [R0]
     DSB
     CPSIE I
     ISB

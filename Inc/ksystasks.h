@@ -15,8 +15,8 @@
 extern "C" {
 #endif
 
-extern K_TASK_HANDLE timTaskHandle;
-extern K_TASK_HANDLE idleTaskHandle;
+extern K_TASK timTaskHandle;
+extern K_TASK idleTaskHandle;
 
 void IdleTask(void);
 void TimerHandlerTask(void);

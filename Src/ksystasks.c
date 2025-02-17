@@ -19,9 +19,7 @@
 INT idleStack[IDLE_STACKSIZE];
 INT timerHandlerStack[TIMHANDLER_STACKSIZE];
 
-VOID IdleTask( VOID) /*SAD: on a well designed system this fella runs for
- >30% of the time. still, they call it ''idle''.
- where are the unions? */
+VOID IdleTask( VOID)
 {
 
 	while (1)
@@ -37,19 +35,38 @@ VOID TimerHandlerTask( VOID)
 
 	while (1)
 	{
+		kTaskPend( K_WAIT_FOREVER);
 
+#if (K_DEF_CALLOUT_TIMER==ON)
 		K_CR_AREA
 		K_ENTER_CR
-		if (dTimOneShotList || dTimReloadList)
+		timeOutListHeadPtr = timeOutListHeadPtr;
+		while (timerListHeadPtr != NULL && timerListHeadPtr->dtick == 0)
 		{
-			if (kTimerHandler())
-				K_PEND_CTXTSWTCH
+			K_TIMEOUT_NODE *node = (K_TIMEOUT_NODE*) timerListHeadPtr;
+			timerListHeadPtr = node->nextPtr;
+			kRemoveTimerNode( node);
+			switch (node->objectType)
+			{
+			case TIMER:
+			{
+				K_TIMER *timer = (K_TIMER*) node->kobj;
+				if (timer->funPtr != NULL)
+				{
+					timer->funPtr( timer->argsPtr);
+				}
+				if (timer->reload)
+				{
+					kTimerInit(timer, 0, timer->timeoutNode.timeout, \
+							timer->funPtr, timer->argsPtr, timer->reload);
+				}
+			}
+				break;
+			default:
+				break;
+			}
 		}
 		K_EXIT_CR
-#if (K_DEF_TASK_SIGNAL_BIN_SEMA==ON)
-		kTaskPend( K_WAIT_FOREVER);
-#else
-		kTaskPend();
 #endif
 	}
 }

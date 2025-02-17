@@ -22,9 +22,7 @@ extern volatile K_FAULT faultID; /* Fault ID */
 extern INT idleStack[IDLE_STACKSIZE]; /* Stack for idle task */
 extern INT timerHandlerStack[TIMHANDLER_STACKSIZE];
 extern K_TCBQ readyQueue[K_DEF_MIN_PRIO + 2]; /* Table of ready queues */
-extern K_TCBQ sleepingQueue;
 extern K_TCBQ timeOutQueue;
-extern K_TCBQ dirSignalTimeoutQueue;
 
 BOOL kSchNeedReschedule(K_TCB*);
 VOID kSchSwtch(VOID);
@@ -33,8 +31,6 @@ VOID kExitCR(UINT);
 VOID kInit(VOID);
 VOID kYield(VOID);
 VOID kApplicationInit(VOID);
-PID kGetTaskPID(TID const);
-PRIO kGetTaskPrio(TID const);
 extern unsigned __getReadyPrio(unsigned);
 
 

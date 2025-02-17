@@ -25,12 +25,10 @@
 
 /* scheduler globals */
 K_TCBQ readyQueue[K_DEF_MIN_PRIO + 2];
-K_TCBQ sleepingQueue;
-K_TCBQ dirSignalTimeoutQueue;
 K_TCB *runPtr;
 K_TCB tcbs[NTHREADS];
-K_TASK_HANDLE timTaskHandle;
-K_TASK_HANDLE idleTaskHandle;
+K_TASK timTaskHandle;
+K_TASK idleTaskHandle;
 struct kRunTime runTime;
 /* local globals  */
 static PRIO highestPrio = 0;
@@ -100,7 +98,7 @@ K_ERR kTCBQDeq( K_TCBQ *const kobj, K_TCB **const tcbPPtr)
 
 	if (err != K_SUCCESS)
 	{
-		kErrHandler( FAULT_LIST);
+		return (err);
 	}
 	*tcbPPtr = K_LIST_GET_TCB_NODE( dequeuedNodePtr, K_TCB);
 
@@ -126,7 +124,6 @@ K_ERR kTCBQRem( K_TCBQ *const kobj, K_TCB **const tcbPPtr)
 	K_ERR err = kListRemove( kobj, dequeuedNodePtr);
 	if (err != K_SUCCESS)
 	{
-		kErrHandler( FAULT_LIST);
 		return (err);
 	}
 	*tcbPPtr = K_LIST_GET_TCB_NODE( dequeuedNodePtr, K_TCB);
@@ -278,17 +275,16 @@ static K_ERR kInitTcb_( TASKENTRY const taskFuncPtr, INT *const stackAddrPtr,
 	return (K_ERROR);
 }
 
-K_ERR kCreateTask( K_TASK_HANDLE *taskHandlePtr, TASKENTRY const taskFuncPtr,
-		STRING taskName, TID const id, INT *const stackAddrPtr,
-		UINT const stackSize,
+K_ERR kCreateTask( K_TASK *taskHandlePtr, TASKENTRY const taskFuncPtr,
+		STRING taskName, INT *const stackAddrPtr, UINT const stackSize,
 #if(K_DEF_SCH_TSLICE==ON)
         TICK const timeSlice,
 #endif
 		PRIO const priority, BOOL const runToCompl)
 {
-	if (id == TIMHANDLER_ID || id == IDLETASK_ID)
+	if (taskHandlePtr == NULL)
 	{
-		kErrHandler( FAULT_TASK_INVALID_ID);
+		kErrHandler( FAULT_NULL_OBJ);
 	}
 	/* if private PID is 0, system tasks hasn't been started yet */
 	if (pPid == 0)
@@ -302,13 +298,12 @@ K_ERR kCreateTask( K_TASK_HANDLE *taskHandlePtr, TASKENTRY const taskFuncPtr,
 		tcbs[pPid].realPrio = idleTaskPrio;
 #endif
 		tcbs[pPid].taskName = "IdleTask";
-		tcbs[pPid].uPid = IDLETASK_ID;
 		tcbs[pPid].runToCompl = FALSE;
 #if(K_DEF_SCH_TSLICE==ON)
 
         tcbs[pPid].timeSlice = 0;
 #endif
-		idleTaskHandle.handle = &tcbs[pPid];
+		idleTaskHandle.tcbPtr = &tcbs[pPid];
 		tcbs[pPid].taskHandlePtr = &idleTaskHandle;
 		pPid += 1;
 
@@ -321,13 +316,12 @@ K_ERR kCreateTask( K_TASK_HANDLE *taskHandlePtr, TASKENTRY const taskFuncPtr,
 		tcbs[pPid].realPrio = 0;
 #endif
 		tcbs[pPid].taskName = "TimHandlerTask";
-		tcbs[pPid].uPid = TIMHANDLER_ID;
 		tcbs[pPid].runToCompl = TRUE;
 #if(K_DEF_SCH_TSLICE==ON)
 
         tcbs[pPid].timeSlice = 0;
 #endif
-		timTaskHandle.handle = &tcbs[pPid];
+		timTaskHandle.tcbPtr = &tcbs[pPid];
 		tcbs[pPid].taskHandlePtr = &timTaskHandle;
 		pPid += 1;
 
@@ -350,16 +344,14 @@ K_ERR kCreateTask( K_TASK_HANDLE *taskHandlePtr, TASKENTRY const taskFuncPtr,
         tcbs[pPid].timeSlice = timeSlice;
         tcbs[pPid].timeLeft  = timeSlice;
 #endif
-#if (K_DEF_TASK_SIGNAL_BIN_SEMA==(ON))
 		tcbs[pPid].signalled = FALSE;
-#endif
-		tcbs[pPid].uPid = id;
 		tcbs[pPid].runToCompl = runToCompl;
-		if (taskHandlePtr != NULL)
-		{
-			taskHandlePtr->handle = &tcbs[pPid];
-			tcbs[pPid].taskHandlePtr = taskHandlePtr;
-		}
+
+		taskHandlePtr->tcbPtr = &tcbs[pPid];
+		tcbs[pPid].taskHandlePtr = taskHandlePtr;
+		taskHandlePtr->timeoutNode.kobj = &tcbs[pPid];
+		taskHandlePtr->timeoutNode.objectType = TASK_HANDLE;
+
 		pPid += 1;
 		return (K_SUCCESS);
 	}
@@ -397,29 +389,8 @@ VOID kExitCR( UINT crState)
 
 }
 
-/******************************************************************************
- HELPERS
- ******************************************************************************/
-/*TODO: improve naive search*/
-PID kGetTaskPID( TID const taskID)
-{
-	PID pid = 0;
-	for (pid = 0; pid < NTHREADS; pid++)
-	{
-		if (tcbs[pid].uPid == taskID)
-			break;
-	}
-	return (pid);
-}
-
-PRIO kGetTaskPrio( TID const taskID)
-{
-	PID pid = kGetTaskPID( taskID);
-	return (tcbs[pid].priority);
-}
-
 #if (K_DEF_FUNC_DYNAMIC_PRIO==(ON))
-K_ERR kTaskChangePrio(PRIO newPrio)
+K_ERR kTaskChangePrio( PRIO newPrio)
 {
 	if (kIsISR())
 		return (K_ERR_INVALID_ISR_PRIMITIVE);
@@ -430,7 +401,7 @@ K_ERR kTaskChangePrio(PRIO newPrio)
 	return (K_SUCCESS);
 }
 
-K_ERR kTaskRestorePrio(VOID)
+K_ERR kTaskRestorePrio( VOID)
 {
 	if (kIsISR())
 		return (K_ERR_INVALID_ISR_PRIMITIVE);
@@ -458,7 +429,6 @@ static K_ERR kInitQueues_( VOID)
 	{
 		err |= kTCBQInit( &readyQueue[prio], "ReadyQ");
 	}
-	err |= kTCBQInit( &sleepingQueue, "SleepQ");
 	kassert( err == 0);
 	return (err);
 }
@@ -529,6 +499,7 @@ static BOOL kDecTimeSlice_(VOID)
     return (FALSE);
 }
 #endif
+#if DEADCODE
 static BOOL kSleepHandle_( VOID)
 {
 	K_CR_AREA
@@ -552,7 +523,6 @@ static BOOL kSleepHandle_( VOID)
 			kassert( tcbToWakePtr != NULL);
 			kTCBQEnq( &readyQueue[tcbToWakePtr->priority], tcbToWakePtr);
 			tcbToWakePtr->status = READY;
-			tcbToWakePtr->pendingTmr = NULL;
 			kTimerPut( expTimerPtr);
 			dTimSleepList = dTimSleepList->nextPtr;
 			K_EXIT_CR
@@ -565,9 +535,17 @@ static BOOL kSleepHandle_( VOID)
 	return (ret);
 
 }
+#endif
+volatile K_TIMEOUT_NODE *timeOutListHeadPtr = NULL;
+volatile K_TIMEOUT_NODE *timeOutListHeadPtrCpy = NULL;
+volatile K_TIMEOUT_NODE *timerListHeadPtr = NULL;
+
+
+volatile K_TIMEOUT_NODE *timeOutListHeadPtr_;
 
 BOOL kTickHandler( VOID)
 {
+	timeOutListHeadPtr_ = timeOutListHeadPtr;
 	/* return is short-circuit to !runToCompl & */
 	BOOL runToCompl = FALSE;
 #if (K_DEF_SCH_TSLICE==ON)
@@ -586,13 +564,8 @@ BOOL kTickHandler( VOID)
 		runTime.globalTick = 0U;
 		runTime.nWraps += 1U;
 	}
-	/* sleep delay */
-	if (dTimSleepList)
-	{
-		readySleepTask = kSleepHandle_();
-	}
 
-	/* handle time out list */
+	/* handle time out and sleeping list */
 	timeOutTask = kHandleTimeoutList();
 
 	/* a run-to-completion task is a first-class citizen not prone to tick
@@ -601,17 +574,6 @@ BOOL kTickHandler( VOID)
 		/* this flag toggles, short-circuiting the */
 		/* return value  to FALSE                  */
 		runToCompl = TRUE;
-
-	/* this is the deferred handler for timers. it has priority 0. any user */
-	/* task with priority also 0 will be postponed. */
-	if (runPtr->pid != TIMHANDLER_ID)
-	{
-		if (dTimOneShotList || dTimReloadList)
-		{
-			kTaskSignal( &timTaskHandle); /* ready the TIMHANDLER */
-			kReadyRunningTask_();
-		}
-	}
 
 	/* if time-slice is enabled, decrease the time-slice. */
 #if (K_DEF_SCH_TSLICE==ON)
@@ -629,11 +591,25 @@ BOOL kTickHandler( VOID)
         }
     }
 #else
-	/* only READY the idle task if tslice is off*/
-	if (runPtr->pid == IDLETASK_ID)
+    K_TIMER* headTimPtr = (K_TIMER*)(timerListHeadPtr->kobj);
+	if (timerListHeadPtr != NULL)
 	{
-		kReadyRunningTask_();
+		if (headTimPtr->phase > 0)
+		{
+			headTimPtr->phase--;
+		}
+		else
+		{
+			if (timerListHeadPtr->dtick > 0)
+				((K_TIMEOUT_NODE*) timerListHeadPtr)->dtick--;
+		}
 	}
+	if (timerListHeadPtr != NULL && timerListHeadPtr->dtick == 0)
+	{
+		kTaskSignal( &timTaskHandle);
+		timeOutTask=TRUE;
+	}
+
 #endif
 	ret = ((!runToCompl)
 			& ((runPtr->status == READY) | readySleepTask | timeOutTask

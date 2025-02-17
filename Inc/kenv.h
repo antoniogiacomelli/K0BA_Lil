@@ -6,9 +6,17 @@
 extern "C" {
 #endif
 
-/* place here GCC includes, HAL includes, std libs     */
-/* extern data, as peripheral handles declarations,    */
-/* etc. then set CUSTOM_ENV to (1) in kconfig.h        */
+/*******************************************/
+/* place HAL and compiler libraries here   */
+/* then set CUSTOM_ENV to (1) in kconfig.h */
+/*******************************************/
+
+/*#define K_DEF_PRINTF*/
+
+#ifdef K_DEF_PRINTF
+/* extern data, as peripheral handlers declarations, etc*/
+extern UART_HandleTypeDef huart2;
+#endif
 
 #ifdef __cplusplus
 }

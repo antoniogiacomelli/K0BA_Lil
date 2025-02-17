@@ -125,7 +125,6 @@ __STATIC_FORCEINLINE unsigned kIsISR(void)
 #define K_TICK_EN  SysTick->CTRL |= 0xFFFFFFFF;
 #define K_TICK_DIS SysTick->CTRL &= 0xFFFFFFFE;
 #define IS_INIT(obj) (obj)->init) ? (1) : (0)
-#define IS_VALID_TID(id) ((id == (IDLETASK_ID)) || (id == (TIMHANDLER_ID))) ? (0) : (1)
 #define IS_BLOCK_ON_ISR(timeout) ((kIsISR() && (timeout > 0)) ? (1) : (0))
 
 #ifdef NDEBUG

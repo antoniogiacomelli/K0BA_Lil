@@ -25,93 +25,67 @@
 /*******************************************************************************
  * DIRECT TASK SIGNAL
  *******************************************************************************/
-#if (K_DEF_TASK_SIGNAL_BIN_SEMA==ON)
 K_ERR kTaskPend( TICK timeout)
 {
-#else
-K_ERR kTaskPend(VOID)
-{
-#endif
 	K_ERR err;
 	if (kIsISR())
 		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
 	K_CR_AREA
 
 	K_ENTER_CR
-
-	if (runPtr->status == RUNNING)
+	if (runPtr->signalled == TRUE)
 	{
-#if (K_DEF_TASK_SIGNAL_BIN_SEMA==(ON))
-		if (runPtr->signalled == TRUE)
-		{
-			runPtr->signalled = FALSE;
-			err = K_SUCCESS;
-			goto EXIT;
-		}
-		else
-		{
-			runPtr->status = PENDING;
-			err = K_SUCCESS;
-			if ((timeout > 0) && (timeout < K_WAIT_FOREVER))
-			{
-				K_TASK_HANDLE *runPtrHandle = runPtr->taskHandlePtr;
-				runPtr->taskHandlePtr->timeoutNode.kobj = (ADDR) runPtrHandle;
-				runPtr->taskHandlePtr->timeoutNode.objectType = TASK_HANDLE;
-				runPtr->taskHandlePtr->timeoutNode.timeout = timeout;
-				kTimeOut( &runPtrHandle->timeoutNode, timeout);
-			}
-			K_PEND_CTXTSWTCH
-			K_EXIT_CR
-			/* resuming here, if time is out, return error */
-			K_ENTER_CR
-			if (runPtr->timeOut)
-			{
-				runPtr->timeOut = FALSE;
-				K_EXIT_CR
-				return (K_ERR_TIMEOUT);
-			}
-		}
-#else
-		runPtr->status = PENDING;
-		err = K_SUCCESS;
-		K_PEND_CTXTSWTCH
-
-#endif
+		runPtr->signalled = FALSE;
+		err = (K_SUCCESS);
 	}
 	else
 	{
-		err = K_ERROR;
+		runPtr->status = PENDING;
+		err = K_SUCCESS;
+		if ((timeout > 0) && (timeout < K_WAIT_FOREVER))
+		{
+			kTimeOut( &runPtr->taskHandlePtr->timeoutNode, timeout);
+		}
+		K_PEND_CTXTSWTCH
+		K_EXIT_CR
+		/* resuming here, if time is out, return error */
+		K_ENTER_CR
+		if (runPtr->timeOut)
+		{
+			runPtr->timeOut = FALSE;
+			err = K_ERR_TIMEOUT;
+		}
+		else
+		{
+			if (timeout > K_NO_WAIT && timeout < K_WAIT_FOREVER)
+				kRemoveTimeoutNode( &runPtr->taskHandlePtr->timeoutNode);
+		}
 	}
-#if (K_DEF_TASK_SIGNAL_BIN_SEMA==(ON))
-	EXIT:
-#endif
 	K_EXIT_CR
 	return (err);
 }
 
-K_ERR kTaskSignal( K_TASK_HANDLE *const taskHandlePtr)
+K_ERR kTaskSignal( K_TASK *const taskHandlePtr)
 {
 
 	K_ERR err = -1;
-	if ((taskHandlePtr == NULL) || (taskHandlePtr->handle->pid == runPtr->pid)
-			|| (taskHandlePtr->handle->pid == TIMHANDLER_ID)
-			|| (taskHandlePtr->handle->pid == IDLETASK_ID))
+	if ((taskHandlePtr == NULL) || (taskHandlePtr->tcbPtr->pid == runPtr->pid)
+			|| (taskHandlePtr->tcbPtr->pid == TIMHANDLER_ID)
+			|| (taskHandlePtr->tcbPtr->pid == IDLETASK_ID))
 		return (err);
 	K_CR_AREA
 	K_ENTER_CR
-	PID pid = taskHandlePtr->handle->pid;
+	PID pid = taskHandlePtr->tcbPtr->pid;
 	if (tcbs[pid].status == PENDING)
 	{
 		err = kReadyCtxtSwtch( &tcbs[pid]);
 		kassert( !err);
 	}
-#if (K_DEF_TASK_SIGNAL_BIN_SEMA==(ON))
 	else
 	{
-		taskHandlePtr->handle->signalled = TRUE;
+		taskHandlePtr->tcbPtr->signalled = TRUE;
 		err = (K_SUCCESS);
 	}
-#endif
 	K_EXIT_CR
 	return (err);
 }
@@ -140,7 +114,8 @@ K_ERR kEventInit( K_EVENT *const kobj)
 }
 K_ERR kEventSleep( K_EVENT *kobj, TICK timeout)
 {
-
+	K_CR_AREA
+	K_ENTER_CR
 	if (kIsISR())
 	{
 		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
@@ -153,13 +128,8 @@ K_ERR kEventSleep( K_EVENT *kobj, TICK timeout)
 	{
 		KFAULT( FAULT_OBJ_NOT_INIT);
 	}
-
-	K_CR_AREA
-	K_ENTER_CR
-
 	kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 	runPtr->status = SLEEPING;
-	runPtr->pendingEv = kobj;
 	if ((timeout > 0) && (timeout < K_WAIT_FOREVER))
 	{
 		kTimeOut( &kobj->timeoutNode, timeout);
@@ -174,10 +144,14 @@ K_ERR kEventSleep( K_EVENT *kobj, TICK timeout)
 		K_EXIT_CR
 		return (K_ERR_TIMEOUT);
 	}
+	else
+	{
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
 
+	}
 	K_EXIT_CR
 	return (K_SUCCESS);
-
 }
 
 VOID kEventWake( K_EVENT *kobj)
@@ -202,7 +176,6 @@ VOID kEventWake( K_EVENT *kobj)
 			K_TCB *nextTCBPtr;
 			kTCBQDeq( &kobj->waitingQueue, &nextTCBPtr);
 			kassert( !kReadyCtxtSwtch( nextTCBPtr));
-			nextTCBPtr->pendingEv = NULL;
 		}
 	}
 	K_EXIT_CR
@@ -215,7 +188,6 @@ VOID kEventSignal( K_EVENT *kobj)
 	{
 		KFAULT( FAULT_NULL_OBJ);
 	}
-
 	if (kobj->waitingQueue.size == 0)
 		return;
 	K_CR_AREA
@@ -224,12 +196,9 @@ VOID kEventSignal( K_EVENT *kobj)
 	{
 		KFAULT( FAULT_OBJ_NOT_INIT);
 	}
-
 	K_TCB *nextTCBPtr;
 	kTCBQDeq( &kobj->waitingQueue, &nextTCBPtr);
 	kassert( !kReadyCtxtSwtch( nextTCBPtr));
-	nextTCBPtr->pendingEv = NULL;
-
 	K_EXIT_CR
 	return;
 }
@@ -249,7 +218,7 @@ UINT kEventQuery( K_EVENT *const kobj)
 /******************************************************************************
  * SEMAPHORES
  ******************************************************************************/
-K_ERR kSemaInit( K_SEMA *const kobj, INT const value)
+K_ERR kSemaInit( K_SEMA *const kobj, const INT value)
 {
 	K_CR_AREA
 	K_ENTER_CR
@@ -264,7 +233,6 @@ K_ERR kSemaInit( K_SEMA *const kobj, INT const value)
 	kobj->value = value;
 	if (kTCBQInit( &(kobj->waitingQueue), "semaQ") != K_SUCCESS)
 	{
-		KFAULT( FAULT_LIST);
 		K_EXIT_CR
 		return (K_ERROR);
 	}
@@ -277,8 +245,10 @@ K_ERR kSemaInit( K_SEMA *const kobj, INT const value)
 	return (K_SUCCESS);
 }
 
-K_ERR kSemaWait( K_SEMA *const kobj, TICK const timeout)
+K_ERR kSemaWait( K_SEMA *const kobj, const TICK timeout)
 {
+	K_CR_AREA
+	K_ENTER_CR
 	if (kIsISR())
 	{
 		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
@@ -291,21 +261,16 @@ K_ERR kSemaWait( K_SEMA *const kobj, TICK const timeout)
 	{
 		KFAULT( FAULT_NULL_OBJ);
 	}
-
-	K_CR_AREA
-	K_ENTER_CR
 	kobj->value--;
 	DMB
-
 	if (kobj->value < 0)
 	{
 #if(K_DEF_SEMA_ENQ==K_DEF_ENQ_FIFO)
-		kTCBQEnq(&kobj->waitingQueue, runPtr);
+        kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
 		kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 #endif
 		runPtr->status = BLOCKED;
-		runPtr->pendingSema = kobj;
 		DMB
 		if (timeout > K_NO_WAIT && timeout < K_WAIT_FOREVER)
 			kTimeOut( &kobj->timeoutNode, timeout);
@@ -319,6 +284,8 @@ K_ERR kSemaWait( K_SEMA *const kobj, TICK const timeout)
 			K_EXIT_CR
 			return (K_ERR_TIMEOUT);
 		}
+		if (timeout > K_NO_WAIT && timeout < K_WAIT_FOREVER)
+			kRemoveTimeoutNode( &kobj->timeoutNode);
 	}
 	K_EXIT_CR
 	return (K_SUCCESS);
@@ -345,7 +312,6 @@ VOID kSemaSignal( K_SEMA *const kobj)
 		K_ERR err = kTCBQDeq( &(kobj->waitingQueue), &nextTCBPtr);
 		kassert( err == 0);
 		kassert( nextTCBPtr != NULL);
-		nextTCBPtr->pendingSema = NULL;
 		err = kReadyCtxtSwtch( nextTCBPtr);
 	}
 	K_EXIT_CR
@@ -365,11 +331,9 @@ K_ERR kMutexInit( K_MUTEX *const kobj)
 		KFAULT( FAULT_NULL_OBJ);
 		return (K_ERROR);
 	}
-	kobj->lock = FALSE
-	;
+	kobj->lock = FALSE;
 	if (kTCBQInit( &(kobj->waitingQueue), "mutexQ") != K_SUCCESS)
 	{
-		KFAULT( FAULT_LIST);
 		return (K_ERROR);
 	}
 	kobj->init = TRUE;
@@ -422,7 +386,7 @@ K_ERR kMutexLock( K_MUTEX *const kobj, TICK timeout)
 		}
 #endif
 #if(K_DEF_MUTEX_ENQ==K_DEF_ENQ_FIFO)
-		kTCBQEnq(&kobj->waitingQueue, runPtr);
+        kTCBQEnq(&kobj->waitingQueue, runPtr);
 #else
 		kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
 #endif
@@ -430,7 +394,6 @@ K_ERR kMutexLock( K_MUTEX *const kobj, TICK timeout)
 			if ((timeout > 0) && (timeout < 0xFFFFFFFF))
 				kTimeOut( &kobj->timeoutNode, timeout);
 		runPtr->status = BLOCKED;
-		runPtr->pendingMutx = (K_MUTEX*) kobj;
 		K_PEND_CTXTSWTCH
 		K_EXIT_CR
 		K_ENTER_CR
@@ -439,6 +402,11 @@ K_ERR kMutexLock( K_MUTEX *const kobj, TICK timeout)
 			runPtr->timeOut = FALSE;
 			K_EXIT_CR
 			return (K_ERR_TIMEOUT);
+		}
+		else
+		{
+			if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+				kRemoveTimeoutNode( &kobj->timeoutNode);
 		}
 	}
 	else
@@ -469,7 +437,7 @@ VOID kMutexUnlock( K_MUTEX *const kobj)
 	}
 	if (kobj->init == FALSE)
 	{
-		kassert( 0);
+		KFAULT( FAULT_OBJ_NOT_INIT);
 	}
 	if ((kobj->lock == FALSE ))
 	{
@@ -477,7 +445,7 @@ VOID kMutexUnlock( K_MUTEX *const kobj)
 	}
 	if (kobj->ownerPtr != runPtr)
 	{
-		kassert( FAULT_UNLOCK_OWNED_MUTEX);
+		KFAULT( FAULT_UNLOCK_OWNED_MUTEX);
 		K_EXIT_CR
 		return;
 	}
@@ -488,7 +456,6 @@ VOID kMutexUnlock( K_MUTEX *const kobj)
 #if (K_DEF_MUTEX_PRIO_INH==(ON))
 		kobj->ownerPtr->priority = kobj->ownerPtr->realPrio;
 #endif
-		kobj->ownerPtr->pendingMutx = NULL;
 		tcbPtr = kobj->ownerPtr;
 		kobj->ownerPtr = NULL;
 	}
@@ -510,7 +477,6 @@ VOID kMutexUnlock( K_MUTEX *const kobj)
 		if (!kReadyCtxtSwtch( tcbPtr))
 		{
 			kobj->ownerPtr = tcbPtr;
-			tcbPtr->pendingMutx = NULL;
 			K_EXIT_CR
 			return;
 		}
