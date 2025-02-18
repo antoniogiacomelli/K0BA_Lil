@@ -121,7 +121,7 @@ SysTick_Handler:
     TICKHANDLER:
     BL kTickHandler        /* always run kTickHandler, result in R0        */
     CMP R0, #1
-    BEQ SETPENDSV
+    BEQ SWITCHTASK
     POP {R0, LR}
     CMP LR, 0xFFFFFFF1
     BEQ RESUMEISR
@@ -134,8 +134,7 @@ SysTick_Handler:
     CPSIE I
     ISB
     BX LR
-    SETPENDSV:             /* defer ctxt swtch                             */
-    B SWITCHTASK
+    
 
 /* deferred context switching */
 .global PendSV_Handler
@@ -144,9 +143,6 @@ SysTick_Handler:
 PendSV_Handler:
     CPSID I
     SWITCHTASK:
-//    LDR R0, =STICK_CTRL
-//    MOVS R1, #STICK_OFF
-//    STR R1, [R0]
     BL SAVEUSRCTXT
     BL kSchSwtch
     B  RESTOREUSRCTXT
@@ -211,9 +207,6 @@ RESTOREUSRCTXT:
     LDMIA R2!, {R4-R11}
     MSR PSP, R2
     MOV LR, #0xFFFFFFFD
-//    LDR R0, =STICK_CTRL
-//    MOVS R1, #STICK_ON
-//    STR R1, [R0]
     DSB
     CPSIE I
     ISB
