@@ -36,7 +36,7 @@
 
 /* kernel specifics  */
 .equ APP_START_UP_IMM,   0xAA
-.equ USR_CTXT_SWTCH,	 0xC5
+.equ USR_CTXT_SWTCH,     0xC5
 .equ FAULT_SVC, 0xFF
 .equ SP_OFFSET, 0
 .equ STATUS_OFFSET, 4
@@ -66,7 +66,7 @@ SVC_Handler:       /* we start-up from msp               */
    /*  when trapping 6 reg are pushed                                    */
     MRS R12, MSP
     LDR R1, [R12, #24] /* <-  the instruction that brought us here       */
-   /* a THUMB2 instruction is 16-bit, armv7m is little endian.           */
+   /* a THUMB2 instruction is 16-bit.                                    */
    /* the immediate is 1 byte. then, within code memory,                 */
    /* the immediate can be taken, by looking at the BYTE placed, 16      */
    /* [B]it towards the (-)minor address position                        */
@@ -134,7 +134,7 @@ SysTick_Handler:
     CPSIE I
     ISB
     BX LR
-    
+
 
 /* deferred context switching */
 .global PendSV_Handler
