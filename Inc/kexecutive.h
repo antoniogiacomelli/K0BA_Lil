@@ -21,7 +21,9 @@
 #include "kversion.h"
 #include "kutils.h"
 #include "ksch.h"
+#if (K_DEF_ALLOC == ON)
 #include "kmem.h"
+#endif
 #include "kitc.h"
 #include "ktimer.h"
 #include "ksystasks.h"

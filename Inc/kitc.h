@@ -17,8 +17,10 @@
 extern "C" {
 #endif
 
-K_ERR kTaskPend(TICK);
-K_ERR kTaskSignal(K_TASK* const);
+K_ERR kTaskPend( TICK);
+K_ERR kTaskSignal( K_TASK* const);
+K_ERR kMutexLock( K_MUTEX* const, TICK tmeout);
+VOID kMutexUnlock( K_MUTEX* const);
 
 #ifdef __cplusplus
 }

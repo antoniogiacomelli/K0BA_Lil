@@ -505,6 +505,7 @@ UINT kEventQuery( K_EVENT *const kobj);
 
 #endif
 
+#if (K_DEF_CALLOUT_TIMER==ON)
 /*******************************************************************************
  * APPLICATION TIMER AND DELAY
  ******************************************************************************/
@@ -518,7 +519,7 @@ UINT kEventQuery( K_EVENT *const kobj);
  * \return K_SUCCESS/K_ERROR
  */
 K_ERR kTimerInit( K_TIMER*, TICK, TICK, CALLOUT, ADDR, BOOL);
-
+#endif
 
 /**
  * \brief Busy-wait a specified delay in ticks.
@@ -549,6 +550,7 @@ VOID kSleepUntil( TICK period);
  */
 TICK kTickGet( VOID);
 
+#if (K_DEF_ALLOC==ON)
 /*******************************************************************************
  * BLOCK MEMORY POOL
  ******************************************************************************/
@@ -579,7 +581,7 @@ ADDR kMemAlloc( K_MEM *const kobj);
  * \return Pointer to the allocated memory. NULL on failure.
  */
 K_ERR kMemFree( K_MEM *const kobj, ADDR const blockPtr);
-
+#endif
 /*******************************************************************************
  * MISC
  ******************************************************************************/

@@ -53,6 +53,7 @@ struct kTimeoutNode
 	K_OBJ_TYPE objectType;
 };
 
+#if (K_DEF_CALLOUT_TIMER==ON)
 struct kTimer
 {
 	BOOL reload;
@@ -61,7 +62,7 @@ struct kTimer
 	ADDR argsPtr;
 	struct kTimeoutNode timeoutNode;
 } __attribute__((aligned));
-
+#endif
 
 struct kListNode
 {
@@ -157,6 +158,8 @@ struct kEvent
 };
 #endif /* K_DEF_SLEEPWAKE */
 
+#if (K_DEF_ALLOC==ON)
+
 #define MEMBLKLAST (0)
 
 /* Fixed-size pool memory control block (BLOCK POOL) */
@@ -172,6 +175,7 @@ struct kMemBlock
 #endif
 	BOOL init;
 };
+#endif
 
 #if (K_DEF_MBOX==ON)
 /* Mailbox (single capcacity)*/

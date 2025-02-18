@@ -13,8 +13,11 @@
  *
  *****************************************************************************/
 
+
 #define K_CODE
 #include "kexecutive.h"
+
+#if (K_DEF_ALLOC==ON)
 
 K_ERR kMemInit( K_MEM *const kobj, ADDR const memPoolPtr, BYTE blkSize,
 		BYTE const numBlocks)
@@ -104,3 +107,4 @@ K_ERR kMemFree( K_MEM *const kobj, ADDR const blockPtr)
 	return (K_SUCCESS);
 }
 
+#endif

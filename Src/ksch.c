@@ -199,8 +199,6 @@ K_ERR kReadyCtxtSwtch( K_TCB *const tcbPtr)
 			K_PEND_CTXTSWTCH
 		}
 #endif
-		K_EXIT_CR
-		return (K_SUCCESS);
 	}
 	K_EXIT_CR
 	return (K_ERROR);
@@ -289,7 +287,6 @@ K_ERR kCreateTask( K_TASK *taskHandlePtr, TASKENTRY const taskFuncPtr,
 	/* if private PID is 0, system tasks hasn't been started yet */
 	if (pPid == 0)
 	{
-
 		/* initialise IDLE TASK */
 		kassert( kInitTcb_(IdleTask, idleStack, IDLE_STACKSIZE) == K_SUCCESS);
 
@@ -340,7 +337,6 @@ K_ERR kCreateTask( K_TASK *taskHandlePtr, TASKENTRY const taskFuncPtr,
 		tcbs[pPid].taskName = taskName;
 		tcbs[pPid].lastWakeTime = 0;
 #if(K_DEF_SCH_TSLICE==ON)
-
         tcbs[pPid].timeSlice = timeSlice;
         tcbs[pPid].timeLeft  = timeSlice;
 #endif
@@ -505,7 +501,6 @@ BOOL kTickHandler( VOID)
 {
 	/* return is short-circuit to !runToCompl & */
 	BOOL runToCompl = FALSE;
-    BOOL tsliceDue = FALSE;
 	BOOL timeOutTask = FALSE;
 	BOOL ret = FALSE;
 	runTime.globalTick += 1U;
@@ -535,7 +530,8 @@ BOOL kTickHandler( VOID)
 
 	/* if time-slice is enabled, decrease the time-slice. */
 #if (K_DEF_SCH_TSLICE==ON)
-    tsliceDue = kDecTimeSlice_();
+    BOOL tsliceDue = FALSE;
+	tsliceDue = kDecTimeSlice_();
     if (tsliceDue == FALSE)
     {
         /* check if there is a higher priority task in the queue   */
@@ -548,8 +544,9 @@ BOOL kTickHandler( VOID)
             kReadyRunningTask_();
         }
     }
-#else
-	K_TIMER *headTimPtr = (K_TIMER*) (timerListHeadPtr->kobj);
+#endif
+#if (K_DEF_CALLOUT_TIMER==ON)
+    K_TIMER *headTimPtr = (K_TIMER*) (timerListHeadPtr->kobj);
 	if (timerListHeadPtr != NULL)
 	{
 		if (headTimPtr->phase > 0)
@@ -567,7 +564,6 @@ BOOL kTickHandler( VOID)
 		kTaskSignal( &timTaskHandle);
 		timeOutTask = TRUE;
 	}
-
 #endif
 	/* unless there is a run to completion task running, context switch
 	 * happens whenever running task is ready (probably yielded or tslice is due
@@ -575,7 +571,7 @@ BOOL kTickHandler( VOID)
 	 * task of higher priority than the running task switches to ready
 	 * and is unrelated to the the tick handler
 	 */
-	ret = ((!runToCompl) & ((runPtr->status == READY) | timeOutTask	));
+	ret = ((!runToCompl) & ((runPtr->status == READY) | timeOutTask));
 
 	return (ret);
 }

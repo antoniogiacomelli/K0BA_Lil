@@ -212,6 +212,20 @@ UINT kEventQuery( K_EVENT *const kobj)
 	return (kobj->waitingQueue.size);
 }
 
+#if ((K_DEF_MUTEX==ON))
+inline K_ERR kCondVarWait( K_EVENT *eventPtr, K_MUTEX *mutexPtr, TICK timeout)
+{
+	K_ERR err;
+	K_CR_AREA
+	K_ENTER_CR
+	kMutexUnlock( mutexPtr);
+	err = kEventSleep( eventPtr, timeout);
+	K_EXIT_CR
+	return (err);
+}
+#endif
+
+
 #endif
 
 #if (K_DEF_SEMA == ON)
@@ -520,3 +534,4 @@ K_ERR kMutexQuery( K_MUTEX *const kobj)
 }
 
 #endif /* mutex */
+

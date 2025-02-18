@@ -9,9 +9,12 @@
  *
  *    Number of user tasks.
  *
- * - **Lowest effective priority:**      (`K_DEF_MINPRIO`)
- *   Priorities range are from `0` to ``K_DEF_MINPRIO`.
+ * - **Lowest effective priority:**      (`K_DEF_N_MINPRIO`)
+ *   Priorities range are from `0` to ``K_DEF_N_MINPRIO`.
  *   (0 is highest effective priority)
+ *
+ * - **Number of timers:**     (`K_DEF_N_TIMERS`)
+ *   Minimal: Number of Tasks + 1
  *
  * - **Tick Period:**        (`K_DEF_TICK_PERIOD`)
  *   Pre-defined values are `TICK_1MS`, `TICK_5MS` and `TICK_10MS`.
@@ -33,7 +36,7 @@
 
 /* include headers for HAL and compiler in kenv.h */
 /* and set this macro to 1                        */
-#define CUSTOM_ENV (1)
+#define CUSTOM_ENV (0)
 
 /**/
 /*** [ System Tasks Stack Size (WORDS)] ***************************************/
@@ -64,19 +67,22 @@
 
 /**/
 /*** [ App Timers ] ***********************************************************/
-#define K_DEF_CALLOUT_TIMER				(ON)
+#define K_DEF_CALLOUT_TIMER				(OFF)
 
+/**/
+/*** [ Memory Allocator ] *****************************************************/
+#define K_DEF_ALLOC						(OFF)
 
 /**/
 /*** [ Dynamic priority change ] **********************************************/
 /* Enables the methods kTaskChangePrio() and kTaskRestorePrio() to act on
  the calling task. */
 
-#define K_DEF_FUNC_DYNAMIC_PRIO		    (ON)
+#define K_DEF_FUNC_DYNAMIC_PRIO		    (OFF)
 
 /**/
 /*** [ Semaphores ] ***********************************************************/
-#define K_DEF_SEMA                      (ON)
+#define K_DEF_SEMA                      (OFF)
 
 #if (K_DEF_SEMA==ON)
 #define K_DEF_SEMA_ENQ  		        (K_DEF_ENQ_PRIO)
@@ -86,7 +92,7 @@
 /*** [ Mutexes ] **************************************************************/
 #define K_DEF_MUTEX                     (ON)
 /* Priority Inheritance */
-#define K_DEF_MUTEX_PRIO_INH			(ON)
+#define K_DEF_MUTEX_PRIO_INH			(OFF)
 #if (K_DEF_MUTEX==ON)
 /* Queue Discipline:				 */
 #define K_DEF_MUTEX_ENQ				    (K_DEF_ENQ_PRIO)
@@ -99,7 +105,7 @@
 /**/
 /*** [ Mailbox ] **************************************************************/
 
-#define K_DEF_MBOX	       	             (ON)
+#define K_DEF_MBOX	       	             (OFF)
 
 #if(K_DEF_MBOX==ON)
 
@@ -117,7 +123,7 @@
 /**/
 /*** [ Queue ] ****************************************************************/
 
-#define K_DEF_QUEUE						(ON)
+#define K_DEF_QUEUE						(OFF)
 
 #if(K_DEF_QUEUE==ON)
 
@@ -134,7 +140,7 @@
 /**/
 /*** [ Stream ] ***************************************************************/
 
-#define K_DEF_STREAM			   	    (ON)
+#define K_DEF_STREAM			   	    (OFF)
 
 #if (K_DEF_STREAM == ON)
 /* Queue Discipline				 */

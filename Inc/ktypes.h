@@ -143,37 +143,30 @@ typedef enum kTaskStatus
 
 typedef struct kTimeoutNode K_TIMEOUT_NODE;
 typedef struct kTcb K_TCB;
+#if (K_DEF_CALLOUT_TIMER==ON)
 typedef struct kTimer K_TIMER;
+#endif
+#if (K_DEF_ALLOC==ON)
 typedef struct kMemBlock K_MEM;
+#endif
 typedef struct kList K_LIST;
 typedef struct kListNode K_NODE;
 typedef K_LIST K_TCBQ;
 typedef struct kTask K_TASK;
 #if (K_DEF_SEMA == ON)
-
 typedef struct kSema K_SEMA;
 #endif /*sema */
-
 #if (K_DEF_STREAM == ON)
-
 typedef struct kStream K_STREAM;
-
 #endif /*mesgq*/
-
 #if (K_DEF_MBOX == ON)
-
 typedef struct kMailbox K_MBOX;
-
 #endif /* mbox */
-
 #if (K_DEF_QUEUE==ON)
 typedef struct kQ K_QUEUE;
 #endif
-
 #if (K_DEF_SLEEPWAKE==ON)
-
 typedef struct kEvent K_EVENT;
-
 #endif
 
 #if (K_DEF_PDMESG== ON)

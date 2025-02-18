@@ -19,10 +19,7 @@
 
 #define K_CODE
 
-
-
 #include "kexecutive.h"
-
 
 /******************************************************************************
  * GLOBAL TICK RETURN
@@ -50,8 +47,11 @@ VOID kBusyDelay( TICK delay)
 /******************************************************************************
  * CALLOUT TIMERS
  *****************************************************************************/
-static inline VOID kTimerListAdd_( K_TIMER *kobj, TICK phase, TICK duration, CALLOUT funPtr,
-		ADDR argsPtr, BOOL reload)
+K_TIMER *currTimerPtr = NULL;
+
+
+static inline VOID kTimerListAdd_( K_TIMER *kobj, TICK phase, TICK duration,
+		CALLOUT funPtr, ADDR argsPtr, BOOL reload)
 {
 	kobj->timeoutNode.dtick = duration;
 	kobj->timeoutNode.timeout = duration;
@@ -64,8 +64,8 @@ static inline VOID kTimerListAdd_( K_TIMER *kobj, TICK phase, TICK duration, CAL
 	kTimeOut( &kobj->timeoutNode, duration);
 }
 
-K_ERR kTimerInit( K_TIMER *kobj, TICK phase, TICK duration, CALLOUT funPtr, ADDR argsPtr,
-		BOOL reload)
+K_ERR kTimerInit( K_TIMER *kobj, TICK phase, TICK duration, CALLOUT funPtr,
+		ADDR argsPtr, BOOL reload)
 {
 	if ((kobj == NULL) || (funPtr == NULL))
 	{
@@ -77,7 +77,29 @@ K_ERR kTimerInit( K_TIMER *kobj, TICK phase, TICK duration, CALLOUT funPtr, ADDR
 	K_EXIT_CR
 	return (K_SUCCESS);
 }
+VOID kRemoveTimerNode( K_TIMEOUT_NODE *node)
+{
+	if (node == NULL)
+		return;
 
+	if (node->nextPtr != NULL)
+	{
+		node->nextPtr->dtick += node->dtick;
+		node->nextPtr->prevPtr = node->prevPtr;
+	}
+
+	if (node->prevPtr != NULL)
+	{
+		node->prevPtr->nextPtr = node->nextPtr;
+	}
+	else
+	{
+		timerListHeadPtr = node->nextPtr;
+	}
+
+	node->nextPtr = NULL;
+	node->prevPtr = NULL;
+}
 #endif
 
 /* some marvin gaye, some luther vandross, some lil' anita... */
@@ -138,7 +160,7 @@ K_ERR kTimeOut( K_TIMEOUT_NODE *timeOutNode, TICK timeout)
 	timeOutNode->dtick = timeout;
 	timeOutNode->prevPtr = NULL;
 	timeOutNode->nextPtr = NULL;
-
+#if (K_DEF_CALLOUT_TIMER==ON)
 	if (timeOutNode->objectType == TIMER)
 	{
 
@@ -178,7 +200,7 @@ K_ERR kTimeOut( K_TIMEOUT_NODE *timeOutNode, TICK timeout)
 	}
 	else
 	{
-
+#endif
 		K_TIMEOUT_NODE *currPtr = (K_TIMEOUT_NODE*) timeOutListHeadPtr;
 		K_TIMEOUT_NODE *prevPtr = NULL;
 
@@ -206,7 +228,9 @@ K_ERR kTimeOut( K_TIMEOUT_NODE *timeOutNode, TICK timeout)
 			prevPtr->nextPtr = timeOutNode;
 			timeOutNode->prevPtr = prevPtr;
 		}
+#if (K_DEF_CALLOUT_TIMER==ON)
 	}
+#endif
 	return (K_SUCCESS);
 }
 
@@ -339,9 +363,6 @@ VOID kRemoveTaskFromEvent( ADDR kobj)
 	}
 }
 #endif
-K_TIMER *currTimerPtr = NULL;
-
-
 /* runs @ systick */
 static volatile K_TIMEOUT_NODE *node;
 BOOL kHandleTimeoutList( VOID)
@@ -362,7 +383,7 @@ BOOL kHandleTimeoutList( VOID)
 			node = timeOutListHeadPtr;
 			/* Remove the expired node from the list */
 			timeOutListHeadPtr = node->nextPtr;
-			kRemoveTimeoutNode((K_TIMEOUT_NODE*) node);
+			kRemoveTimeoutNode( (K_TIMEOUT_NODE*) node);
 			ret = TRUE;
 			switch (node->objectType)
 			{
@@ -387,9 +408,9 @@ BOOL kHandleTimeoutList( VOID)
 				break;
 #endif
 #if (K_DEF_STREAM==ON)
-				case STREAM:
-					kRemoveTaskFromStream( node->kobj);
-					break;
+			case STREAM:
+				kRemoveTaskFromStream( node->kobj);
+				break;
 #endif
 #if (K_DEF_SLEEPWAKE==ON)
 			case EVENT:
@@ -432,26 +453,3 @@ VOID kRemoveTimeoutNode( K_TIMEOUT_NODE *node)
 	node->prevPtr = NULL;
 }
 
-VOID kRemoveTimerNode( K_TIMEOUT_NODE *node)
-{
-	if (node == NULL)
-		return;
-
-	if (node->nextPtr != NULL)
-	{
-		node->nextPtr->dtick += node->dtick;
-		node->nextPtr->prevPtr = node->prevPtr;
-	}
-
-	if (node->prevPtr != NULL)
-	{
-		node->prevPtr->nextPtr = node->nextPtr;
-	}
-	else
-	{
-		timerListHeadPtr = node->nextPtr;
-	}
-
-	node->nextPtr = NULL;
-	node->prevPtr = NULL;
-}
