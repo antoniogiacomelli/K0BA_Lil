@@ -14,49 +14,18 @@
  *					o Semaphores
  *					o Mutexes
  *
- *
  *****************************************************************************/
 
 #define K_CODE
 
 #include "kexecutive.h"
 
-/****
- *
- * Notes about coding style
- *
- * The coding style might be weird for linuxers and other systems programmers
- * working on big machines.
- * It will not be weird for embedded systems programmers used to RTOSes that
- * are not Zephyr (Linux Style) or FreeRTOS.
- *
- * The indentation is BSD style, 4 spaces = 1 tab.
- *
- * Kernel primitives are in UPPERCASE. If preceded by a K_ they are composite
- * data structures, if not, they are fundamental C types representing value
- * for a kernel object - e.g., PRIO (priority of a task) - or C fundamentals
- * as INT (signed), UINT (unsigned), ULONG (unsigned long), BYTE(unsigned char),
- * CHAR (signed char).
- * Genereic pointers (void*) are typedef to ADDR.
- *
- * This style makes it clear it is a kernel entity thaat is being handled.
- *
- * Return values are also uppercase.
- *
- * You will easily distinguish between a macro or a typedef.
- *
- * Macros that are aliases for some instruction - such as K_CR_ENTER - are
- * not followed by `;`
- *
- * Return values that are negative are a failure. Non-negative returns
- * are an error that does not lead to failure.
- * 0 is success.
- *
- *
- * At this point of the system evolution, we  "repeat ourrselves"
- * to avoid any coupling. Features that are solid share more commonality.
- *
- ***/
+/**
+ Coding Style:
+ K0 coding style might seem odd for those unused to RTOSes other than
+ Zephyr (Linux style) and FreeRTOS (that style). It is a very common
+ embedded systems programming style though.
+ **/
 
 /*******************************************************************************
  * DIRECT TASK SIGNAL
