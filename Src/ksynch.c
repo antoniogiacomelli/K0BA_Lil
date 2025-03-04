@@ -137,9 +137,8 @@ ULONG kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask)
 			}
 		}
 	}
-
 	K_CR_EXIT
-	return updatedFlags;
+	return (updatedFlags);
 }
 
 /*
@@ -151,7 +150,11 @@ ULONG kTaskFlagsPend( ULONG flagMask, ULONG option, TICK timeout)
 {
 	K_CR_AREA
 	K_CR_ENTER
-	BOOL clear = 0;
+    if (kIsISR())
+	{
+		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
+	}
+    BOOL clear = 0;
 	BOOL all = 0;
 	ULONG currFlags = RUN_FLAGS;
 	switch (option)
@@ -223,7 +226,6 @@ ULONG kTaskFlagsPend( ULONG flagMask, ULONG option, TICK timeout)
 #if (K_DEF_EVENT==ON)
 K_ERR kEventInit( K_EVENT *const kobj)
 {
-
 	if (kobj == NULL)
 	{
 		KFAULT( FAULT_NULL_OBJ);
@@ -419,7 +421,11 @@ K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
 {
 	K_CR_AREA
 	K_CR_ENTER
-	K_ERR err = -1;
+    if (kIsISR())
+	{
+		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
+	}
+    K_ERR err = -1;
 	BOOL clear = 0;
 	BOOL all = 0;
 	ULONG currFlags = kobj->eventFlags;
