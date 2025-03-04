@@ -72,7 +72,7 @@ K_ERR kTCBQInit( K_TCBQ *const kobj, STRING listName)
 K_ERR kTCBQEnq( K_TCBQ *const kobj, K_TCB *const tcbPtr)
 {
 	K_CR_AREA
-	K_ENTER_CR
+	K_CR_ENTER
 	if (kobj == NULL || tcbPtr == NULL)
 	{
 		kErrHandler( FAULT_NULL_OBJ);
@@ -83,7 +83,7 @@ K_ERR kTCBQEnq( K_TCBQ *const kobj, K_TCB *const tcbPtr)
 		if (kobj == &readyQueue[tcbPtr->priority])
 			readyQBitMask |= 1 << tcbPtr->priority;
 	}
-	K_EXIT_CR
+	K_CR_EXIT
 	return (err);
 }
 
@@ -181,11 +181,11 @@ K_ERR kTCBQEnqByPrio( K_TCBQ *const kobj, K_TCB *const tcbPtr)
 K_ERR kReadyCtxtSwtch( K_TCB *const tcbPtr)
 {
 	K_CR_AREA
-	K_ENTER_CR
+	K_CR_ENTER
 	if (IS_NULL_PTR( tcbPtr))
 	{
 		kErrHandler( FAULT_NULL_OBJ);
-		K_EXIT_CR
+		K_CR_EXIT
 		return (K_ERR_OBJ_NULL);
 	}
 	if (kTCBQEnq( &readyQueue[tcbPtr->priority], tcbPtr) == K_SUCCESS)
@@ -200,7 +200,7 @@ K_ERR kReadyCtxtSwtch( K_TCB *const tcbPtr)
 		}
 #endif
 	}
-	K_EXIT_CR
+	K_CR_EXIT
 	return (K_ERROR);
 }
 
@@ -391,9 +391,9 @@ K_ERR kTaskChangePrio( PRIO newPrio)
 	if (kIsISR())
 		return (K_ERR_INVALID_ISR_PRIMITIVE);
 	K_CR_AREA
-	K_ENTER_CR
+	K_CR_ENTER
 	runPtr->priority = newPrio;
-	K_EXIT_CR
+	K_CR_EXIT
 	return (K_SUCCESS);
 }
 
@@ -402,9 +402,9 @@ K_ERR kTaskRestorePrio( VOID)
 	if (kIsISR())
 		return (K_ERR_INVALID_ISR_PRIMITIVE);
 	K_CR_AREA
-	K_ENTER_CR
+	K_CR_ENTER
 	runPtr->priority = runPtr->realPrio;
-	K_EXIT_CR
+	K_CR_EXIT
 	return (K_SUCCESS);
 }
 #endif

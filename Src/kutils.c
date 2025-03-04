@@ -43,8 +43,7 @@ ULONG kMemCpy( ADDR destPtr, ADDR const srcPtr, ULONG size)
 	}
 	return (n);
 }
-
-#if (K_DEF_PRINTF==ON)
+#ifdef K_DEF_PRINTF
 /*****************************************************************************
  * the glamurous blocking printf
  * deceiving and botching for the good

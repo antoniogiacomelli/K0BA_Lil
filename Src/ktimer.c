@@ -72,9 +72,9 @@ K_ERR kTimerInit( K_TIMER *kobj, TICK phase, TICK duration, CALLOUT funPtr,
 		return (K_ERR_OBJ_NULL);
 	}
 	K_CR_AREA
-	K_ENTER_CR
+	K_CR_ENTER
 	kTimerListAdd_( kobj, phase, duration, funPtr, argsPtr, reload);
-	K_EXIT_CR
+	K_CR_EXIT
 	return (K_SUCCESS);
 }
 VOID kRemoveTimerNode( K_TIMEOUT_NODE *node)
@@ -109,7 +109,7 @@ VOID kRemoveTimerNode( K_TIMEOUT_NODE *node)
 void kSleep( TICK ticks)
 {
 	K_CR_AREA
-	K_ENTER_CR
+	K_CR_ENTER
 
 	if (runPtr->status != RUNNING)
 	{
@@ -118,13 +118,13 @@ void kSleep( TICK ticks)
 	kTimeOut( &runPtr->taskHandlePtr->timeoutNode, ticks);
 	runPtr->status = SLEEPING;
 	K_PEND_CTXTSWTCH
-	K_EXIT_CR
+	K_CR_EXIT
 }
 
 VOID kSleepUntil( TICK const period)
 {
 	K_CR_AREA
-	K_ENTER_CR
+	K_CR_ENTER
 	TICK currentTick = kTickGet();
 	TICK nextWakeTime = runPtr->lastWakeTime + period;
 	/*  the task missed its deadline, adjust nextWakeTime to catch up */
@@ -143,9 +143,10 @@ VOID kSleepUntil( TICK const period)
 		K_PEND_CTXTSWTCH
 
 	}
+	runPtr->timeOut=FALSE;
 	/* Update the last wake time */
 	runPtr->lastWakeTime = nextWakeTime;
-	K_EXIT_CR
+	K_CR_EXIT
 }
 /* timeout and sleeping list (delta-list) */
 K_ERR kTimeOut( K_TIMEOUT_NODE *timeOutNode, TICK timeout)
@@ -156,6 +157,7 @@ K_ERR kTimeOut( K_TIMEOUT_NODE *timeOutNode, TICK timeout)
 	if (timeOutNode == NULL)
 		return (K_ERR_OBJ_NULL);
 
+	runPtr->timeOut = FALSE;
 	timeOutNode->timeout = timeout;
 	timeOutNode->dtick = timeout;
 	timeOutNode->prevPtr = NULL;
@@ -347,7 +349,7 @@ VOID kRemoveTaskFromStream( ADDR kobj)
 	}
 }
 #endif
-#if (K_DEF_SLEEPWAKE==ON)
+#if (K_DEF_EVENT==ON)
 VOID kRemoveTaskFromEvent( ADDR kobj)
 {
 	K_EVENT *eventPtr = (K_EVENT*) kobj;
@@ -412,7 +414,7 @@ BOOL kHandleTimeoutList( VOID)
 				kRemoveTaskFromStream( node->kobj);
 				break;
 #endif
-#if (K_DEF_SLEEPWAKE==ON)
+#if (K_DEF_EVENT==ON)
 			case EVENT:
 				kRemoveTaskFromEvent( node->kobj);
 				break;
@@ -452,4 +454,3 @@ VOID kRemoveTimeoutNode( K_TIMEOUT_NODE *node)
 	node->nextPtr = NULL;
 	node->prevPtr = NULL;
 }
-

@@ -55,11 +55,11 @@
 
 /**/
 /*** [ Number of user-defined tasks ] *****************************************/
-#define K_DEF_N_USRTASKS    	        (3)
+#define K_DEF_N_USRTASKS    	        (4)
 
 /**/
 /*** [The lowest effective priority, that is the highest user-defined value]  */
-#define K_DEF_MIN_PRIO	           	    (1)
+#define K_DEF_MIN_PRIO	           	    (2)
 
 /**/
 /*** [ Time-Slice Scheduling ]*************************************************/
@@ -67,22 +67,25 @@
 
 /**/
 /*** [ App Timers ] ***********************************************************/
-#define K_DEF_CALLOUT_TIMER				(OFF)
+#define K_DEF_CALLOUT_TIMER				(ON)
 
 /**/
-/*** [ Memory Allocator ] *****************************************************/
-#define K_DEF_ALLOC						(OFF)
+/*** [ Mmeory Allocator ] *****************************************************/
+#define K_DEF_ALLOC						(ON)
 
 /**/
 /*** [ Dynamic priority change ] **********************************************/
 /* Enables the methods kTaskChangePrio() and kTaskRestorePrio() to act on
  the calling task. */
+#define K_DEF_FUNC_DYNAMIC_PRIO		    (ON)
 
-#define K_DEF_FUNC_DYNAMIC_PRIO		    (OFF)
+/**/
+/*** [ Task Flags ] ***********************************************************/
+#define K_DEF_TASK_FLAGS                (ON)
 
 /**/
 /*** [ Semaphores ] ***********************************************************/
-#define K_DEF_SEMA                      (OFF)
+#define K_DEF_SEMA                      (ON)
 
 #if (K_DEF_SEMA==ON)
 #define K_DEF_SEMA_ENQ  		        (K_DEF_ENQ_PRIO)
@@ -92,7 +95,7 @@
 /*** [ Mutexes ] **************************************************************/
 #define K_DEF_MUTEX                     (ON)
 /* Priority Inheritance */
-#define K_DEF_MUTEX_PRIO_INH			(OFF)
+#define K_DEF_MUTEX_PRIO_INH			(ON)
 #if (K_DEF_MUTEX==ON)
 /* Queue Discipline:				 */
 #define K_DEF_MUTEX_ENQ				    (K_DEF_ENQ_PRIO)
@@ -100,12 +103,17 @@
 
 /**/
 /*** [ Sleep/Wake Events ] ****************************************************/
-#define K_DEF_SLEEPWAKE                  (ON)
+#define K_DEF_EVENT                 (ON)
+
+/* Extend Event to support Event Flags */
+#if(K_DEF_EVENT==ON)
+#define K_DEF_EVENT_FLAGS           (ON)
+#endif
 
 /**/
 /*** [ Mailbox ] **************************************************************/
 
-#define K_DEF_MBOX	       	             (OFF)
+#define K_DEF_MBOX	       	            (ON)
 
 #if(K_DEF_MBOX==ON)
 
@@ -117,13 +125,12 @@
 #define K_DEF_FUNC_MBOX_ISFULL			(ON)
 #define K_DEF_FUNC_MBOX_PEEK			(ON)
 #define K_DEF_FUNC_MBOX_POSTOVW			(ON)
-
 #endif
 
 /**/
 /*** [ Queue ] ****************************************************************/
 
-#define K_DEF_QUEUE						(OFF)
+#define K_DEF_QUEUE						(ON)
 
 #if(K_DEF_QUEUE==ON)
 
@@ -140,11 +147,11 @@
 /**/
 /*** [ Stream ] ***************************************************************/
 
-#define K_DEF_STREAM			   	    (OFF)
+#define K_DEF_STREAM			   	    (ON)
 
 #if (K_DEF_STREAM == ON)
 /* Queue Discipline				 */
-#define K_DEF_STREAM_ENQ				    (K_DEF_ENQ_PRIO)
+#define K_DEF_STREAM_ENQ				 (K_DEF_ENQ_PRIO)
 
 /* Optional methods */
 #define K_DEF_FUNC_STREAM_JAM			 (ON)
@@ -156,6 +163,7 @@
 
 /**/
 /*** [ Pump-Drop Buffers ] ****************************************************/
-#define K_DEF_PDMESG                       (OFF)
+#define K_DEF_PDMESG                     (OFF)
+
 
 #endif /* KCONFIG_H */

@@ -24,12 +24,12 @@ K_ERR kMemInit( K_MEM *const kobj, ADDR const memPoolPtr, BYTE blkSize,
 {
 	K_CR_AREA
 
-	K_ENTER_CR
+	K_CR_ENTER
 
 	if (IS_NULL_PTR( kobj))
 	{
 		KFAULT( FAULT_NULL_OBJ);
-		K_EXIT_CR
+		K_CR_EXIT
 		return (K_ERR_MEM_INIT);
 	}
 	/*round up to next value multiple of 4 (if not a multiple)*/
@@ -62,7 +62,7 @@ K_ERR kMemInit( K_MEM *const kobj, ADDR const memPoolPtr, BYTE blkSize,
     kobj->lastUsed = NULL;
 #endif
 	kobj->init = TRUE;
-	K_EXIT_CR
+	K_CR_EXIT
 	return (K_SUCCESS);
 }
 
@@ -75,7 +75,7 @@ ADDR kMemAlloc( K_MEM *const kobj)
 	}
 	K_CR_AREA
 
-	K_ENTER_CR
+	K_CR_ENTER
 	ADDR allocPtr = kobj->freeListPtr;
 	kobj->freeListPtr = *(ADDR*) allocPtr;
 #if(MEMBLKLAST)
@@ -83,7 +83,7 @@ ADDR kMemAlloc( K_MEM *const kobj)
     #endif
 	if (allocPtr != NULL)
 		kobj->nFreeBlocks -= 1;
-	K_EXIT_CR
+	K_CR_EXIT
 	return (allocPtr);
 }
 
@@ -99,11 +99,11 @@ K_ERR kMemFree( K_MEM *const kobj, ADDR const blockPtr)
 		return (K_ERR_MEM_FREE);
 	}
 	K_CR_AREA
-	K_ENTER_CR
+	K_CR_ENTER
 	*(ADDR*) blockPtr = kobj->freeListPtr;
 	kobj->freeListPtr = blockPtr;
 	kobj->nFreeBlocks += 1;
-	K_EXIT_CR
+	K_CR_EXIT
 	return (K_SUCCESS);
 }
 

@@ -41,16 +41,22 @@ extern "C" {
 #define R5_OFFSET   15 /* R5 Register offset */
 #define R4_OFFSET   16 /* R4 Register offset */
 
+/* Timeout values */
 #define K_WAIT_FOREVER      (0xFFFFFFFF)
 #define K_NO_WAIT			(0)
 
-#define TIMHANDLER_ID        		255
-#define IDLETASK_ID           		0
-#define DEADCODE 				   (0)
-#define TIMER_SIZE  			    sizeof(K_TIMER)
-#define N_SYSTASKS          2 /*idle task + tim handler*/
+/* Event Flags values */
+#define K_ALL        (1)
+#define K_ANY        (2)
+#define K_ALL_CLEAR  (3)
+#define K_ANY_CLEAR  (4)
+
 
 /*** Config values */
+
+#define TIMHANDLER_ID               255
+#define IDLETASK_ID                 0
+#define N_SYSTASKS          2 /*idle task + tim handler*/
 #define NTHREADS            (K_DEF_N_USRTASKS + N_SYSTASKS)
 #define NPRIO               (K_DEF_MIN_PRIO + 1)
 #define K_DEF_ENQ_PRIO  	(0)
@@ -62,7 +68,7 @@ extern "C" {
 /* Misc */
 
 #define KFAULT				kErrHandler
-
+#define DEADCODE            (0)
 /* inline asm */
 #define DMB								asm volatile ("dmb 0xF":::"memory");
 #define DSB								asm volatile ("dsb 0xF":::"memory");
@@ -105,8 +111,8 @@ __STATIC_FORCEINLINE unsigned kIsISR(void)
     ((containerType *)((unsigned char *)(memberPtr) - \
      offsetof(containerType, memberName)))
 #define K_CR_AREA  UINT crState_;
-#define K_ENTER_CR crState_ = kEnterCR();
-#define K_EXIT_CR  kExitCR(crState_);
+#define K_CR_ENTER crState_ = kEnterCR();
+#define K_CR_EXIT  kExitCR(crState_);
 #define K_PEND_CTXTSWTCH K_TRAP_PENDSV
 #define K_SWTCH			 _K_SWTCH
 #define READY_HIGHER_PRIO(ptr) ((ptr->priority < nextTaskPrio) ? 1 : 0)

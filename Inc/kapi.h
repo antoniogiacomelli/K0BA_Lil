@@ -86,7 +86,7 @@ K_ERR kTaskChangePrio( PRIO newPrio);
 K_ERR kTaskRestorePrio( VOID);
 #endif
 /*******************************************************************************
- SEMAPHORES
+ COUNTER SEMAPHORE
  *******************************************************************************/
 #if (K_DEF_SEMA==ON)
 /**
@@ -120,7 +120,7 @@ INT kSemaQuery( K_SEMA *const kobj);
 
 #endif
 /*******************************************************************************
- * MUTEX
+ * MUTEX SEMAPHORE
  *******************************************************************************/
 #if (K_DEF_MUTEX==ON)
 /**
@@ -159,10 +159,9 @@ K_ERR kMutexQuery( K_MUTEX *const kobj);
 
 /**
  * \brief               Initialises an indirect single mailbox.
- *
  * \param kobj          Mailbox address.
  * \param initMail		If initialising full, address of initial mail.
- * \					Otherwise NULL.
+ *  					Otherwise NULL.
  * \return              K_SUCCESS or specific error.
  */
 
@@ -174,8 +173,8 @@ K_ERR kMboxInit( K_MBOX *const kobj, ADDR initMail);
  * \param timeout		Suspension time-out
  * \return              K_SUCCESS or specific error.
  */
-K_ERR kMboxPost( K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
 
+K_ERR kMboxPost( K_MBOX *const kobj, ADDR const sendPtr, TICK timeout);
 /**
  * \brief               Receive from a mailbox. Block if empty.
  *
@@ -236,7 +235,7 @@ BOOL kMboxIsFull( K_MBOX *const kobj);
 
 #endif /* MBOX  */
 /*******************************************************************************
- * QUEUE
+ * QUEUE (MAIL QUEUE)
  ******************************************************************************/
 #if (K_DEF_QUEUE == ON)
 
@@ -303,7 +302,7 @@ ULONG kQueueMailCount( K_QUEUE *const kobj);
 #endif /* QUEUE  */
 
 /******************************************************************************/
-/* STREAM (MESSAGE QUEUE)			    									  */
+/* MESSAGE STREAM                	    									  */
 /******************************************************************************/
 #if (K_DEF_STREAM == ON)
 /**
@@ -450,28 +449,49 @@ K_ERR kPDMesgDrop( K_PDMESG *const kobj, K_PDBUF *const bufPtr);
 #endif
 
 /******************************************************************************
- * DIRECT TASK SIGNAL (PRIVATE BINARY SEMAPHORE)
+ * DIRECT TASK SIGNALS - BINARY SEMAPHORE AND FLAGS
  ******************************************************************************/
-/**
- * \brief  Pend on a direct signal.
- * \param timeout Suspension timeout
- * \return K_SUCCESS, K_ERR_TIMEOUT or specific error.
- */
 
+/**
+ * \brief A task pends on its own binary semaphore
+ * \param timeout Suspension time until signalled
+ * \return K_SUCCESS or specific error
+ */
 K_ERR kTaskPend( TICK timeout);
 
 /**
- * \brief Direct Signal a task.
- * \param taskHandlePtr  Task Handle Address.
- * \param K_SUCCESS or specific error.
+ * \brief Signal a task's binary semaphore
+ * \param taskHandlePtr Pointer to task handle
+ * \return K_SUCCESS or specific error
  */
 K_ERR kTaskSignal( K_TASK *const taskHandlePtr);
+
+
+#if (K_DEF_TASK_FLAGS == ON)
+/**
+ * \brief Writes a bit string of events to a task´s private event flags
+ * \param taskHandlePtr Pointer to the target task's handle
+ * \param flagMask The bit string of flags
+ * \return The updated bit string of flags.
+ */
+ULONG kTaskFlagsSet( K_TASK *const taskHandlePtr, ULONG flagMask);
+
+/**
+ * \brief A task checks for a combination of events on its private flags
+ * \param flagMask The combination
+ * \param option K_OR for ANY of the flags, K_AND for ALL flags
+ * 				 K_OR_CLEAR/K_AND_CLEAR clears the flags that were met
+ * \param timeout Suspension timeout
+ * \return The updated bit string of flags.
+ */
+ULONG kTaskFlagsGet( ULONG flagMask, ULONG option, TICK timeout);
+#endif
 
 /******************************************************************************
  * EVENTS
  ******************************************************************************/
 
-#if (K_DEF_SLEEPWAKE==ON)
+#if (K_DEF_EVENT==ON)
 /**
  * \brief 			Initialise an event
  * \param kobj		Pointer to K_EVENT object
@@ -479,7 +499,7 @@ K_ERR kTaskSignal( K_TASK *const taskHandlePtr);
  */
 K_ERR kEventInit( K_EVENT *const kobj);
 /**
- * \brief 			Suspends a task waiting for a specific event
+ * \brief 			Suspends a task waiting for a wake signal
  * \param kobj 		Pointer to a K_EVENT object
  * \param timeout	Suspension time.
  */
@@ -503,6 +523,50 @@ VOID kEventSignal( K_EVENT *const kobj);
  */
 UINT kEventQuery( K_EVENT *const kobj);
 
+
+#if (K_DEF_EVENT_FLAGS==ON)
+/**
+ * \brief  Initialises an EVENT object with event flags
+ * \param kobj  Pointer to the Event object
+ * \param mask  Initial flags value
+ * \return K_SUCCESS or K_ERROR
+ */
+K_ERR kEventFlagsInit( K_EVENT *const kobj, ULONG mask);
+
+
+/**
+ * \brief  Set a combination of event flags on an Event object and
+ *         wakes any tasks that happens to be waiting on that
+ *         combination
+ *
+ * \param kobj Pointer to the event object
+ * \param flagMask Flags to be set
+ * \return Updated flags
+ */
+ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask);
+
+/**
+ * \brief Goes to sleep waiting for a combination of events
+ *        If they are already met, task proceeds.
+ * \param kobj Pointer to the event object
+ * \param requiredFlags Combination of flags to be met
+ * \param options K_ANY(_CLEAR) to wait for any raised flag
+ *                K_ALL(_CLEAR) to wait for all flags to be raised
+ *                (_CLEAR) will clear the satisfied bit flags.
+ * \param timeout  Suspension time (in ticks)
+ * \return K_SUCCESS or specific error
+ */
+K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
+		 ULONG options, TICK timeout);
+
+/**
+ * \brief 	Returns the current event flags within an event object.
+ * \param kobj Address to the event object.
+ * \return  ULONG value representing the current flags.
+ */
+ULONG kEventFlagsQuery(K_EVENT *const kobj);
+
+#endif
 #endif
 
 #if (K_DEF_CALLOUT_TIMER==ON)
@@ -512,7 +576,6 @@ UINT kEventQuery( K_EVENT *const kobj);
 /**
  * \brief Initialises an application timer
  * \param phase Initial phase delay
- * \param
  * \param funPtr The callback when timer expires
  * \param argsPtr Address to callback function arguments
  * \param reload TRUE for reloading after timer-out. FALSE for an one-shot
@@ -617,6 +680,24 @@ ULONG kStrLen( STRING s);
 extern K_TCB *runPtr;
 #define K_RUNNING_PID (runPtr->pid)
 #define K_RUNNING_PRIO (runPtr->priority)
+
+/* Enable/Disable global interrupts */
+/* Note: use this on application-level only.
+ * If tweaking kernel code, look at K_CR_*
+ * system macros.
+ */
+__attribute__((always_inline))
+static inline VOID kDisableIRQ(VOID)
+{
+	  __ASM volatile ("CPSID I" : : : "memory");
+}
+
+__attribute__((always_inline))
+static inline VOID kEnableIRQ(VOID)
+{
+	  __ASM volatile ("CPSIE I" : : : "memory");
+}
+
 
 /*[EOF]*/
 

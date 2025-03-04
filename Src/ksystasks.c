@@ -39,7 +39,7 @@ VOID TimerHandlerTask( VOID)
 
 #if (K_DEF_CALLOUT_TIMER==ON)
 		K_CR_AREA
-		K_ENTER_CR
+		K_CR_ENTER
 		timeOutListHeadPtr = timeOutListHeadPtr;
 		while (timerListHeadPtr != NULL && timerListHeadPtr->dtick == 0)
 		{
@@ -66,7 +66,7 @@ VOID TimerHandlerTask( VOID)
 				break;
 			}
 		}
-		K_EXIT_CR
+		K_CR_EXIT
 #endif
 	}
 }

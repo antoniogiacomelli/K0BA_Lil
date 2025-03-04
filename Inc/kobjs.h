@@ -1,4 +1,4 @@
-/****************************************************************************
+/*******************************************************************************
  *
  * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
  *
@@ -32,7 +32,7 @@ typedef enum
 #if (K_DEF_STREAM==ON)
 	STREAM,
 #endif
-#if(K_DEF_SLEEPWAKE==ON)
+#if(K_DEF_EVENT==ON)
 	EVENT,
 #endif
 #if(K_DEF_CALLOUT_TIMER==ON)
@@ -81,11 +81,9 @@ struct kList
 struct kTcb
 {
 	/* Don't change */
-
 	INT *sp;
 	K_TASK_STATUS status;
 	UINT runCnt;
-
 	/**/
 	STRING taskName;
 	INT *stackAddrPtr;
@@ -96,7 +94,14 @@ struct kTcb
 #if ( (K_DEF_FUNC_DYNAMIC_PRIO==ON) || (K_DEF_MUTEX_PRIO_INH==ON) )
 	PRIO realPrio; /* Real priority  */
 #endif
-	BOOL signalled; /* private binary semaphore */
+	BOOL   signalled; /* private binary semaphore */
+#if ((K_DEF_TASK_FLAGS==ON) || (K_DEF_EVENT_FLAGS==ON))
+	ULONG  currFlags; /* event flags */
+#endif
+#if (K_DEF_EVENT_FLAGS==ON)
+    ULONG flagsOptions;
+    ULONG gotFlags;
+#endif
 #if (K_DEF_SCH_TSLICE == ON)
 	TICK timeSlice;
 	TICK timeLeft;
@@ -147,16 +152,20 @@ struct kMutex
 };
 #endif
 
-#if (K_DEF_SLEEPWAKE==ON)
+#if (K_DEF_EVENT==ON)
 
 struct kEvent
 {
 	struct kList waitingQueue;
 	BOOL init;
+#if (K_DEF_EVENT_FLAGS)
+	ULONG eventFlags;
+#endif
 	K_TIMEOUT_NODE timeoutNode;
 
 };
-#endif /* K_DEF_SLEEPWAKE */
+
+#endif /* K_DEF_EVENT */
 
 #if (K_DEF_ALLOC==ON)
 

@@ -16,16 +16,17 @@
 /**
  * \brief C primitives
  */
-/*** these are immutable:                                                   */
+/*** these are immutable: */
 typedef void VOID;
 typedef char CHAR;
 typedef unsigned char BYTE;
 typedef signed INT; /* stack type */
 typedef unsigned UINT;
 typedef unsigned long ULONG;
-typedef void *ADDR; /* Generic address type 		*/
+typedef long LONG;
+typedef void *ADDR; /* Generic address type */
 
-/*** if you dont provide a stdbool                                          */
+/*** if you dont provide a stdbool */
 #if !defined(bool)
 typedef unsigned BOOL;
 #define FALSE (unsigned)0
@@ -48,11 +49,6 @@ typedef unsigned TICK; /* Tick count type */
 typedef void (*TASKENTRY)(void); /* Task entry function pointer */
 typedef void (*CALLOUT)(void*); /* Callout (timers)             */
 typedef void (*CBK)(void*); /* Generic Call Back             */
-
-typedef enum
-{
-	OR, AND
-}K_OR_AND;
 
 /**
  *\brief Return values
@@ -137,7 +133,7 @@ typedef enum kTaskStatus
 {
 	INVALID = 0, READY, RUNNING,
 	/* WAITING */
-	PENDING, SLEEPING, BLOCKED, SUSPENDED, SENDING, RECEIVING
+	PENDING, PENDING_FLAGS, SLEEPING, BLOCKED, SENDING, RECEIVING
 
 } K_TASK_STATUS;
 
@@ -165,8 +161,11 @@ typedef struct kMailbox K_MBOX;
 #if (K_DEF_QUEUE==ON)
 typedef struct kQ K_QUEUE;
 #endif
-#if (K_DEF_SLEEPWAKE==ON)
+#if (K_DEF_EVENT==ON)
 typedef struct kEvent K_EVENT;
+#if (K_DEF_EVENT_FLAGS==ON)
+typedef struct kEventGroup K_EVENT_FLAGS;
+#endif
 #endif
 
 #if (K_DEF_PDMESG== ON)
