@@ -512,6 +512,9 @@ K_ERR kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask, ULONG* updatedFlags,
 				currTcbPtr->gotFlags = kobj->eventFlags;
 				kListRemove( &kobj->waitingQueue, currNodePtr);
 				kReadyCtxtSwtch( currTcbPtr);
+				/* room for preemption, if higher prio task */
+				K_CR_EXIT
+				K_CR_ENTER
 			}
 			currNodePtr = prevNodePtr; /* Move to the previous node */
 		}
