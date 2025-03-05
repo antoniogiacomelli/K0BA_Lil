@@ -52,11 +52,11 @@
 
 /**/
 /*** [ Number of user-defined tasks ] *****************************************/
-#define K_DEF_N_USRTASKS    	        (4)
+#define K_DEF_N_USRTASKS    	        (3)
 
 /**/
 /*** [The lowest effective priority, that is the highest user-defined value]  */
-#define K_DEF_MIN_PRIO	           	    (2)
+#define K_DEF_MIN_PRIO	           	    (1)
 
 /**/
 /*** [ Time-Slice Scheduling ]*************************************************/
