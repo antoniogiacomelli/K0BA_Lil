@@ -150,11 +150,11 @@ ULONG kTaskFlagsPend( ULONG flagMask, ULONG option, TICK timeout)
 {
 	K_CR_AREA
 	K_CR_ENTER
-    if (kIsISR())
+	if (kIsISR())
 	{
 		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
 	}
-    BOOL clear = 0;
+	BOOL clear = 0;
 	BOOL all = 0;
 	ULONG currFlags = RUN_FLAGS;
 	switch (option)
@@ -396,7 +396,7 @@ inline VOID kCondVarBroad( K_EVENT *eventPtr)
  * When a task pend on a combination of flags associated to a EVENT_FLAGS
  * object, first it checks if the current flags meet the asked combination.
  * If so, task proceeds.
- * if not, the task  switches to SLEEPING state.
+ * if not, the task  switches to PENDING_FLAGS state.
  */
 #if (K_DEF_EVENT_FLAGS==(ON))
 K_ERR kEventFlagsInit( K_EVENT *const kobj, ULONG mask)
@@ -412,20 +412,20 @@ K_ERR kEventFlagsInit( K_EVENT *const kobj, ULONG mask)
 	K_CR_EXIT
 	return (err);
 }
-ULONG kEventFlagsQuery(K_EVENT *const kobj)
+ULONG kEventFlagsQuery( K_EVENT *const kobj)
 {
 	return (kobj->eventFlags);
 }
-K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags, ULONG* gotFlagsPtr,
-		 ULONG options, TICK timeout)
+K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
+		ULONG *gotFlagsPtr, ULONG options, TICK timeout)
 {
 	K_CR_AREA
 	K_CR_ENTER
-    if (kIsISR())
+	if (kIsISR())
 	{
 		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
 	}
-    K_ERR err = -1;
+	K_ERR err = -1;
 	BOOL clear = 0;
 	BOOL all = 0;
 	ULONG currFlags = kobj->eventFlags;
@@ -458,29 +458,41 @@ K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags, ULONG* gotFlagsP
 			|| (!all && (currFlags & requiredFlags)))
 	{
 		err = K_SUCCESS;
-		goto UPDATE;
+		runPtr->gotFlags = kobj->eventFlags;
+		if (clear)
+		{
+			kobj->eventFlags &= ~requiredFlags;
+		}
 	}
 	else
 	{
-		/* Block task if condition is not met */
-		err = kEventSleep( kobj, timeout);
-		K_CR_EXIT
-		K_CR_ENTER
-		if (err == K_SUCCESS)
+		kTCBQEnq( &kobj->waitingQueue, runPtr);
+		runPtr->status = PENDING_FLAGS;
+		if ((timeout > 0) && (timeout < K_WAIT_FOREVER))
 		{
-			goto UPDATE;
+			kTimeOut( &kobj->timeoutNode, timeout);
 		}
-		else
+		K_PEND_CTXTSWTCH
+		K_CR_EXIT
+		/* resuming here, if time is out, return error */
+		K_CR_ENTER
+		if (runPtr->timeOut)
 		{
+			runPtr->timeOut = FALSE;
+			err = K_ERR_TIMEOUT;
 			goto EXIT;
 		}
-	}
-	UPDATE:
-	/* If CLEAR option is set, clear only the met flags */
-	*gotFlagsPtr = runPtr->gotFlags;
-	if (clear)
-	{
-		kobj->eventFlags &= ~requiredFlags;
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
+
+		/* snap of the flags taken when task was made ready */
+		*gotFlagsPtr = runPtr->gotFlags;
+		/* this cannot stick so we know they've been serviced */
+		runPtr->gotFlags = 0UL;
+		if (clear)
+		{
+			kobj->eventFlags &= ~requiredFlags;
+		}
 	}
 	EXIT:
 	K_CR_EXIT
@@ -506,26 +518,22 @@ ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask)
 			/* save previous node before modification */
 			K_NODE *prevNodePtr = currNodePtr->prevPtr;
 			K_TCB *currTcbPtr = K_LIST_GET_TCB_NODE( currNodePtr, K_TCB);
-
 			BOOL all = (currTcbPtr->flagsOptions & K_ALL)
 					|| (currTcbPtr->flagsOptions & K_ALL_CLEAR);
 
-			/* wake only if the task's flag condition is met */
+			/* wake all tasks which condition is met */
 			if ((all
 					&& ((kobj->eventFlags & currTcbPtr->currFlags)
 							== currTcbPtr->currFlags))
 					|| (!all && (kobj->eventFlags & currTcbPtr->currFlags)))
 			{
-
-				kListRemove( &kobj->waitingQueue, currNodePtr);
 				currTcbPtr->gotFlags = kobj->eventFlags;
+				kListRemove( &kobj->waitingQueue, currNodePtr);
 				kReadyCtxtSwtch( currTcbPtr);
-
 			}
 			currNodePtr = prevNodePtr; /* Move to the previous node */
 		}
 	}
-
 	K_CR_EXIT
 	return (updatedFlags);
 }
