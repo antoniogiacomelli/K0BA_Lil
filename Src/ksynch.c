@@ -140,7 +140,6 @@ K_ERR kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask,
 				|| (!all && (taskHandlerPtr->tcbPtr->currFlags & flagMask)))
 		{
 			/* move task to READY state */
-			taskHandlerPtr->tcbPtr->status = READY;
 			kReadyCtxtSwtch( taskHandlerPtr->tcbPtr);
 			/* Clear flags if necessary */
 			if (clear)
