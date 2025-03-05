@@ -103,7 +103,7 @@ K_ERR kTaskSignal( K_TASK *const taskHandlePtr)
 #if (K_DEF_TASK_FLAGS==ON)
 /* running task flags */
 #define RUN_FLAGS (runPtr->currFlags)
-#define RUN_FLAGS_OPTION (runPtr->flagsOptions)
+
 /* updates target task flags
  * if it is pending, make it ready */
 K_ERR kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask,
@@ -140,6 +140,7 @@ K_ERR kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask,
 				|| (!all && (taskHandlerPtr->tcbPtr->currFlags & flagMask)))
 		{
 			/* move task to READY state */
+			taskHandlerPtr->tcbPtr->status = READY;
 			kReadyCtxtSwtch( taskHandlerPtr->tcbPtr);
 			/* Clear flags if necessary */
 			if (clear)
