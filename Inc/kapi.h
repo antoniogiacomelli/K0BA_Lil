@@ -235,12 +235,25 @@ BOOL kMboxIsFull( K_MBOX *const kobj);
 
 #endif /* MBOX  */
 /*******************************************************************************
- * QUEUE (MAIL QUEUE)
- ******************************************************************************/
+ MESSAGE QUEUES (QUEUE AND STREAM)
+******************************************************************************/
+/**
+ * There are two mechanisms working as Message Queues: QUEUEs and STREAMs
+ * QUEUES are Mailboxes of multiple messages - each slot is fixed to 4-byte
+ * size - therefore, unless your messages are exactly 4-bytes, you need to
+ * pass a pointer and take care of the message scope.
+ *
+ * STREAMs are byte-oriented queues which transmit fixed-size messages by deep
+ * copy. Each STREAM will have the message size declared on initialisation.
+ *
+ * For more information look at the Docbook.
+ *
+ */
+
 #if (K_DEF_QUEUE == ON)
 
 /**
- * \brief			 Initialises a queue.
+ * \brief			 Initialises a mail queue.
  * \param kobj		 Multibox address
  * \param memPtr     Pointer to the buffer that will store mail addresses
  * \param maxItems   Maximum number of mails.
@@ -257,7 +270,7 @@ K_ERR kQueueInit( K_QUEUE *const kobj, ADDR memPtr, ULONG maxItems);
 K_ERR kQueuePost( K_QUEUE *const kobj, ADDR const sendPtr, TICK timeout);
 
 /**
- * \brief               Receive from a queue. Block if empty.
+ * \brief               Receive from a mail queue. Block if empty.
  *
  * \param kobj          Multibox address.
  * \param recvPPtr      Address that will store the message address
@@ -281,7 +294,7 @@ K_ERR kQueuePeek( K_QUEUE *const kobj, ADDR *peekPPtr);
 
 #if (K_DEF_FUNC_QUEUE_ISFULL==ON)
 /**
- * \brief   		Check if a queue is full.
+ * \brief   		Check if a mail queue is full.
  * \param kobj		Multibox address.
  * \return  		TRUE or FALSE.
  */
@@ -299,15 +312,12 @@ ULONG kQueueMailCount( K_QUEUE *const kobj);
 
 #endif
 
-#endif /* QUEUE  */
+#endif /* MAIL QUEUE  */
 
-/******************************************************************************/
-/* MESSAGE STREAM                	    									  */
-/******************************************************************************/
 #if (K_DEF_STREAM == ON)
 /**
- *\brief 			Initialise a Message Queue
- *\param kobj		Queue address
+ *\brief 			Initialise a Message Queue (Stream)
+ *\param kobj		Message Queue address
  *\param buffer		Allocated memory. It must be enough for the queue capacity
  *\					that is messsageSize*maxMessages
  *\param messageSize Message size
@@ -321,7 +331,7 @@ K_ERR kStreamInit( K_STREAM *const kobj, ADDR buffer, ULONG messageSize,
 
 /**
  *\brief 			Get the current number of messages within a message queue.
- *\param kobj		Queue address
+ *\param kobj		(Stream) Queue address
  *\param mesgCntPtr Address to store the message number
  *\return			K_SUCCESS or a specific error.
  */
@@ -334,7 +344,7 @@ K_ERR kStreamGetMesgCount( K_STREAM *const kobj, UINT *const mesgCntPtr);
 
 /**
  *\brief 			Sends a message to the queue front.
- *\param kobj		Queue address
+ *\param kobj		(Stream) Queue address
  *\param sendPtr	Message address
  *\param timeout	Suspension time
  *\return			K_SUCCESS or specific error
@@ -345,15 +355,15 @@ K_ERR kStreamJam( K_STREAM *const kobj, ADDR const sendPtr, TICK timeout);
 
 /**
  *\brief 			Receive a message from the queue
- *\param kobj		Queue address
+ *\param kobj		(Stream) Queue address
  *\param recvPtr	Receiving address
  *\param Timeout	Suspension time
  */
 K_ERR kStreamRecv( K_STREAM *const kobj, ADDR recvPtr, TICK timeout);
 
 /**
- *\brief 			Send a message to a queue
- *\param kobj		Queue address
+ *\brief 			Send a message to a message queue
+ *\param kobj		(Stream) Queue address
  *\param recvPtr	Message address
  *\param Timeout	Suspension time
  */
@@ -364,7 +374,7 @@ K_ERR kStreamSend( K_STREAM *const kobj, ADDR const sendPtr, TICK timeout);
 /**
  *\brief 			Receive the front message of a queue
  *					without changing its state
- *\param	kobj		Message Queue object address
+ *\param	kobj		(Stream) Queue object address
  *\param	recvPtr		Receiving pointer address
  *\return			K_SUCCESS or error.
  */
@@ -375,15 +385,15 @@ K_ERR kStreamPeek( K_STREAM *const kobj, ADDR recvPtr);
 #endif /*K_DEF_STREAM*/
 
 /*******************************************************************************
- * PUMP-DROP QUEUE (CYCLIC ASYNCHRONOUS BUFFERS - CABs)
+ * PUMP-DROP LIFO QUEUE (CYCLIC ASYNCHRONOUS BUFFERS - CABs)
  *******************************************************************************/
 
 #if (K_DEF_PDMESG == ON)
 
 /**
- * \brief          Pump-drop queue initialisation.
+ * \brief          Pump-drop LIFO initialisation.
  *
- * \param kobj    	    PD queue address.
+ * \param kobj    	    PD LIFO address.
  * \param memCtrlPtr	Pointer to the memory allocator control block
  * \param bufPool  		Pool of PD Buffers, statically allocated.
  * \param nBufs    		Number of buffers for this queue.
@@ -395,7 +405,7 @@ K_ERR kPDMesgInit( K_PDMESG *const kobj, K_MEM *const memCtrlPtr,
 /**
  * \brief          Reserves a pump-drop buffer before writing on it.
  *
- * \param kobj     Queue address.
+ * \param kobj     LIFO address.
  * \return         K_SUCCESS or specific error
  */
 K_PDBUF* kPDMesgReserve( K_PDMESG *const kobj);
@@ -413,7 +423,7 @@ K_ERR kPDBufWrite( K_PDBUF *bufPtr, ADDR srcPtr, ULONG dataSize);
 /**
  * \brief          Pump a buffer into the queue - make it available for readers.
  *
- * \param kobj     Queue address.
+ * \param kobj     LIFO address.
  * \return         Address of a written PD buffer.
  */
 K_ERR kPDMesgPump( K_PDMESG *const kobj, K_PDBUF *bufPtr);
@@ -421,7 +431,7 @@ K_ERR kPDMesgPump( K_PDMESG *const kobj, K_PDBUF *bufPtr);
 /**
  * \brief          Fetches the most recent buffer pumped in the queue.
  *
- * \param kobj     Queue address.
+ * \param kobj     LIFO address.
  * \return         Address of a PD buffer available for reading.
  */
 K_PDBUF* kPDMesgFetch( K_PDMESG *const kobj);
@@ -715,13 +725,13 @@ extern K_TCB *runPtr;
 __attribute__((always_inline))
 static inline VOID kDisableIRQ(VOID)
 {
-	  __ASM volatile ("CPSID I" : : : "memory");
+  __ASM volatile ("CPSID I" : : : "memory");
 }
 
 __attribute__((always_inline))
 static inline VOID kEnableIRQ(VOID)
 {
-	  __ASM volatile ("CPSIE I" : : : "memory");
+ __ASM volatile ("CPSIE I" : : : "memory");
 }
 
 
