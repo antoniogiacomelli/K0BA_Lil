@@ -106,14 +106,26 @@ K_ERR kTaskSignal( K_TASK *const taskHandlePtr)
 #define RUN_FLAGS_OPTION (runPtr->flagsOptions)
 /* updates target task flags
  * if it is pending, make it ready */
-ULONG kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask)
+K_ERR kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask,
+		ULONG *updatedFlagsPtr, ULONG option)
 {
 	K_CR_AREA
 	K_CR_ENTER
 
 	/* update the task's flags */
-	taskHandlerPtr->tcbPtr->currFlags |= flagMask;
-	ULONG updatedFlags = taskHandlerPtr->tcbPtr->currFlags;
+	if (option == K_OR)
+	{
+		taskHandlerPtr->tcbPtr->currFlags |= flagMask;
+	}
+	else if (option == K_AND)
+	{
+		taskHandlerPtr->tcbPtr->currFlags &= flagMask;
+	}
+	else
+	{
+		return (K_ERR_INVALID_PARAM);
+	}
+	*updatedFlagsPtr = taskHandlerPtr->tcbPtr->currFlags;
 
 	/* check if task is pending and should wake up */
 	if (taskHandlerPtr->tcbPtr->status == PENDING_FLAGS)
@@ -138,7 +150,7 @@ ULONG kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask)
 		}
 	}
 	K_CR_EXIT
-	return (updatedFlags);
+	return (K_SUCCESS);
 }
 
 /*
@@ -396,22 +408,9 @@ inline VOID kCondVarBroad( K_EVENT *eventPtr)
  * When a task pend on a combination of flags associated to a EVENT_FLAGS
  * object, first it checks if the current flags meet the asked combination.
  * If so, task proceeds.
- * if not, the task  switches to PENDING_FLAGS state.
+ * if not, the task  switches to SLEEPING state.
  */
 #if (K_DEF_EVENT_FLAGS==(ON))
-K_ERR kEventFlagsInit( K_EVENT *const kobj, ULONG mask)
-{
-	K_ERR err = -1;
-	K_CR_AREA
-	K_CR_ENTER
-	err = kEventInit( kobj);
-	if (err == K_SUCCESS)
-	{
-		kobj->eventFlags = mask;
-	}
-	K_CR_EXIT
-	return (err);
-}
 ULONG kEventFlagsQuery( K_EVENT *const kobj)
 {
 	return (kobj->eventFlags);
@@ -499,14 +498,28 @@ K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
 	return (err);
 }
 
-ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask)
+K_ERR kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask, ULONG* updatedFlags,
+		ULONG options)
 {
 	K_CR_AREA
 	K_CR_ENTER
 
 	/* update the event flags */
-	kobj->eventFlags |= flagMask;
-	ULONG updatedFlags = kobj->eventFlags;
+	if (options == K_OR)
+	{
+		kobj->eventFlags |= flagMask;
+
+	}
+	else if (options == K_AND)
+	{
+		kobj->eventFlags &= flagMask;
+	}
+	else
+	{
+		*updatedFlags = kobj->eventFlags;
+		return (K_ERR_INVALID_PARAM);
+	}
+	*updatedFlags = kobj->eventFlags;
 
 	/* process waiting tasks */
 	if (kobj->waitingQueue.size > 0)
@@ -535,7 +548,7 @@ ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask)
 		}
 	}
 	K_CR_EXIT
-	return (updatedFlags);
+	return (K_SUCCESS);
 }
 
 #endif
