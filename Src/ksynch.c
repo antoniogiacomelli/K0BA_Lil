@@ -416,7 +416,7 @@ ULONG kEventFlagsQuery(K_EVENT *const kobj)
 {
 	return (kobj->eventFlags);
 }
-K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
+K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags, ULONG* gotFlagsPtr,
 		 ULONG options, TICK timeout)
 {
 	K_CR_AREA
@@ -477,6 +477,7 @@ K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
 	}
 	UPDATE:
 	/* If CLEAR option is set, clear only the met flags */
+	*gotFlagsPtr = runPtr->gotFlags;
 	if (clear)
 	{
 		kobj->eventFlags &= ~requiredFlags;
@@ -816,9 +817,7 @@ VOID kMutexUnlock( K_MUTEX *const kobj)
 K_ERR kMutexQuery( K_MUTEX *const kobj)
 {
 	K_CR_AREA
-
 	K_CR_ENTER
-
 	if (kobj == NULL)
 	{
 		K_CR_EXIT
@@ -844,4 +843,3 @@ K_ERR kMutexQuery( K_MUTEX *const kobj)
 }
 
 #endif /* mutex */
-
