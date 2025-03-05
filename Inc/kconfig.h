@@ -9,17 +9,14 @@
  *
  *    Number of user tasks.
  *
- * - **Lowest effective priority:**      (`K_DEF_N_MINPRIO`)
- *   Priorities range are from `0` to ``K_DEF_N_MINPRIO`.
+ * - **Lowest effective priority:**      (`K_DEF_MINPRIO`)
+ *   Priorities range are from `0` to ``K_DEF_MINPRIO`.
  *   (0 is highest effective priority)
- *
- * - **Number of timers:**     (`K_DEF_N_TIMERS`)
- *   Minimal: Number of Tasks + 1
  *
  * - **Tick Period:**        (`K_DEF_TICK_PERIOD`)
  *   Pre-defined values are `TICK_1MS`, `TICK_5MS` and `TICK_10MS`.
  *   Users can define it, as they wish, by configuring SysTick.
- *   Recommended value is 5ms.
+ *   
  *
  * - **Queue Discipline**: blocking mechanisms that can change the queue dis
  *   cipline are either by priority  (`K_DEF_ENQ_PRIO`) or FIFO (`K_DEF_ENQ_FIFO`).
@@ -70,7 +67,7 @@
 #define K_DEF_CALLOUT_TIMER				(ON)
 
 /**/
-/*** [ Mmeory Allocator ] *****************************************************/
+/*** [ Memory Allocator ] *****************************************************/
 #define K_DEF_ALLOC						(ON)
 
 /**/
@@ -103,11 +100,11 @@
 
 /**/
 /*** [ Sleep/Wake Events ] ****************************************************/
-#define K_DEF_EVENT                 (ON)
+#define K_DEF_EVENT                     (ON)
 
 /* Extend Event to support Event Flags */
 #if(K_DEF_EVENT==ON)
-#define K_DEF_EVENT_FLAGS           (ON)
+#define K_DEF_EVENT_FLAGS               (ON)
 #endif
 
 /**/
