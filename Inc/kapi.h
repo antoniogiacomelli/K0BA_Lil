@@ -236,19 +236,22 @@ BOOL kMboxIsFull( K_MBOX *const kobj);
 #endif /* MBOX  */
 /*******************************************************************************
  MESSAGE QUEUES (QUEUE AND STREAM)
-******************************************************************************/
-/**
+*******************************************************************************/
+
+/*******************************************************************************
  * There are two mechanisms working as Message Queues: QUEUEs and STREAMs
- * QUEUES are Mailboxes of multiple messages - each slot is fixed to 4-byte
- * size - therefore, unless your messages are exactly 4-bytes, you need to
- * pass a pointer and take care of the message scope.
  *
- * STREAMs are byte-oriented queues which transmit fixed-size messages by deep
- * copy. Each STREAM will have the message size declared on initialisation.
+ * QUEUES are Mailboxes of multiple messages (aka Multibox) - each slot is 
+ * fixed to 4-byte size - and you normally pass a pointer to a message,
+ * unless the message is a 4-byte message (INT, UINT, LONG, ULONG).
+ *
+ * STREAMs are byte-oriented message queues which transmit fixed-size messages 
+ * by deep copy. Each STREAM will have its message size declared on initialisation
+ * and, again, it is fixed.
  *
  * For more information look at the Docbook.
  *
- */
+ *******************************************************************************/
 
 #if (K_DEF_QUEUE == ON)
 
