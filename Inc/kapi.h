@@ -563,6 +563,36 @@ K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
 ULONG kEventFlagsQuery(K_EVENT *const kobj);
 
 #endif
+
+/******************************************************************************
+ * CONDITION VARIABLES
+ ******************************************************************************/
+
+/**
+ * \brief (Helper) Condition Variable Wait. This function must be called
+ *        within a mutex critical region when in the need to wait for a
+ *        a condition. It atomically put the task to sleep and unlocks
+ *        the mutex.
+ * \param eventPtr Pointer to event associated to a condition varaiable.
+ * \param mutexPtr Pointer to mutex associated to a condition variable.
+ * \param timeout  Suspension timeout.
+ * \return K_SUCCESS or specific error
+ */
+inline K_ERR kCondVarWait( K_EVENT *eventPtr, K_MUTEX *mutexPtr, TICK timeout);
+
+/**
+ * \brief The same as kEventSignal - for readability
+ * \param eventPtr Pointer to event
+ * \return K_SUCCESS or specific error
+ */
+inline VOID kCondVarSignal( K_EVENT *eventPtr);
+/**
+ * \brief The same as kEventWake (signal broadcast) - for readability
+ * \param eventPtr Pointer to event
+ * \return K_SUCCESS or specific error
+ */
+inline VOID kCondVarBroad( K_EVENT *eventPtr);
+
 #endif
 
 #if (K_DEF_CALLOUT_TIMER==ON)
