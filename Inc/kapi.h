@@ -472,10 +472,11 @@ K_ERR kTaskSignal( K_TASK *const taskHandlePtr);
  * \brief Writes a bit string of events to a task´s private event flags
  * \param taskHandlePtr Pointer to the target task's handle
  * \param flagMask The bit string of flags
- * \return The updated bit string of flags.
+ * \param updatedFlagsPtr Address to store the updated flags return
+ * \return K_SUCCESS or specific error
  */
-ULONG kTaskFlagsSet( K_TASK *const taskHandlePtr, ULONG flagMask);
-
+K_ERR kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask,
+		ULONG *updatedFlagsPtr, ULONG option);
 /**
  * \brief A task checks for a combination of events on its private flags
  * \param flagMask The combination
@@ -526,25 +527,19 @@ UINT kEventQuery( K_EVENT *const kobj);
 
 #if (K_DEF_EVENT_FLAGS==ON)
 /**
- * \brief  Initialises an EVENT object with event flags
- * \param kobj  Pointer to the Event object
- * \param mask  Initial flags value
- * \return K_SUCCESS or K_ERROR
- */
-K_ERR kEventFlagsInit( K_EVENT *const kobj, ULONG mask);
-
-
-/**
  * \brief  Set a combination of event flags on an Event object and
  *         wakes any tasks that happens to be waiting on that
  *         combination
  *
  * \param kobj Pointer to the event object
  * \param flagMask Flags to be set
- * \return Updated flags
+ * \param updatedFlagsPtr Address to return the updated flags
+ * \param options TX_OR / TX_AND - bitwise operation to perform over
+ * 				  the current Flags
+ * \return K_SUCCESS or specific error
  */
-ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask);
-
+K_ERR kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask,
+		ULONG* updatedFlagsPtr, ULONG options);
 /**
  * \brief Goes to sleep waiting for a combination of events
  *        If they are already met, task proceeds.
