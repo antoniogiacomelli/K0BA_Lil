@@ -394,9 +394,11 @@ K_ERR kStreamPeek( K_STREAM *const kobj, ADDR recvPtr);
 #if (K_DEF_PDMESG == ON)
 
 /**
- * \brief          Pump-drop LIFO initialisation.
+ * \brief               Pump-drop Message Control Block initialisation.
+ *                      This initialisation associates a pool of buffers
+ *                      to a unique control block.
  *
- * \param kobj    	    PD LIFO address.
+ * \param kobj    	    PD Control Block address.
  * \param memCtrlPtr	Pointer to the memory allocator control block
  * \param bufPool  		Pool of PD Buffers, statically allocated.
  * \param nBufs    		Number of buffers for this queue.
@@ -407,15 +409,13 @@ K_ERR kPDMesgInit( K_PDMESG *const kobj, K_MEM *const memCtrlPtr,
 
 /**
  * \brief          Reserves a pump-drop buffer before writing on it.
- *
- * \param kobj     LIFO address.
+ * \param kobj     PD Message Control address.
  * \return         K_SUCCESS or specific error
  */
 K_PDBUF* kPDMesgReserve( K_PDMESG *const kobj);
 /**
  * \brief           Writes into a PD buffer the source address and the size
  *                  of a data message.
- *
  * \param bufPtr    Buffer address.
  * \param srcPtr    Message address.
  * \param dataSize  Message size.
@@ -441,7 +441,6 @@ K_PDBUF* kPDMesgFetch( K_PDMESG *const kobj);
 
 /**
  * \brief          Copies the message from a PD Buffer to a chosen address.
- *
  * \param bufPtr   Address of the PD buffer.
  * \param destPtr  Address that will store the message.
  * \return         K_SUCCESS or specific error
@@ -453,7 +452,6 @@ K_ERR kPDBufRead( K_PDBUF *const bufPtr, ADDR destPtr);
  *                message from a buffer. If there are no more readers
  *                using the buffer, and it is not the last buffer pumped
  *                in the queue, it will be reused.
- *
  * \param kobj    Queue address;
  * \return        K_SUCCESS or specific error
  */
