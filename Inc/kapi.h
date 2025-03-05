@@ -550,6 +550,7 @@ ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask);
  *        If they are already met, task proceeds.
  * \param kobj Pointer to the event object
  * \param requiredFlags Combination of flags to be met
+ * \param gotFlagsPtr Which flags have been captured as set
  * \param options K_ANY(_CLEAR) to wait for any raised flag
  *                K_ALL(_CLEAR) to wait for all flags to be raised
  *                (_CLEAR) will clear the satisfied bit flags.
@@ -557,7 +558,7 @@ ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask);
  * \return K_SUCCESS or specific error
  */
 K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
-		 ULONG options, TICK timeout);
+		ULONG* gotFlagsPtr, ULONG options, TICK timeout);
 
 /**
  * \brief 	Returns the current event flags within an event object.
