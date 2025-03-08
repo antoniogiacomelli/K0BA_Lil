@@ -623,14 +623,17 @@ inline K_ERR kCondVarBroad( K_EVENT *eventPtr);
  * APPLICATION TIMER AND DELAY
  ******************************************************************************/
 /**
- * \brief Initialises an application timer
- * \param phase Initial phase delay
- * \param funPtr The callback when timer expires
- * \param argsPtr Address to callback function arguments
- * \param reload TRUE for reloading after timer-out. FALSE for an one-shot
- * \return K_SUCCESS/K_ERROR
+ * \brief 		   Initialise a Callout Timer
+ * \param kobj     Pointer to the timer object
+ * \param phase    Phase delay
+ * \param duration Time until it expires (in ticks)
+ * \param funPtr   Function pointer to the callback
+ * \param argsPtr  Pointer to arguments
+ * \param reload   TRUE reload, FALSE one-shot
+ * \return K_SUCESS or a specific error
  */
-K_ERR kTimerInit( K_TIMER*, TICK, TICK, CALLOUT, ADDR, BOOL);
+K_ERR kTimerInit( K_TIMER *kobj, TICK phase, TICK duration, CALLOUT funPtr,
+		ADDR argsPtr, BOOL reload);
 #endif
 
 /**
