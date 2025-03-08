@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]
  *
  *******************************************************************************
  * ##Important Parameters##
@@ -36,7 +36,7 @@
 
 /* include headers for HAL and compiler in kenv.h */
 /* and set this macro to 1                        */
-#define CUSTOM_ENV (0)
+#define CUSTOM_ENV (1)
 
 /**/
 /*** [ System Tasks Stack Size (WORDS)] ***************************************/
@@ -51,11 +51,11 @@
 
 /**/
 /*** [ Time Quantum ] *********************************************************/
-#define K_DEF_TICK_PERIOD               (TICK_5MS)
+#define K_DEF_TICK_PERIOD               (TICK_1MS)
 
 /**/
 /*** [ Number of user-defined tasks ] *****************************************/
-#define K_DEF_N_USRTASKS    	        (4)
+#define K_DEF_N_USRTASKS    	        (5)
 
 /**/
 /*** [The lowest effective priority, that is the highest user-defined value]  */
@@ -125,6 +125,12 @@
 #define K_DEF_FUNC_MBOX_ISFULL			(ON)
 #define K_DEF_FUNC_MBOX_PEEK			(ON)
 #define K_DEF_FUNC_MBOX_POSTOVW			(ON)
+
+#if (K_DEF_FUNC_MBOX_POSTPEND==ON)
+/*** [ Mailbox Client-Server Priority Inheritance ] ***************************/
+#define K_DEF_MBOX_POSTPEND_PRIO_INH	(ON)
+
+#endif
 #endif
 
 /**/

@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -12,17 +12,16 @@
 #ifndef SYS_ALIAS
 #define SYS_ALIAS
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #include "kconfig.h"
 #include "kenv.h"
 
-
-
-/*
- * brief This is the offset w.r.t the top of a stack frame
- * The numbers are unsigned.
- * */
+	/*
+	 * brief This is the offset w.r.t the top of a stack frame
+	 * The numbers are unsigned.
+	 * */
 
 #define PSR_OFFSET  1 /* Program Status Register offset */
 #define PC_OFFSET   2 /* Program Counter offset */
@@ -41,18 +40,22 @@ extern "C" {
 #define R5_OFFSET   15 /* R5 Register offset */
 #define R4_OFFSET   16 /* R4 Register offset */
 
-/* Timeout values */
+	/* Timeout values */
 #define K_WAIT_FOREVER      (0xFFFFFFFF)
 #define K_NO_WAIT			(0)
 
-/* Event Flags values */
+	/* Event Flags values */
 #define K_ALL        (1)
 #define K_ANY        (2)
 #define K_ALL_CLEAR  (3)
 #define K_ANY_CLEAR  (4)
+#define K_OR		 (K_ANY)
+#define K_AND		 (K_ALL)
+#define K_OR_CLEAR	 (K_ANY_CLEAR)
+#define K_AND_CLEAR	 (K_ALL_CLEAR)
+#define K_MAIL		 (5)
 
-
-/*** Config values */
+	/*** Config values */
 
 #define TIMHANDLER_ID               255
 #define IDLETASK_ID                 0
@@ -65,21 +68,20 @@ extern "C" {
 #define TICK_5MS            (SystemCoreClock/2000)  /* Tick period of 5ms */
 #define TICK_1MS            (SystemCoreClock/10000) /*  Tick period of 1ms */
 
-/* Misc */
+	/* Misc */
 
 #define KFAULT				kErrHandler
 #define DEADCODE            (0)
-/* inline asm */
+	/* inline asm */
 #define DMB								asm volatile ("dmb 0xF":::"memory");
 #define DSB								asm volatile ("dsb 0xF":::"memory");
 #define ISB								asm volatile ("isb 0xF":::"memory");
 #define NOP                             asm volatile ("nop");
 
-/*_ means assembly hardwired code parms */
-#define _K_SWTCH asm volatile("svc #0xC5");
-#define _K_STUP asm volatile("svc #0xAA");
+	/*_ means assembly hardwired code parms */
+ #define _K_STUP asm volatile("svc #0xAA");
 
-/*  helpers */
+	/*  helpers */
 
 #define CPY(d,s,z, r)                                 \
  do                                                   \
@@ -94,18 +96,18 @@ extern "C" {
       }                                               \
   } while(0U)
 
-/*todo: improve copy by advancing dst and src and reusing
- * as indexes for mesgq
- */
+	/*todo: improve copy by advancing dst and src and reusing
+	 * as indexes for mesgq
+	 */
 #define CPYQ(d,s,z,r) CPY(d,s,z,r)
 
-__STATIC_FORCEINLINE unsigned kIsISR(void)
-{
-	unsigned ipsr_value;
-	asm("MRS %0, IPSR" : "=r"(ipsr_value));
-	DMB
-	return (ipsr_value);
-}
+	__STATIC_FORCEINLINE unsigned kIsISR( void)
+	{
+		unsigned ipsr_value;
+		asm("MRS %0, IPSR" : "=r"(ipsr_value));
+		DMB
+		return (ipsr_value);
+	}
 
 #define K_GET_CONTAINER_ADDR(memberPtr, containerType, memberName) \
     ((containerType *)((unsigned char *)(memberPtr) - \
@@ -114,10 +116,15 @@ __STATIC_FORCEINLINE unsigned kIsISR(void)
 #define K_CR_ENTER crState_ = kEnterCR();
 #define K_CR_EXIT  kExitCR(crState_);
 #define K_PEND_CTXTSWTCH K_TRAP_PENDSV
-#define K_SWTCH			 _K_SWTCH
-#define READY_HIGHER_PRIO(ptr) ((ptr->priority < nextTaskPrio) ? 1 : 0)
-#define K_TICK_TYPE_MAX ((1ULL << (8 * sizeof(typeof(TICK)))) - 1)
-#define K_PRIO_TYPE_MAX ((1ULL << (8 * sizeof(typeof(PRIO)))) - 1)
+ #define READY_HIGHER_PRIO(ptr) ((ptr->priority < nextTaskPrio) ? 1 : 0)
+	/*maximum usigned N-bit number 2^N - 1
+	 *maximum signed N-bit number 2^(N-1) - 1*/
+#define K_TICK_TYPE_MAX ((1ULL << (8 * sizeof(typeof(ULONG)))) - 1)
+#define K_PRIO_TYPE_MAX ((1ULL << (8 * sizeof(typeof(BYTE)))) - 1)
+#define K_INT_MAX    ((1ULL << ((8 * sizeof(typeof(INT))) - 1)) - 1)
+#define K_UINT_MAX   ((1ULL << (8 * sizeof(typeof(UINT)))) - 1)
+#define K_ULONG_MAX  ((1ULL << (8 * sizeof(typeof(ULONG)))) - 1)
+#define K_LONG_MAX   ((1ULL << ((8 * sizeof(typeof(LONG))) - 1)) - 1)
 #define IS_NULL_PTR(ptr) ((ptr) == NULL ? 1 : 0)
 
 #define K_TRAP_PENDSV  \

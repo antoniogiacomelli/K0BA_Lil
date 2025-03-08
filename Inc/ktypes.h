@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]
  *
  ******************************************************************************
  * 	In this header:
@@ -43,7 +43,7 @@ typedef char *STRING; /*Pointer to string of chars */
 /*** Priority range: 0-31 - tasks can have the same priority    */
 typedef unsigned char PID; /* System defined Task ID type */
 typedef unsigned char PRIO; /* Task priority type */
-typedef unsigned TICK; /* Tick count type */
+typedef unsigned long TICK; /* Tick count type */
 
 /*** Func ptrs typedef */
 typedef void (*TASKENTRY)(void); /* Task entry function pointer */
@@ -73,7 +73,9 @@ typedef enum kErr
 	K_ERR_STREAM_FULL = 0xB,
 	K_ERR_STREAM_EMPTY = 0xC,
 	K_ERR_MUTEX_LOCKED = 0xD,
-	K_ERR_INVALID_PARAM	= 0xE,
+	K_ERR_MUTEX_NOT_LOCKED = 0xE,
+	K_ERR_INVALID_PARAM	= 0xF,
+	K_ERR_EMPTY_WAITING_QUEUE = 0x10,
 	/* FAULTY RETURN VALUES: negative */
 	K_ERROR = (int) 0xFFFFFFFF, /* (0xFFFFFFFF) Generic error placeholder */
 
@@ -106,7 +108,8 @@ typedef enum kErr
 	K_ERR_MUTEX_REC_LOCK = (int) 0xFFFF0014,
 	K_ERR_MUTEX_NOT_OWNER = (int) 0xFFFF0015,
 	K_ERR_TASK_INVALID_ST = (int) 0xFFFF0016,
-	K_ERR_INVALID_ISR_PRIMITIVE = (int) 0xFFFFF0017
+	K_ERR_INVALID_ISR_PRIMITIVE = (int) 0xFFFFF0017,
+	K_ERR_OVERFLOW = (int) 0xFFFFF0018
 } K_ERR;
 
 /**
@@ -116,12 +119,12 @@ typedef enum kFault
 {
 	FAULT = K_ERROR,
 	FAULT_READY_QUEUE = K_ERR_READY_QUEUE,
-	FAULT_NULL_OBJ =  K_ERR_OBJ_NULL,
+	FAULT_OBJ_NULL =  K_ERR_OBJ_NULL,
 	FAULT_KERNEL_VERSION = K_ERR_KERNEL_VERSION,
 	FAULT_OBJ_NOT_INIT = K_ERR_OBJ_NOT_INIT,
 	FAULT_TASK_INVALID_PRIO = K_ERR_INVALID_PRIO,
 	FAULT_UNLOCK_OWNED_MUTEX = K_ERR_MUTEX_NOT_OWNER,
-	FAULT_ISR_INVALID_PRIMITVE = K_ERR_INVALID_ISR_PRIMITIVE,
+	FAULT_INVALID_ISR_PRIMITVE = K_ERR_INVALID_ISR_PRIMITIVE,
 	FAULT_TASK_INVALID_STATE = K_ERR_TASK_INVALID_ST,
 	FAULT_TASK_INVALID_TSLICE = K_ERR_INVALID_TSLICE
 } K_FAULT;

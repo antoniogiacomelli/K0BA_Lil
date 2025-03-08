@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -52,6 +52,11 @@ NEG  R0, R0
 ADD  R0, #31
 BX LR
 
+
+.global kApplicationInit
+.type kApplicationInit, %function
+.thumb_func
+
 .global kErrHandler  /* defined in kerr.c */
 .type kErrHandler, %function
 .thumb_func
@@ -61,27 +66,12 @@ BX LR
 .thumb_func
 SVC_Handler:       /* we start-up from msp               */
     TST LR, #4     /* for MSP, LR here shall end with a x9               */
-    BNE CHECK_CTXTSWTCH /* swtch ctxts from psp */
-   /*fallthrough: check if #N is what we are prepared to handle.         */
-   /*  when trapping 6 reg are pushed                                    */
+    BNE ERR
     MRS R12, MSP
     LDR R1, [R12, #24] /* <-  the instruction that brought us here       */
-   /* a THUMB2 instruction is 16-bit.                                    */
-   /* the immediate is 1 byte. then, within code memory,                 */
-   /* the immediate can be taken, by looking at the BYTE placed, 16      */
-   /* [B]it towards the (-)minor address position                        */
     LDRB R12, [R1,#-2]
     CMP R12, #APP_START_UP_IMM
     BEQ USRSTARTUP
-    BNE ERR
-    CHECK_CTXTSWTCH:
-    CPSID I
-    MRS R12, PSP
-    LDR R1, [R12, #24]
-    LDRB R12, [R1,#-2]
-    CMP R12, #USR_CTXT_SWTCH
-    BEQ SWITCHTASK
-    /*fallthru*/
     ERR:
     MOV R0, #FAULT_SVC
     BL  kErrHandler
@@ -94,6 +84,7 @@ SVC_Handler:       /* we start-up from msp               */
     CPSID I
     MOVS R0, #2               /* 0b10 = PSP, PRIV                         */
     MSR CONTROL, R0
+    DSB
     LDR R1, =runPtr
     LDR R2, [R1, #SP_OFFSET]
     MOVS R12, #RUNNING
@@ -103,7 +94,7 @@ SVC_Handler:       /* we start-up from msp               */
     LDR R2, [R2, #SP_OFFSET] /* base address == &(runPtr->sp)              */
     LDMIA R2!, {R4-R11}      /* 'POP' R4-R11 as    assembled on kInitTcb_  */
     MSR PSP, R2              /* update PSP after 'popping '                */
-    MOV LR, #0xFFFFFFFD      /* set LR to indicate we choose PSP           */
+    MOV LR, #0xFFFFFFFD      /* set LR to indicate we choose PSP          */
     LDR R0, =STICK_CTRL
     MOVS R1, #STICK_ON       /* tick on                                    */
     STR R1, [R0]
@@ -121,12 +112,13 @@ SysTick_Handler:
     TICKHANDLER:
     BL kTickHandler        /* always run kTickHandler, result in R0        */
     CMP R0, #1
-    BEQ SWITCHTASK
+    BEQ SWITCH
     POP {R0, LR}
     CMP LR, 0xFFFFFFF1
     BEQ RESUMEISR
     RESUMETASK:
     MOV LR, #0xFFFFFFFD
+    DSB
     CPSIE I
     ISB
     BX LR
@@ -134,68 +126,24 @@ SysTick_Handler:
     CPSIE I
     ISB
     BX LR
-
+    SWITCH:
+    POP {R0, LR}
+    B SWITCHTASK
 
 /* deferred context switching */
 .global PendSV_Handler
 .type PendSV_Handler, %function
 .thumb_func
 PendSV_Handler:
-    CPSID I
     SWITCHTASK:
-    BL SAVEUSRCTXT
-    BL kSchSwtch
-    B  RESTOREUSRCTXT
-
-/* user ctxt save: */
-
-/* when a  thread is interruptEd the CPU pushes:                             */
-/* STACKFRAME: caller-saved registers                                        */
-/* [ xPSR    ]                                                               */
-/* [ PC(R15) ]                                                               */
-/* [ LR(R14) ]                                                               */
-/* [ R12     ]                                                               */
-/* [ R 3     ]                                                               */
-/* [ R 2     ]                                                               */
-/* [ R 1     ]                                                               */
-/* [ R 0     ] (<-SP points to R0)                                           */
-/*  more often than NOT, the former stacked registers are enough to restore  */
-/*  context properly and, keeping this way would indeed provide us a faster  */
-/*  ctxt swtch. but, the kernel cannot (without adding more overhead) know   */
-/*  what really has changed. so, we go conservative, save everything:        */
-
-.global SAVEUSRCTXT
-.type SAVEUSRCTXT, %function
-.thumb_func
-SAVEUSRCTXT:
-    MRS R12, PSP              /* arM Read Special register                   */
-    STMDB R12!, {R4-R11}      /* we assume no FPU                            */
-
-/* STACKFRAME: callee-saved registers                                        */
-/* [ R11     ]                                                               */
-/* [ R10     ]                                                               */
-/* [ R 9     ]                                                               */
-/* [ R 8     ]                                                               */
-/* [ R 7     ]                                                               */
-/* [ R 6     ]                                                               */
-/* [ R 5     ]                                                               */
-/* [ R 4     ] <--  r12 points to the bottom of the stack.                   */
-/*                  this is were we resume a task from                       */
-    MSR PSP, R12    /* keep the task state consistent, though switchin       */
+    MRS R12, PSP
+    STMDB R12!, {R4-R11}
+    MSR PSP, R12
     LDR R0, =runPtr
     LDR R1, [R0]
     STR R12, [R1]
     DSB
-    BX LR
-/* user ctxt restore: now we do the opposite                              */
-/* after getting the saved address pointing to the value R4 was storing   */
-/* we assign it to  PSP, POP then back to the core and - after updating   */
-/* PSP and LR, we return and the CPU will restore the remaining frame     */
-
-.global RESTOREUSRCTXT
-.type RESTOREUSRCTXT, %function
-.thumb_func
-RESTOREUSRCTXT:
+    BL kSchSwtch
     LDR R0, =runPtr
     LDR R1, [R0]
     LDR R3, [R1, #RUNCNTR_OFFSET]
@@ -210,11 +158,5 @@ RESTOREUSRCTXT:
     DSB
     CPSIE I
     ISB
-    BX LR                   /*...running, running, running...            */
-/* note we couldnt use PUSH/POP   pseudo-instructions because here in the */
-/* handler     sp is the MSP, and these pseudo-instructions take the      */
-/* current stack pointer as the base address. quite odd (for a RISC),     */
-/* we have Load Multiple Increment After  for POPPing,and  Store Multiple */
-/* Decrement Before for PUSHing. they load/store and update the addresses */
-/* but as we are not operating directly on the PSP - as PUSH/POP would,   */
-/* we update its value manually                                           */
+    BX LR
+

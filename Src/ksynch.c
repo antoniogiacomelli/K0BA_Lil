@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications | [VERSION: 0.3.1]]
+ * [K0BA - Kernel 0 For Embedded Applications | [VERSION: 0.4.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -10,8 +10,14 @@
  *  Public API  	    : Yes
  *
  * 	In this unit:
- *					o Events (Condition Variables and Event Flags)
+ *					o Direct Task Signals (Binary Semaphore and Flags)
+ *					o Events (Sleep/Wake, Condition Variables and Event Flags)
  *					o Semaphores (Counter, Binary and Mutexes)
+ *
+ *  Notes: Blocking methods cannot be issued from ISR
+ *  	   There is no distinct method for ISRs
+ *
+ *
  *
  *****************************************************************************/
 
@@ -25,14 +31,16 @@
 /*
  this function pends on a task private binary semaphore
  if already signalled task proceeds, otherwise switches
- to PENDING status until signalled, returning SUCCESS
- if timeout, task get READY again  returning ERR_TIMEOUT
+ to PENDING status until signalled, returning SUCCESS.
+ if timeout, task get READY again, returning
+ ERR_TIMEOUT after dispatched
  */
+static BOOL first=1;
 K_ERR kTaskPend( TICK timeout)
 {
 	K_ERR err;
 	if (kIsISR())
-		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
+		KFAULT( FAULT_INVALID_ISR_PRIMITVE);
 	K_CR_AREA
 	K_CR_ENTER
 	if (runPtr->signalled == TRUE)
@@ -49,6 +57,7 @@ K_ERR kTaskPend( TICK timeout)
 			kTimeOut( &runPtr->taskHandlePtr->timeoutNode, timeout);
 		}
 		K_PEND_CTXTSWTCH
+
 		K_CR_EXIT
 		/* resuming here, if time is out, return error */
 		K_CR_ENTER
@@ -66,8 +75,8 @@ K_ERR kTaskPend( TICK timeout)
 }
 
 /* Signal a task directly on its private bin semaphore
- If pending task is readied. If not, task bin semaphore
- remains or switches to TRUE
+ If pending, task is readied - semaphore remains 0
+ If not, task bin remains 1
  */
 K_ERR kTaskSignal( K_TASK *const taskHandlePtr)
 {
@@ -103,20 +112,51 @@ K_ERR kTaskSignal( K_TASK *const taskHandlePtr)
 #if (K_DEF_TASK_FLAGS==ON)
 /* running task flags */
 #define RUN_FLAGS (runPtr->currFlags)
-#define RUN_FLAGS_OPTION (runPtr->flagsOptions)
+
 /* updates target task flags
- * if it is pending, make it ready */
-ULONG kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask)
+ * if it is pending, task will switch to ready if
+ * required flags are met
+ * */
+K_ERR kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask,
+		ULONG *updatedFlagsPtr, ULONG option)
 {
 	K_CR_AREA
 	K_CR_ENTER
 
 	/* update the task's flags */
-	taskHandlerPtr->tcbPtr->currFlags |= flagMask;
-	ULONG updatedFlags = taskHandlerPtr->tcbPtr->currFlags;
+	if (option == K_OR)
+	{
+		taskHandlerPtr->tcbPtr->currFlags |= flagMask;
+	}
+	else if (option == K_AND)
+	{
+		taskHandlerPtr->tcbPtr->currFlags &= flagMask;
+	}
+	else if (option == K_MAIL)
+	{
+		/* this option is to create an asynchronous direct
+		   mailbox. flags are entirely overwritten
+		   task reads message via updatedFlagsPtr */
+		   taskHandlerPtr->tcbPtr->currFlags = flagMask;
+	}
+	else
+	{
+		return (K_ERR_INVALID_PARAM);
+	}
+	*updatedFlagsPtr = taskHandlerPtr->tcbPtr->currFlags;
 
-	/* check if task is pending and should wake up */
-	if (taskHandlerPtr->tcbPtr->status == PENDING_FLAGS)
+	/* if it is direct message, ready task if pending and exit */
+	if (option == K_MAIL)
+	{
+		if (taskHandlerPtr->tcbPtr->status == PENDING_FLAGS)
+		{
+			taskHandlerPtr->tcbPtr->status = READY;
+			kReadyCtxtSwtch( taskHandlerPtr->tcbPtr);
+		}
+
+	}
+	/* otherwise, check if task is pending and has required flags met */
+	else if (taskHandlerPtr->tcbPtr->status == PENDING_FLAGS)
 	{
 		BOOL all = (taskHandlerPtr->tcbPtr->flagsOptions & K_ALL)
 				|| (taskHandlerPtr->tcbPtr->flagsOptions & K_ALL_CLEAR);
@@ -130,30 +170,35 @@ ULONG kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask)
 			/* move task to READY state */
 			taskHandlerPtr->tcbPtr->status = READY;
 			kReadyCtxtSwtch( taskHandlerPtr->tcbPtr);
-			/* Clear flags if necessary */
+			/* clear flags if necessary */
 			if (clear)
 			{
 				taskHandlerPtr->tcbPtr->currFlags &= ~flagMask;
 			}
 		}
 	}
-
 	K_CR_EXIT
-	return updatedFlags;
+	return (K_SUCCESS);
 }
 
 /*
  * caller checks on a combination of flags
  * if this combination is already set, function returns
  * if it is not set, caller blocks
+ * return value is the current task event flags
  */
-ULONG kTaskFlagsPend( ULONG flagMask, ULONG option, TICK timeout)
+ULONG kTaskFlagsPend( ULONG requiredFlags, ULONG option, TICK timeout)
 {
 	K_CR_AREA
 	K_CR_ENTER
+	if (kIsISR())
+	{
+		KFAULT( FAULT_INVALID_ISR_PRIMITVE);
+	}
 	BOOL clear = 0;
 	BOOL all = 0;
 	ULONG currFlags = RUN_FLAGS;
+
 	switch (option)
 	{
 	case (K_ANY):
@@ -173,24 +218,24 @@ ULONG kTaskFlagsPend( ULONG flagMask, ULONG option, TICK timeout)
 		all = 1;
 		break;
 	default:
-		/* not valid option, return with no updates */
+		/* K_MAIL or invalid option, task->currFlags are not updated
+		 * just exit */
 		goto EXIT;
 	}
 	/*  given option parameters, do not pend if
 	 *  current flags meet flagMask  */
-	if ((all && ((currFlags & flagMask) == flagMask))
-			|| (!all && (currFlags & flagMask)))
+	if ((all && ((currFlags & requiredFlags) == requiredFlags))
+			|| (!all && (currFlags & requiredFlags)))
 	{
-		/* if CLEAR option, zero flags for AND
-		 * clear met flags for OR */
+		/* clear met flags */
 		if (clear)
 		{
 			{ /* Only clear the met flags */
-				currFlags &= ~flagMask;
+				currFlags &= ~requiredFlags;
 			}
 		}
 	}
-	else /* if not, pend */
+	else /* current flags do not met required flags, pend */
 	{
 		runPtr->status = PENDING_FLAGS;
 		if ((timeout > 0) && (timeout < K_WAIT_FOREVER))
@@ -210,23 +255,35 @@ ULONG kTaskFlagsPend( ULONG flagMask, ULONG option, TICK timeout)
 		if (timeout > K_NO_WAIT && timeout < K_WAIT_FOREVER)
 			kRemoveTimeoutNode( &runPtr->taskHandlePtr->timeoutNode);
 	}
-	/* update flags */
 	RUN_FLAGS = currFlags;
 	EXIT:
 	K_CR_EXIT
 	return (RUN_FLAGS);
 }
+
+
 #endif
 /******************************************************************************
  * SLEEP/WAKE ON EVENTS
  ******************************************************************************/
+/*
+ * Sleep/Wake Events do not record events. It is a queue associated to an Event
+ * Object. Tasks are enqueued and dequeued by priority.
+ * As a building block for synchronisation it:
+ * - Can be used alone, mainly for broadcast on events we do not mind recording,
+ *   Wake is broadcast signal; Signal wakes a single waiting task
+ * - Along with mutexes to compose Condition Variables
+ * - If Event Flags are enabled, it extends to store a ULONG for public Event
+ *   Groups, and kEventFlags* methods are to be used.
+ * - Blocking time-out is supported.
+ */
+
 #if (K_DEF_EVENT==ON)
 K_ERR kEventInit( K_EVENT *const kobj)
 {
-
 	if (kobj == NULL)
 	{
-		KFAULT( FAULT_NULL_OBJ);
+		KFAULT( FAULT_OBJ_NULL);
 	}
 	K_CR_AREA
 	K_CR_ENTER
@@ -243,27 +300,38 @@ K_ERR kEventInit( K_EVENT *const kobj)
 	return (K_SUCCESS);
 }
 /*
- Sleep waiting for a signal or wake event
- tasks sleeping for an event are enqueued and
- dequeued by priority
+ Sleep for a Signal/Wake Event
+ Timeout in ticks.
  */
 K_ERR kEventSleep( K_EVENT *kobj, TICK timeout)
 {
 	K_CR_AREA
 	K_CR_ENTER
+	K_ERR err = K_ERROR;
 	if (kIsISR())
 	{
-		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
+		KFAULT( FAULT_INVALID_ISR_PRIMITVE);
+		K_CR_EXIT
+		return (K_ERR_INVALID_ISR_PRIMITIVE);
 	}
 	if (kobj == NULL)
 	{
-		KFAULT( FAULT_NULL_OBJ);
+		KFAULT( FAULT_OBJ_NULL);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NULL);
 	}
 	if (kobj->init == FALSE)
 	{
 		KFAULT( FAULT_OBJ_NOT_INIT);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NULL);
 	}
-	kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
+	err = kTCBQEnqByPrio( &kobj->waitingQueue, runPtr);
+	if (err < 0)
+	{
+		K_CR_EXIT
+		return (err);
+	}
 	runPtr->status = SLEEPING;
 	if ((timeout > 0) && (timeout < K_WAIT_FOREVER))
 	{
@@ -287,99 +355,87 @@ K_ERR kEventSleep( K_EVENT *kobj, TICK timeout)
 	K_CR_EXIT
 	return (K_SUCCESS);
 }
-/* broadcast signal to an event - all tasks will switch to READY */
-VOID kEventWake( K_EVENT *kobj)
+/* Broadcast signal to an event - all tasks will switch to READY */
+K_ERR kEventWake( K_EVENT *const kobj)
 {
-	if (kobj == NULL)
-	{
-		KFAULT( FAULT_NULL_OBJ);
-	}
-	if (kobj->waitingQueue.size == 0)
-		return;
 	K_CR_AREA
 	K_CR_ENTER
+	K_ERR err = K_ERROR;
+	if (kobj == NULL)
+	{
+		KFAULT( FAULT_OBJ_NULL);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NULL);
+	}
 	if (kobj->init == FALSE)
 	{
 		KFAULT( FAULT_OBJ_NOT_INIT);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NOT_INIT);
+	}
+	if (kobj->waitingQueue.size == 0)
+	{
+		K_CR_EXIT
+		return (K_ERR_EMPTY_WAITING_QUEUE);
 	}
 	ULONG sleepThreads = kobj->waitingQueue.size;
-	if (sleepThreads > 0)
+	for (ULONG i = 0; i < sleepThreads; ++i)
 	{
-		for (ULONG i = 0; i < sleepThreads; ++i)
-		{
-			K_TCB *nextTCBPtr;
-			kTCBQDeq( &kobj->waitingQueue, &nextTCBPtr);
-			kassert( !kReadyCtxtSwtch( nextTCBPtr));
-		}
+		K_TCB *nextTCBPtr;
+		err = kTCBQDeq( &kobj->waitingQueue, &nextTCBPtr);
+		if (err < 0)
+			return (err);
 	}
 	K_CR_EXIT
-	return;
+	return (K_SUCCESS);
 }
 /*
- signal an event - a single task switches to READY, the highest
- priority one enqueued
+ Signal an Event - a Single Task Switches to READY
+ Dequeued by priority
  */
 
-VOID kEventSignal( K_EVENT *kobj)
+K_ERR kEventSignal( K_EVENT *const kobj)
 {
-	if (kobj == NULL)
-	{
-		KFAULT( FAULT_NULL_OBJ);
-	}
-	if (kobj->waitingQueue.size == 0)
-		return;
 	K_CR_AREA
 	K_CR_ENTER
+	K_ERR err = K_ERROR;
+	if (kobj == NULL)
+	{
+		KFAULT( FAULT_OBJ_NULL);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NULL);
+	}
+	if (kobj->waitingQueue.size == 0)
+		err = (K_ERR_EMPTY_WAITING_QUEUE);
+	K_CR_EXIT
+	return (err);
 	if (kobj->init == FALSE)
 	{
 		KFAULT( FAULT_OBJ_NOT_INIT);
+		err = (K_ERR_OBJ_NOT_INIT);
+		K_CR_EXIT
+		return (err);
 	}
-	K_TCB *nextTCBPtr;
-	kTCBQDeq( &kobj->waitingQueue, &nextTCBPtr);
-	kassert( !kReadyCtxtSwtch( nextTCBPtr));
+	else
+	{
+		K_TCB *nextTCBPtr;
+		err = kTCBQDeq( &kobj->waitingQueue, &nextTCBPtr);
+		if (err < 0)
+			return (err);
+	}
 	K_CR_EXIT
-	return;
+	return (K_SUCCESS);
 }
-/* returns the number of tasks sleeping for an event */
-UINT kEventQuery( K_EVENT *const kobj)
+/* Returns the number of tasks sleeping for an event */
+ULONG kEventQuery( K_EVENT *const kobj)
 {
 	if (kobj == NULL)
 	{
-		KFAULT( FAULT_NULL_OBJ);
+		KFAULT( FAULT_OBJ_NULL);
+		return (0);
 	}
 	return (kobj->waitingQueue.size);
 }
-
-/***************************************************************************/
-/* CONDITION VARIABLES                                                     */
-/***************************************************************************/
-
-#if ((K_DEF_MUTEX==ON))
-/* this is a helper for condition variables to perform the wait atomically
- unlocking the mutex and going to sleep
- for signal and wake one can use EventSignal and EventWake */
-inline K_ERR kCondVarWait( K_EVENT *eventPtr, K_MUTEX *mutexPtr, TICK timeout)
-{
-	K_ERR err;
-	/* atomic */
-	K_CR_AREA
-	K_CR_ENTER
-	kMutexUnlock( mutexPtr);
-	err = kEventSleep( eventPtr, timeout);
-	K_CR_EXIT
-	return (err);
-	/* upon returning (after wake) the condition variable must loop lock the
-	 * the mutex and loop around the condition */
-}
-inline VOID kCondVarSignal( K_EVENT *eventPtr)
-{
-	return (kEventSignal( eventPtr));
-}
-inline VOID kCondVarBroad( K_EVENT *eventPtr)
-{
-	return (kEventWake( eventPtr));
-}
-#endif
 
 /*****************************************************************************/
 /* EVENT FLAGS                                                               */
@@ -388,37 +444,46 @@ inline VOID kCondVarBroad( K_EVENT *eventPtr)
 /* Event Flags extend EVENT. For each event there is an associated ULONG to
  * represent a bit string. Every time a task posts to an Event Flags object, the
  * kernel sweep the event list to check if there is one ore more  tasks waiting
- * for that combination. If so, it wakes up that task. Note this combination of
- * flags a task waits for is stored in each task control block - on the same
- * ULONG used for private Flags.
- * When a task pend on a combination of flags associated to a EVENT_FLAGS
- * object, first it checks if the current flags meet the asked combination.
- * If so, task proceeds.
- * if not, the task  switches to SLEEPING state.
+ * for that combination. If so, it wakes up each task.
+ * Note this combination of flags a task waits for is stored in each
+ * task control block - on the same ULONG storage for private Flags.
  */
 #if (K_DEF_EVENT_FLAGS==(ON))
-K_ERR kEventFlagsInit( K_EVENT *const kobj, ULONG mask)
-{
-	K_ERR err = -1;
-	K_CR_AREA
-	K_CR_ENTER
-	err = kEventInit( kobj);
-	if (err == K_SUCCESS)
-	{
-		kobj->eventFlags = mask;
-	}
-	K_CR_EXIT
-	return (err);
-}
-ULONG kEventFlagsQuery(K_EVENT *const kobj)
+
+/* Returns the current event flags of an Event Object */
+ULONG kEventFlagsQuery( K_EVENT *const kobj)
 {
 	return (kobj->eventFlags);
 }
+/* Get is the same as Pend
+ * When a task pends on a combination of flags associated to a EVENT_FLAGS
+*  object, first it checks if the current flags meet the asked combination.
+*  If so, task proceeds.
+*  if not, the task  switches to SLEEPING state.
+*/
 K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
-		 ULONG options, TICK timeout)
+		ULONG *gotFlagsPtr, ULONG options, TICK timeout)
 {
 	K_CR_AREA
 	K_CR_ENTER
+	if (kIsISR())
+	{
+		KFAULT( FAULT_INVALID_ISR_PRIMITVE);
+		K_CR_EXIT
+		return (K_ERR_INVALID_ISR_PRIMITIVE);
+	}
+	if (kobj == NULL)
+	{
+		KFAULT( FAULT_OBJ_NULL);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NULL);
+	}
+	if (kobj->init == FALSE)
+	{
+		KFAULT( FAULT_OBJ_NOT_INIT);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NULL);
+	}
 	K_ERR err = -1;
 	BOOL clear = 0;
 	BOOL all = 0;
@@ -446,48 +511,84 @@ K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
 	default:
 		goto EXIT;
 	}
-
 	/* Check if event condition is already met */
 	if ((all && ((currFlags & requiredFlags) == requiredFlags))
 			|| (!all && (currFlags & requiredFlags)))
 	{
 		err = K_SUCCESS;
-		goto UPDATE;
+		runPtr->gotFlags = kobj->eventFlags;
+		if (clear)
+		{
+			kobj->eventFlags &= ~requiredFlags;
+		}
 	}
 	else
 	{
-		/* Block task if condition is not met */
-		err = kEventSleep( kobj, timeout);
-		K_CR_EXIT
-		K_CR_ENTER
-		if (err == K_SUCCESS)
+		kTCBQEnq( &kobj->waitingQueue, runPtr);
+		runPtr->status = SLEEPING;
+		if ((timeout > 0) && (timeout < K_WAIT_FOREVER))
 		{
-			goto UPDATE;
+			kTimeOut( &kobj->timeoutNode, timeout);
 		}
-		else
+		K_PEND_CTXTSWTCH
+		K_CR_EXIT
+		/* resuming here, if time is out, return error */
+		K_CR_ENTER
+		if (runPtr->timeOut)
 		{
+			runPtr->timeOut = FALSE;
+			err = K_ERR_TIMEOUT;
 			goto EXIT;
 		}
-	}
-	UPDATE:
-	/* If CLEAR option is set, clear only the met flags */
-	if (clear)
-	{
-		kobj->eventFlags &= ~requiredFlags;
+		if ((timeout > K_NO_WAIT) && (timeout < K_WAIT_FOREVER))
+			kRemoveTimeoutNode( &kobj->timeoutNode);
+		/* snap of the flags taken when task was made ready */
+		*gotFlagsPtr = runPtr->gotFlags;
+		/* this cannot stick so we know they've been serviced */
+		runPtr->gotFlags = 0UL;
+		if (clear)
+		{
+			kobj->eventFlags &= ~requiredFlags;
+		}
 	}
 	EXIT:
 	K_CR_EXIT
 	return (err);
 }
 
-ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask)
+K_ERR kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask, ULONG *updatedFlags,
+		ULONG options)
 {
 	K_CR_AREA
 	K_CR_ENTER
-
+	if (kobj == NULL)
+	{
+		KFAULT( FAULT_OBJ_NULL);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NULL);
+	}
+	if (kobj->init == FALSE)
+	{
+		KFAULT( FAULT_OBJ_NOT_INIT);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NULL);
+	}
 	/* update the event flags */
-	kobj->eventFlags |= flagMask;
-	ULONG updatedFlags = kobj->eventFlags;
+	if (options == K_OR)
+	{
+		kobj->eventFlags |= flagMask;
+
+	}
+	else if (options == K_AND)
+	{
+		kobj->eventFlags &= flagMask;
+	}
+	else
+	{
+		*updatedFlags = kobj->eventFlags;
+		return (K_ERR_INVALID_PARAM);
+	}
+	*updatedFlags = kobj->eventFlags;
 
 	/* process waiting tasks */
 	if (kobj->waitingQueue.size > 0)
@@ -499,28 +600,25 @@ ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask)
 			/* save previous node before modification */
 			K_NODE *prevNodePtr = currNodePtr->prevPtr;
 			K_TCB *currTcbPtr = K_LIST_GET_TCB_NODE( currNodePtr, K_TCB);
-
 			BOOL all = (currTcbPtr->flagsOptions & K_ALL)
 					|| (currTcbPtr->flagsOptions & K_ALL_CLEAR);
 
-			/* wake only if the task's flag condition is met */
+			/* wake all tasks which condition is met */
 			if ((all
 					&& ((kobj->eventFlags & currTcbPtr->currFlags)
 							== currTcbPtr->currFlags))
 					|| (!all && (kobj->eventFlags & currTcbPtr->currFlags)))
 			{
-
-				kListRemove( &kobj->waitingQueue, currNodePtr);
 				currTcbPtr->gotFlags = kobj->eventFlags;
+				kListRemove( &kobj->waitingQueue, currNodePtr);
 				kReadyCtxtSwtch( currTcbPtr);
 
 			}
 			currNodePtr = prevNodePtr; /* Move to the previous node */
 		}
 	}
-
 	K_CR_EXIT
-	return (updatedFlags);
+	return (K_SUCCESS);
 }
 
 #endif
@@ -531,13 +629,13 @@ ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask)
  * COUNTER SEMAPHORES
  ******************************************************************************/
 /* counter semaphores cannot initialise with a negative value */
-K_ERR kSemaInit( K_SEMA *const kobj, const INT value)
+K_ERR kSemaInit( K_SEMA *const kobj, const LONG value)
 {
 	K_CR_AREA
 	K_CR_ENTER
 	if (kobj == NULL)
 	{
-		KFAULT( FAULT_NULL_OBJ);
+		KFAULT( FAULT_OBJ_NULL);
 		K_CR_EXIT
 		return (K_ERR_OBJ_NULL);
 	}
@@ -560,6 +658,7 @@ K_ERR kSemaInit( K_SEMA *const kobj, const INT value)
 
 /* Counter Semaphores have their own waiting queue and do not
  * handle priority inversion
+ * Queue is configured either as FIFO or PRIORITY discipline
  * */
 K_ERR kSemaWait( K_SEMA *const kobj, const TICK timeout)
 {
@@ -567,15 +666,21 @@ K_ERR kSemaWait( K_SEMA *const kobj, const TICK timeout)
 	K_CR_ENTER
 	if (kIsISR())
 	{
-		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
+		KFAULT( FAULT_INVALID_ISR_PRIMITVE);
+		K_CR_EXIT
+		return (K_ERR_INVALID_ISR_PRIMITIVE);
 	}
 	if (kobj->init == FALSE)
 	{
 		KFAULT( FAULT_OBJ_NOT_INIT);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NOT_INIT);
 	}
 	if (kobj == NULL)
 	{
-		KFAULT( FAULT_NULL_OBJ);
+		KFAULT( FAULT_OBJ_NULL);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NULL);
 	}
 	kobj->value--;
 	DMB
@@ -607,30 +712,47 @@ K_ERR kSemaWait( K_SEMA *const kobj, const TICK timeout)
 	return (K_SUCCESS);
 }
 
-VOID kSemaSignal( K_SEMA *const kobj)
+K_ERR kSemaSignal( K_SEMA *const kobj)
 {
 	K_CR_AREA
 	K_CR_ENTER
 	if (kobj == NULL)
 	{
-		KFAULT( FAULT_NULL_OBJ);
+		KFAULT( FAULT_OBJ_NULL);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NULL);
 	}
 	if (kobj->init == FALSE)
 	{
 		KFAULT( FAULT_OBJ_NOT_INIT);
+		K_CR_EXIT
+		return (K_ERR_OBJ_NOT_INIT);
 	}
 	K_TCB *nextTCBPtr = NULL;
 	(kobj->value) = (kobj->value) + 1;
+	if (kobj->value == K_LONG_MAX - 1)
+	{
+		K_CR_EXIT
+		return (K_ERR_OVERFLOW);
+	}
 	DMB
 	if ((kobj->value) <= 0)
 	{
 		K_ERR err = kTCBQDeq( &(kobj->waitingQueue), &nextTCBPtr);
-		kassert( err == 0);
-		kassert( nextTCBPtr != NULL);
+		if (err < 0)
+		{
+			K_CR_EXIT
+			return (err);
+		}
 		err = kReadyCtxtSwtch( nextTCBPtr);
+		if (err < 0)
+		{
+			K_CR_EXIT
+			return (err);
+		}
 	}
 	K_CR_EXIT
-	return;
+	return (K_SUCCESS);
 }
 #endif
 
@@ -639,13 +761,16 @@ VOID kSemaSignal( K_SEMA *const kobj)
  * MUTEX SEMAPHORE
  *******************************************************************************/
 /* mutex handle priority inversion by default */
+/* there is no recursive lock */
+/* unlocking a mutex you do not own leads to hard fault */
+/* queue discipline is either priority (default) or fifo */
 
 K_ERR kMutexInit( K_MUTEX *const kobj)
 {
 
 	if (kobj == NULL)
 	{
-		KFAULT( FAULT_NULL_OBJ);
+		KFAULT( FAULT_OBJ_NULL);
 		return (K_ERROR);
 	}
 	kobj->lock = FALSE;
@@ -671,11 +796,11 @@ K_ERR kMutexLock( K_MUTEX *const kobj, TICK timeout)
 	}
 	if (kobj == NULL)
 	{
-		KFAULT( FAULT_NULL_OBJ);
+		KFAULT( FAULT_OBJ_NULL);
 	}
 	if (kIsISR())
 	{
-		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
+		KFAULT( FAULT_INVALID_ISR_PRIMITVE);
 	}
 	if (kobj->lock == FALSE)
 	{
@@ -731,7 +856,6 @@ K_ERR kMutexLock( K_MUTEX *const kobj, TICK timeout)
 			return (K_ERR_MUTEX_REC_LOCK);
 		}
 	}
-
 	K_CR_EXIT
 	return (K_SUCCESS);
 }
@@ -739,18 +863,18 @@ K_ERR kMutexLock( K_MUTEX *const kobj, TICK timeout)
 /* a unlock will fail if not issued by the owner
  * therefore it cannot be within an ISR
  * */
-VOID kMutexUnlock( K_MUTEX *const kobj)
+K_ERR kMutexUnlock( K_MUTEX *const kobj)
 {
 	K_CR_AREA
 	K_CR_ENTER
 	K_TCB *tcbPtr;
 	if (kIsISR())
 	{
-		KFAULT( FAULT_ISR_INVALID_PRIMITVE);
+		KFAULT( FAULT_INVALID_ISR_PRIMITVE);
 	}
 	if (kobj == NULL)
 	{
-		KFAULT( FAULT_NULL_OBJ);
+		KFAULT( FAULT_OBJ_NULL);
 	}
 	if (kobj->init == FALSE)
 	{
@@ -758,13 +882,13 @@ VOID kMutexUnlock( K_MUTEX *const kobj)
 	}
 	if ((kobj->lock == FALSE ))
 	{
-		return;
+		return (K_ERR_MUTEX_NOT_LOCKED);
 	}
 	if (kobj->ownerPtr != runPtr)
 	{
 		KFAULT( FAULT_UNLOCK_OWNED_MUTEX);
 		K_CR_EXIT
-		return;
+		return (K_ERR_MUTEX_NOT_OWNER);
 	}
 	/* runPtr is the owner and mutex was locked */
 	if (kobj->waitingQueue.size == 0)
@@ -783,7 +907,7 @@ VOID kMutexUnlock( K_MUTEX *const kobj)
 		 * mutex is still locked */
 		kTCBQDeq( &(kobj->waitingQueue), &tcbPtr);
 		if (IS_NULL_PTR( tcbPtr))
-			KFAULT( FAULT_NULL_OBJ);
+			KFAULT( FAULT_OBJ_NULL);
 #if ((K_DEF_MUTEX_PRIO_INH==ON) )
 
 		/* here only runptr can unlock a mutex*/
@@ -795,8 +919,6 @@ VOID kMutexUnlock( K_MUTEX *const kobj)
 		if (!kReadyCtxtSwtch( tcbPtr))
 		{
 			kobj->ownerPtr = tcbPtr;
-			K_CR_EXIT
-			return;
 		}
 		else
 		{
@@ -804,15 +926,13 @@ VOID kMutexUnlock( K_MUTEX *const kobj)
 		}
 	}
 	K_CR_EXIT
-	return;
+	return (K_SUCCESS);
 }
 /* return mutex state - it checks for abnormal values */
 K_ERR kMutexQuery( K_MUTEX *const kobj)
 {
 	K_CR_AREA
-
 	K_CR_ENTER
-
 	if (kobj == NULL)
 	{
 		K_CR_EXIT
@@ -838,4 +958,3 @@ K_ERR kMutexQuery( K_MUTEX *const kobj)
 }
 
 #endif /* mutex */
-

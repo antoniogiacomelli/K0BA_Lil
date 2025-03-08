@@ -1,12 +1,12 @@
 /******************************************************************************
 *
-* [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
+* [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]
 *
 ******************************************************************************/
 /**
  * \file     kapi.h
  * \brief    Kernel API
- * \version  0.3.1
+ * \version  0.4.0
  * \author   Antonio Giacomelli
  *
  * This is the kernel API to be included within any application
@@ -142,8 +142,9 @@ K_ERR kMutexLock( K_MUTEX *const kobj, TICK timeout);
 /**
  *\brief Unlock a mutex
  *\param kobj mutex address
+ *\return K_SUCCESS or specific error
  */
-VOID kMutexUnlock( K_MUTEX *const kobj);
+K_ERR kMutexUnlock( K_MUTEX *const kobj);
 
 /**
  * \brief Return the state of a mutex (locked/unlocked)
@@ -235,12 +236,27 @@ BOOL kMboxIsFull( K_MBOX *const kobj);
 
 #endif /* MBOX  */
 /*******************************************************************************
- * QUEUE (MAIL QUEUE)
+ MESSAGE QUEUES (QUEUE AND STREAM)
+*******************************************************************************/
+/*******************************************************************************
+ * There are two mechanisms working as Message Queues: QUEUEs and STREAMs
+ *
+ * QUEUES are Mailboxes of multiple messages (aka Multibox) - each slot is
+ * fixed to 4-byte size - and you normally pass a pointer to a message,
+ * unless the message is a 4-byte message (INT, UINT, LONG, ULONG).
+ *
+ * STREAMs are byte-oriented message queues which transmit fixed-size messages
+ * by deep copy. Each STREAM will have its message size declared on initialisation
+ * and, again, it is fixed.
+ *
+ * For more information look at the Docbook.
+ *
  ******************************************************************************/
+
 #if (K_DEF_QUEUE == ON)
 
 /**
- * \brief			 Initialises a queue.
+ * \brief			 Initialises a mail queue.
  * \param kobj		 Multibox address
  * \param memPtr     Pointer to the buffer that will store mail addresses
  * \param maxItems   Maximum number of mails.
@@ -257,7 +273,7 @@ K_ERR kQueueInit( K_QUEUE *const kobj, ADDR memPtr, ULONG maxItems);
 K_ERR kQueuePost( K_QUEUE *const kobj, ADDR const sendPtr, TICK timeout);
 
 /**
- * \brief               Receive from a queue. Block if empty.
+ * \brief               Receive from a mail queue. Block if empty.
  *
  * \param kobj          Multibox address.
  * \param recvPPtr      Address that will store the message address
@@ -281,7 +297,7 @@ K_ERR kQueuePeek( K_QUEUE *const kobj, ADDR *peekPPtr);
 
 #if (K_DEF_FUNC_QUEUE_ISFULL==ON)
 /**
- * \brief   		Check if a queue is full.
+ * \brief   		Check if a mail queue is full.
  * \param kobj		Multibox address.
  * \return  		TRUE or FALSE.
  */
@@ -299,15 +315,12 @@ ULONG kQueueMailCount( K_QUEUE *const kobj);
 
 #endif
 
-#endif /* QUEUE  */
+#endif /* MAIL QUEUE  */
 
-/******************************************************************************/
-/* MESSAGE STREAM                	    									  */
-/******************************************************************************/
 #if (K_DEF_STREAM == ON)
 /**
- *\brief 			Initialise a Message Queue
- *\param kobj		Queue address
+ *\brief 			Initialise a Message Queue (Stream)
+ *\param kobj		Message Queue address
  *\param buffer		Allocated memory. It must be enough for the queue capacity
  *\					that is messsageSize*maxMessages
  *\param messageSize Message size
@@ -321,7 +334,7 @@ K_ERR kStreamInit( K_STREAM *const kobj, ADDR buffer, ULONG messageSize,
 
 /**
  *\brief 			Get the current number of messages within a message queue.
- *\param kobj		Queue address
+ *\param kobj		(Stream) Queue address
  *\param mesgCntPtr Address to store the message number
  *\return			K_SUCCESS or a specific error.
  */
@@ -334,7 +347,7 @@ K_ERR kStreamGetMesgCount( K_STREAM *const kobj, UINT *const mesgCntPtr);
 
 /**
  *\brief 			Sends a message to the queue front.
- *\param kobj		Queue address
+ *\param kobj		(Stream) Queue address
  *\param sendPtr	Message address
  *\param timeout	Suspension time
  *\return			K_SUCCESS or specific error
@@ -345,15 +358,15 @@ K_ERR kStreamJam( K_STREAM *const kobj, ADDR const sendPtr, TICK timeout);
 
 /**
  *\brief 			Receive a message from the queue
- *\param kobj		Queue address
+ *\param kobj		(Stream) Queue address
  *\param recvPtr	Receiving address
  *\param Timeout	Suspension time
  */
 K_ERR kStreamRecv( K_STREAM *const kobj, ADDR recvPtr, TICK timeout);
 
 /**
- *\brief 			Send a message to a queue
- *\param kobj		Queue address
+ *\brief 			Send a message to a message queue
+ *\param kobj		(Stream) Queue address
  *\param recvPtr	Message address
  *\param Timeout	Suspension time
  */
@@ -364,7 +377,7 @@ K_ERR kStreamSend( K_STREAM *const kobj, ADDR const sendPtr, TICK timeout);
 /**
  *\brief 			Receive the front message of a queue
  *					without changing its state
- *\param	kobj		Message Queue object address
+ *\param	kobj		(Stream) Queue object address
  *\param	recvPtr		Receiving pointer address
  *\return			K_SUCCESS or error.
  */
@@ -375,15 +388,17 @@ K_ERR kStreamPeek( K_STREAM *const kobj, ADDR recvPtr);
 #endif /*K_DEF_STREAM*/
 
 /*******************************************************************************
- * PUMP-DROP QUEUE (CYCLIC ASYNCHRONOUS BUFFERS - CABs)
+ * PUMP-DROP LIFO QUEUE (CYCLIC ASYNCHRONOUS BUFFERS - CABs)
  *******************************************************************************/
 
 #if (K_DEF_PDMESG == ON)
 
 /**
- * \brief          Pump-drop queue initialisation.
+ * \brief               Pump-drop Message Control Block initialisation.
+ *                      This initialisation associates a pool of buffers
+ *                      to a unique control block.
  *
- * \param kobj    	    PD queue address.
+ * \param kobj    	    PD Control Block address.
  * \param memCtrlPtr	Pointer to the memory allocator control block
  * \param bufPool  		Pool of PD Buffers, statically allocated.
  * \param nBufs    		Number of buffers for this queue.
@@ -394,15 +409,13 @@ K_ERR kPDMesgInit( K_PDMESG *const kobj, K_MEM *const memCtrlPtr,
 
 /**
  * \brief          Reserves a pump-drop buffer before writing on it.
- *
- * \param kobj     Queue address.
+ * \param kobj     PD Message Control address.
  * \return         K_SUCCESS or specific error
  */
 K_PDBUF* kPDMesgReserve( K_PDMESG *const kobj);
 /**
  * \brief           Writes into a PD buffer the source address and the size
  *                  of a data message.
- *
  * \param bufPtr    Buffer address.
  * \param srcPtr    Message address.
  * \param dataSize  Message size.
@@ -413,7 +426,7 @@ K_ERR kPDBufWrite( K_PDBUF *bufPtr, ADDR srcPtr, ULONG dataSize);
 /**
  * \brief          Pump a buffer into the queue - make it available for readers.
  *
- * \param kobj     Queue address.
+ * \param kobj     LIFO address.
  * \return         Address of a written PD buffer.
  */
 K_ERR kPDMesgPump( K_PDMESG *const kobj, K_PDBUF *bufPtr);
@@ -421,14 +434,13 @@ K_ERR kPDMesgPump( K_PDMESG *const kobj, K_PDBUF *bufPtr);
 /**
  * \brief          Fetches the most recent buffer pumped in the queue.
  *
- * \param kobj     Queue address.
+ * \param kobj     LIFO address.
  * \return         Address of a PD buffer available for reading.
  */
 K_PDBUF* kPDMesgFetch( K_PDMESG *const kobj);
 
 /**
  * \brief          Copies the message from a PD Buffer to a chosen address.
- *
  * \param bufPtr   Address of the PD buffer.
  * \param destPtr  Address that will store the message.
  * \return         K_SUCCESS or specific error
@@ -440,7 +452,6 @@ K_ERR kPDBufRead( K_PDBUF *const bufPtr, ADDR destPtr);
  *                message from a buffer. If there are no more readers
  *                using the buffer, and it is not the last buffer pumped
  *                in the queue, it will be reused.
- *
  * \param kobj    Queue address;
  * \return        K_SUCCESS or specific error
  */
@@ -472,19 +483,21 @@ K_ERR kTaskSignal( K_TASK *const taskHandlePtr);
  * \brief Writes a bit string of events to a task´s private event flags
  * \param taskHandlePtr Pointer to the target task's handle
  * \param flagMask The bit string of flags
- * \return The updated bit string of flags.
+ * \param updatedFlagsPtr Address to store the updated flags return
+ * \return K_SUCCESS or specific error
  */
-ULONG kTaskFlagsSet( K_TASK *const taskHandlePtr, ULONG flagMask);
-
+K_ERR kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask,
+		ULONG *updatedFlagsPtr, ULONG option);
 /**
  * \brief A task checks for a combination of events on its private flags
- * \param flagMask The combination
+ * \param requiredFlags The combination required
  * \param option K_OR for ANY of the flags, K_AND for ALL flags
  * 				 K_OR_CLEAR/K_AND_CLEAR clears the flags that were met
+ * 				 K_MAIL just returns whatever is on task flags
  * \param timeout Suspension timeout
  * \return The updated bit string of flags.
  */
-ULONG kTaskFlagsGet( ULONG flagMask, ULONG option, TICK timeout);
+ULONG kTaskFlagsPend( ULONG requiredFlags,  ULONG option, TICK timeout);
 #endif
 
 /******************************************************************************
@@ -508,32 +521,26 @@ K_ERR kEventSleep( K_EVENT *const kobj, TICK timeout);
 /**
  * \brief Wakes all tasks sleeping for a specific event
  * \param kobj Pointer to a K_EVENT object
+ * \return K_SUCCESS or specific error
  */
-VOID kEventWake( K_EVENT *const kobj);
+K_ERR kEventWake( K_EVENT *const kobj);
 
 /**
  * \brief Wakes a single task sleeping for a specific event
  *        (by priority)
  * \param kobj Pointer to a K_EVENT object
+ * \return K_SUCCESS or specific error
  */
-VOID kEventSignal( K_EVENT *const kobj);
+K_ERR kEventSignal( K_EVENT *const kobj);
 
 /**
  * \brief  Return the number of tasks sleeping on an event.
+ * \return Number of sleeping tasks;
  */
 UINT kEventQuery( K_EVENT *const kobj);
 
 
 #if (K_DEF_EVENT_FLAGS==ON)
-/**
- * \brief  Initialises an EVENT object with event flags
- * \param kobj  Pointer to the Event object
- * \param mask  Initial flags value
- * \return K_SUCCESS or K_ERROR
- */
-K_ERR kEventFlagsInit( K_EVENT *const kobj, ULONG mask);
-
-
 /**
  * \brief  Set a combination of event flags on an Event object and
  *         wakes any tasks that happens to be waiting on that
@@ -541,15 +548,19 @@ K_ERR kEventFlagsInit( K_EVENT *const kobj, ULONG mask);
  *
  * \param kobj Pointer to the event object
  * \param flagMask Flags to be set
- * \return Updated flags
+ * \param updatedFlagsPtr Address to return the updated flags
+ * \param options TX_OR / TX_AND - bitwise operation to perform over
+ * 				  the current Flags
+ * \return K_SUCCESS or specific error
  */
-ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask);
-
+K_ERR kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask,
+		ULONG* updatedFlagsPtr, ULONG options);
 /**
  * \brief Goes to sleep waiting for a combination of events
  *        If they are already met, task proceeds.
  * \param kobj Pointer to the event object
  * \param requiredFlags Combination of flags to be met
+ * \param gotFlagsPtr Which flags have been captured as set
  * \param options K_ANY(_CLEAR) to wait for any raised flag
  *                K_ALL(_CLEAR) to wait for all flags to be raised
  *                (_CLEAR) will clear the satisfied bit flags.
@@ -557,7 +568,7 @@ ULONG kEventFlagsSet( K_EVENT *const kobj, ULONG flagMask);
  * \return K_SUCCESS or specific error
  */
 K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
-		 ULONG options, TICK timeout);
+		ULONG* gotFlagsPtr, ULONG options, TICK timeout);
 
 /**
  * \brief 	Returns the current event flags within an event object.
@@ -566,7 +577,45 @@ K_ERR kEventFlagsGet( K_EVENT *const kobj, ULONG requiredFlags,
  */
 ULONG kEventFlagsQuery(K_EVENT *const kobj);
 
+/* Alias for keeping the Event Semantics if one wishes */
+#define kEventFlagsSleep kEventFlagsGet
+#define kEventFlagsWake  kEventFlagsSet
+
 #endif
+
+/******************************************************************************
+ * CONDITION VARIABLES
+ ******************************************************************************/
+
+/**
+ * \brief (Helper) Condition Variable Wait. This function must be called
+ *        within a mutex critical region when in the need to wait for a
+ *        a condition. It atomically put the task to sleep and unlocks
+ *        the mutex.
+ * \param eventPtr Pointer to event associated to a condition variable.
+ * \param mutexPtr Pointer to mutex associated to a condition variable.
+ * \param timeout  Suspension timeout.
+ * \return K_SUCCESS or specific error
+ */
+
+__attribute__((always_inline))
+inline K_ERR kCondVarWait( K_EVENT *eventPtr, K_MUTEX *mutexPtr, TICK timeout);
+
+/**
+ * \brief The same as kEventSignal - for readability
+ * \param eventPtr Pointer to event
+ * \return K_SUCCESS or specific error
+ */
+__attribute__((always_inline))
+inline K_ERR kCondVarSignal( K_EVENT *eventPtr);
+/**
+ * \brief The same as kEventWake (signal broadcast) - for readability
+ * \param eventPtr Pointer to event
+ * \return K_SUCCESS or specific error
+ */
+__attribute__((always_inline))
+inline K_ERR kCondVarBroad( K_EVENT *eventPtr);
+
 #endif
 
 #if (K_DEF_CALLOUT_TIMER==ON)
@@ -596,7 +645,7 @@ VOID kBusyDelay( TICK const delay);
  *        Task switches to SLEEPING state.
  * \param ticks Number of ticks to sleep
  */
-VOID kSleep( TICK const ticks);
+K_ERR kSleep( TICK ticks);
 
 #if (K_DEF_SCH_TSLICE==OFF)
 
@@ -689,13 +738,13 @@ extern K_TCB *runPtr;
 __attribute__((always_inline))
 static inline VOID kDisableIRQ(VOID)
 {
-	  __ASM volatile ("CPSID I" : : : "memory");
+  __ASM volatile ("CPSID I" : : : "memory");
 }
 
 __attribute__((always_inline))
 static inline VOID kEnableIRQ(VOID)
 {
-	  __ASM volatile ("CPSIE I" : : : "memory");
+ __ASM volatile ("CPSIE I" : : : "memory");
 }
 
 

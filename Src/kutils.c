@@ -1,6 +1,6 @@
 /*****************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]
  *
  ******************************************************************************
  ******************************************************************************
@@ -31,7 +31,7 @@ ULONG kMemCpy( ADDR destPtr, ADDR const srcPtr, ULONG size)
 {
 	if ((IS_NULL_PTR( destPtr)) || (IS_NULL_PTR( srcPtr)))
 	{
-		kErrHandler( FAULT_NULL_OBJ);
+		kErrHandler( FAULT_OBJ_NULL);
 	}
 	ULONG n = 0;
 	BYTE *destTempPtr = (BYTE*) destPtr;

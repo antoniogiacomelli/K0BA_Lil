@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -16,7 +16,6 @@
 #include "kinternals.h"
 #include "ktypes.h"
 #include "kobjs.h"
-#include "klist.h"
 #include "kerr.h"
 #include "kversion.h"
 #include "kutils.h"
@@ -27,5 +26,6 @@
 #include "kitc.h"
 #include "ktimer.h"
 #include "ksystasks.h"
+
 
 #endif

@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]
  *
  ******************************************************************************
  ******************************************************************************
@@ -20,7 +20,7 @@
 
 /* no file system, no NVM map, this is the best we can do */
 struct kversion const KVERSION =
-{ 0, 3, 1 };
+{ 0, 4, 0 };
 
 unsigned int kGetVersion( void)
 {

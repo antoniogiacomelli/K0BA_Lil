@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]
  *
  *******************************************************************************
  * 	In this header:
@@ -74,7 +74,7 @@ struct kList
 {
 	struct kListNode listDummy;
 	STRING listName;
-	UINT size;
+	ULONG size;
 	BOOL init;
 };
 
@@ -83,7 +83,7 @@ struct kTcb
 	/* Don't change */
 	INT *sp;
 	K_TASK_STATUS status;
-	UINT runCnt;
+	ULONG runCnt;
 	/**/
 	STRING taskName;
 	INT *stackAddrPtr;
@@ -104,13 +104,11 @@ struct kTcb
 #endif
 #if (K_DEF_SCH_TSLICE == ON)
 	TICK timeSlice;
-	TICK timeLeft;
+	TICK yieldTime;
 #endif
 	TICK busyWaitTime;
-#if (K_DEF_SCH_TSLICE==OFF)
-	TICK lastWakeTime;
-#endif
-	BOOL runToCompl;
+ 	TICK lastWakeTime;
+ 	BOOL runToCompl;
 	BOOL yield;
 	BOOL timeOut;
 	/* Monitoring */
@@ -132,7 +130,7 @@ extern struct kRunTime runTime;
 struct kSema
 {
 	BOOL init;
-	INT value;
+	LONG value;
 	struct kTcb *owner;
 	struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;
@@ -176,9 +174,9 @@ struct kMemBlock
 {
 	BYTE *freeListPtr;
 	BYTE *poolPtr;
-	BYTE blkSize;
-	BYTE nMaxBlocks;
-	BYTE nFreeBlocks;
+	ULONG blkSize;
+	ULONG nMaxBlocks;
+	ULONG nFreeBlocks;
 #if (MEMBLKLAST)
 	BYTE* lastUsed;
 #endif
@@ -192,9 +190,12 @@ struct kMailbox
 {
 	BOOL init;
 	ADDR mailPtr;
+#if (K_DEF_MBOX_POSTPEND_PRIO_INH==ON)
+	struct kTcb* clientTask;
+	struct kTcb* serverTask;
+#endif
 	struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;
-
 } __attribute__((aligned(4)));
 #endif
 
@@ -203,10 +204,11 @@ struct kQ
 {
 	BOOL init;
 	ADDR mailQPtr;
-	UINT headIdx;
-	UINT tailIdx;
+	ULONG headIdx;
+	ULONG tailIdx;
 	ULONG maxItems;
 	ULONG countItems;
+	K_TCB* port;
 	struct kList waitingQueue;
 	K_TIMEOUT_NODE timeoutNode;
 } __attribute__((aligned(4)));
@@ -237,7 +239,7 @@ struct kPumpDropBuf
 
 	ADDR dataPtr;
 	ULONG dataSize; /* mesg size in this buf */
-	UINT nUsers; /* number of tasks using */
+	ULONG nUsers; /* number of tasks using */
 };
 struct kPumpDropQueue
 {

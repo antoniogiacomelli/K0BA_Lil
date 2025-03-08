@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]
+ * [K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]
  *
  ******************************************************************************
  ******************************************************************************
@@ -106,7 +106,7 @@ VOID kRemoveTimerNode( K_TIMEOUT_NODE *node)
 /*******************************************************************************
  * SLEEP TIMER AND BLOCKING TIME-OUT
  *******************************************************************************/
-void kSleep( TICK ticks)
+K_ERR kSleep( TICK ticks)
 {
 	K_CR_AREA
 	K_CR_ENTER
@@ -114,15 +114,24 @@ void kSleep( TICK ticks)
 	if (runPtr->status != RUNNING)
 	{
 		kassert( FAULT_TASK_INVALID_STATE);
+		K_CR_EXIT
+		return (K_ERR_TASK_INVALID_ST);
 	}
 	kTimeOut( &runPtr->taskHandlePtr->timeoutNode, ticks);
 	runPtr->status = SLEEPING;
 	K_PEND_CTXTSWTCH
 	K_CR_EXIT
+	return (K_SUCCESS);
 }
 
-VOID kSleepUntil( TICK const period)
+#if(K_DEF_SCH_TSLICE!=ON)
+
+K_ERR kSleepUntil( TICK const period)
 {
+	if (period==0)
+	{
+		return (K_ERR_INVALID_PARAM);
+	}
 	K_CR_AREA
 	K_CR_ENTER
 	TICK currentTick = kTickGet();
@@ -138,16 +147,20 @@ VOID kSleepUntil( TICK const period)
 	if (delay > 0)
 	{
 		kTimeOut( &runPtr->taskHandlePtr->timeoutNode, period);
-
 		runPtr->status = SLEEPING;
 		K_PEND_CTXTSWTCH
 
 	}
-	runPtr->timeOut=FALSE;
+	/* return to false */
+	runPtr->timeOut=FALSE; /* TODO */
 	/* Update the last wake time */
 	runPtr->lastWakeTime = nextWakeTime;
 	K_CR_EXIT
+	return (K_SUCCESS);
 }
+
+#endif
+
 /* timeout and sleeping list (delta-list) */
 K_ERR kTimeOut( K_TIMEOUT_NODE *timeOutNode, TICK timeout)
 {

@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -28,7 +28,7 @@ K_ERR kMemInit( K_MEM *const kobj, ADDR const memPoolPtr, BYTE blkSize,
 
 	if (IS_NULL_PTR( kobj))
 	{
-		KFAULT( FAULT_NULL_OBJ);
+		KFAULT( FAULT_OBJ_NULL);
 		K_CR_EXIT
 		return (K_ERR_MEM_INIT);
 	}

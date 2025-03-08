@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.3.1]]
+ *     [[K0BA - Kernel 0 For Embedded Applications] | [VERSION: 0.4.0]]
  *
  ******************************************************************************
  ******************************************************************************
@@ -17,6 +17,7 @@ extern "C" {
 
 ULONG kStrLen(STRING s);
 ULONG kMemCpy(ADDR destPtr, ADDR const srcPtr, ULONG size);
+
 
 #ifdef K_DEF_PRINTF
 
