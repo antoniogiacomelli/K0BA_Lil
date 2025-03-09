@@ -40,7 +40,7 @@ VOID TimerHandlerTask( VOID)
 #if (K_DEF_CALLOUT_TIMER==ON)
 		K_CR_AREA
 		K_CR_ENTER
-		timeOutListHeadPtr = timeOutListHeadPtr;
+		timerListHeadPtr = timeOutListHeadPtr;
 		while (timerListHeadPtr != NULL && timerListHeadPtr->dtick == 0)
 		{
 			K_TIMEOUT_NODE *node = (K_TIMEOUT_NODE*) timerListHeadPtr;
