@@ -2,7 +2,7 @@
 
 **K0BA** (_Kernel 0 For emBedded Applications_) is a _highly_ deterministic Real-Time Kernel aiming constrained MCU-based solutions. 
 
-## Features
+## Features (v0.4.0)
 
 - Clean API with composable, modular, configurable services.
 - Low-latency, deterministic Preemptive priority O(1) scheduler, with optional time-slice. 
