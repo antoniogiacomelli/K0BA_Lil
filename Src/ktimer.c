@@ -55,7 +55,6 @@ static inline VOID kTimerListAdd_( K_TIMER *kobj, TICK phase, TICK duration,
     kobj->timeoutNode.dtick = duration;
     kobj->timeoutNode.timeout = duration;
     kobj->timeoutNode.objectType = TIMER;
-    kobj->timeoutNode.kobj = ( ADDR) kobj;
     kobj->funPtr = funPtr;
     kobj->argsPtr = argsPtr;
     kobj->reload = reload;

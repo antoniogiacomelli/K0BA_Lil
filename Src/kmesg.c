@@ -68,8 +68,7 @@ K_ERR kMboxInit( K_MBOX *const kobj, ADDR initMailPtr)
 	kassert( listerr == 0);
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
-	kobj->timeoutNode.kobj = kobj;
-	kobj->timeoutNode.objectType = MAILBOX;
+ 	kobj->timeoutNode.objectType = MAILBOX;
 #if(K_DEF_MBOX_POSTPEND_PRIO_INH==ON)
 	kobj->serverTask = NULL;
 	kobj->clientTask = NULL;
@@ -439,8 +438,7 @@ K_ERR kQueueInit( K_QUEUE *const kobj, ADDR memPtr, ULONG maxItems)
 	kassert( listerr == 0);
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
-	kobj->timeoutNode.kobj = kobj;
-	kobj->timeoutNode.objectType = QUEUE;
+ 	kobj->timeoutNode.objectType = QUEUE;
 	K_CR_EXIT
 	return (K_SUCCESS);
 }
@@ -752,8 +750,7 @@ K_ERR kStreamInit( K_STREAM *const kobj, ADDR const buffer,
 	}
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
-	kobj->timeoutNode.kobj = kobj;
-	kobj->timeoutNode.objectType = STREAM;
+ 	kobj->timeoutNode.objectType = STREAM;
 	kobj->init = 1;
 	K_CR_EXIT
 	return (K_SUCCESS);

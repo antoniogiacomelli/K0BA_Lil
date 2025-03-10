@@ -16,6 +16,8 @@ VOID kRemoveTimerNode( K_TIMEOUT_NODE *);
 
 extern volatile K_TIMEOUT_NODE *timeOutListHeadPtr;
 extern volatile K_TIMEOUT_NODE *timerListHeadPtr;
+extern volatile K_TIMEOUT_NODE *timerListHeadPtrSaved;
+
 K_ERR kTimeOut( K_TIMEOUT_NODE*, TICK);
 BOOL kHandleTimeoutList( VOID);
 VOID kRemoveTimeoutNode( K_TIMEOUT_NODE*);

@@ -41,7 +41,6 @@ VOID TimerHandlerTask( VOID)
 #if (K_DEF_CALLOUT_TIMER==ON)
 		K_CR_AREA
 		K_CR_ENTER
-		timerListHeadPtr = timeOutListHeadPtr;
 		while (timerListHeadPtr != NULL && timerListHeadPtr->dtick == 0)
 		{
 			K_TIMEOUT_NODE *node = (K_TIMEOUT_NODE*) timerListHeadPtr;
@@ -51,7 +50,7 @@ VOID TimerHandlerTask( VOID)
 			{
 			case TIMER:
 			{
-				K_TIMER *timer = (K_TIMER*) node->kobj;
+				K_TIMER *timer = K_GET_CONTAINER_ADDR(node, K_TIMER, timeoutNode);
 				if (timer->funPtr != NULL)
 				{
 					timer->funPtr( timer->argsPtr);

@@ -290,8 +290,7 @@ K_ERR kEventInit( K_EVENT *const kobj)
 	kobj->init = TRUE;
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
-	kobj->timeoutNode.kobj = kobj;
-	kobj->timeoutNode.objectType = EVENT;
+ 	kobj->timeoutNode.objectType = EVENT;
 #if (K_DEF_EVENT_FLAGS==ON)
 	kobj->eventFlags = 0UL;
 #endif
@@ -649,8 +648,7 @@ K_ERR kSemaInit( K_SEMA *const kobj, const LONG value)
 	kobj->init = TRUE;
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
-	kobj->timeoutNode.kobj = kobj;
-	kobj->timeoutNode.objectType = SEMAPHORE;
+ 	kobj->timeoutNode.objectType = SEMAPHORE;
 	K_CR_EXIT
 	return (K_SUCCESS);
 }
@@ -780,8 +778,7 @@ K_ERR kMutexInit( K_MUTEX *const kobj)
 	kobj->init = TRUE;
 	kobj->timeoutNode.nextPtr = NULL;
 	kobj->timeoutNode.timeout = 0;
-	kobj->timeoutNode.kobj = kobj;
-	kobj->timeoutNode.objectType = MUTEX;
+ 	kobj->timeoutNode.objectType = MUTEX;
 	return (K_SUCCESS);
 }
 

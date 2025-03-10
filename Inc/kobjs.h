@@ -50,7 +50,6 @@ struct kTimeoutNode
 	struct kTimeoutNode *prevPtr;
 	TICK timeout;
 	TICK dtick;
-	ADDR kobj;
 	K_OBJ_TYPE objectType;
 };
 
