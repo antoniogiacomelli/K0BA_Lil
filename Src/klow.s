@@ -95,9 +95,6 @@ SVC_Handler:       /* we start-up from msp               */
     LDMIA R2!, {R4-R11}      /* 'POP' R4-R11 as    assembled on kInitTcb_  */
     MSR PSP, R2              /* update PSP after 'popping '                */
     MOV LR, #0xFFFFFFFD      /* set LR to indicate we choose PSP          */
-    LDR R0, =STICK_CTRL
-    MOVS R1, #STICK_ON       /* tick on                                    */
-    STR R1, [R0]
     DSB
     CPSIE I
     ISB
@@ -128,7 +125,13 @@ SysTick_Handler:
     BX LR
     SWITCH:
     POP {R0, LR}
-    B SWITCHTASK
+   // LDR R0, =SCB_ICSR
+   // MOVS R1, #ISCR_SETPSV   /* pend ctxt swtch */
+   // STR R1, [R0]
+   // DSB
+   // CPSIE I
+   // ISB
+   // BX LR
 
 /* deferred context switching */
 .global PendSV_Handler
@@ -155,8 +158,10 @@ PendSV_Handler:
     LDMIA R2!, {R4-R11}
     MSR PSP, R2
     MOV LR, #0xFFFFFFFD
+    LDR R0, =SCB_ICSR
+    MOVS R1, #STICK_CLRP   /* clear pending SysTick interrupt */
+    STR R1, [R0]
     DSB
     CPSIE I
     ISB
     BX LR
-

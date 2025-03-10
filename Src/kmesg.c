@@ -408,7 +408,6 @@ K_ERR kMboxPostPend( K_MBOX *const kobj, ADDR const sendPtr,
 	kobj->clientTask = NULL;
 	kobj->serverTask = NULL;
 #endif
-
 	K_CR_EXIT
 	return (K_SUCCESS);
 

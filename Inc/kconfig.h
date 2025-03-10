@@ -59,11 +59,11 @@
 
 /**/
 /*** [The lowest effective priority, that is the highest user-defined value]  */
-#define K_DEF_MIN_PRIO	           	    (2)
+#define K_DEF_MIN_PRIO	           	    (1)
 
 /**/
 /*** [ Time-Slice Scheduling ]*************************************************/
-#define K_DEF_SCH_TSLICE			    (OFF)
+#define K_DEF_SCH_TSLICE			    (ON)
 
 /**/
 /*** [ App Timers ] ***********************************************************/

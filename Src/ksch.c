@@ -27,8 +27,8 @@
 K_TCBQ readyQueue[K_DEF_MIN_PRIO + 2];
 K_TCB *runPtr;
 K_TCB tcbs[NTHREADS];
-K_TASK timTaskHandle;
-K_TASK idleTaskHandle;
+K_TASK_HANDLE timTaskHandle;
+K_TASK_HANDLE idleTaskHandle;
 struct kRunTime runTime;
 /* local globals  */
 static PRIO highestPrio = 0;
@@ -276,17 +276,14 @@ static K_ERR kInitTcb_( TASKENTRY const taskFuncPtr, INT *const stackAddrPtr,
 	return (K_ERROR);
 }
 
-K_ERR kCreateTask( K_TASK *taskHandlePtr, TASKENTRY const taskFuncPtr,
+K_ERR kCreateTask( K_TASK_HANDLE* taskHandlePtr, TASKENTRY const taskFuncPtr,
 		STRING taskName, INT *const stackAddrPtr, UINT const stackSize,
 #if(K_DEF_SCH_TSLICE==ON)
         TICK const timeSlice,
 #endif
 		PRIO const priority, BOOL const runToCompl)
 {
-	if (taskHandlePtr == NULL)
-	{
-		kErrHandler( FAULT_OBJ_NULL);
-	}
+
 	/* if private PID is 0, system tasks hasn't been started yet */
 	if (pPid == 0)
 	{
@@ -303,8 +300,7 @@ K_ERR kCreateTask( K_TASK *taskHandlePtr, TASKENTRY const taskFuncPtr,
 
         tcbs[pPid].timeSlice = 0;
 #endif
-		idleTaskHandle.tcbPtr = &tcbs[pPid];
-		tcbs[pPid].taskHandlePtr = &idleTaskHandle;
+		idleTaskHandle = &tcbs[pPid];
 		pPid += 1;
 
 		/* initialise TIMER HANDLER TASK */
@@ -321,8 +317,7 @@ K_ERR kCreateTask( K_TASK *taskHandlePtr, TASKENTRY const taskFuncPtr,
 
         tcbs[pPid].timeSlice = 0;
 #endif
-		timTaskHandle.tcbPtr = &tcbs[pPid];
-		tcbs[pPid].taskHandlePtr = &timTaskHandle;
+		timTaskHandle = &tcbs[pPid];
 		pPid += 1;
 
 	}
@@ -341,17 +336,15 @@ K_ERR kCreateTask( K_TASK *taskHandlePtr, TASKENTRY const taskFuncPtr,
 
 #if(K_DEF_SCH_TSLICE==ON)
         tcbs[pPid].timeSlice = timeSlice;
+        tcbs[pPid].timeSliceCnt  = 0UL;
 #else
 		tcbs[pPid].lastWakeTime = 0;
 #endif
 		tcbs[pPid].signalled = FALSE;
 		tcbs[pPid].runToCompl = runToCompl;
 
-		taskHandlePtr->tcbPtr = &tcbs[pPid];
-		tcbs[pPid].taskHandlePtr = taskHandlePtr;
-		taskHandlePtr->timeoutNode.kobj = &tcbs[pPid];
-		taskHandlePtr->timeoutNode.objectType = TASK_HANDLE;
-
+		*taskHandlePtr = &tcbs[pPid];
+		(*taskHandlePtr)->timeoutNode.objectType = TASK_HANDLE;
 		pPid += 1;
 		return (K_SUCCESS);
 	}
@@ -480,91 +473,98 @@ static inline VOID kReadyRunningTask_( VOID)
 }
 
 #if (K_DEF_SCH_TSLICE == ON)
-static inline BOOL kDecTimeSlice_(VOID)
+static inline BOOL kDecTimeSlice_( VOID)
 {
-    if ( (runPtr->status == RUNNING) && (runPtr->runToCompl == FALSE))
+    if ((runPtr->status == RUNNING) && (runPtr->runToCompl == FALSE ))
     {
-    	runPtr->yieldTime += 1;
 
-    	return (runPtr->yieldTime == runPtr->timeSlice);
+        runPtr->timeSliceCnt += 1UL;
+        if (runPtr->busyWaitTime > 0)
+              {
+                  runPtr->busyWaitTime -= 1U;
+              }
+        return (runPtr->timeSliceCnt == runPtr->timeSlice);
     }
-
-    	return (FALSE);
+    return (FALSE );
 }
-#endif
+#endif‹
 volatile K_TIMEOUT_NODE *timeOutListHeadPtr = NULL;
 volatile K_TIMEOUT_NODE *timerListHeadPtr = NULL;
 BOOL kTickHandler( VOID)
 {
-	/* return is short-circuit to !runToCompl & */
-	BOOL runToCompl = FALSE;
-	BOOL timeOutTask = FALSE;
-	BOOL ret = FALSE;
-	runTime.globalTick += 1U;
-	if (runPtr->busyWaitTime > 0)
-	{
-		runPtr->busyWaitTime -= 1U;
-	}
-	if (runTime.globalTick == K_TICK_TYPE_MAX)
-	{
-		runTime.globalTick = 0U;
-		runTime.nWraps += 1U;
-	}
+    /* return is short-circuit to !runToCompl & */
+    BOOL runToCompl = FALSE;
+    BOOL timeOutTask = FALSE;
+    BOOL ret = FALSE;
+    runTime.globalTick += 1U;
+#if (K_DEF_SCH_TSLICE!=ON)
+    if (runPtr->busyWaitTime > 0)
+    {
+        runPtr->busyWaitTime -= 1U;
+    }
+#endif
+    if (runTime.globalTick == K_TICK_TYPE_MAX)
+    {
+        runTime.globalTick = 0U;
+        runTime.nWraps += 1U;
+    }
 
-	if (runPtr->yield == TRUE)
-	{
-		kReadyRunningTask_();
-	}
-	/* handle time out and sleeping list */
-	timeOutTask = kHandleTimeoutList();
+    if (runPtr->yield == TRUE)
+    {
+        kReadyRunningTask_();
+    }
+    /* handle time out and sleeping list */
+    /* the list is not empty, decrement only the head  */
+       if (timeOutListHeadPtr != NULL)
+       {
+           timeOutTask = kHandleTimeoutList();
+       }
+    /* a run-to-completion task is a first-class citizen not prone to tick
+     truculence.*/
+    if (runPtr->runToCompl && (runPtr->status == RUNNING))
+        /* this flag toggles, short-circuiting the */
+        /* return value  to FALSE                  */
+        runToCompl = TRUE;
 
-	/* a run-to-completion task is a first-class citizen not prone to tick
-	 truculence.*/
-	if (runPtr->runToCompl && (runPtr->status == RUNNING))
-		/* this flag toggles, short-circuiting the */
-		/* return value  to FALSE                  */
-		runToCompl = TRUE;
-
-	/* if time-slice is enabled, decrease the time-slice. */
+    /* if time-slice is enabled, decrease the time-slice. */
 #if (K_DEF_SCH_TSLICE==ON)
     BOOL tsliceDue = FALSE;
-	tsliceDue = kDecTimeSlice_();
-	if (tsliceDue)
-	{
-		kReadyRunningTask_();
-		runPtr->yieldTime=0;
-
-	}
+    tsliceDue = kDecTimeSlice_();
+    if (tsliceDue)
+    {
+        kReadyRunningTask_();
+        runPtr->timeSliceCnt = 0UL;
+    }
 #endif
 #if (K_DEF_CALLOUT_TIMER==ON)
-    K_TIMER *headTimPtr = (K_TIMER*) (timerListHeadPtr->kobj);
-	if (timerListHeadPtr != NULL)
-	{
-		if (headTimPtr->phase > 0)
-		{
-			headTimPtr->phase--;
-		}
-		else
-		{
-			if (timerListHeadPtr->dtick > 0)
-				((K_TIMEOUT_NODE*) timerListHeadPtr)->dtick--;
-		}
-	}
-	if (timerListHeadPtr != NULL && timerListHeadPtr->dtick == 0)
-	{
-		kTaskSignal( &timTaskHandle);
-		timeOutTask = TRUE;
-	}
+    K_TIMER *headTimPtr = ( K_TIMER*) (timerListHeadPtr->kobj);
+    if (timerListHeadPtr != NULL)
+    {
+        if (headTimPtr->phase > 0)
+        {
+            headTimPtr->phase --;
+        }
+        else
+        {
+            if (timerListHeadPtr->dtick > 0)
+                (( K_TIMEOUT_NODE*) timerListHeadPtr)->dtick --;
+        }
+    }
+    if (timerListHeadPtr != NULL && timerListHeadPtr->dtick == 0)
+    {
+        kTaskSignal( timTaskHandle);
+        timeOutTask = TRUE;
+    }
 #endif
-	/* unless there is a run to completion task running, context switch
-	 * happens whenever running task is ready (probably yielded or tslice is due
-	 * context switching by preemption for higher priority, happens whenever a
-	 * task of higher priority than the running task switches to ready
-	 * and is unrelated to the the tick handler
-	 */
-	ret = ((!runToCompl) & ((runPtr->status == READY) | timeOutTask));
+    /* unless there is a run to completion task running, context switch
+     * happens whenever running task is ready (probably yielded or tslice is due
+     * context switching by preemption for higher priority, happens whenever a
+     * task of higher priority than the running task switches to ready
+     * and is unrelated to the the tick handler
+     */
+    ret = ((!runToCompl) & ((runPtr->status == READY) | timeOutTask));
 
-	return (ret);
+    return (ret);
 }
 
 /*******************************************************************************

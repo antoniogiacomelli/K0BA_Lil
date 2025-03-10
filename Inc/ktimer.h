@@ -24,7 +24,7 @@ VOID kBusyDelay( TICK const);
 
 #define BUSY(t) kBusyDelay(t)
 
-K_ERR kSleep( TICK ticks);
+VOID kSleep( TICK const);
 
 #define SLEEP(t) kSleep(t)
 

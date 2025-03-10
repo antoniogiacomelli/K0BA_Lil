@@ -43,6 +43,7 @@ typedef enum
 } K_OBJ_TYPE;
 
 
+
 struct kTimeoutNode
 {
 	struct kTimeoutNode *nextPtr;
@@ -90,7 +91,6 @@ struct kTcb
 	UINT stackSize;
 	PID pid; /* System-defined task ID */
 	PRIO priority; /* Task priority (0-31) 32 is invalid */
-	struct kTask *taskHandlePtr;
 #if ( (K_DEF_FUNC_DYNAMIC_PRIO==ON) || (K_DEF_MUTEX_PRIO_INH==ON) )
 	PRIO realPrio; /* Real priority  */
 #endif
@@ -104,16 +104,19 @@ struct kTcb
 #endif
 #if (K_DEF_SCH_TSLICE == ON)
 	TICK timeSlice;
-	TICK yieldTime;
+	TICK timeSliceCnt;
 #endif
 	TICK busyWaitTime;
- 	TICK lastWakeTime;
- 	BOOL runToCompl;
+#if (K_DEF_SCH_TSLICE==OFF)
+	TICK lastWakeTime;
+#endif
+	BOOL runToCompl;
 	BOOL yield;
 	BOOL timeOut;
 	/* Monitoring */
 	UINT nPreempted;
 	PID preemptedBy;
+	struct kTimeoutNode timeoutNode;
 	struct kListNode tcbNode;
 } __attribute__((aligned));
 

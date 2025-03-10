@@ -50,7 +50,7 @@
  *
  * \return K_SUCCESS on success, K_ERROR on failure
  */
-K_ERR kCreateTask( K_TASK *taskHandlePtr, TASKENTRY const taskFuncPtr,
+K_ERR kCreateTask( K_TASK_HANDLE* taskHandlePtr, TASKENTRY const taskFuncPtr,
 		STRING taskName, INT *const stackAddrPtr,
 		UINT const stackSize,
 #if(K_DEF_SCH_TSLICE==ON)
@@ -472,21 +472,21 @@ K_ERR kTaskPend( TICK timeout);
 
 /**
  * \brief Signal a task's binary semaphore
- * \param taskHandlePtr Pointer to task handle
+ * \param taskHandle Task handle
  * \return K_SUCCESS or specific error
  */
-K_ERR kTaskSignal( K_TASK *const taskHandlePtr);
+K_ERR kTaskSignal( K_TASK_HANDLE const taskHandle);
 
 
 #if (K_DEF_TASK_FLAGS == ON)
 /**
  * \brief Writes a bit string of events to a task´s private event flags
- * \param taskHandlePtr Pointer to the target task's handle
+ * \param taskHandle Target task's handle
  * \param flagMask The bit string of flags
  * \param updatedFlagsPtr Address to store the updated flags return
  * \return K_SUCCESS or specific error
  */
-K_ERR kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask,
+K_ERR kTaskFlagsPost( K_TASK_HANDLE const taskHandle, ULONG flagMask,
 		ULONG *updatedFlagsPtr, ULONG option);
 /**
  * \brief A task checks for a combination of events on its private flags
@@ -623,17 +623,14 @@ inline K_ERR kCondVarBroad( K_EVENT *eventPtr);
  * APPLICATION TIMER AND DELAY
  ******************************************************************************/
 /**
- * \brief 		   Initialise a Callout Timer
- * \param kobj     Pointer to the timer object
- * \param phase    Phase delay
- * \param duration Time until it expires (in ticks)
- * \param funPtr   Function pointer to the callback
- * \param argsPtr  Pointer to arguments
- * \param reload   TRUE reload, FALSE one-shot
- * \return K_SUCESS or a specific error
+ * \brief Initialises an application timer
+ * \param phase Initial phase delay
+ * \param funPtr The callback when timer expires
+ * \param argsPtr Address to callback function arguments
+ * \param reload TRUE for reloading after timer-out. FALSE for an one-shot
+ * \return K_SUCCESS/K_ERROR
  */
-K_ERR kTimerInit( K_TIMER *kobj, TICK phase, TICK duration, CALLOUT funPtr,
-		ADDR argsPtr, BOOL reload);
+K_ERR kTimerInit( K_TIMER*, TICK, TICK, CALLOUT, ADDR, BOOL);
 #endif
 
 /**
@@ -648,7 +645,7 @@ VOID kBusyDelay( TICK const delay);
  *        Task switches to SLEEPING state.
  * \param ticks Number of ticks to sleep
  */
-K_ERR kSleep( TICK ticks);
+VOID kSleep( TICK const ticks);
 
 #if (K_DEF_SCH_TSLICE==OFF)
 

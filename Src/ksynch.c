@@ -35,8 +35,7 @@
  if timeout, task get READY again, returning
  ERR_TIMEOUT after dispatched
  */
-static BOOL first=1;
-K_ERR kTaskPend( TICK timeout)
+ K_ERR kTaskPend( TICK timeout)
 {
 	K_ERR err;
 	if (kIsISR())
@@ -54,7 +53,7 @@ K_ERR kTaskPend( TICK timeout)
 		err = K_SUCCESS;
 		if ((timeout > 0) && (timeout < K_WAIT_FOREVER))
 		{
-			kTimeOut( &runPtr->taskHandlePtr->timeoutNode, timeout);
+			kTimeOut( &runPtr->timeoutNode, timeout);
 		}
 		K_PEND_CTXTSWTCH
 
@@ -67,7 +66,7 @@ K_ERR kTaskPend( TICK timeout)
 			err = K_ERR_TIMEOUT;
 		}
 		if (timeout > K_NO_WAIT && timeout < K_WAIT_FOREVER)
-			kRemoveTimeoutNode( &runPtr->taskHandlePtr->timeoutNode);
+			kRemoveTimeoutNode( &runPtr->timeoutNode);
 
 	}
 	K_CR_EXIT
@@ -78,7 +77,7 @@ K_ERR kTaskPend( TICK timeout)
  If pending, task is readied - semaphore remains 0
  If not, task bin remains 1
  */
-K_ERR kTaskSignal( K_TASK *const taskHandlePtr)
+K_ERR kTaskSignal( K_TASK_HANDLE const taskHandlePtr)
 {
 
 	K_ERR err = -1;
@@ -86,20 +85,20 @@ K_ERR kTaskSignal( K_TASK *const taskHandlePtr)
 	 a taskhandler cannot be null
 	 a task cannot signal itself, signal the timer handler or signal itself
 	 */
-	if ((taskHandlePtr == NULL) || (taskHandlePtr->tcbPtr->pid == runPtr->pid)
-			|| (taskHandlePtr->tcbPtr->pid == TIMHANDLER_ID)
-			|| (taskHandlePtr->tcbPtr->pid == IDLETASK_ID))
+	if ((taskHandlePtr == NULL) || (taskHandlePtr->pid == runPtr->pid)
+			|| (taskHandlePtr->pid == TIMHANDLER_ID)
+			|| (taskHandlePtr->pid == IDLETASK_ID))
 		return (err);
 	K_CR_AREA
 	K_CR_ENTER
-	PID pid = taskHandlePtr->tcbPtr->pid;
+	PID pid = taskHandlePtr->pid;
 	if (tcbs[pid].status == PENDING)
 	{
 		kReadyCtxtSwtch( &tcbs[pid]);
 	}
 	else
 	{
-		taskHandlePtr->tcbPtr->signalled = TRUE;
+		taskHandlePtr->signalled = TRUE;
 		err = (K_SUCCESS);
 	}
 	K_CR_EXIT
@@ -117,7 +116,7 @@ K_ERR kTaskSignal( K_TASK *const taskHandlePtr)
  * if it is pending, task will switch to ready if
  * required flags are met
  * */
-K_ERR kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask,
+K_ERR kTaskFlagsPost( K_TASK_HANDLE const taskHandlePtr, ULONG flagMask,
 		ULONG *updatedFlagsPtr, ULONG option)
 {
 	K_CR_AREA
@@ -126,54 +125,54 @@ K_ERR kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask,
 	/* update the task's flags */
 	if (option == K_OR)
 	{
-		taskHandlerPtr->tcbPtr->currFlags |= flagMask;
+		taskHandlePtr->currFlags |= flagMask;
 	}
 	else if (option == K_AND)
 	{
-		taskHandlerPtr->tcbPtr->currFlags &= flagMask;
+		taskHandlePtr->currFlags &= flagMask;
 	}
 	else if (option == K_MAIL)
 	{
 		/* this option is to create an asynchronous direct
 		   mailbox. flags are entirely overwritten
 		   task reads message via updatedFlagsPtr */
-		   taskHandlerPtr->tcbPtr->currFlags = flagMask;
+		   taskHandlePtr->currFlags = flagMask;
 	}
 	else
 	{
 		return (K_ERR_INVALID_PARAM);
 	}
-	*updatedFlagsPtr = taskHandlerPtr->tcbPtr->currFlags;
+	*updatedFlagsPtr = taskHandlePtr->currFlags;
 
 	/* if it is direct message, ready task if pending and exit */
 	if (option == K_MAIL)
 	{
-		if (taskHandlerPtr->tcbPtr->status == PENDING_FLAGS)
+		if (taskHandlePtr->status == PENDING_FLAGS)
 		{
-			taskHandlerPtr->tcbPtr->status = READY;
-			kReadyCtxtSwtch( taskHandlerPtr->tcbPtr);
+			taskHandlePtr->status = READY;
+			kReadyCtxtSwtch( taskHandlePtr);
 		}
 
 	}
 	/* otherwise, check if task is pending and has required flags met */
-	else if (taskHandlerPtr->tcbPtr->status == PENDING_FLAGS)
+	else if (taskHandlePtr->status == PENDING_FLAGS)
 	{
-		BOOL all = (taskHandlerPtr->tcbPtr->flagsOptions & K_ALL)
-				|| (taskHandlerPtr->tcbPtr->flagsOptions & K_ALL_CLEAR);
-		BOOL clear = (taskHandlerPtr->tcbPtr->flagsOptions & K_ANY_CLEAR)
-				|| (taskHandlerPtr->tcbPtr->flagsOptions & K_ALL_CLEAR);
+		BOOL all = (taskHandlePtr->flagsOptions & K_ALL)
+				|| (taskHandlePtr->flagsOptions & K_ALL_CLEAR);
+		BOOL clear = (taskHandlePtr->flagsOptions & K_ANY_CLEAR)
+				|| (taskHandlePtr->flagsOptions & K_ALL_CLEAR);
 
 		/* Wake only if condition is met */
-		if ((all && ((taskHandlerPtr->tcbPtr->currFlags & flagMask) == flagMask))
-				|| (!all && (taskHandlerPtr->tcbPtr->currFlags & flagMask)))
+		if ((all && ((taskHandlePtr->currFlags & flagMask) == flagMask))
+				|| (!all && (taskHandlePtr->currFlags & flagMask)))
 		{
 			/* move task to READY state */
-			taskHandlerPtr->tcbPtr->status = READY;
-			kReadyCtxtSwtch( taskHandlerPtr->tcbPtr);
+			taskHandlePtr->status = READY;
+			kReadyCtxtSwtch( taskHandlePtr);
 			/* clear flags if necessary */
 			if (clear)
 			{
-				taskHandlerPtr->tcbPtr->currFlags &= ~flagMask;
+				taskHandlePtr->currFlags &= ~flagMask;
 			}
 		}
 	}
@@ -240,7 +239,7 @@ ULONG kTaskFlagsPend( ULONG requiredFlags, ULONG option, TICK timeout)
 		runPtr->status = PENDING_FLAGS;
 		if ((timeout > 0) && (timeout < K_WAIT_FOREVER))
 		{
-			kTimeOut( &runPtr->taskHandlePtr->timeoutNode, timeout);
+			kTimeOut( &runPtr->timeoutNode, timeout);
 		}
 		K_PEND_CTXTSWTCH
 		K_CR_EXIT
@@ -253,7 +252,7 @@ ULONG kTaskFlagsPend( ULONG requiredFlags, ULONG option, TICK timeout)
 			/* timeout; return without updating flags */
 		}
 		if (timeout > K_NO_WAIT && timeout < K_WAIT_FOREVER)
-			kRemoveTimeoutNode( &runPtr->taskHandlePtr->timeoutNode);
+			kRemoveTimeoutNode( &runPtr->timeoutNode);
 	}
 	RUN_FLAGS = currFlags;
 	EXIT:

@@ -20,7 +20,7 @@ extern "C" {
 /* publicised only needed prototypes */
 
 K_ERR kTaskPend( TICK);
-K_ERR kTaskSignal( K_TASK* const);
+K_ERR kTaskSignal( K_TASK_HANDLE const);
 
 #if(K_DEF_MUTEX==ON)
 K_ERR kMutexLock( K_MUTEX* const, TICK tmeout);
@@ -55,12 +55,12 @@ K_ERR kTaskPend( TICK timeout);
  * \param taskHandlePtr Pointer to task handle
  * \return K_SUCCESS or specific error
  */
-K_ERR kTaskSignal( K_TASK *const taskHandlePtr);
+K_ERR kTaskSignal( K_TASK_HANDLE const taskHandlePtr);
 
 
 #if (K_DEF_TASK_FLAGS == ON)
 
-K_ERR kTaskFlagsPost( K_TASK *const taskHandlerPtr, ULONG flagMask,
+K_ERR kTaskFlagsPost( K_TASK_HANDLE const taskHandlePtr, ULONG flagMask,
 		ULONG *updatedFlagsPtr, ULONG option);
 
 ULONG kTaskFlagsGet( ULONG flagMask, ULONG option, TICK timeout);

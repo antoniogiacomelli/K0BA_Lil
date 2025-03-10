@@ -32,6 +32,7 @@ VOID IdleTask( VOID)
 
 VOID TimerHandlerTask( VOID)
 {
+    K_TICK_EN
 
 	while (1)
 	{
