@@ -12,14 +12,6 @@
 - Fixed-size block efficent memory allocator.
 - Footprint as low as 5KB. 
 
-See the docbook:
-
-https://antoniogiacomelli.github.io/K0BA_Lil/
-
-
-> [!NOTE]
-> This is a work in progress. 
-
 *Logical Architecture:*
 
 <img width="450" alt="kernel" src="https://github.com/antoniogiacomelli/K0BA_Lite/blob/master/layeredkernel.png">
